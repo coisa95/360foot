@@ -25,76 +25,95 @@ export async function GET(request: Request) {
     }
 
     const supabase = createClient();
-    const currentYear = new Date().getFullYear();
-    let leaguesUpdated = 0;
 
-    for (const leagueId of LEAGUE_IDS) {
+    // Free API plan: season 2024 only
+    const currentSeason = 2024;
+
+    // Get league UUID mappings
+    const { data: leagues } = await supabase
+      .from("leagues")
+      .select("id, api_football_id");
+
+    const leagueMap = new Map<number, string>();
+    for (const l of leagues || []) {
+      if (l.api_football_id) leagueMap.set(l.api_football_id, l.id);
+    }
+
+    let leaguesUpdated = 0;
+    const errors: string[] = [];
+
+    const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+    for (let i = 0; i < LEAGUE_IDS.length; i++) {
+      const leagueId = LEAGUE_IDS[i];
+
+      // Respect rate limit: 10 requests/min → wait 7s between calls
+      if (i > 0) await delay(7000);
       try {
-        const standingsResponse = await fetchStandings(leagueId, currentYear);
+        const standingsResponse = await fetchStandings(leagueId, currentSeason);
 
         if (!standingsResponse || !standingsResponse.length) continue;
 
-        // API-Football returns standings as StandingsResponse[]
-        // Each response has league.standings which is Standing[][]
         const leagueData = standingsResponse[0];
         if (!leagueData?.league?.standings) continue;
 
+        const leagueUUID = leagueMap.get(leagueId);
+        if (!leagueUUID) {
+          errors.push(`No UUID found for league ${leagueId}`);
+          continue;
+        }
+
         const allGroups = leagueData.league.standings;
 
-        for (const group of allGroups) {
-          const standings = (group || []).map(
-            (entry) => ({
-              rank: entry.rank,
-              team_name: entry.team.name,
-              team_slug: entry.team.name
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/(^-|-$)/g, ""),
-              team_api_id: entry.team.id,
-              played: entry.all.played,
-              won: entry.all.win,
-              drawn: entry.all.draw,
-              lost: entry.all.lose,
-              goals_for: entry.all.goals.for,
-              goals_against: entry.all.goals.against,
-              goal_diff: entry.goalsDiff,
-              points: entry.points,
-            })
-          );
+        // Combine all groups into one JSON
+        const standingsData = allGroups.flatMap((group) =>
+          (group || []).map((entry) => ({
+            rank: entry.rank,
+            team_name: entry.team.name,
+            team_logo: entry.team.logo,
+            team_api_id: entry.team.id,
+            played: entry.all.played,
+            won: entry.all.win,
+            drawn: entry.all.draw,
+            lost: entry.all.lose,
+            goals_for: entry.all.goals.for,
+            goals_against: entry.all.goals.against,
+            goal_diff: entry.goalsDiff,
+            points: entry.points,
+            group: entry.group || "League",
+            form: entry.form,
+          }))
+        );
 
-          const groupName = group?.[0]?.group || "League";
+        // Delete existing standings for this league/season, then insert new
+        await supabase
+          .from("standings")
+          .delete()
+          .eq("league_id", leagueUUID)
+          .eq("season", String(currentSeason));
 
-          const { error } = await supabase.from("standings").upsert(
-            {
-              league_api_football_id: leagueId,
-              season: currentYear,
-              group_name: groupName,
-              data_json: standings,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: "league_api_football_id,season,group_name" }
-          );
+        const { error } = await supabase.from("standings").insert({
+          league_id: leagueUUID,
+          season: String(currentSeason),
+          data_json: standingsData,
+          updated_at: new Date().toISOString(),
+        });
 
-          if (error) {
-            console.error(
-              `Error upserting standings for league ${leagueId}:`,
-              error
-            );
-          } else {
-            leaguesUpdated++;
-          }
+        if (error) {
+          errors.push(`Standings league ${leagueId}: ${error.message}`);
+        } else {
+          leaguesUpdated++;
         }
       } catch (err) {
-        console.error(
-          `Error fetching standings for league ${leagueId}:`,
-          err
-        );
+        errors.push(`League ${leagueId}: ${String(err)}`);
       }
     }
 
     return NextResponse.json({
       success: true,
       leagues_updated: leaguesUpdated,
+      season: currentSeason,
+      errors: errors.length > 0 ? errors.slice(0, 10) : undefined,
     });
   } catch (error) {
     console.error("Error in update-standings cron:", error);
