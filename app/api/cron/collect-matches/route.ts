@@ -15,6 +15,9 @@ const LEAGUE_IDS = [
   140, // La Liga
   135, // Serie A
   78,  // Bundesliga
+  // Autres ligues majeures
+  253, // MLS (USA)
+  307, // Saudi Pro League
   // Compétitions continentales & internationales
   2,   // Champions League
   3,   // Europa League

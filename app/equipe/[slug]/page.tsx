@@ -93,7 +93,7 @@ export default async function TeamPage({ params }: Props) {
   const { data: teamArticles } = await supabase
     .from("articles")
     .select("*, league:leagues!league_id(name)")
-    .eq("status", "published")
+    .not("published_at", "is", null)
     .or(`title.ilike.%${team.name}%,content.ilike.%${team.name}%`)
     .order("created_at", { ascending: false })
     .limit(6);

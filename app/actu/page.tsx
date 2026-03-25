@@ -58,6 +58,8 @@ const EUROPEAN_LEAGUE_SLUGS = [
 const INTERNATIONAL_LEAGUE_SLUGS = [
   "matchs-amicaux",
   "qualifs-cdm-amerique-sud",
+  "mls",
+  "saudi-pro-league",
 ];
 
 const TYPE_LABELS: Record<string, string> = {
@@ -110,7 +112,7 @@ export default async function ActuPage({ searchParams }: Props) {
   let query = supabase
     .from("articles")
     .select("*, league:leagues!league_id(name, slug)", { count: "exact" })
-    .eq("status", "published")
+    .not("published_at", "is", null)
     .order("created_at", { ascending: false });
 
   // Apply filters

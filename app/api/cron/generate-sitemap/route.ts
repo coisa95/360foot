@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const { data: articles } = await supabase
       .from("articles")
       .select("slug, published_at, updated_at, type")
-      .eq("status", "published")
+      .not("published_at", "is", null)
       .order("published_at", { ascending: false });
 
     // Fetch all teams

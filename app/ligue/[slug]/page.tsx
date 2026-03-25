@@ -86,7 +86,7 @@ export default async function LeaguePage({ params }: Props) {
     .from("articles")
     .select("*")
     .eq("league_id", league.id)
-    .eq("status", "published")
+    .not("published_at", "is", null)
     .order("published_at", { ascending: false })
     .limit(6);
 

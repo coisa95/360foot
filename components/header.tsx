@@ -12,23 +12,30 @@ const NAV_LINKS = [
 ];
 
 const LEAGUES = [
-  { href: "/ligue/ligue-1-cote-divoire", label: "Ligue 1 CI" },
-  { href: "/ligue/ligue-pro-senegal", label: "Ligue Pro SN" },
-  { href: "/ligue/elite-one-cameroun", label: "Elite One CM" },
-  { href: "/ligue/ligue-1-france", label: "Ligue 1" },
-  { href: "/ligue/premier-league", label: "Premier League" },
-  { href: "/ligue/la-liga", label: "La Liga" },
-  { href: "/ligue/champions-league", label: "Champions League" },
+  { href: "/ligue/ligue-1-cote-divoire", label: "🇨🇮 Ligue 1 CI" },
+  { href: "/ligue/ligue-pro-senegal", label: "🇸🇳 Ligue Pro SN" },
+  { href: "/ligue/elite-one-cameroun", label: "🇨🇲 Elite One CM" },
+  { href: "/ligue/ligue-1-france", label: "🇫🇷 Ligue 1" },
+  { href: "/ligue/premier-league", label: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League" },
+  { href: "/ligue/la-liga", label: "🇪🇸 La Liga" },
+  { href: "/ligue/serie-a", label: "🇮🇹 Serie A" },
+  { href: "/ligue/bundesliga", label: "🇩🇪 Bundesliga" },
+  { href: "/ligue/champions-league", label: "🏆 Champions League" },
+  { href: "/ligue/mls", label: "🇺🇸 MLS" },
+  { href: "/ligue/saudi-pro-league", label: "🇸🇦 Saudi Pro League" },
 ];
 
 const CLASSEMENTS = [
-  { href: "/classement/ligue-1-cote-divoire", label: "Ligue 1 CI" },
-  { href: "/classement/ligue-pro-senegal", label: "Ligue Pro SN" },
-  { href: "/classement/elite-one-cameroun", label: "Elite One CM" },
-  { href: "/classement/ligue-1-france", label: "Ligue 1" },
-  { href: "/classement/premier-league", label: "Premier League" },
-  { href: "/classement/la-liga", label: "La Liga" },
-  { href: "/classement/champions-league", label: "Champions League" },
+  { href: "/classement/ligue-1-cote-divoire", label: "🇨🇮 Ligue 1 CI" },
+  { href: "/classement/ligue-pro-senegal", label: "🇸🇳 Ligue Pro SN" },
+  { href: "/classement/elite-one-cameroun", label: "🇨🇲 Elite One CM" },
+  { href: "/classement/ligue-1-france", label: "🇫🇷 Ligue 1" },
+  { href: "/classement/premier-league", label: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League" },
+  { href: "/classement/la-liga", label: "🇪🇸 La Liga" },
+  { href: "/classement/serie-a", label: "🇮🇹 Serie A" },
+  { href: "/classement/bundesliga", label: "🇩🇪 Bundesliga" },
+  { href: "/classement/mls", label: "🇺🇸 MLS" },
+  { href: "/classement/saudi-pro-league", label: "🇸🇦 Saudi Pro League" },
 ];
 
 export function Header() {

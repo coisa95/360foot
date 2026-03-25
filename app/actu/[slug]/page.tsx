@@ -56,7 +56,7 @@ export default async function ArticlePage({ params }: Props) {
     .from("articles")
     .select("*")
     .neq("id", article.id)
-    .eq("status", "published")
+    .not("published_at", "is", null)
     .order("published_at", { ascending: false })
     .limit(5);
 

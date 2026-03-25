@@ -15,7 +15,7 @@ export async function GET() {
     supabase
       .from("articles")
       .select("slug, updated_at, published_at")
-      .eq("status", "published")
+      .not("published_at", "is", null)
       .order("published_at", { ascending: false }),
     supabase
       .from("matches")

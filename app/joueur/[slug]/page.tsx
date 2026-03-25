@@ -57,7 +57,7 @@ export default async function PlayerPage({ params }: Props) {
     .from("articles")
     .select("*")
     .ilike("content", `%${player.name}%`)
-    .eq("status", "published")
+    .not("published_at", "is", null)
     .order("published_at", { ascending: false })
     .limit(5);
 

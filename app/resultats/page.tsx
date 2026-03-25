@@ -68,7 +68,7 @@ export default async function ResultatsPage({ searchParams }: Props) {
   const { data: matchArticles } = await supabase
     .from("articles")
     .select("slug, match_id")
-    .eq("status", "published")
+    .not("published_at", "is", null)
     .eq("type", "result")
     .not("match_id", "is", null);
 
