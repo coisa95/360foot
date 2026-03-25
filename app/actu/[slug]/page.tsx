@@ -173,7 +173,7 @@ export default async function ArticlePage({ params }: Props) {
           <div className="mt-8">
             <AffiliateButton
               bookmakerName="1xBet"
-              affiliateUrl="https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528"
+              affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573"
               bonus="Bonus de bienvenue jusqu'à 200 000 FCFA"
               articleId={article.id}
             />

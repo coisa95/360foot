@@ -8,7 +8,7 @@ INSERT INTO bookmakers (name, slug, affiliate_url, bonus_json, countries, priori
   (
     '1xBet',
     '1xbet',
-    'https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528',
+    'https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573',
     '{"CI": "Bonus de bienvenue jusqu''à 200 000 FCFA", "SN": "Bonus de bienvenue jusqu''à 200 000 FCFA", "CM": "Bonus de bienvenue jusqu''à 200 000 FCFA", "ML": "Bonus de bienvenue jusqu''à 200 000 FCFA", "BF": "Bonus de bienvenue jusqu''à 200 000 FCFA", "FR": "Bonus de bienvenue jusqu''à 100€", "default": "Welcome bonus up to 100%"}',
     ARRAY['CI', 'SN', 'CM', 'ML', 'BF', 'FR'],
     1,

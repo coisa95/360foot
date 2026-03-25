@@ -146,7 +146,7 @@ export default async function HomePage() {
         <aside className="space-y-6">
           <AffiliateBanner
             bookmakerName="1xBet"
-            affiliateUrl="https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528"
+            affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573"
             bonus="Bonus de bienvenue jusqu'à 200 000 FCFA"
           />
 

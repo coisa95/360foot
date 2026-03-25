@@ -8,7 +8,7 @@ const BOOKMAKER_BY_COUNTRY: Record<string, Bookmaker[]> = {
   CI: [
     {
       name: "1xBet",
-      url: "https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528",
+      url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
       bonus: "Bonus de bienvenue jusqu'à 200 000 FCFA",
     },
     {
@@ -25,7 +25,7 @@ const BOOKMAKER_BY_COUNTRY: Record<string, Bookmaker[]> = {
   SN: [
     {
       name: "1xBet",
-      url: "https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528",
+      url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
       bonus: "Bonus de bienvenue jusqu'à 200 000 FCFA",
     },
     {
@@ -42,7 +42,7 @@ const BOOKMAKER_BY_COUNTRY: Record<string, Bookmaker[]> = {
   CM: [
     {
       name: "1xBet",
-      url: "https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528",
+      url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
       bonus: "Bonus de bienvenue jusqu'à 200 000 FCFA",
     },
     {
@@ -59,7 +59,7 @@ const BOOKMAKER_BY_COUNTRY: Record<string, Bookmaker[]> = {
   ML: [
     {
       name: "1xBet",
-      url: "https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528",
+      url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
       bonus: "Bonus de bienvenue jusqu'à 200 000 FCFA",
     },
     {
@@ -76,7 +76,7 @@ const BOOKMAKER_BY_COUNTRY: Record<string, Bookmaker[]> = {
   BF: [
     {
       name: "1xBet",
-      url: "https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528",
+      url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
       bonus: "Bonus de bienvenue jusqu'à 200 000 FCFA",
     },
     {
@@ -93,7 +93,7 @@ const BOOKMAKER_BY_COUNTRY: Record<string, Bookmaker[]> = {
   FR: [
     {
       name: "1xBet",
-      url: "https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528",
+      url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
       bonus: "Bonus de bienvenue jusqu'à 100€",
     },
     {
@@ -110,7 +110,7 @@ const BOOKMAKER_BY_COUNTRY: Record<string, Bookmaker[]> = {
   DEFAULT: [
     {
       name: "1xBet",
-      url: "https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528",
+      url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
       bonus: "Welcome bonus up to 100%",
     },
     {
