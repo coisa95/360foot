@@ -1,0 +1,10 @@
+{
+  "crons": [
+    { "path": "/api/cron/collect-matches", "schedule": "0 */2 * * *" },
+    { "path": "/api/cron/generate-articles", "schedule": "*/15 18-23 * * *" },
+    { "path": "/api/cron/generate-previews", "schedule": "0 8 * * *" },
+    { "path": "/api/cron/update-standings", "schedule": "0 */2 * * *" },
+    { "path": "/api/cron/scrape-transfers", "schedule": "0 */4 * * *" },
+    { "path": "/api/cron/generate-sitemap", "schedule": "0 */6 * * *" }
+  ]
+}
