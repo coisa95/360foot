@@ -250,7 +250,7 @@ export default async function MatchPage({ params }: Props) {
         )}
 
         <div className="mt-8">
-          <AffiliateButton bookmakerName="1xBet" affiliateUrl="https://1xbet.com/?ref=360foot" bonus="Bonus 100%" />
+          <AffiliateButton bookmakerName="1xBet" affiliateUrl="https://reffpa.com/L?tag=d_689933m_2528c_&site=689933&ad=2528" bonus="Bonus de bienvenue jusqu'à 200 000 FCFA" />
         </div>
       </div>
     </main>
