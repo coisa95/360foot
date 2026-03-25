@@ -3,18 +3,25 @@ import { createClient } from "@/lib/supabase";
 import { getMatchesByRange } from "@/lib/api-football";
 
 const LEAGUE_IDS = [
-  373, // Ligue 1 CI
-  384, // Ligue Pro SN
-  406, // Elite One CM
-  394, // Primus Mali
-  398, // Fasofoot BF
+  // Ligues africaines
+  386, // Ligue 1 Côte d'Ivoire
+  403, // Ligue 1 Sénégal
+  411, // Elite One Cameroun
+  598, // Première Division Mali
+  423, // Ligue 1 Burkina Faso
+  // Ligues européennes
   61,  // Ligue 1 France
   39,  // Premier League
   140, // La Liga
   135, // Serie A
+  78,  // Bundesliga
+  // Compétitions continentales & internationales
   2,   // Champions League
   3,   // Europa League
   6,   // CAN
+  32,  // Qualifs Coupe du Monde - Europe
+  34,  // Qualifs Coupe du Monde - Amérique du Sud
+  10,  // Matchs amicaux internationaux
 ];
 
 function generateSlug(home: string, away: string, date: string): string {

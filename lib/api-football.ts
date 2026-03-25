@@ -158,18 +158,28 @@ async function fetchApi<T>(endpoint: string, params: Record<string, string>): Pr
  * Updated based on API-Football data (March 2026).
  */
 const LEAGUE_SEASONS: Record<number, number> = {
-  373: 2025, // Ligue 1 CI
-  384: 2025, // State Cup SN
-  406: 2025, // Elite One CM
-  394: 2025, // Super Liga Mali
-  398: 2026, // Premier League BF (Fasofoot)
-  61:  2025, // Ligue 1 France (2025-2026)
-  39:  2025, // Premier League (2025-2026)
-  140: 2025, // La Liga (2025-2026)
-  135: 2025, // Serie A (2025-2026)
+  // Ligues africaines
+  386: 2025, // Ligue 1 Côte d'Ivoire
+  403: 2025, // Ligue 1 Sénégal
+  411: 2025, // Elite One Cameroun
+  598: 2025, // Première Division Mali
+  423: 2026, // Ligue 1 Burkina Faso
+  // Ligues européennes
+  61:  2025, // Ligue 1 France
+  39:  2025, // Premier League
+  140: 2025, // La Liga
+  135: 2025, // Serie A
+  78:  2025, // Bundesliga
+  // Compétitions continentales
   2:   2025, // Champions League
   3:   2025, // Europa League
   6:   2025, // CAN
+  36:  2027, // CAN Qualifications
+  // Compétitions internationales
+  10:  2026, // Matchs amicaux
+  32:  2024, // Qualifs Coupe du Monde - Europe
+  34:  2026, // Qualifs Coupe du Monde - Amérique du Sud
+  1:   2026, // Coupe du Monde
 };
 
 /**
