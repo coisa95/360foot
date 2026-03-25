@@ -18,7 +18,9 @@ const LEAGUE_IDS = [
   // Compétitions continentales & internationales
   2,   // Champions League
   3,   // Europa League
+  848, // Conference League
   6,   // CAN
+  29,  // Qualifs Coupe du Monde - Afrique
   32,  // Qualifs Coupe du Monde - Europe
   34,  // Qualifs Coupe du Monde - Amérique du Sud
 ];

@@ -18,11 +18,16 @@ const LEAGUE_IDS = [
   // Compétitions continentales & internationales
   2,   // Champions League
   3,   // Europa League
+  848, // Conference League
   6,   // CAN
+  29,  // Qualifs Coupe du Monde - Afrique
   32,  // Qualifs Coupe du Monde - Europe
   34,  // Qualifs Coupe du Monde - Amérique du Sud
   10,  // Matchs amicaux internationaux
 ];
+
+// Filtrer les compétitions jeunes (U23, U20, U19, U18, U17)
+const YOUTH_KEYWORDS = ["U23", "U20", "U19", "U18", "U17", "Youth", "Junior", "Espoirs", "Olympic"];
 
 function generateSlug(home: string, away: string, date: string): string {
   const clean = (s: string) =>
@@ -80,6 +85,18 @@ export async function GET(request: Request) {
         const leagueUUID = leagueMap.get(leagueId);
 
         for (const match of matches) {
+          // Filtrer les matchs de catégories jeunes
+          const leagueName = match.league?.name || "";
+          const homeTeamName = match.teams?.home?.name || "";
+          const awayTeamName = match.teams?.away?.name || "";
+          const isYouth = YOUTH_KEYWORDS.some(
+            (kw) =>
+              leagueName.includes(kw) ||
+              homeTeamName.includes(kw) ||
+              awayTeamName.includes(kw)
+          );
+          if (isYouth) continue;
+
           const homeTeam = match.teams.home;
           const awayTeam = match.teams.away;
 

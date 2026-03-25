@@ -9,6 +9,8 @@ Règles :
 - Intègre 3 à 4 statistiques clés du match (possession, tirs, corners, etc.).
 - Mentionne le classement actuel des équipes après le match.
 - Termine par une mention du prochain match de chaque équipe.
+- IMPORTANT : Le champ "content" doit être en HTML pur (balises <p>, <h2>, <h3>, <strong>, <ul>, <li>). N'utilise JAMAIS de markdown (#, *, **, ##). Pas de balises <h1>.
+- Le champ "excerpt" doit être du texte brut sans aucun formatage.
 - Retourne le résultat au format JSON avec les champs suivants : title, content, excerpt, seo_title, seo_description, tags.`;
 
 export interface MatchEvent {

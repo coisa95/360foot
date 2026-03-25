@@ -173,7 +173,9 @@ const LEAGUE_SEASONS: Record<number, number> = {
   // Compétitions continentales
   2:   2025, // Champions League
   3:   2025, // Europa League
+  848: 2025, // Conference League
   6:   2025, // CAN
+  29:  2025, // Qualifs Coupe du Monde - Afrique
   36:  2027, // CAN Qualifications
   // Compétitions internationales
   10:  2026, // Matchs amicaux

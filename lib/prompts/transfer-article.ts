@@ -7,6 +7,8 @@ Règles :
 - Inclus un profil du joueur (âge, poste, nationalité, parcours).
 - Analyse l'impact du transfert pour le club acheteur et le club vendeur.
 - Adopte un ton professionnel et informatif.
+- IMPORTANT : Le champ "content" doit être en HTML pur (balises <p>, <h2>, <h3>, <strong>, <ul>, <li>). N'utilise JAMAIS de markdown (#, *, **, ##). Pas de balises <h1>.
+- Le champ "excerpt" doit être du texte brut sans aucun formatage.
 - Retourne le résultat au format JSON avec les champs suivants : title, content, excerpt, seo_title, seo_description, tags.`;
 
 export interface TransferData {
