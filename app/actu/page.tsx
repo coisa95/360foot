@@ -24,11 +24,41 @@ export const metadata: Metadata = {
 
 const CATEGORIES = [
   { label: "Tous", value: "all" },
+  { label: "Afrique", value: "afrique" },
+  { label: "Europe", value: "europe" },
+  { label: "International", value: "international" },
   { label: "Résultats", value: "result" },
-  { label: "Previews", value: "preview" },
+  { label: "Avant-matchs", value: "preview" },
   { label: "Transferts", value: "transfer" },
-  { label: "Récaps", value: "recap" },
 ] as const;
+
+// Ligues africaines (UUIDs) - utilisés pour le filtre géographique
+const AFRICAN_LEAGUE_SLUGS = [
+  "ligue-1-cote-divoire",
+  "ligue-pro-senegal",
+  "elite-one-cameroun",
+  "primus-ligue-mali",
+  "fasofoot-burkina-faso",
+  "can",
+  "qualifs-cdm-afrique",
+];
+
+const EUROPEAN_LEAGUE_SLUGS = [
+  "ligue-1-france",
+  "premier-league",
+  "la-liga",
+  "serie-a",
+  "bundesliga",
+  "champions-league",
+  "europa-league",
+  "conference-league",
+  "qualifs-cdm-europe",
+];
+
+const INTERNATIONAL_LEAGUE_SLUGS = [
+  "matchs-amicaux",
+  "qualifs-cdm-amerique-sud",
+];
 
 const TYPE_LABELS: Record<string, string> = {
   result: "Résultat",
@@ -63,13 +93,38 @@ export default async function ActuPage({ searchParams }: Props) {
 
   const supabase = createClient();
 
+  // Fetch league IDs for geographic filtering
+  const { data: allLeagues } = await supabase
+    .from("leagues")
+    .select("id, slug");
+
+  const leaguesBySlug = new Map<string, string>();
+  for (const l of allLeagues || []) {
+    leaguesBySlug.set(l.slug, l.id);
+  }
+
+  function getLeagueIds(slugs: string[]): string[] {
+    return slugs.map((s) => leaguesBySlug.get(s)).filter(Boolean) as string[];
+  }
+
   let query = supabase
     .from("articles")
     .select("*, league:leagues!league_id(name, slug)", { count: "exact" })
     .eq("status", "published")
     .order("created_at", { ascending: false });
 
-  if (activeCategory !== "all") {
+  // Apply filters
+  if (activeCategory === "afrique") {
+    const ids = getLeagueIds(AFRICAN_LEAGUE_SLUGS);
+    if (ids.length > 0) query = query.in("league_id", ids);
+  } else if (activeCategory === "europe") {
+    const ids = getLeagueIds(EUROPEAN_LEAGUE_SLUGS);
+    if (ids.length > 0) query = query.in("league_id", ids);
+  } else if (activeCategory === "international") {
+    const ids = getLeagueIds(INTERNATIONAL_LEAGUE_SLUGS);
+    if (ids.length > 0) query = query.in("league_id", ids);
+  } else if (activeCategory !== "all") {
+    // Type filter (result, preview, transfer)
     query = query.eq("type", activeCategory);
   }
 
