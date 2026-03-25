@@ -5,16 +5,30 @@ const FOOTER_LINKS = {
     { href: "/ligue/ligue-1-cote-divoire", label: "Ligue 1 Côte d'Ivoire" },
     { href: "/ligue/ligue-pro-senegal", label: "Ligue Pro Sénégal" },
     { href: "/ligue/elite-one-cameroun", label: "Elite One Cameroun" },
+    { href: "/ligue/ligue-1-france", label: "Ligue 1 France" },
     { href: "/ligue/premier-league", label: "Premier League" },
+    { href: "/ligue/la-liga", label: "La Liga" },
     { href: "/ligue/champions-league", label: "Champions League" },
   ],
+  Classements: [
+    { href: "/classement/ligue-1-cote-divoire", label: "Classement Ligue 1 CI" },
+    { href: "/classement/ligue-pro-senegal", label: "Classement Ligue Pro SN" },
+    { href: "/classement/elite-one-cameroun", label: "Classement Elite One CM" },
+    { href: "/classement/premier-league", label: "Classement Premier League" },
+    { href: "/classement/la-liga", label: "Classement La Liga" },
+    { href: "/classement/champions-league", label: "Classement Champions League" },
+  ],
   Rubriques: [
+    { href: "/actu", label: "Actualités" },
+    { href: "/resultats", label: "Résultats" },
     { href: "/transferts", label: "Transferts" },
+    { href: "/actu?categorie=preview", label: "Avant-matchs" },
+    { href: "/actu?categorie=recap", label: "Récaps" },
     { href: "/bookmakers", label: "Paris sportifs" },
+  ],
+  Infos: [
     { href: "/a-propos", label: "À propos" },
     { href: "/methodologie", label: "Méthodologie IA" },
-  ],
-  Légal: [
     { href: "/confidentialite", label: "Confidentialité" },
     { href: "/mentions-legales", label: "Mentions légales" },
   ],
@@ -24,7 +38,7 @@ export function Footer() {
   return (
     <footer className="border-t border-dark-border bg-dark-bg">
       <div className="mx-auto max-w-7xl px-4 py-10">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2">
@@ -49,7 +63,7 @@ export function Footer() {
               </h3>
               <ul className="space-y-2">
                 {links.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.href + link.label}>
                     <Link
                       href={link.href}
                       className="text-sm text-gray-500 transition-colors hover:text-lime-400"

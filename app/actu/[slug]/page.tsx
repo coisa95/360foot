@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase";
+import { addInternalLinks } from "@/lib/internal-links";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { RelatedArticles } from "@/components/related-articles";
 import { AffiliateButton } from "@/components/affiliate-button";
@@ -59,9 +60,24 @@ export default async function ArticlePage({ params }: Props) {
     .order("published_at", { ascending: false })
     .limit(5);
 
+  // Fetch entities for internal linking
+  const [{ data: teams }, { data: players }, { data: leagues }] = await Promise.all([
+    supabase.from("teams").select("name, slug"),
+    supabase.from("players").select("name, slug"),
+    supabase.from("leagues").select("name, slug"),
+  ]);
+
+  // Apply internal links to article content
+  const enrichedContent = addInternalLinks(
+    article.content || "",
+    (teams || []).map((t: Record<string, unknown>) => ({ name: t.name as string, slug: t.slug as string })),
+    (players || []).map((p: Record<string, unknown>) => ({ name: p.name as string, slug: p.slug as string })),
+    (leagues || []).map((l: Record<string, unknown>) => ({ name: l.name as string, slug: l.slug as string }))
+  );
+
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
-    { label: "Actualites", href: "/actu" },
+    { label: "Actualités", href: "/actu" },
     { label: article.title },
   ];
 
@@ -166,7 +182,7 @@ export default async function ArticlePage({ params }: Props) {
               prose-a:text-lime-400 prose-a:no-underline hover:prose-a:underline
               prose-strong:text-white
               prose-li:text-gray-300"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: enrichedContent }}
           />
 
           {/* Bouton affiliation contextuel */}
