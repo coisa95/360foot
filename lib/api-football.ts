@@ -154,16 +154,43 @@ async function fetchApi<T>(endpoint: string, params: Record<string, string>): Pr
 }
 
 /**
+ * Get the current season year for API-Football.
+ * Free plan supports seasons 2022-2024 only.
+ * We use 2024 as the most recent available season.
+ */
+function getCurrentSeason(): number {
+  return 2024;
+}
+
+/**
  * Get matches for a given date and optional league.
  * @param date - Date string in YYYY-MM-DD format
  * @param leagueId - Optional league ID to filter by
  */
 export async function getMatches(date: string, leagueId?: number): Promise<MatchFixture[]> {
-  const params: Record<string, string> = { date };
+  const params: Record<string, string> = {
+    date,
+    season: String(getCurrentSeason()),
+  };
   if (leagueId) {
     params.league = String(leagueId);
   }
   return fetchApi<MatchFixture[]>("/fixtures", params);
+}
+
+/**
+ * Get matches for a date range (to collect more data).
+ * @param from - Start date YYYY-MM-DD
+ * @param to - End date YYYY-MM-DD
+ * @param leagueId - League ID
+ */
+export async function getMatchesByRange(from: string, to: string, leagueId: number): Promise<MatchFixture[]> {
+  return fetchApi<MatchFixture[]>("/fixtures", {
+    league: String(leagueId),
+    season: String(getCurrentSeason()),
+    from,
+    to,
+  });
 }
 
 /**

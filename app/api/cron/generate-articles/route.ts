@@ -47,7 +47,7 @@ export async function GET(request: Request) {
 
     const matchesWithoutArticles = (finishedMatches || []).filter(
       (m: Record<string, unknown>) => !existingMatchIds.has(m.id)
-    );
+    ).slice(0, 3); // Limit to 3 per execution to avoid Vercel timeout
 
     let articlesGenerated = 0;
 
@@ -62,6 +62,29 @@ export async function GET(request: Request) {
         const awayTeam = match.away_team as Record<string, unknown> | null;
         const league = match.league as Record<string, unknown> | null;
 
+        // Extract events from fixture details
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const events = (fixture?.events || []).map((e: any) => ({
+          type: e.type === "Goal" ? "goal" : e.type?.toLowerCase() || "",
+          player: e.player?.name || "",
+          team: e.team?.name || "",
+          minute: e.time?.elapsed || 0,
+          detail: e.detail || "",
+        }));
+
+        // Extract stats from fixture details
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const fixtureStats = fixture?.statistics || [];
+        const getStatValue = (teamIdx: number, statType: string): number => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const teamStats = fixtureStats[teamIdx]?.statistics || [];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const stat = teamStats.find((s: any) => s.type === statType);
+          if (!stat?.value) return 0;
+          const val = String(stat.value).replace("%", "");
+          return parseInt(val) || 0;
+        };
+
         const userPrompt = buildResultUserPrompt({
           homeTeam: (homeTeam?.name as string) || "Équipe A",
           awayTeam: (awayTeam?.name as string) || "Équipe B",
@@ -69,18 +92,13 @@ export async function GET(request: Request) {
           awayScore: (match.score_away as number) || 0,
           competition: (league?.name as string) || "",
           date: (match.date as string) || new Date().toISOString(),
-          events: (fixture?.events || []).map((e: Record<string, unknown>) => ({
-            type: (e.type as string) || "",
-            player: (e.player as string) || "",
-            team: (e.team as string) || "",
-            minute: (e.time as number) || 0,
-          })),
+          events,
           stats: {
-            possession: [50, 50],
-            shots: [0, 0],
-            shotsOnTarget: [0, 0],
-            corners: [0, 0],
-            fouls: [0, 0],
+            possession: [getStatValue(0, "Ball Possession"), getStatValue(1, "Ball Possession")],
+            shots: [getStatValue(0, "Total Shots"), getStatValue(1, "Total Shots")],
+            shotsOnTarget: [getStatValue(0, "Shots on Goal"), getStatValue(1, "Shots on Goal")],
+            corners: [getStatValue(0, "Corner Kicks"), getStatValue(1, "Corner Kicks")],
+            fouls: [getStatValue(0, "Fouls"), getStatValue(1, "Fouls")],
           },
           standings: [],
         });

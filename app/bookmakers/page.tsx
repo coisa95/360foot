@@ -29,6 +29,12 @@ export default async function BookmakersPage() {
     .eq("active", true)
     .order("priority", { ascending: true });
 
+  // Helper to get bonus text for display
+  const getBonusText = (bonusJson: Record<string, string> | null): string => {
+    if (!bonusJson) return "";
+    return bonusJson["CI"] || bonusJson["default"] || Object.values(bonusJson)[0] || "";
+  };
+
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
     { label: "Paris sportifs" },
@@ -71,29 +77,21 @@ export default async function BookmakersPage() {
                           {bookmaker.name}
                         </h2>
                       </Link>
-                      {bookmaker.rating && (
-                        <Badge className="bg-lime-500/20 text-lime-400 border-lime-500/30">
-                          {bookmaker.rating}/5
-                        </Badge>
-                      )}
+                      <Badge className="bg-lime-500/20 text-lime-400 border-lime-500/30">
+                        #{bookmaker.priority}
+                      </Badge>
                     </div>
 
-                    {bookmaker.bonus && (
+                    {bookmaker.bonus_json && (
                       <p className="text-lime-400 font-semibold text-lg mb-2">
-                        {bookmaker.bonus}
+                        {getBonusText(bookmaker.bonus_json as Record<string, string>)}
                       </p>
                     )}
 
-                    {bookmaker.description && (
-                      <p className="text-gray-400 text-sm mb-3">
-                        {bookmaker.description}
-                      </p>
-                    )}
-
-                    {bookmaker.supported_countries && (
+                    {bookmaker.countries && (
                       <div className="flex flex-wrap gap-2">
                         <span className="text-gray-500 text-xs">Disponible :</span>
-                        {(bookmaker.supported_countries as string[]).map((country) => (
+                        {(bookmaker.countries as string[]).map((country) => (
                           <Badge
                             key={country}
                             className="bg-gray-700 text-gray-300 border-gray-600 text-xs"
