@@ -52,7 +52,7 @@ export async function GET(request: Request) {
 
     const matchesWithoutPreviews = (scheduledMatches || []).filter(
       (m: Record<string, unknown>) => !existingMatchIds.has(m.id)
-    );
+    ).slice(0, 2); // Limit to 2 per execution to avoid Vercel timeout
 
     let previewsGenerated = 0;
 
