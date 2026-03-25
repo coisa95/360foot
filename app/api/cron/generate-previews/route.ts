@@ -28,14 +28,17 @@ export async function GET(request: Request) {
 
     const supabase = createClient();
     const today = new Date().toISOString().split("T")[0];
+    const in3Days = new Date();
+    in3Days.setDate(in3Days.getDate() + 3);
+    const endDate = in3Days.toISOString().split("T")[0];
 
-    // Find today's matches with status NS
+    // Find upcoming matches (next 3 days) with status NS or TBD
     const { data: scheduledMatches } = await supabase
       .from("matches")
       .select("*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name), league:leagues(name)")
-      .eq("status", "NS")
+      .in("status", ["NS", "TBD"])
       .gte("date", `${today}T00:00:00`)
-      .lte("date", `${today}T23:59:59`);
+      .lte("date", `${endDate}T23:59:59`);
 
     // Get existing preview articles
     const { data: existingPreviews } = await supabase
