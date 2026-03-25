@@ -27,7 +27,28 @@ const LEAGUE_IDS = [
 ];
 
 // Filtrer les compétitions jeunes (U23, U20, U19, U18, U17)
-const YOUTH_KEYWORDS = ["U23", "U20", "U19", "U18", "U17", "Youth", "Junior", "Espoirs", "Olympic"];
+const YOUTH_KEYWORDS = ["U23", "U21", "U20", "U19", "U18", "U17", "Youth", "Junior", "Espoirs", "Olympic", "Women", "Féminin"];
+
+// Pays/équipes d'intérêt pour les matchs amicaux et qualifs
+const RELEVANT_COUNTRIES = [
+  // Afrique
+  "Ivory Coast", "Cote D'Ivoire", "Côte d'Ivoire", "Senegal", "Sénégal", "Cameroon", "Cameroun",
+  "Mali", "Burkina Faso", "Ghana", "Nigeria", "Egypt", "Morocco", "Maroc", "Algeria", "Algérie",
+  "Tunisia", "Tunisie", "Guinea", "Guinée", "Congo", "DR Congo", "Gabon", "Benin", "Bénin", "Togo",
+  "South Africa", "Afrique du Sud",
+  // Europe (grandes équipes)
+  "France", "England", "Germany", "Spain", "Italy", "Portugal", "Netherlands", "Belgium",
+  "Brazil", "Brésil", "Argentina", "Argentine", "Colombia", "Colombie", "Uruguay",
+  // Autres grosses nations
+  "Mexico", "Mexique", "USA", "United States", "Japan", "Japon",
+  "Croatia", "Croatie", "Turkey", "Turquie", "Switzerland", "Suisse",
+  "Denmark", "Danemark", "Austria", "Autriche", "Poland", "Pologne",
+  "Sweden", "Suède", "Norway", "Norvège", "Czech Republic", "République Tchèque",
+  "Scotland", "Wales", "Ukraine", "Serbia", "Serbie", "Greece", "Grèce",
+  "Romania", "Roumanie", "Hungary", "Hongrie", "Slovakia", "Slovaquie",
+  "Ireland", "Irlande", "Albania", "Albanie", "Bosnia", "Bosnie",
+  "Saudi Arabia", "Arabie Saoudite", "Korea Republic", "Corée du Sud",
+];
 
 function generateSlug(home: string, away: string, date: string): string {
   const clean = (s: string) =>
@@ -96,6 +117,17 @@ export async function GET(request: Request) {
               awayTeamName.includes(kw)
           );
           if (isYouth) continue;
+
+          // Pour les matchs amicaux et qualifs, filtrer par pays d'intérêt
+          const FRIENDLY_LEAGUE_IDS = [10, 32, 34, 29]; // Amicaux, Qualifs Europe, Amérique du Sud, Afrique
+          if (FRIENDLY_LEAGUE_IDS.includes(leagueId)) {
+            const isRelevant = RELEVANT_COUNTRIES.some(
+              (country) =>
+                homeTeamName.toLowerCase().includes(country.toLowerCase()) ||
+                awayTeamName.toLowerCase().includes(country.toLowerCase())
+            );
+            if (!isRelevant) continue;
+          }
 
           const homeTeam = match.teams.home;
           const awayTeam = match.teams.away;
