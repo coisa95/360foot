@@ -50,6 +50,7 @@ export async function GET(request: Request) {
     ).slice(0, 3); // Limit to 3 per execution to avoid Vercel timeout
 
     let articlesGenerated = 0;
+    const errors: string[] = [];
 
     for (const match of matchesWithoutArticles) {
       try {
@@ -136,7 +137,9 @@ export async function GET(request: Request) {
           articlesGenerated++;
         }
       } catch (err) {
-        console.error(`Error generating article for match ${match.id}:`, err);
+        const errMsg = `Match ${match.id}: ${String(err)}`;
+        console.error(errMsg);
+        errors.push(errMsg);
       }
     }
 
@@ -144,6 +147,7 @@ export async function GET(request: Request) {
       success: true,
       articles_generated: articlesGenerated,
       matches_processed: matchesWithoutArticles.length,
+      errors: errors.length > 0 ? errors : undefined,
     });
   } catch (error) {
     console.error("Error in generate-articles cron:", error);
