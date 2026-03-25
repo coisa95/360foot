@@ -46,8 +46,45 @@ async function fetchTransfers(teamId: number): Promise<TransferEntry[]> {
   return data.response || [];
 }
 
-// Team IDs to monitor (expand as needed)
-const MONITORED_TEAM_IDS: number[] = [];
+// African team IDs to monitor for transfers
+const MONITORED_TEAM_IDS: number[] = [
+  // Ligue 1 Côte d'Ivoire
+  4512, // ASEC Mimosas
+  4521, // San-Pédro
+  4525, // Stade d'Abidjan
+  4520, // SOA
+  4519, // Racing d'Abidjan
+  // Ligue Pro Sénégal
+  5289, // Jaraaf
+  5296, // Teungueth
+  5285, // Casa Sport
+  5288, // Génération Foot
+  // Elite One Cameroun
+  5401, // Cotonsport
+  5560, // Canon Yaoundé
+  5413, // Union Douala
+  // Grands clubs européens (joueurs africains)
+  85,   // PSG
+  541,  // Real Madrid
+  529,  // Barcelona
+  33,   // Manchester United
+  40,   // Liverpool
+  42,   // Arsenal
+  50,   // Manchester City
+  489,  // AC Milan
+  496,  // Juventus
+  157,  // Bayern Munich
+  80,   // Lyon
+  81,   // Marseille
+  79,   // Lille
+  94,   // Villarreal
+  530,  // Atletico Madrid
+  47,   // Tottenham
+  49,   // Chelsea
+  165,  // Borussia Dortmund
+  492,  // Napoli
+  487,  // Lazio
+];
 
 export async function GET(request: Request) {
   try {
@@ -59,8 +96,23 @@ export async function GET(request: Request) {
     const supabase = createClient();
     let transfersUpserted = 0;
     let articlesGenerated = 0;
+    const errors: string[] = [];
 
-    for (const teamId of MONITORED_TEAM_IDS) {
+    const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+    // Rotate through teams: process 8 per run based on current hour
+    const batchSize = 8;
+    const currentHour = new Date().getUTCHours();
+    const batchIndex = Math.floor(currentHour / 6) % Math.ceil(MONITORED_TEAM_IDS.length / batchSize);
+    const startIdx = batchIndex * batchSize;
+    const batch = MONITORED_TEAM_IDS.slice(startIdx, startIdx + batchSize);
+
+    for (let i = 0; i < batch.length; i++) {
+      const teamId = batch[i];
+
+      // Respect rate limit: 10 requests/min → wait 7s between calls
+      if (i > 0) await delay(7000);
+
       try {
         const transferData = await fetchTransfers(teamId);
 
@@ -150,6 +202,8 @@ export async function GET(request: Request) {
       success: true,
       transfers_upserted: transfersUpserted,
       articles_generated: articlesGenerated,
+      batch: `${startIdx}-${startIdx + batch.length} of ${MONITORED_TEAM_IDS.length}`,
+      errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
     });
   } catch (error) {
     console.error("Error in scrape-transfers cron:", error);

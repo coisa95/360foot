@@ -4,18 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { AffiliateBanner } from "@/components/affiliate-banner";
 import { Metadata } from "next";
-import Link from "next/link";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Transferts - Dernieres infos mercato football africain - 360 Foot",
+  title: "Transferts - Dernières infos mercato football africain - 360 Foot",
   description:
-    "Suivez tous les transferts du football africain : arrivees, departs, prets et montants des transferts des joueurs africains.",
+    "Suivez tous les transferts du football africain : arrivées, départs, prêts et montants des transferts des joueurs africains.",
   openGraph: {
-    title: "Transferts - Dernieres infos mercato football africain - 360 Foot",
+    title: "Transferts - Dernières infos mercato football africain - 360 Foot",
     description:
-      "Suivez tous les transferts du football africain : arrivees, departs, prets et montants des transferts des joueurs africains.",
+      "Suivez tous les transferts du football africain : arrivées, départs, prêts et montants des transferts des joueurs africains.",
     type: "website",
     url: "https://360-foot.com/transferts",
   },
@@ -24,13 +23,20 @@ export const metadata: Metadata = {
 export default async function TransfersPage() {
   const supabase = createClient();
 
+  // Get transfers (simple columns, no joins)
   const { data: transfers } = await supabase
     .from("transfers")
-    .select(
-      "*, player:players!player_id(*), from_team:teams!from_team_id(*), to_team:teams!to_team_id(*)"
-    )
+    .select("*")
     .order("date", { ascending: false })
     .limit(50);
+
+  // Also get transfer articles
+  const { data: transferArticles } = await supabase
+    .from("articles")
+    .select("id, title, slug, excerpt, created_at")
+    .eq("type", "transfer")
+    .order("created_at", { ascending: false })
+    .limit(10);
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
@@ -38,19 +44,21 @@ export default async function TransfersPage() {
   ];
 
   const typeLabels: Record<string, string> = {
+    "N/A": "Transfert",
+    Free: "Libre",
+    Loan: "Prêt",
     transfer: "Transfert",
-    loan: "Pret",
-    loan_return: "Retour de pret",
+    loan: "Prêt",
     free: "Libre",
-    retirement: "Retraite",
   };
 
   const typeBadgeColor: Record<string, string> = {
+    "N/A": "bg-lime-500/20 text-lime-400 border-lime-500/30",
+    Free: "bg-gray-500/20 text-gray-400 border-gray-500/30",
+    Loan: "bg-blue-500/20 text-blue-400 border-blue-500/30",
     transfer: "bg-lime-500/20 text-lime-400 border-lime-500/30",
     loan: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-    loan_return: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
     free: "bg-gray-500/20 text-gray-400 border-gray-500/30",
-    retirement: "bg-red-500/20 text-red-400 border-red-500/30",
   };
 
   return (
@@ -61,95 +69,119 @@ export default async function TransfersPage() {
         <div className="mt-6">
           <h1 className="text-3xl font-bold text-lime-400">Transferts</h1>
           <p className="text-gray-400 mt-1">
-            Derniers mouvements de joueurs dans le football africain
+            Derniers mouvements de joueurs dans le football africain et européen
           </p>
         </div>
 
-        <AffiliateBanner bookmakerName="1xBet" affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573" bonus="Bonus de bienvenue jusqu'à 200 000 FCFA" />
+        <AffiliateBanner
+          bookmakerName="1xBet"
+          affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573"
+          bonus="Bonus de bienvenue jusqu'à 200 000 FCFA"
+        />
+
+        {/* Articles transferts */}
+        {transferArticles && transferArticles.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-xl font-bold text-white mb-4">
+              Analyses transferts
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {transferArticles.map((article) => (
+                <a
+                  key={article.id}
+                  href={`/actu/${article.slug}`}
+                  className="block"
+                >
+                  <Card className="bg-dark-card border-gray-800 p-4 hover:border-lime-500/30 transition-colors h-full">
+                    <h3 className="font-bold text-white hover:text-lime-400 transition-colors">
+                      {article.title}
+                    </h3>
+                    {article.excerpt && (
+                      <p className="text-gray-400 text-sm mt-2 line-clamp-2">
+                        {article.excerpt}
+                      </p>
+                    )}
+                    <p className="text-gray-600 text-xs mt-2">
+                      {new Date(article.created_at).toLocaleDateString("fr-FR", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </Card>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Liste des transferts */}
-        <div className="mt-8 space-y-4">
-          {transfers && transfers.length > 0 ? (
-            transfers.map((transfer) => (
-              <Card
-                key={transfer.id}
-                className="bg-dark-bg border-gray-800 p-4 hover:border-gray-700 transition-colors"
-              >
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      {transfer.player ? (
-                        <Link
-                          href={`/joueur/${transfer.player.slug}`}
-                          className="text-lg font-bold hover:text-lime-400 transition-colors"
-                        >
-                          {transfer.player.name}
-                        </Link>
-                      ) : (
-                        <span className="text-lg font-bold">
-                          {transfer.player_name || "Joueur inconnu"}
+        <div className="mt-8">
+          <h2 className="text-xl font-bold text-white mb-4">
+            Tableau des transferts
+          </h2>
+          <div className="space-y-3">
+            {transfers && transfers.length > 0 ? (
+              transfers.map((transfer) => (
+                <Card
+                  key={transfer.id}
+                  className="bg-dark-card border-gray-800 p-4 hover:border-gray-700 transition-colors"
+                >
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-1">
+                        <span className="text-lg font-bold text-white">
+                          {transfer.player_name}
+                        </span>
+                        {transfer.transfer_type && (
+                          <Badge
+                            className={
+                              typeBadgeColor[transfer.transfer_type] ||
+                              "bg-lime-500/20 text-lime-400 border-lime-500/30"
+                            }
+                          >
+                            {typeLabels[transfer.transfer_type] ||
+                              transfer.transfer_type}
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2 text-sm text-gray-400">
+                        <span>{transfer.from_team || "?"}</span>
+                        <span className="text-lime-400 font-bold">→</span>
+                        <span className="text-white">
+                          {transfer.to_team || "?"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      {transfer.fee && transfer.fee !== "Non communiqué" && (
+                        <span className="text-lime-400 font-bold text-sm">
+                          {transfer.fee}
                         </span>
                       )}
-                      {transfer.type && (
-                        <Badge
-                          className={
-                            typeBadgeColor[transfer.type] || typeBadgeColor.transfer
-                          }
-                        >
-                          {typeLabels[transfer.type] || transfer.type}
-                        </Badge>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-gray-400">
-                      {transfer.from_team ? (
-                        <Link
-                          href={`/equipe/${transfer.from_team.slug}`}
-                          className="hover:text-white transition-colors"
-                        >
-                          {transfer.from_team.name}
-                        </Link>
-                      ) : (
-                        <span>-</span>
-                      )}
-                      <span className="text-lime-400">→</span>
-                      {transfer.to_team ? (
-                        <Link
-                          href={`/equipe/${transfer.to_team.slug}`}
-                          className="hover:text-white transition-colors"
-                        >
-                          {transfer.to_team.name}
-                        </Link>
-                      ) : (
-                        <span>-</span>
+                      {transfer.date && (
+                        <span className="text-gray-500 text-sm whitespace-nowrap">
+                          {new Date(transfer.date).toLocaleDateString("fr-FR", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </span>
                       )}
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-4">
-                    {transfer.fee && (
-                      <span className="text-lime-400 font-bold">
-                        {transfer.fee}
-                      </span>
-                    )}
-                    {transfer.date && (
-                      <span className="text-gray-500 text-sm">
-                        {new Date(transfer.date).toLocaleDateString("fr-FR", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    )}
-                  </div>
-                </div>
+                </Card>
+              ))
+            ) : (
+              <Card className="bg-dark-card border-gray-800 p-8 text-center">
+                <p className="text-gray-400">
+                  Les transferts sont mis à jour automatiquement. Revenez bientôt !
+                </p>
               </Card>
-            ))
-          ) : (
-            <Card className="bg-dark-bg border-gray-800 p-8 text-center">
-              <p className="text-gray-400">Aucun transfert disponible pour le moment.</p>
-            </Card>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </main>
