@@ -35,9 +35,14 @@ export async function GET(request: Request) {
 
     const supabase = createClient();
 
-    // For free API plan (season 2024 only), get recent matches
-    const fromStr = "2024-12-01";
-    const toStr = "2024-12-31";
+    // Get matches from the last 7 days + next 7 days
+    const now = new Date();
+    const from = new Date(now);
+    from.setDate(from.getDate() - 7);
+    const to = new Date(now);
+    to.setDate(to.getDate() + 7);
+    const fromStr = from.toISOString().split("T")[0];
+    const toStr = to.toISOString().split("T")[0];
 
     // Fetch all league UUID mappings from DB
     const { data: leagues } = await supabase

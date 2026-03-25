@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
-import { getStandings as fetchStandings } from "@/lib/api-football";
+import { getStandings as fetchStandings, getCurrentSeason } from "@/lib/api-football";
 
 const LEAGUE_IDS = [
   373, // Ligue 1 CI
@@ -26,9 +26,6 @@ export async function GET(request: Request) {
 
     const supabase = createClient();
 
-    // Free API plan: season 2024 only
-    const currentSeason = 2024;
-
     // Get league UUID mappings
     const { data: leagues } = await supabase
       .from("leagues")
@@ -50,7 +47,8 @@ export async function GET(request: Request) {
       // Respect rate limit: 10 requests/min → wait 7s between calls
       if (i > 0) await delay(7000);
       try {
-        const standingsResponse = await fetchStandings(leagueId, currentSeason);
+        const leagueSeason = getCurrentSeason(leagueId);
+        const standingsResponse = await fetchStandings(leagueId, leagueSeason);
 
         if (!standingsResponse || !standingsResponse.length) continue;
 
@@ -90,11 +88,11 @@ export async function GET(request: Request) {
           .from("standings")
           .delete()
           .eq("league_id", leagueUUID)
-          .eq("season", String(currentSeason));
+          .eq("season", String(leagueSeason));
 
         const { error } = await supabase.from("standings").insert({
           league_id: leagueUUID,
-          season: String(currentSeason),
+          season: String(leagueSeason),
           data_json: standingsData,
           updated_at: new Date().toISOString(),
         });
@@ -112,7 +110,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       leagues_updated: leaguesUpdated,
-      season: currentSeason,
+      season: "2025-2026",
       errors: errors.length > 0 ? errors.slice(0, 10) : undefined,
     });
   } catch (error) {

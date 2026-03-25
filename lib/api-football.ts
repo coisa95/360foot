@@ -154,12 +154,34 @@ async function fetchApi<T>(endpoint: string, params: Record<string, string>): Pr
 }
 
 /**
- * Get the current season year for API-Football.
- * Free plan supports seasons 2022-2024 only.
- * We use 2024 as the most recent available season.
+ * Map of league ID → current season year.
+ * Updated based on API-Football data (March 2026).
  */
-function getCurrentSeason(): number {
-  return 2024;
+const LEAGUE_SEASONS: Record<number, number> = {
+  373: 2025, // Ligue 1 CI
+  384: 2025, // State Cup SN
+  406: 2025, // Elite One CM
+  394: 2025, // Super Liga Mali
+  398: 2026, // Premier League BF (Fasofoot)
+  61:  2025, // Ligue 1 France (2025-2026)
+  39:  2025, // Premier League (2025-2026)
+  140: 2025, // La Liga (2025-2026)
+  135: 2025, // Serie A (2025-2026)
+  2:   2025, // Champions League
+  3:   2025, // Europa League
+  6:   2025, // CAN
+};
+
+/**
+ * Get the current season for a given league.
+ */
+export function getCurrentSeason(leagueId?: number): number {
+  if (leagueId && LEAGUE_SEASONS[leagueId]) {
+    return LEAGUE_SEASONS[leagueId];
+  }
+  // Default: if month >= August, use current year, otherwise use previous year
+  const now = new Date();
+  return now.getMonth() >= 7 ? now.getFullYear() : now.getFullYear() - 1;
 }
 
 /**
@@ -170,7 +192,7 @@ function getCurrentSeason(): number {
 export async function getMatches(date: string, leagueId?: number): Promise<MatchFixture[]> {
   const params: Record<string, string> = {
     date,
-    season: String(getCurrentSeason()),
+    season: String(getCurrentSeason(leagueId)),
   };
   if (leagueId) {
     params.league = String(leagueId);
@@ -187,7 +209,7 @@ export async function getMatches(date: string, leagueId?: number): Promise<Match
 export async function getMatchesByRange(from: string, to: string, leagueId: number): Promise<MatchFixture[]> {
   return fetchApi<MatchFixture[]>("/fixtures", {
     league: String(leagueId),
-    season: String(getCurrentSeason()),
+    season: String(getCurrentSeason(leagueId)),
     from,
     to,
   });
