@@ -8,7 +8,7 @@ const NAV_LINKS = [
   { href: "/actu", label: "Actualités" },
   { href: "/resultats", label: "Résultats" },
   { href: "/transferts", label: "Transferts" },
-  { href: "/bookmakers", label: "Paris" },
+  { href: "/bookmakers", label: "Bons Plans" },
 ];
 
 const LEAGUES = [
