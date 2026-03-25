@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase";
 import { addInternalLinks } from "@/lib/internal-links";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { RelatedArticles } from "@/components/related-articles";
-import { AffiliateButton } from "@/components/affiliate-button";
+import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
@@ -187,12 +187,7 @@ export default async function ArticlePage({ params }: Props) {
 
           {/* Bouton affiliation contextuel */}
           <div className="mt-8">
-            <AffiliateButton
-              bookmakerName="1xBet"
-              affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573"
-              bonus="Bonus de bienvenue jusqu'à 200 000 FCFA"
-              articleId={article.id}
-            />
+            <AffiliateTrio />
           </div>
 
           <Separator className="bg-gray-800 my-8" />

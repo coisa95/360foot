@@ -4,7 +4,7 @@ import { ArticleCard } from "@/components/article-card";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { AffiliateButton } from "@/components/affiliate-button";
+import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -250,7 +250,7 @@ export default async function MatchPage({ params }: Props) {
         )}
 
         <div className="mt-8">
-          <AffiliateButton bookmakerName="1xBet" affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573" bonus="Bonus de bienvenue jusqu'à 200 000 FCFA" />
+          <AffiliateTrio />
         </div>
       </div>
     </main>

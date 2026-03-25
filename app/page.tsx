@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase";
 import { ArticleCard } from "@/components/article-card";
 import { MatchCard } from "@/components/match-card";
 import { StandingsTable } from "@/components/standings-table";
-import { AffiliateBanner } from "@/components/affiliate-banner";
+import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Separator } from "@/components/ui/separator";
 
 export const revalidate = 300;
@@ -144,11 +144,7 @@ export default async function HomePage() {
 
         {/* Sidebar */}
         <aside className="space-y-6">
-          <AffiliateBanner
-            bookmakerName="1xBet"
-            affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573"
-            bonus="Bonus de bienvenue jusqu'à 200 000 FCFA"
-          />
+          <AffiliateTrio />
 
           {standings.length > 0
             ? standings.map((standing: Record<string, unknown>) => {

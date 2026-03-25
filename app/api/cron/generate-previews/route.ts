@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { generateArticle } from "@/lib/claude";
+import { getArticleImages, injectImagesIntoHTML } from "@/lib/images";
 import {
   systemPrompt as PREVIEW_SYSTEM_PROMPT,
   buildUserPrompt as buildPreviewUserPrompt,
@@ -90,16 +91,37 @@ export async function GET(request: Request) {
         const parsed = JSON.parse(cleanData);
         const slug = generateSlug(parsed.title || "preview");
 
+        // Fetch and inject images
+        let contentWithImages = parsed.content;
+        let ogImageUrl: string | null = null;
+        try {
+          const images = await getArticleImages({
+            title: parsed.title,
+            teams: [
+              (homeTeam?.name as string) || "",
+              (awayTeam?.name as string) || "",
+            ],
+            league: (league?.name as string) || "",
+            type: "preview",
+            tags: parsed.tags || [],
+          });
+          contentWithImages = injectImagesIntoHTML(parsed.content, images);
+          ogImageUrl = images[0]?.url || null;
+        } catch (imgErr) {
+          console.error("Image injection failed:", imgErr);
+        }
+
         const { error: insertError } = await supabase.from("articles").insert({
           title: parsed.title,
           slug,
           excerpt: parsed.excerpt,
-          content: parsed.content,
+          content: contentWithImages,
           type: "preview",
           match_id: match.id,
           league_id: match.league_id,
           seo_title: parsed.seo_title || parsed.title,
           seo_description: parsed.seo_description || parsed.excerpt,
+          og_image_url: ogImageUrl,
           tags: parsed.tags || [],
           published_at: new Date().toISOString(),
         });

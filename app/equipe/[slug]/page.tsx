@@ -3,7 +3,7 @@ import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
 import { ArticleCard } from "@/components/article-card";
 import { PlayerCard } from "@/components/player-card";
-import { AffiliateBanner } from "@/components/affiliate-banner";
+import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -293,13 +293,9 @@ export default async function TeamPage({ params }: Props) {
           </div>
         )}
 
-        {/* Banniere affiliation */}
+        {/* Partenaires */}
         <div className="mt-12">
-          <AffiliateBanner
-            bookmakerName="1xBet"
-            affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573"
-            bonus="Bonus de bienvenue jusqu'a 200 000 FCFA"
-          />
+          <AffiliateTrio />
         </div>
       </div>
     </main>

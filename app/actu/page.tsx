@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
-import { AffiliateBanner } from "@/components/affiliate-banner";
+import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
@@ -326,13 +326,9 @@ export default async function ActuPage({ searchParams }: Props) {
           </p>
         )}
 
-        {/* Banniere affiliation */}
+        {/* Partenaires */}
         <div className="mt-12">
-          <AffiliateBanner
-            bookmakerName="1xBet"
-            affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573"
-            bonus="Bonus de bienvenue jusqu'a 200 000 FCFA"
-          />
+          <AffiliateTrio />
         </div>
       </div>
     </main>

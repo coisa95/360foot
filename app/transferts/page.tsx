@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { AffiliateBanner } from "@/components/affiliate-banner";
+import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 
 export const revalidate = 300;
@@ -73,11 +73,7 @@ export default async function TransfersPage() {
           </p>
         </div>
 
-        <AffiliateBanner
-          bookmakerName="1xBet"
-          affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573"
-          bonus="Bonus de bienvenue jusqu'à 200 000 FCFA"
-        />
+        <AffiliateTrio />
 
         {/* Articles transferts */}
         {transferArticles && transferArticles.length > 0 && (

@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
 import { Card } from "@/components/ui/card";
-import { AffiliateBanner } from "@/components/affiliate-banner";
+import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -119,7 +119,7 @@ export default async function NationalTeamPage({ params }: Props) {
           </Card>
         )}
 
-        <AffiliateBanner bookmakerName="1xBet" affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573" bonus="Bonus de bienvenue jusqu'à 200 000 FCFA" />
+        <AffiliateTrio />
 
         {/* Derniers matchs */}
         {recentMatches && recentMatches.length > 0 ? (
