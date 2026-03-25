@@ -114,7 +114,12 @@ export async function GET(request: Request) {
           continue;
         }
 
-        const parsed = typeof articleData === "string" ? JSON.parse(articleData) : articleData;
+        let cleanData = articleData;
+        if (typeof cleanData === "string") {
+          // Strip markdown code blocks if present
+          cleanData = cleanData.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+        }
+        const parsed = JSON.parse(cleanData);
         const slug = generateSlug(parsed.title || "article");
 
         const { error: insertError } = await supabase.from("articles").insert({
