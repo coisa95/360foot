@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
+import { ArticleCard } from "@/components/article-card";
 import { PlayerCard } from "@/components/player-card";
+import { AffiliateBanner } from "@/components/affiliate-banner";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -54,11 +56,24 @@ export default async function TeamPage({ params }: Props) {
 
   if (!team) notFound();
 
+  const now = new Date().toISOString();
+
+  // Fetch recent matches (past)
   const { data: recentMatches } = await supabase
     .from("matches")
     .select("*, home_team:teams!home_team_id(*), away_team:teams!away_team_id(*), league:leagues!league_id(*)")
     .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
+    .lte("date", now)
     .order("date", { ascending: false })
+    .limit(5);
+
+  // Fetch upcoming matches (future)
+  const { data: upcomingMatches } = await supabase
+    .from("matches")
+    .select("*, home_team:teams!home_team_id(*), away_team:teams!away_team_id(*), league:leagues!league_id(*)")
+    .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
+    .gt("date", now)
+    .order("date", { ascending: true })
     .limit(5);
 
   const { data: standings } = await supabase
@@ -73,6 +88,15 @@ export default async function TeamPage({ params }: Props) {
     .select("*")
     .eq("team_id", team.id)
     .order("position", { ascending: true });
+
+  // Fetch articles related to this team (title or content mentions team name)
+  const { data: teamArticles } = await supabase
+    .from("articles")
+    .select("*, league:leagues!league_id(name)")
+    .eq("status", "published")
+    .or(`title.ilike.%${team.name}%,content.ilike.%${team.name}%`)
+    .order("created_at", { ascending: false })
+    .limit(6);
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
@@ -97,6 +121,31 @@ export default async function TeamPage({ params }: Props) {
       : undefined,
   };
 
+  function renderMatchList(matches: Record<string, unknown>[]) {
+    return (
+      <div className="space-y-3">
+        {matches.map((match: Record<string, unknown>) => {
+          const homeTeam = match.home_team as Record<string, unknown> | null;
+          const awayTeam = match.away_team as Record<string, unknown> | null;
+          const league = match.league as Record<string, unknown> | null;
+          return (
+            <MatchCard
+              key={match.id as string}
+              slug={match.slug as string}
+              homeTeam={(homeTeam?.name as string) || ""}
+              awayTeam={(awayTeam?.name as string) || ""}
+              homeScore={match.score_home as number | null}
+              awayScore={match.score_away as number | null}
+              status={match.status as string}
+              date={match.date as string}
+              leagueName={(league?.name as string) || ""}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-dark-bg text-white">
       <script
@@ -110,18 +159,28 @@ export default async function TeamPage({ params }: Props) {
         {/* Informations de l'equipe */}
         <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
           <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-lime-400">{team.name}</h1>
-              <div className="flex gap-4 mt-3 text-gray-400">
-                {team.country && (
-                  <span>Pays : {team.country}</span>
-                )}
-                {team.coach && (
-                  <span>Entraineur : {team.coach}</span>
-                )}
-                {team.venue && (
-                  <span>Stade : {team.venue}</span>
-                )}
+            <div className="flex items-center gap-4">
+              {team.logo_url && (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={team.logo_url}
+                  alt={`Logo ${team.name}`}
+                  className="h-16 w-16 object-contain"
+                />
+              )}
+              <div>
+                <h1 className="text-3xl font-bold text-lime-400">{team.name}</h1>
+                <div className="flex flex-wrap gap-4 mt-3 text-gray-400">
+                  {team.country && (
+                    <span>Pays : {team.country}</span>
+                  )}
+                  {team.coach && (
+                    <span>Entraineur : {team.coach}</span>
+                  )}
+                  {team.venue && (
+                    <span>Stade : {team.venue}</span>
+                  )}
+                </div>
               </div>
             </div>
             <Link href={`/ligue/${team.league.slug}`}>
@@ -173,26 +232,40 @@ export default async function TeamPage({ params }: Props) {
           </Card>
         )}
 
+        {/* Matchs a venir */}
+        {upcomingMatches && upcomingMatches.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-lg font-bold text-lime-400 mb-4">Matchs a venir</h2>
+            {renderMatchList(upcomingMatches)}
+          </div>
+        )}
+
         {/* Derniers matchs */}
         {recentMatches && recentMatches.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-lg font-bold text-lime-400 mb-4">Derniers matchs</h2>
-            <div className="space-y-3">
-              {recentMatches.map((match: Record<string, unknown>) => {
-                const homeTeam = match.home_team as Record<string, unknown> | null;
-                const awayTeam = match.away_team as Record<string, unknown> | null;
-                const league = match.league as Record<string, unknown> | null;
+            <h2 className="text-lg font-bold text-lime-400 mb-4">Derniers resultats</h2>
+            {renderMatchList(recentMatches)}
+          </div>
+        )}
+
+        {/* Articles lies a l'equipe */}
+        {teamArticles && teamArticles.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-lg font-bold text-lime-400 mb-4">
+              Actualites {team.name}
+            </h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {teamArticles.map((article: Record<string, unknown>) => {
+                const league = article.league as Record<string, unknown> | null;
                 return (
-                  <MatchCard
-                    key={match.id as string}
-                    slug={match.slug as string}
-                    homeTeam={(homeTeam?.name as string) || ""}
-                    awayTeam={(awayTeam?.name as string) || ""}
-                    homeScore={match.score_home as number | null}
-                    awayScore={match.score_away as number | null}
-                    status={match.status as string}
-                    date={match.date as string}
-                    leagueName={(league?.name as string) || ""}
+                  <ArticleCard
+                    key={article.id as string}
+                    slug={article.slug as string}
+                    title={article.title as string}
+                    excerpt={(article.excerpt as string) || ""}
+                    type={(article.type as string) || "news"}
+                    publishedAt={(article.created_at as string) || ""}
+                    leagueName={(league?.name as string) || undefined}
                   />
                 );
               })}
@@ -219,6 +292,15 @@ export default async function TeamPage({ params }: Props) {
             </div>
           </div>
         )}
+
+        {/* Banniere affiliation */}
+        <div className="mt-12">
+          <AffiliateBanner
+            bookmakerName="1xBet"
+            affiliateUrl="https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573"
+            bonus="Bonus de bienvenue jusqu'a 200 000 FCFA"
+          />
+        </div>
       </div>
     </main>
   );
