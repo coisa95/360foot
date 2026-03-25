@@ -234,4 +234,4 @@ export function injectImagesIntoHTML(
   return result;
 }
 
-export { ArticleImageInput } from "./image-queries";
+export type { ArticleImageInput } from "./image-queries";
