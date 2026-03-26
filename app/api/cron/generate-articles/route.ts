@@ -40,11 +40,14 @@ export async function GET(request: Request) {
       (existingArticles || []).map((a: Record<string, unknown>) => a.match_id)
     );
 
-    // Find finished matches
+    // Find finished matches (only from the last 3 days to avoid stale articles)
+    const threeDaysAgo = new Date();
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
     const { data: finishedMatches } = await supabase
       .from("matches")
       .select("*, home_team:teams!home_team_id(name), away_team:teams!away_team_id(name), league:leagues(name)")
-      .eq("status", "FT");
+      .eq("status", "FT")
+      .gte("date", threeDaysAgo.toISOString());
 
     const matchesWithoutArticles = (finishedMatches || []).filter(
       (m: Record<string, unknown>) => !existingMatchIds.has(m.id)

@@ -29,8 +29,16 @@ const LEAGUE_IDS = [
   10,  // Matchs amicaux internationaux
 ];
 
-// Filtrer les compétitions jeunes (U23, U20, U19, U18, U17)
-const YOUTH_KEYWORDS = ["U23", "U21", "U20", "U19", "U18", "U17", "Youth", "Junior", "Espoirs", "Olympic", "Women", "Féminin"];
+// Filtrer les compétitions jeunes et non pertinentes
+const YOUTH_KEYWORDS = ["U23", "U21", "U20", "U19", "U18", "U17", "Youth", "Junior", "Espoirs", "Olympic", "Women", "Féminin", "u23", "u21", "u20", "u19", "u18", "u17", "women", "féminin"];
+
+// Clubs/ligues à exclure (faux positifs API-Football)
+const EXCLUDED_TEAM_KEYWORDS = [
+  "Hapoel", "Maccabi", "Beitar", "Bnei", "Ironi", "Shimshon",   // Israël
+  "Persepolis", "Esteghlal", "Sepahan",                          // Iran
+  "Mohun Bagan", "Kerala", "Chennaiyin",                         // Inde
+  "Buriram", "Muangthong",                                       // Thaïlande
+];
 
 // Pays/équipes d'intérêt pour les matchs amicaux et qualifs
 const RELEVANT_COUNTRIES = [
@@ -113,13 +121,21 @@ export async function GET(request: Request) {
           const leagueName = match.league?.name || "";
           const homeTeamName = match.teams?.home?.name || "";
           const awayTeamName = match.teams?.away?.name || "";
+          const fullText = `${leagueName} ${homeTeamName} ${awayTeamName}`;
+          const fullTextLower = fullText.toLowerCase();
           const isYouth = YOUTH_KEYWORDS.some(
-            (kw) =>
-              leagueName.includes(kw) ||
-              homeTeamName.includes(kw) ||
-              awayTeamName.includes(kw)
+            (kw) => fullTextLower.includes(kw.toLowerCase())
           );
           if (isYouth) continue;
+
+          // Filtrer les équipes hors périmètre (faux positifs API-Football)
+          const isExcluded = EXCLUDED_TEAM_KEYWORDS.some(
+            (kw) => homeTeamName.includes(kw) || awayTeamName.includes(kw)
+          );
+          if (isExcluded) {
+            console.log(`Match exclu (hors périmètre): ${homeTeamName} vs ${awayTeamName}`);
+            continue;
+          }
 
           // Pour les matchs amicaux et qualifs, filtrer par pays d'intérêt
           const FRIENDLY_LEAGUE_IDS = [10, 32, 34, 29]; // Amicaux, Qualifs Europe, Amérique du Sud, Afrique
