@@ -1,30 +1,14 @@
 import { createClient } from "@/lib/supabase";
 import { ArticleCard } from "@/components/article-card";
+import { ArticleCarousel } from "@/components/article-carousel";
 import { MatchCard } from "@/components/match-card";
 import { StandingsTable } from "@/components/standings-table";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Separator } from "@/components/ui/separator";
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
 import Link from "next/link";
 
 export const revalidate = 300;
 
-const TYPE_LABELS: Record<string, string> = {
-  result: "Résultat",
-  preview: "Avant-match",
-  transfer: "Transfert",
-  recap: "Récap",
-  player_profile: "Joueur",
-};
-
-const TYPE_COLORS: Record<string, string> = {
-  result: "bg-blue-500/20 text-blue-400",
-  preview: "bg-orange-500/20 text-orange-400",
-  transfer: "bg-purple-500/20 text-purple-400",
-  recap: "bg-emerald-500/20 text-emerald-400",
-  player_profile: "bg-cyan-500/20 text-cyan-400",
-};
 
 async function getLatestArticles() {
   try {
@@ -81,9 +65,7 @@ export default async function HomePage() {
     getStandings(),
   ]);
 
-  const featuredArticle = articles.length > 0 ? articles[0] : null;
-  const secondaryArticles = articles.slice(1, 4);
-  const remainingArticles = articles.slice(4);
+  const remainingArticles = articles.slice(6);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -100,101 +82,23 @@ export default async function HomePage() {
         </p>
       </section>
 
-      {/* SECTION 1: Articles en vedette */}
-      {featuredArticle && (
+      {/* SECTION 1: Articles en vedette — Carousel */}
+      {articles.length > 0 && (
         <section className="mb-8">
-          {/* Article principal - grande carte */}
-          <Link href={`/actu/${(featuredArticle as Record<string, unknown>).slug}`} className="group block mb-4">
-            <Card className="overflow-hidden rounded-xl border border-dark-border/50 bg-dark-card/80 shadow-xl shadow-black/20 backdrop-blur-sm transition-all duration-300 hover:border-lime-500/20 hover:shadow-2xl hover:shadow-lime-500/5 hover:-translate-y-0.5">
-              <div className="grid md:grid-cols-2">
-                <div className="relative aspect-video md:aspect-auto md:min-h-[280px]">
-                  <Image
-                    src={(featuredArticle as Record<string, unknown>).og_image_url as string || `/api/og?title=${encodeURIComponent((featuredArticle as Record<string, unknown>).title as string)}&type=${(featuredArticle as Record<string, unknown>).type || "result"}`}
-                    alt={(featuredArticle as Record<string, unknown>).title as string}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-                <div className="flex flex-col justify-center p-6">
-                  <div className="mb-3 flex flex-wrap items-center gap-2">
-                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${TYPE_COLORS[(featuredArticle as Record<string, unknown>).type as string] || "bg-lime-500/10 text-lime-400"}`}>
-                      {TYPE_LABELS[(featuredArticle as Record<string, unknown>).type as string] || "Actu"}
-                    </span>
-                    {(() => {
-                      const league = (featuredArticle as Record<string, unknown>).league as Record<string, unknown> | null;
-                      return league?.name ? (
-                        <span className="text-xs text-gray-500">{league.name as string}</span>
-                      ) : null;
-                    })()}
-                  </div>
-                  <h2 className="mb-3 text-xl font-bold leading-tight text-white transition-colors group-hover:text-lime-400 md:text-2xl">
-                    {(featuredArticle as Record<string, unknown>).title as string}
-                  </h2>
-                  {String((featuredArticle as Record<string, unknown>).excerpt || "") !== "" && (
-                    <p className="mb-4 line-clamp-3 text-gray-400 text-sm">
-                      {String((featuredArticle as Record<string, unknown>).excerpt)}
-                    </p>
-                  )}
-                  <time className="text-xs text-gray-500" dateTime={(featuredArticle as Record<string, unknown>).published_at as string}>
-                    {new Date((featuredArticle as Record<string, unknown>).published_at as string).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </time>
-                </div>
-              </div>
-            </Card>
-          </Link>
-
-          {/* 3 articles secondaires */}
-          {secondaryArticles.length > 0 && (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {secondaryArticles.map((article: Record<string, unknown>) => {
-                const league = article.league as Record<string, unknown> | null;
-                return (
-                  <Link key={article.slug as string} href={`/actu/${article.slug}`} className="group">
-                    <Card className="h-full overflow-hidden border-dark-border bg-dark-card transition-all hover:border-lime-500/30 hover:bg-dark-surface">
-                      <div className="relative aspect-video">
-                        <Image
-                          src={article.og_image_url as string || `/api/og?title=${encodeURIComponent(article.title as string)}&type=${article.type || "result"}`}
-                          alt={article.title as string}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 640px) 100vw, 33vw"
-                        />
-                        <div className="absolute left-2 top-2">
-                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${TYPE_COLORS[article.type as string] || "bg-lime-500/10 text-lime-400"}`}>
-                            {TYPE_LABELS[article.type as string] || "Actu"}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        {String(league?.name || "") !== "" && (
-                          <span className="text-xs text-gray-500">{String(league?.name)}</span>
-                        )}
-                        <h3 className="mt-1 line-clamp-2 text-sm font-semibold leading-tight text-white transition-colors group-hover:text-lime-400">
-                          {article.title as string}
-                        </h3>
-                        <time className="mt-2 block text-[10px] text-gray-500" dateTime={article.published_at as string}>
-                          {new Date(article.published_at as string).toLocaleDateString("fr-FR", {
-                            day: "numeric",
-                            month: "long",
-                          })}
-                        </time>
-                      </div>
-                    </Card>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+          <ArticleCarousel
+            articles={articles.slice(0, 6).map((a: Record<string, unknown>) => ({
+              slug: a.slug as string,
+              title: a.title as string,
+              excerpt: (a.excerpt as string) || "",
+              type: (a.type as string) || "result",
+              published_at: a.published_at as string,
+              og_image_url: a.og_image_url as string | null,
+              league: a.league as { name: string } | null,
+            }))}
+          />
 
           {/* Bouton voir toutes les actus */}
-          <div className="mt-4 text-center">
+          <div className="mt-6 text-center">
             <Link
               href="/actu"
               className="inline-block rounded-xl bg-gradient-to-r from-lime-500/10 to-emerald-500/10 border border-lime-500/20 px-6 py-2.5 text-sm font-semibold text-lime-400 shadow-lg shadow-lime-500/5 transition-all duration-300 hover:from-lime-500/20 hover:to-emerald-500/20 hover:shadow-xl hover:shadow-lime-500/10 hover:-translate-y-0.5"
