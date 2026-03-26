@@ -46,6 +46,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://360-foot.com/classement/${slug}`,
+    },
     openGraph: {
       title,
       description,

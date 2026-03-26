@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: "A propos de 360 Foot - Media football africain propulse par l'IA",
   description:
     "Decouvrez 360 Foot, le media innovant dedie au football africain. Actualites, resultats, transferts et analyses propulses par l'intelligence artificielle.",
+  alternates: {
+    canonical: "https://360-foot.com/a-propos",
+  },
   openGraph: {
     title: "A propos de 360 Foot",
     description:

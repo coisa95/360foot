@@ -31,64 +31,64 @@ const SLIDES = [
 
 export function AffiliateTicker() {
   const [current, setCurrent] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsVisible(false);
-      setTimeout(() => {
-        setCurrent((prev) => (prev + 1) % SLIDES.length);
-        setIsVisible(true);
-      }, 300);
+      setCurrent((prev) => (prev + 1) % SLIDES.length);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
 
-  const slide = SLIDES[current];
-
   return (
     <div className="py-2 px-4 mx-auto max-w-7xl">
-      <a
-        href={slide.url}
-        target="_blank"
-        rel="noopener noreferrer nofollow"
-        className={`
-          block w-full rounded-xl bg-gradient-to-r ${slide.bg}
-          px-4 py-2.5 shadow-lg ${slide.glow}
-          transition-all duration-300 ease-in-out
-          hover:scale-[1.01] hover:shadow-xl
-          ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1"}
-        `}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-lg">{slide.icon}</span>
-            <div>
-              <span className="text-white font-bold text-sm">{slide.name}</span>
-              <span className="text-white/80 text-sm ml-2 hidden sm:inline">— {slide.text}</span>
-              <span className="text-white/80 text-xs ml-2 sm:hidden">{slide.text}</span>
+      <div className="relative h-[72px] sm:h-[56px] rounded-xl overflow-hidden shadow-lg">
+        {/* All slides stacked, opacity controls visibility */}
+        {SLIDES.map((slide, i) => (
+          <a
+            key={i}
+            href={slide.url}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            className={`
+              absolute inset-0 w-full h-full
+              bg-gradient-to-r ${slide.bg}
+              px-4 py-2.5 flex items-center
+              transition-opacity duration-700 ease-in-out
+              ${i === current ? "opacity-100 z-10" : "opacity-0 z-0"}
+            `}
+          >
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-3">
+                <span className="text-lg">{slide.icon}</span>
+                <div>
+                  <span className="text-white font-bold text-sm">{slide.name}</span>
+                  <span className="text-white/80 text-sm ml-2 hidden sm:inline">— {slide.text}</span>
+                  <span className="text-white/80 text-xs ml-2 sm:hidden">{slide.text}</span>
+                </div>
+              </div>
+              <span className="flex items-center gap-1 rounded-lg bg-white/20 backdrop-blur-sm px-3 py-1.5 text-xs font-bold text-white">
+                Profiter
+                <svg className="w-3.5 h-3.5 animate-bounce-x" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
             </div>
-          </div>
-          <span className="flex items-center gap-1 rounded-lg bg-white/20 backdrop-blur-sm px-3 py-1.5 text-xs font-bold text-white transition-all hover:bg-white/30">
-            Profiter
-            <svg className="w-3.5 h-3.5 animate-bounce-x" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </span>
-        </div>
+          </a>
+        ))}
 
-        {/* Dots indicator */}
-        <div className="flex justify-center gap-1.5 mt-1.5">
+        {/* Dots indicator - on top of everything */}
+        <div className="absolute bottom-1.5 left-0 right-0 flex justify-center gap-1.5 z-20">
           {SLIDES.map((_, i) => (
-            <span
+            <button
               key={i}
-              className={`h-1 rounded-full transition-all duration-300 ${
+              onClick={(e) => { e.preventDefault(); setCurrent(i); }}
+              className={`h-1 rounded-full transition-all duration-500 ${
                 i === current ? "w-4 bg-white" : "w-1.5 bg-white/40"
               }`}
             />
           ))}
         </div>
-      </a>
+      </div>
 
       <style jsx>{`
         @keyframes bounce-x {

@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: "Methodologie - Comment 360 Foot produit ses contenus - 360 Foot",
   description:
     "Decouvrez notre methodologie : comment 360 Foot utilise l'intelligence artificielle pour generer des articles de qualite sur le football africain.",
+  alternates: {
+    canonical: "https://360-foot.com/methodologie",
+  },
   openGraph: {
     title: "Methodologie - Comment 360 Foot produit ses contenus",
     description:

@@ -44,18 +44,18 @@ export const metadata: Metadata = {
       "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
     images: [
       {
-        url: "https://360-foot.com/icon-512.png",
-        width: 512,
-        height: 512,
-        alt: "360 Foot — Actu Football Afrique & Europe",
+        url: "https://360-foot.com/og-home.png",
+        width: 1200,
+        height: 630,
+        alt: "360 Foot — Actu Football Afrique & Europe en Direct",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "360 Foot",
-    description: "Toute l'actu football Afrique & Europe en direct.",
-    images: ["https://360-foot.com/icon-512.png"],
+    title: "360 Foot — Actu Football Afrique & Europe en Direct",
+    description: "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
+    images: ["https://360-foot.com/og-home.png"],
   },
   robots: {
     index: true,

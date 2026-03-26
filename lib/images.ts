@@ -116,7 +116,7 @@ export async function getArticleImages(
     const position = images.length === 0 ? "featured" : "mid";
 
     images.push({
-      url: `${best.src.large2x || best.src.large}?auto=compress&cs=tinysrgb&w=1200`,
+      url: (best.src.large2x || best.src.large).split("?")[0] + "?auto=compress&cs=tinysrgb&w=1200",
       alt: generateContextualAlt(input, position),
       credit: `Photo by ${best.photographer} on Pexels`,
       width: 1200,

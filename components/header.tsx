@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 const NAV_LINKS = [
@@ -8,7 +9,7 @@ const NAV_LINKS = [
   { href: "/actu", label: "Actualités" },
   { href: "/resultats", label: "Résultats" },
   { href: "/transferts", label: "Transferts" },
-  { href: "/bookmakers", label: "Bons Plans" },
+  { href: "/bons-plans", label: "Bons Plans" },
 ];
 
 const LEAGUES = [
@@ -48,9 +49,13 @@ export function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-lime-400 to-emerald-500 font-bold text-dark-bg text-lg shadow-lg shadow-lime-500/25 transition-all group-hover:shadow-lime-500/40 group-hover:scale-105">
-            360
-          </div>
+          <Image
+            src="/logo-360.png"
+            alt="360 Foot"
+            width={40}
+            height={40}
+            className="rounded-lg transition-all group-hover:scale-105"
+          />
           <span className="text-xl font-bold">
             <span className="text-white">360</span>{" "}
             <span className="bg-gradient-to-r from-lime-400 to-emerald-400 bg-clip-text text-transparent">Foot</span>

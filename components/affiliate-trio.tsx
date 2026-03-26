@@ -36,7 +36,8 @@ export function AffiliateTrio() {
       <p className="text-xs font-semibold uppercase tracking-wider text-lime-400 text-center">
         Nos partenaires
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      {/* Compact row on mobile, full cards on desktop */}
+      <div className="hidden sm:grid sm:grid-cols-3 gap-3">
         {BOOKMAKERS.map((bk) => (
           <a
             key={bk.slug}
@@ -54,6 +55,28 @@ export function AffiliateTrio() {
                 S&apos;inscrire
               </div>
             </div>
+          </a>
+        ))}
+      </div>
+      {/* Mobile: compact inline rows */}
+      <div className="sm:hidden space-y-2">
+        {BOOKMAKERS.map((bk) => (
+          <a
+            key={bk.slug}
+            href={bk.url}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            className={`flex items-center justify-between rounded-lg border border-gray-700/50 bg-gradient-to-r ${bk.color} px-3 py-2 transition-all`}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-white">{bk.name}</span>
+              <span className="text-xs text-white/80">{bk.bonus}</span>
+            </div>
+            <span
+              className={`rounded-md ${bk.btnColor} px-3 py-1 text-[10px] font-semibold text-dark-bg`}
+            >
+              S&apos;inscrire
+            </span>
           </a>
         ))}
       </div>

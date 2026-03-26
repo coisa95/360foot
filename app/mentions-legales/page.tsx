@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: "Mentions legales - 360 Foot",
   description:
     "Mentions legales du site 360 Foot. Informations sur l'editeur, l'hebergeur et les conditions d'utilisation du site.",
+  alternates: {
+    canonical: "https://360-foot.com/mentions-legales",
+  },
   openGraph: {
     title: "Mentions legales - 360 Foot",
     description:

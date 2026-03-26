@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: "Politique de confidentialite - 360 Foot",
   description:
     "Politique de confidentialite de 360 Foot. Decouvrez comment nous collectons, utilisons et protegeons vos donnees personnelles.",
+  alternates: {
+    canonical: "https://360-foot.com/confidentialite",
+  },
   openGraph: {
     title: "Politique de confidentialite - 360 Foot",
     description:

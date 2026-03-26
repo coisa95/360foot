@@ -9,6 +9,11 @@ import Link from "next/link";
 
 export const revalidate = 300;
 
+export const metadata = {
+  alternates: {
+    canonical: "https://360-foot.com",
+  },
+};
 
 async function getLatestArticles() {
   try {

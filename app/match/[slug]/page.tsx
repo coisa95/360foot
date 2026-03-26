@@ -39,6 +39,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://360-foot.com/match/${slug}`,
+    },
     openGraph: {
       title,
       description,
