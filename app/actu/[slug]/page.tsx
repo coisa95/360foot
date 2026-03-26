@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: article.seo_description || article.excerpt,
       type: "article",
       url: `https://360-foot.com/actu/${slug}`,
-      images: article.image ? [{ url: article.image }] : undefined,
+      images: (article.og_image_url || article.image) ? [{ url: article.og_image_url || article.image }] : undefined,
       publishedTime: article.published_at,
     },
   };
@@ -68,12 +68,17 @@ export default async function ArticlePage({ params }: Props) {
   ]);
 
   // Apply internal links to article content
-  const enrichedContent = addInternalLinks(
-    article.content || "",
-    (teams || []).map((t: Record<string, unknown>) => ({ name: t.name as string, slug: t.slug as string })),
-    (players || []).map((p: Record<string, unknown>) => ({ name: p.name as string, slug: p.slug as string })),
-    (leagues || []).map((l: Record<string, unknown>) => ({ name: l.name as string, slug: l.slug as string }))
-  );
+  let enrichedContent = article.content || "";
+  try {
+    enrichedContent = addInternalLinks(
+      article.content || "",
+      (teams || []).map((t: Record<string, unknown>) => ({ name: t.name as string, slug: t.slug as string })),
+      (players || []).map((p: Record<string, unknown>) => ({ name: p.name as string, slug: p.slug as string })),
+      (leagues || []).map((l: Record<string, unknown>) => ({ name: l.name as string, slug: l.slug as string }))
+    );
+  } catch (e) {
+    console.error("Error adding internal links:", e);
+  }
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
@@ -86,7 +91,7 @@ export default async function ArticlePage({ params }: Props) {
     "@type": "NewsArticle",
     headline: article.title,
     description: article.seo_description || article.excerpt,
-    image: article.image || undefined,
+    image: article.og_image_url || article.image || undefined,
     datePublished: article.published_at,
     dateModified: article.updated_at || article.published_at,
     author: {
@@ -161,11 +166,11 @@ export default async function ArticlePage({ params }: Props) {
           </header>
 
           {/* Image */}
-          {article.image && (
-            <div className="mb-8 rounded-lg overflow-hidden">
+          {(article.og_image_url || article.image) && (
+            <div className="mb-8 rounded-xl overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={article.image}
+                src={article.og_image_url || article.image}
                 alt={article.title}
                 className="w-full h-auto object-cover"
               />
@@ -198,7 +203,16 @@ export default async function ArticlePage({ params }: Props) {
               <h2 className="text-xl font-bold text-lime-400 mb-4">
                 Articles similaires
               </h2>
-              <RelatedArticles articles={relatedArticles} />
+              <RelatedArticles
+                articles={relatedArticles.map((a: Record<string, unknown>) => ({
+                  slug: a.slug as string,
+                  title: a.title as string,
+                  excerpt: (a.excerpt as string) || "",
+                  type: (a.type as string) || "news",
+                  publishedAt: a.published_at as string,
+                  leagueName: undefined,
+                }))}
+              />
             </div>
           )}
         </article>
