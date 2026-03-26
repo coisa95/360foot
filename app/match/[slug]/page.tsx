@@ -14,6 +14,8 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const supabase = createClient();
@@ -26,30 +28,71 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!match) return { title: "Match introuvable - 360 Foot" };
 
+  const homeName = match.home_team?.name || "Équipe A";
+  const awayName = match.away_team?.name || "Équipe B";
+  const leagueName = match.league?.name || "";
+
   const title =
     match.status === "FT"
-      ? `Resultat ${match.home_team.name} vs ${match.away_team.name} (${match.home_score}-${match.away_score}) - 360 Foot`
-      : `${match.home_team.name} vs ${match.away_team.name} - Apercu du match - 360 Foot`;
+      ? `${homeName} ${match.score_home}-${match.score_away} ${awayName} — ${leagueName}`
+      : `${homeName} vs ${awayName} — ${leagueName}`;
 
   const description =
     match.status === "FT"
-      ? `Score final : ${match.home_team.name} ${match.home_score} - ${match.away_score} ${match.away_team.name}. ${match.league.name}. Decouvrez le resume, les buts et les statistiques du match.`
-      : `Apercu du match ${match.home_team.name} vs ${match.away_team.name} en ${match.league.name}. Composition, forme et pronostics.`;
+      ? `Score final : ${homeName} ${match.score_home} - ${match.score_away} ${awayName}. ${leagueName}. Résumé, buteurs, stats et compositions.`
+      : `Avant-match ${homeName} vs ${awayName} en ${leagueName}. Heure, compositions probables et analyse.`;
 
   return {
     title,
     description,
-    alternates: {
-      canonical: `https://360-foot.com/match/${slug}`,
-    },
-    openGraph: {
-      title,
-      description,
-      type: "website",
-      url: `https://360-foot.com/match/${slug}`,
-    },
+    alternates: { canonical: `https://360-foot.com/match/${slug}` },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/match/${slug}` },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
+
+// ── Helpers ──
+
+function getStatLabel(key: string): string {
+  const labels: Record<string, string> = {
+    "Ball Possession": "Possession",
+    "Total Shots": "Tirs totaux",
+    "Shots on Goal": "Tirs cadrés",
+    "Shots off Goal": "Tirs non cadrés",
+    "Blocked Shots": "Tirs bloqués",
+    "Corner Kicks": "Corners",
+    "Offsides": "Hors-jeu",
+    "Fouls": "Fautes",
+    "Yellow Cards": "Cartons jaunes",
+    "Red Cards": "Cartons rouges",
+    "Total passes": "Passes totales",
+    "Passes accurate": "Passes réussies",
+    "Passes %": "Précision passes",
+    "Goalkeeper Saves": "Arrêts du gardien",
+    "expected_goals": "xG",
+  };
+  return labels[key] || key.replace(/_/g, " ");
+}
+
+function getEventIcon(type: string, detail: string): string {
+  if (type === "Goal" && detail === "Penalty") return "⚽️ (P)";
+  if (type === "Goal" && detail === "Own Goal") return "⚽️ (CSC)";
+  if (type === "Goal") return "⚽️";
+  if (type === "Card" && detail === "Yellow Card") return "🟨";
+  if (type === "Card" && detail === "Red Card") return "🟥";
+  if (type === "Card" && detail === "Second Yellow card") return "🟨🟥";
+  if (type === "subst") return "🔄";
+  if (type === "Var") return "📺 VAR";
+  return "•";
+}
+
+function parseStatValue(val: any): number {
+  if (val === null || val === undefined) return 0;
+  const str = String(val).replace("%", "");
+  return parseInt(str) || 0;
+}
+
+// ── Main Component ──
 
 export default async function MatchPage({ params }: Props) {
   const { slug } = await params;
@@ -70,32 +113,52 @@ export default async function MatchPage({ params }: Props) {
     .limit(1)
     .single();
 
+  const homeName = match.home_team?.name || "Équipe A";
+  const awayName = match.away_team?.name || "Équipe B";
+  const leagueName = match.league?.name || "";
+  const leagueSlug = match.league?.slug || "";
+
+  // Extract data from stats_json
+  const statsJson = match.stats_json as any;
+  const eventsJson = match.events_json as any[] | null;
+  const lineupsJson = match.lineups_json as any[] | null;
+
+  // Match info
+  const referee = statsJson?.fixture?.referee || statsJson?.matchInfo?.referee || null;
+  const venue = statsJson?.fixture?.venue?.name || statsJson?.matchInfo?.venue || null;
+  const city = statsJson?.fixture?.venue?.city || statsJson?.matchInfo?.city || null;
+  const halftime = statsJson?.score?.halftime || null;
+
+  // Statistics
+  const statistics = statsJson?.statistics as Record<string, { home: any; away: any }> | null;
+
+  // Key stats to display in priority order
+  const PRIORITY_STATS = [
+    "Ball Possession", "Total Shots", "Shots on Goal", "Shots off Goal",
+    "Corner Kicks", "Offsides", "Fouls", "Yellow Cards", "Red Cards",
+    "Goalkeeper Saves", "Passes accurate", "Passes %", "Total passes",
+  ];
+
+  const isFinished = match.status === "FT";
+  const isLive = ["1H", "2H", "HT", "ET", "P", "BT"].includes(match.status);
+
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
-    { label: match.league.name, href: `/ligue/${match.league.slug}` },
-    { label: `${match.home_team.name} vs ${match.away_team.name}` },
+    { label: leagueName, href: `/ligue/${leagueSlug}` },
+    { label: `${homeName} vs ${awayName}` },
   ];
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SportsEvent",
-    name: `${match.home_team.name} vs ${match.away_team.name}`,
+    name: `${homeName} vs ${awayName}`,
     startDate: match.date,
-    location: {
-      "@type": "Place",
-      name: match.venue || match.home_team.venue || "Stade",
-    },
-    homeTeam: {
-      "@type": "SportsTeam",
-      name: match.home_team.name,
-    },
-    awayTeam: {
-      "@type": "SportsTeam",
-      name: match.away_team.name,
-    },
+    location: { "@type": "Place", name: venue || "Stade" },
+    homeTeam: { "@type": "SportsTeam", name: homeName },
+    awayTeam: { "@type": "SportsTeam", name: awayName },
     competitor: [
-      { "@type": "SportsTeam", name: match.home_team.name },
-      { "@type": "SportsTeam", name: match.away_team.name },
+      { "@type": "SportsTeam", name: homeName },
+      { "@type": "SportsTeam", name: awayName },
     ],
   };
 
@@ -106,142 +169,211 @@ export default async function MatchPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto max-w-4xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
-        {/* En-tete du match */}
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <div className="text-center mb-4">
+        {/* ── Score Header ── */}
+        <Card className="mt-6 overflow-hidden border-gray-800 bg-gradient-to-b from-dark-card to-dark-bg">
+          <div className="p-6 text-center">
             <Badge className="bg-lime-500/20 text-lime-400 border-lime-500/30">
-              {match.league.name}
+              {leagueName}
             </Badge>
-            <p className="text-gray-400 text-sm mt-2">
+            <p className="mt-2 text-xs text-gray-500">
               {new Date(match.date).toLocaleDateString("fr-FR", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
+                weekday: "long", day: "numeric", month: "long", year: "numeric",
               })}
+              {" à "}
+              {new Date(match.date).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
             </p>
+            {venue && (
+              <p className="mt-1 text-xs text-gray-600">{venue}{city ? `, ${city}` : ""}</p>
+            )}
+            {referee && (
+              <p className="mt-1 text-xs text-gray-600">Arbitre : {referee}</p>
+            )}
           </div>
 
-          {match.status === "FT" ? (
-            /* Score final */
-            <div className="flex items-center justify-center gap-8 my-8">
-              <div className="text-center flex-1">
-                <h2 className="text-xl font-bold">{match.home_team.name}</h2>
-              </div>
-              <div className="text-center">
-                <div className="text-5xl font-bold text-lime-400">
-                  {match.home_score} - {match.away_score}
-                </div>
-                <Badge className="mt-2 bg-red-500/20 text-red-400 border-red-500/30">
-                  Termine
-                </Badge>
-              </div>
-              <div className="text-center flex-1">
-                <h2 className="text-xl font-bold">{match.away_team.name}</h2>
-              </div>
+          <div className="flex items-center justify-center gap-4 px-4 pb-8 sm:gap-8">
+            {/* Home team */}
+            <div className="flex-1 text-center">
+              {match.home_team?.logo_url && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={match.home_team.logo_url} alt={homeName} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
+              )}
+              <h2 className="text-sm font-bold sm:text-lg">{homeName}</h2>
             </div>
-          ) : (
-            /* Apercu du match */
-            <div className="flex items-center justify-center gap-8 my-8">
-              <div className="text-center flex-1">
-                <h2 className="text-xl font-bold">{match.home_team.name}</h2>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gray-400">VS</div>
-                <Badge className="mt-2 bg-lime-500/20 text-lime-400 border-lime-500/30">
-                  A venir
-                </Badge>
-              </div>
-              <div className="text-center flex-1">
-                <h2 className="text-xl font-bold">{match.away_team.name}</h2>
-              </div>
+
+            {/* Score */}
+            <div className="text-center">
+              {isFinished || isLive ? (
+                <>
+                  <div className="text-4xl font-bold text-lime-400 sm:text-5xl">
+                    {match.score_home} - {match.score_away}
+                  </div>
+                  {halftime && halftime.home !== null && (
+                    <p className="mt-1 text-xs text-gray-500">
+                      MT : {halftime.home} - {halftime.away}
+                    </p>
+                  )}
+                  <Badge className={`mt-2 ${isLive ? "bg-green-500/20 text-green-400 border-green-500/30 animate-pulse" : "bg-red-500/20 text-red-400 border-red-500/30"}`}>
+                    {isLive ? "En cours" : "Terminé"}
+                  </Badge>
+                </>
+              ) : (
+                <>
+                  <div className="text-3xl font-bold text-gray-400">VS</div>
+                  <Badge className="mt-2 bg-blue-500/20 text-blue-400 border-blue-500/30">
+                    À venir
+                  </Badge>
+                </>
+              )}
             </div>
-          )}
+
+            {/* Away team */}
+            <div className="flex-1 text-center">
+              {match.away_team?.logo_url && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={match.away_team.logo_url} alt={awayName} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
+              )}
+              <h2 className="text-sm font-bold sm:text-lg">{awayName}</h2>
+            </div>
+          </div>
         </Card>
 
-        {/* Evenements du match */}
-        {match.status === "FT" && match.events && (
-          <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-            <h3 className="text-lg font-bold text-lime-400 mb-4">Evenements du match</h3>
-            <Separator className="bg-gray-800 mb-4" />
-            <div className="space-y-3">
-              {(match.events as Array<{ minute: number; type: string; player: string; team: string }>).map(
-                (event, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 text-sm"
-                  >
-                    <span className="text-lime-400 font-mono w-8">{event.minute}&apos;</span>
-                    <Badge
-                      className={
-                        event.type === "goal"
-                          ? "bg-lime-500/20 text-lime-400"
-                          : event.type === "yellow_card"
-                          ? "bg-yellow-500/20 text-yellow-400"
-                          : "bg-red-500/20 text-red-400"
-                      }
+        {/* ── Events (Goals, Cards, Subs) ── */}
+        {eventsJson && eventsJson.length > 0 && (
+          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
+            <h3 className="mb-4 text-lg font-bold text-lime-400">Événements du match</h3>
+            <div className="space-y-2">
+              {eventsJson
+                .filter((e: any) => e.type !== "subst") // Hide substitutions for cleaner view
+                .map((event: any, index: number) => {
+                  const isHome = event.team === homeName;
+                  return (
+                    <div
+                      key={index}
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
+                        isHome ? "bg-dark-bg" : "bg-dark-surface"
+                      }`}
                     >
-                      {event.type === "goal"
-                        ? "But"
-                        : event.type === "yellow_card"
-                        ? "Carton jaune"
-                        : "Carton rouge"}
-                    </Badge>
-                    <span>{event.player}</span>
-                    <span className="text-gray-500">({event.team})</span>
-                  </div>
-                )
-              )}
-            </div>
-          </Card>
-        )}
-
-        {/* Statistiques */}
-        {match.status === "FT" && match.stats && (
-          <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-            <h3 className="text-lg font-bold text-lime-400 mb-4">Statistiques</h3>
-            <Separator className="bg-gray-800 mb-4" />
-            <div className="space-y-4">
-              {Object.entries(match.stats as Record<string, { home: number; away: number }>).map(
-                ([key, value]) => (
-                  <div key={key}>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>{value.home}</span>
-                      <span className="text-gray-400 capitalize">
-                        {key.replace(/_/g, " ")}
+                      <span className="w-10 text-center font-mono text-xs text-lime-400">
+                        {event.minute}&apos;{event.extra ? `+${event.extra}` : ""}
                       </span>
-                      <span>{value.away}</span>
+                      <span className="text-base">{getEventIcon(event.type, event.detail || "")}</span>
+                      <span className="flex-1 font-medium">
+                        {event.player}
+                        {event.assist && (
+                          <span className="ml-1 text-xs text-gray-500">(pass. {event.assist})</span>
+                        )}
+                      </span>
+                      <span className="text-xs text-gray-500">{event.team}</span>
                     </div>
-                    <div className="flex gap-1 h-2">
-                      <div
-                        className="bg-lime-400 rounded-l"
-                        style={{
-                          width: `${(value.home / (value.home + value.away)) * 100}%`,
-                        }}
-                      />
-                      <div
-                        className="bg-gray-600 rounded-r"
-                        style={{
-                          width: `${(value.away / (value.home + value.away)) * 100}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-                )
-              )}
+                  );
+                })}
             </div>
           </Card>
         )}
 
-        {/* Article lie */}
+        {/* ── Statistics ── */}
+        {statistics && Object.keys(statistics).length > 0 && (
+          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
+            <h3 className="mb-4 text-lg font-bold text-lime-400">Statistiques</h3>
+            <div className="space-y-4">
+              {PRIORITY_STATS.filter((key) => statistics[key]).map((key) => {
+                const stat = statistics[key];
+                const homeVal = parseStatValue(stat.home);
+                const awayVal = parseStatValue(stat.away);
+                const total = homeVal + awayVal || 1;
+                const homePercent = (homeVal / total) * 100;
+                const isPossession = key === "Ball Possession";
+
+                return (
+                  <div key={key}>
+                    <div className="mb-1 flex justify-between text-sm">
+                      <span className="font-medium">{isPossession ? `${stat.home}` : homeVal}</span>
+                      <span className="text-gray-400">{getStatLabel(key)}</span>
+                      <span className="font-medium">{isPossession ? `${stat.away}` : awayVal}</span>
+                    </div>
+                    <div className="flex h-2 gap-0.5 overflow-hidden rounded-full">
+                      <div
+                        className="rounded-l-full bg-lime-400 transition-all"
+                        style={{ width: `${homePercent}%` }}
+                      />
+                      <div
+                        className="rounded-r-full bg-gray-600 transition-all"
+                        style={{ width: `${100 - homePercent}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+        )}
+
+        {/* ── Lineups ── */}
+        {lineupsJson && lineupsJson.length >= 2 && (
+          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
+            <h3 className="mb-4 text-lg font-bold text-lime-400">Compositions</h3>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {lineupsJson.map((lineup: any, idx: number) => (
+                <div key={idx}>
+                  <div className="mb-3 flex items-center justify-between">
+                    <h4 className="font-bold text-white">{lineup.team}</h4>
+                    {lineup.formation && (
+                      <Badge className="bg-dark-surface text-gray-400 border-gray-700">
+                        {lineup.formation}
+                      </Badge>
+                    )}
+                  </div>
+                  {lineup.coach && (
+                    <p className="mb-2 text-xs text-gray-500">Coach : {lineup.coach}</p>
+                  )}
+                  <div className="space-y-1">
+                    {(lineup.startXI || []).map((p: any, i: number) => (
+                      <div key={i} className="flex items-center gap-2 text-sm">
+                        <span className="w-6 text-center text-xs font-mono text-gray-500">
+                          {p.number || "-"}
+                        </span>
+                        <span className="flex-1">{p.name}</span>
+                        <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {(lineup.substitutes || []).length > 0 && (
+                    <>
+                      <Separator className="my-2 bg-gray-800" />
+                      <p className="mb-1 text-xs text-gray-500">Remplaçants</p>
+                      <div className="space-y-1">
+                        {(lineup.substitutes || []).slice(0, 7).map((p: any, i: number) => (
+                          <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
+                            <span className="w-6 text-center font-mono">{p.number || "-"}</span>
+                            <span className="flex-1">{p.name}</span>
+                            <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        {/* ── No data message for finished matches ── */}
+        {isFinished && !eventsJson && !statistics && (
+          <Card className="mt-4 border-gray-800 bg-dark-card p-6 text-center">
+            <p className="text-gray-400">
+              Les données détaillées de ce match seront bientôt disponibles.
+            </p>
+          </Card>
+        )}
+
+        {/* ── Related article ── */}
         {relatedArticle && (
-          <div className="mt-8">
-            <h3 className="text-lg font-bold text-lime-400 mb-4">Article lie</h3>
+          <div className="mt-6">
+            <h3 className="mb-3 text-lg font-bold text-lime-400">Article lié</h3>
             <ArticleCard
               slug={relatedArticle.slug}
               title={relatedArticle.title}
