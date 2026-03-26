@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { AffiliateTicker } from "@/components/affiliate-ticker";
 
 const geist = localFont({
   src: "./fonts/GeistVF.woff",
@@ -62,6 +63,7 @@ export default function RootLayout({
     <html lang="fr" className={cn("dark font-sans antialiased", geist.variable)}>
       <body className="min-h-screen bg-background text-foreground">
         <Header />
+        <AffiliateTicker />
         <main className="min-h-[calc(100vh-8rem)]">{children}</main>
         <Footer />
       </body>
