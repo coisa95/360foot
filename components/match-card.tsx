@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 
 interface MatchCardProps {
   slug: string;
@@ -17,16 +16,16 @@ interface MatchCardProps {
 
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { label: string; className: string }> = {
-    NS: { label: "À venir", className: "bg-dark-surface text-gray-400" },
-    "1H": { label: "1re MT", className: "bg-red-500/20 text-red-400 animate-pulse" },
-    HT: { label: "Mi-temps", className: "bg-yellow-500/20 text-yellow-400" },
-    "2H": { label: "2e MT", className: "bg-red-500/20 text-red-400 animate-pulse" },
-    FT: { label: "Terminé", className: "bg-dark-surface text-gray-400" },
-    PST: { label: "Reporté", className: "bg-orange-500/20 text-orange-400" },
-    CANC: { label: "Annulé", className: "bg-red-500/20 text-red-400" },
+    NS: { label: "À venir", className: "bg-blue-500/15 text-blue-400 border border-blue-500/20" },
+    "1H": { label: "🔴 1re MT", className: "bg-red-500/15 text-red-400 border border-red-500/20 animate-pulse" },
+    HT: { label: "Mi-temps", className: "bg-yellow-500/15 text-yellow-400 border border-yellow-500/20" },
+    "2H": { label: "🔴 2e MT", className: "bg-red-500/15 text-red-400 border border-red-500/20 animate-pulse" },
+    FT: { label: "Terminé", className: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20" },
+    PST: { label: "Reporté", className: "bg-orange-500/15 text-orange-400 border border-orange-500/20" },
+    CANC: { label: "Annulé", className: "bg-red-500/15 text-red-400 border border-red-500/20" },
   };
   const { label, className } = config[status] || config.NS;
-  return <Badge className={className}>{label}</Badge>;
+  return <Badge className={`rounded-lg text-[10px] ${className}`}>{label}</Badge>;
 }
 
 export function MatchCard({
@@ -46,44 +45,48 @@ export function MatchCard({
   });
 
   return (
-    <Link href={`/match/${slug}`}>
-      <Card className="border-dark-border bg-dark-card p-4 transition-colors hover:border-lime-500/30 hover:bg-dark-surface">
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs text-gray-500">{leagueName}</span>
+    <Link href={`/match/${slug}`} className="group block">
+      <div className="rounded-xl border border-dark-border/50 bg-dark-card/80 p-4 shadow-lg shadow-black/10 transition-all duration-300 hover:border-lime-500/20 hover:shadow-xl hover:shadow-lime-500/5 hover:-translate-y-0.5 backdrop-blur-sm">
+        <div className="mb-3 flex items-center justify-between">
+          <span className="text-[11px] font-medium text-gray-400">{leagueName}</span>
           <StatusBadge status={status} />
         </div>
 
         <div className="flex items-center justify-between">
           {/* Home Team */}
           <div className="flex-1 text-right">
-            <span className="text-sm font-medium text-white">{homeTeam}</span>
+            <span className="text-sm font-semibold text-gray-200 group-hover:text-white transition-colors">{homeTeam}</span>
           </div>
 
           {/* Score / Time */}
-          <div className="mx-4 min-w-[4rem] text-center">
+          <div className="mx-4 min-w-[4.5rem] text-center">
             {status === "NS" ? (
-              <span className="text-lg font-bold text-lime-400">{timeStr}</span>
+              <div className="rounded-lg bg-blue-500/10 px-3 py-1">
+                <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">{timeStr}</span>
+              </div>
             ) : (
-              <span className="text-lg font-bold text-white">
-                {homeScore ?? 0} - {awayScore ?? 0}
-              </span>
+              <div className="rounded-lg bg-dark-surface px-3 py-1">
+                <span className="text-lg font-bold text-white">
+                  {homeScore ?? 0} <span className="text-gray-500">-</span> {awayScore ?? 0}
+                </span>
+              </div>
             )}
           </div>
 
           {/* Away Team */}
           <div className="flex-1 text-left">
-            <span className="text-sm font-medium text-white">{awayTeam}</span>
+            <span className="text-sm font-semibold text-gray-200 group-hover:text-white transition-colors">{awayTeam}</span>
           </div>
         </div>
 
-        <div className="mt-2 text-center text-xs text-gray-500">
+        <div className="mt-3 text-center text-[11px] text-gray-500">
           {matchDate.toLocaleDateString("fr-FR", {
             day: "numeric",
             month: "short",
             year: "numeric",
           })}
         </div>
-      </Card>
+      </div>
     </Link>
   );
 }

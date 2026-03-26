@@ -86,16 +86,16 @@ export default async function HomePage() {
   const remainingArticles = articles.slice(4);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6">
+    <div className="mx-auto max-w-7xl px-4 py-8">
       {/* Hero */}
-      <section className="mb-8">
+      <section className="mb-10 bg-glow-lime rounded-2xl p-6">
         <h1 className="text-3xl font-bold text-white md:text-4xl">
           Actu Football{" "}
-          <span className="bg-gradient-to-r from-lime-400 to-lime-300 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-lime-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
             Afrique &amp; Europe
           </span>
         </h1>
-        <p className="mt-2 text-gray-400">
+        <p className="mt-3 text-gray-400 text-lg">
           Résultats, analyses, transferts — couverture 24/7 du football africain et européen.
         </p>
       </section>
@@ -105,7 +105,7 @@ export default async function HomePage() {
         <section className="mb-8">
           {/* Article principal - grande carte */}
           <Link href={`/actu/${(featuredArticle as Record<string, unknown>).slug}`} className="group block mb-4">
-            <Card className="overflow-hidden border-dark-border bg-dark-card transition-all hover:border-lime-500/30">
+            <Card className="overflow-hidden rounded-xl border border-dark-border/50 bg-dark-card/80 shadow-xl shadow-black/20 backdrop-blur-sm transition-all duration-300 hover:border-lime-500/20 hover:shadow-2xl hover:shadow-lime-500/5 hover:-translate-y-0.5">
               <div className="grid md:grid-cols-2">
                 <div className="relative aspect-video md:aspect-auto md:min-h-[280px]">
                   <Image
@@ -197,7 +197,7 @@ export default async function HomePage() {
           <div className="mt-4 text-center">
             <Link
               href="/actu"
-              className="inline-block rounded-lg bg-dark-card border border-dark-border px-6 py-2.5 text-sm font-medium text-lime-400 transition-all hover:bg-dark-surface hover:border-lime-500/30"
+              className="inline-block rounded-xl bg-gradient-to-r from-lime-500/10 to-emerald-500/10 border border-lime-500/20 px-6 py-2.5 text-sm font-semibold text-lime-400 shadow-lg shadow-lime-500/5 transition-all duration-300 hover:from-lime-500/20 hover:to-emerald-500/20 hover:shadow-xl hover:shadow-lime-500/10 hover:-translate-y-0.5"
             >
               Voir toutes les actualités →
             </Link>
@@ -213,8 +213,8 @@ export default async function HomePage() {
           {/* SECTION 2: Matchs du jour */}
           {matches.length > 0 && (
             <section className="mb-8">
-              <h2 className="mb-4 text-lg font-bold text-white">
-                <span className="text-lime-400">⚽</span> Matchs du jour
+              <h2 className="section-title mb-4">
+                Matchs du jour
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
                 {matches.map((match: Record<string, unknown>) => {
@@ -244,7 +244,7 @@ export default async function HomePage() {
           {/* SECTION 3: Plus d'articles */}
           {remainingArticles.length > 0 && (
             <section>
-              <h2 className="mb-4 text-lg font-bold text-white">
+              <h2 className="section-title mb-4">
                 Plus d&apos;actualités
               </h2>
               <div className="grid gap-4 sm:grid-cols-2">

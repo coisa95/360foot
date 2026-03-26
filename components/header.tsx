@@ -44,15 +44,16 @@ export function Header() {
   const [mobileLiguesOpen, setMobileLiguesOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-dark-border bg-dark-bg/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-dark-border/50 bg-dark-bg/90 backdrop-blur-xl shadow-lg shadow-black/20">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-lime-500 to-lime-400 font-bold text-dark-bg text-lg">
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-lime-400 to-emerald-500 font-bold text-dark-bg text-lg shadow-lg shadow-lime-500/25 transition-all group-hover:shadow-lime-500/40 group-hover:scale-105">
             360
           </div>
-          <span className="text-xl font-bold text-white">
-            360 <span className="text-lime-400">Foot</span>
+          <span className="text-xl font-bold">
+            <span className="text-white">360</span>{" "}
+            <span className="bg-gradient-to-r from-lime-400 to-emerald-400 bg-clip-text text-transparent">Foot</span>
           </span>
         </Link>
 
@@ -76,7 +77,7 @@ export function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            <div className="invisible absolute left-0 top-full z-50 mt-2 w-52 rounded-lg border border-dark-border bg-dark-card p-2 opacity-0 shadow-xl transition-all group-hover:visible group-hover:opacity-100">
+            <div className="invisible absolute left-0 top-full z-50 mt-2 w-56 rounded-xl border border-dark-border/50 bg-dark-card/95 backdrop-blur-xl p-2 opacity-0 shadow-2xl shadow-black/40 transition-all group-hover:visible group-hover:opacity-100">
               {CLASSEMENTS.map((item) => (
                 <Link
                   key={item.href}
@@ -97,7 +98,7 @@ export function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            <div className="invisible absolute left-0 top-full z-50 mt-2 w-52 rounded-lg border border-dark-border bg-dark-card p-2 opacity-0 shadow-xl transition-all group-hover:visible group-hover:opacity-100">
+            <div className="invisible absolute left-0 top-full z-50 mt-2 w-56 rounded-xl border border-dark-border/50 bg-dark-card/95 backdrop-blur-xl p-2 opacity-0 shadow-2xl shadow-black/40 transition-all group-hover:visible group-hover:opacity-100">
               {LEAGUES.map((league) => (
                 <Link
                   key={league.href}

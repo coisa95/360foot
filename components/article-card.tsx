@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 
 interface ArticleCardProps {
   slug: string;
@@ -11,14 +9,14 @@ interface ArticleCardProps {
   leagueName?: string;
 }
 
-const TYPE_LABELS: Record<string, string> = {
-  result: "Résultat",
-  preview: "Avant-match",
-  transfer: "Transfert",
-  player_profile: "Joueur",
-  recap: "Récap",
-  guide: "Guide",
-  trending: "Tendance",
+const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
+  result: { label: "Résultat", color: "bg-blue-500/15 text-blue-400 border-blue-500/20" },
+  preview: { label: "Avant-match", color: "bg-orange-500/15 text-orange-400 border-orange-500/20" },
+  transfer: { label: "Transfert", color: "bg-purple-500/15 text-purple-400 border-purple-500/20" },
+  player_profile: { label: "Joueur", color: "bg-cyan-500/15 text-cyan-400 border-cyan-500/20" },
+  recap: { label: "Récap", color: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20" },
+  guide: { label: "Guide", color: "bg-yellow-500/15 text-yellow-400 border-yellow-500/20" },
+  trending: { label: "Tendance", color: "bg-pink-500/15 text-pink-400 border-pink-500/20" },
 };
 
 export function ArticleCard({
@@ -30,36 +28,39 @@ export function ArticleCard({
   leagueName,
 }: ArticleCardProps) {
   const date = new Date(publishedAt);
+  const typeConf = TYPE_CONFIG[type] || { label: type, color: "bg-lime-500/15 text-lime-400 border-lime-500/20" };
 
   return (
-    <Link href={`/actu/${slug}`}>
-      <Card className="group border-dark-border bg-dark-card p-4 transition-all hover:border-lime-500/30 hover:bg-dark-surface">
-        <div className="mb-2 flex items-center gap-2">
-          <Badge
-            variant="secondary"
-            className="bg-lime-500/10 text-lime-400 text-xs"
-          >
-            {TYPE_LABELS[type] || type}
-          </Badge>
+    <Link href={`/actu/${slug}`} className="group block">
+      <div className="h-full rounded-xl border border-dark-border/50 bg-dark-card/80 p-4 shadow-lg shadow-black/10 backdrop-blur-sm transition-all duration-300 hover:border-lime-500/20 hover:shadow-xl hover:shadow-lime-500/5 hover:-translate-y-0.5">
+        <div className="mb-3 flex items-center gap-2">
+          <span className={`rounded-lg border px-2.5 py-0.5 text-[10px] font-semibold ${typeConf.color}`}>
+            {typeConf.label}
+          </span>
           {leagueName && (
-            <span className="text-xs text-gray-500">{leagueName}</span>
+            <span className="text-[11px] text-gray-500">{leagueName}</span>
           )}
         </div>
 
-        <h3 className="mb-2 text-base font-semibold leading-tight text-white transition-colors group-hover:text-lime-400">
+        <h3 className="mb-2 text-base font-semibold leading-tight text-gray-100 transition-colors group-hover:bg-gradient-to-r group-hover:from-lime-400 group-hover:to-emerald-400 group-hover:bg-clip-text group-hover:text-transparent">
           {title}
         </h3>
 
-        <p className="mb-3 line-clamp-2 text-sm text-gray-400">{excerpt}</p>
+        <p className="mb-3 line-clamp-2 text-sm text-gray-400/80">{excerpt}</p>
 
-        <time className="text-xs text-gray-500" dateTime={date.toISOString()}>
-          {date.toLocaleDateString("fr-FR", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </time>
-      </Card>
+        <div className="flex items-center justify-between">
+          <time className="text-[11px] text-gray-500" dateTime={date.toISOString()}>
+            {date.toLocaleDateString("fr-FR", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </time>
+          <span className="text-[11px] text-lime-500/0 transition-all group-hover:text-lime-500/80">
+            Lire →
+          </span>
+        </div>
+      </div>
     </Link>
   );
 }

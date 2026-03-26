@@ -38,9 +38,9 @@ export function StandingsTable({
   const rows = compact ? standings.slice(0, 5) : standings;
 
   return (
-    <div className="rounded-lg border border-dark-border bg-dark-card">
-      <div className="flex items-center justify-between border-b border-dark-border px-4 py-3">
-        <h3 className="text-sm font-semibold text-white">{leagueName}</h3>
+    <div className="rounded-xl border border-dark-border/50 bg-dark-card/80 shadow-lg shadow-black/10 backdrop-blur-sm overflow-hidden">
+      <div className="flex items-center justify-between border-b border-dark-border/50 px-4 py-3 bg-gradient-to-r from-dark-surface/50 to-transparent">
+        <h3 className="text-sm font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{leagueName}</h3>
         {compact && (
           <Link
             href={`/classement/${leagueSlug}`}

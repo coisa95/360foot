@@ -36,17 +36,18 @@ const FOOTER_LINKS = {
 
 export function Footer() {
   return (
-    <footer className="border-t border-dark-border bg-dark-bg">
-      <div className="mx-auto max-w-7xl px-4 py-10">
+    <footer className="border-t border-dark-border/50 bg-dark-bg bg-glow-blue">
+      <div className="mx-auto max-w-7xl px-4 py-12">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-lime-500 to-lime-400 text-sm font-bold text-dark-bg">
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-lime-400 to-emerald-500 text-sm font-bold text-dark-bg shadow-lg shadow-lime-500/20">
                 360
               </div>
-              <span className="text-lg font-bold text-white">
-                360 <span className="text-lime-400">Foot</span>
+              <span className="text-lg font-bold">
+                <span className="text-white">360</span>{" "}
+                <span className="bg-gradient-to-r from-lime-400 to-emerald-400 bg-clip-text text-transparent">Foot</span>
               </span>
             </Link>
             <p className="mt-3 text-sm text-gray-500">
@@ -58,7 +59,7 @@ export function Footer() {
           {/* Links */}
           {Object.entries(FOOTER_LINKS).map(([title, links]) => (
             <div key={title}>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider bg-gradient-to-r from-gray-300 to-gray-500 bg-clip-text text-transparent">
                 {title}
               </h3>
               <ul className="space-y-2">

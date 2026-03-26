@@ -56,10 +56,10 @@ const config: Config = {
           900: "#1A2E05",
         },
         dark: {
-          bg: "#0A0A0A",
-          surface: "#111111",
-          card: "#1A1A1A",
-          border: "#2A2A2A",
+          bg: "#080C14",
+          surface: "#0E1420",
+          card: "#121A2B",
+          border: "#1E2A40",
         },
       },
       borderRadius: {
