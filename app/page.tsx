@@ -44,15 +44,48 @@ async function getTodayMatches() {
   }
 }
 
+// Compétitions terminées — à ne pas afficher en page d'accueil
+const FINISHED_COMPETITION_SLUGS = ["can"];
+
+// Ligues prioritaires pour la sidebar (ligues africaines + top européennes)
+const PRIORITY_LEAGUE_SLUGS = [
+  "ligue-1-cote-divoire",
+  "ligue-pro-senegal",
+  "elite-one-cameroun",
+  "ligue-1-france",
+  "premier-league",
+  "la-liga",
+];
+
 async function getStandings() {
   try {
     const supabase = createClient();
     const { data } = await supabase
       .from("standings")
       .select("league_id, data_json, leagues(name, slug)")
-      .order("updated_at", { ascending: false })
-      .limit(3);
-    return data || [];
+      .order("updated_at", { ascending: false });
+
+    if (!data) return [];
+
+    // Exclure les compétitions terminées
+    const active = data.filter((s: Record<string, unknown>) => {
+      const leagues = s.leagues as Record<string, unknown> | null;
+      const slug = (leagues?.slug as string) || "";
+      return !FINISHED_COMPETITION_SLUGS.includes(slug);
+    });
+
+    // Trier par priorité : ligues prioritaires d'abord
+    active.sort((a: Record<string, unknown>, b: Record<string, unknown>) => {
+      const slugA = ((a.leagues as Record<string, unknown>)?.slug as string) || "";
+      const slugB = ((b.leagues as Record<string, unknown>)?.slug as string) || "";
+      const idxA = PRIORITY_LEAGUE_SLUGS.indexOf(slugA);
+      const idxB = PRIORITY_LEAGUE_SLUGS.indexOf(slugB);
+      const prioA = idxA >= 0 ? idxA : 999;
+      const prioB = idxB >= 0 ? idxB : 999;
+      return prioA - prioB;
+    });
+
+    return active.slice(0, 3);
   } catch {
     return [];
   }
@@ -69,15 +102,15 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-4 md:py-8">
-      {/* Hero — compact on mobile */}
-      <section className="mb-4 md:mb-10 bg-glow-lime rounded-xl md:rounded-2xl px-4 py-3 md:p-6">
-        <h1 className="text-lg font-bold text-white md:text-4xl">
+      {/* Hero — minimal on mobile */}
+      <section className="mb-2 md:mb-10 hidden md:block bg-glow-lime rounded-2xl p-6">
+        <h1 className="text-4xl font-bold text-white">
           Actu Football{" "}
           <span className="bg-gradient-to-r from-lime-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
             Afrique &amp; Europe
           </span>
         </h1>
-        <p className="mt-1 md:mt-3 text-gray-400 text-xs md:text-lg hidden sm:block">
+        <p className="mt-3 text-gray-400 text-lg">
           Résultats, analyses, transferts — couverture 24/7 du football africain et européen.
         </p>
       </section>
@@ -109,43 +142,45 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* SECTION 2: Matchs du jour — full width */}
+      {matches.length > 0 && (
+        <section className="mb-4 md:mb-8">
+          <h2 className="section-title mb-3 md:mb-4">
+            Matchs du jour
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {matches.map((match: Record<string, unknown>) => {
+              const homeTeam = match.home_team as Record<string, unknown> | null;
+              const awayTeam = match.away_team as Record<string, unknown> | null;
+              const league = match.league as Record<string, unknown> | null;
+              return (
+                <MatchCard
+                  key={match.slug as string}
+                  slug={match.slug as string}
+                  homeTeam={(homeTeam?.name as string) || ""}
+                  awayTeam={(awayTeam?.name as string) || ""}
+                  homeScore={match.score_home as number | null}
+                  awayScore={match.score_away as number | null}
+                  status={match.status as string}
+                  date={match.date as string}
+                  leagueName={(league?.name as string) || ""}
+                />
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      <Separator className="my-3 md:my-6 bg-dark-border" />
+
+      {/* Partenaires */}
+      <AffiliateTrio />
+
       <Separator className="my-3 md:my-6 bg-dark-border" />
 
       <div className="grid gap-4 md:gap-8 lg:grid-cols-3">
-        {/* Main Content */}
+        {/* Plus d'articles */}
         <div className="lg:col-span-2">
-          {/* SECTION 2: Matchs du jour */}
-          {matches.length > 0 && (
-            <section className="mb-8">
-              <h2 className="section-title mb-4">
-                Matchs du jour
-              </h2>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {matches.map((match: Record<string, unknown>) => {
-                  const homeTeam = match.home_team as Record<string, unknown> | null;
-                  const awayTeam = match.away_team as Record<string, unknown> | null;
-                  const league = match.league as Record<string, unknown> | null;
-                  return (
-                    <MatchCard
-                      key={match.slug as string}
-                      slug={match.slug as string}
-                      homeTeam={(homeTeam?.name as string) || ""}
-                      awayTeam={(awayTeam?.name as string) || ""}
-                      homeScore={match.score_home as number | null}
-                      awayScore={match.score_away as number | null}
-                      status={match.status as string}
-                      date={match.date as string}
-                      leagueName={(league?.name as string) || ""}
-                    />
-                  );
-                })}
-              </div>
-            </section>
-          )}
-
-          <Separator className="my-6 bg-dark-border" />
-
-          {/* SECTION 3: Plus d'articles */}
           {remainingArticles.length > 0 && (
             <section>
               <h2 className="section-title mb-4">
@@ -171,12 +206,8 @@ export default async function HomePage() {
           )}
         </div>
 
-        {/* Sidebar */}
+        {/* Sidebar — Classements */}
         <aside className="space-y-6">
-          {/* Partenaires */}
-          <AffiliateTrio />
-
-          {/* Classements */}
           {standings.length > 0
             ? standings.map((standing: Record<string, unknown>) => {
                 const leagues = standing.leagues as Record<string, unknown> | null;
