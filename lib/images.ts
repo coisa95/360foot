@@ -1,4 +1,10 @@
-import { ArticleImageInput, generateImageQueries } from "./image-queries";
+import {
+  ArticleImageInput,
+  generateContextualQueries,
+  selectBestImage,
+  isImageContextual,
+  detectContext,
+} from "./image-queries";
 import {
   PexelsPhoto,
   getCachedImages,
@@ -18,11 +24,9 @@ export interface ArticleImage {
 // ----- Pexels API -----
 
 async function searchPexels(query: string): Promise<PexelsPhoto[]> {
-  // Check cache first
   const cached = await getCachedImages(query);
   if (cached) return cached;
 
-  // Rate limit check
   if (!(await canMakeApiCall())) {
     console.warn("Pexels rate limit approaching, skipping API call");
     return [];
@@ -36,10 +40,8 @@ async function searchPexels(query: string): Promise<PexelsPhoto[]> {
 
   try {
     const res = await fetch(
-      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=15&orientation=landscape`,
-      {
-        headers: { Authorization: apiKey },
-      }
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=10&orientation=landscape`,
+      { headers: { Authorization: apiKey } }
     );
 
     if (!res.ok) {
@@ -50,7 +52,6 @@ async function searchPexels(query: string): Promise<PexelsPhoto[]> {
     const data = await res.json();
     const photos: PexelsPhoto[] = data.photos || [];
 
-    // Cache results
     if (photos.length > 0) {
       await setCachedImages(query, photos);
     }
@@ -62,39 +63,22 @@ async function searchPexels(query: string): Promise<PexelsPhoto[]> {
   }
 }
 
-// ----- Image filtering -----
+// ----- ALT text contextuel en français -----
 
-function filterImages(photos: PexelsPhoto[]): PexelsPhoto[] {
-  return photos.filter((photo) => {
-    // Landscape only
-    if (photo.width < photo.height) return false;
-    // Minimum 1200px wide
-    if (photo.width < 1200) return false;
-    // Aspect ratio between 16:9 and 2:1
-    const ratio = photo.width / photo.height;
-    if (ratio < 1.5 || ratio > 2.2) return false;
-    return true;
-  });
-}
-
-// ----- ALT text generation -----
-
-function generateAltText(
+function generateContextualAlt(
   input: ArticleImageInput,
   position: string
 ): string {
+  if (input.teams.length >= 2 && position === "featured") {
+    return `${input.teams[0]} contre ${input.teams[1]} — ${input.league} | 360 Foot`;
+  }
+  if (input.teams.length === 1) {
+    return `${input.teams[0]} — ${input.league} | 360 Foot`;
+  }
   if (position === "featured") {
-    if (input.teams.length === 2) {
-      return `Match de football ${input.teams[0]} contre ${input.teams[1]} — ${input.league}`;
-    }
-    return `Actualité football ${input.league} — 360 Foot`;
+    return `${input.league} — Actualité football | 360 Foot`;
   }
-
-  if (position === "mid") {
-    return `Ambiance de match de football — ${input.league}`;
-  }
-
-  return `Football — 360 Foot`;
+  return `Ambiance football ${input.league} | 360 Foot`;
 }
 
 // ----- Main function -----
@@ -102,60 +86,50 @@ function generateAltText(
 export async function getArticleImages(
   input: ArticleImageInput
 ): Promise<ArticleImage[]> {
-  const queries = generateImageQueries(input);
-  const allPhotos: PexelsPhoto[] = [];
-  const seenIds = new Set<number>();
+  const articleCtx = {
+    title: input.title,
+    content: "",
+    teams: input.teams,
+    league: input.league,
+    tags: input.tags,
+    type: input.type,
+  };
 
-  // Try queries in order until we have enough images
-  for (const query of queries) {
-    if (allPhotos.length >= 5) break;
-
-    const photos = await searchPexels(query);
-    const filtered = filterImages(photos);
-
-    for (const photo of filtered) {
-      if (!seenIds.has(photo.id)) {
-        seenIds.add(photo.id);
-        allPhotos.push(photo);
-      }
-    }
-  }
-
-  // If still no images, try generic fallback
-  if (allPhotos.length === 0) {
-    const fallbackPhotos = await searchPexels("football soccer");
-    const filtered = filterImages(fallbackPhotos);
-    allPhotos.push(...filtered);
-  }
-
-  // Determine how many images based on content length
-  // Default to 2 images (featured + mid)
-  const positions: ("featured" | "mid" | "end")[] = ["featured", "mid"];
-  if (allPhotos.length >= 3) {
-    positions.push("end");
-  }
-
+  const queries = generateContextualQueries(articleCtx);
+  const ctx = detectContext(articleCtx);
   const images: ArticleImage[] = [];
 
-  for (let i = 0; i < Math.min(positions.length, allPhotos.length); i++) {
-    const photo = allPhotos[i];
-    const position = positions[i];
+  for (const query of queries) {
+    if (images.length >= 2) break; // Max 2 images par article
+
+    const photos = await searchPexels(query);
+
+    // Sélectionner la meilleure image avec scoring
+    const best = selectBestImage(photos, ctx);
+    if (!best) continue;
+
+    // Vérification contextuelle — rejeter les images hors sport
+    if (!isImageContextual(best, articleCtx)) {
+      continue;
+    }
+
+    const position = images.length === 0 ? "featured" : "mid";
 
     images.push({
-      url: `${photo.src.large2x || photo.src.large}?auto=compress&cs=tinysrgb&w=1200`,
-      alt: generateAltText(input, position),
-      credit: `Photo by ${photo.photographer} on Pexels`,
+      url: `${best.src.large2x || best.src.large}?auto=compress&cs=tinysrgb&w=1200`,
+      alt: generateContextualAlt(input, position),
+      credit: `Photo by ${best.photographer} on Pexels`,
       width: 1200,
-      height: Math.round((1200 / photo.width) * photo.height),
-      position,
+      height: Math.round(1200 * (best.height / best.width)),
+      position: position as "featured" | "mid",
     });
   }
 
-  // If absolutely no images found, use default
+  // Fallback si aucune image trouvée
   if (images.length === 0) {
     images.push({
       url: "/images/default-football.jpg",
-      alt: generateAltText(input, "featured"),
+      alt: `Football — ${input.league} | 360 Foot`,
       credit: "360 Foot",
       width: 1200,
       height: 675,
@@ -219,14 +193,6 @@ export function injectImagesIntoHTML(
       const mid = images.find((img) => img.position === "mid");
       if (mid) {
         result += generateImgTag(mid);
-      }
-    }
-
-    // End image: after the second-to-last paragraph
-    if (index === paragraphs.length - 3) {
-      const end = images.find((img) => img.position === "end");
-      if (end) {
-        result += generateImgTag(end);
       }
     }
   });
