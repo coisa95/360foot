@@ -10,15 +10,23 @@ import Link from "next/link";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Actualites football africain et europeen - 360 Foot",
+  title: "Actualités football africain et européen",
   description:
-    "Retrouvez toutes les actualites du football africain et europeen : resultats, transferts, analyses et avant-matchs.",
+    "Retrouvez toutes les actualités du football africain et européen : résultats, transferts, analyses et avant-matchs.",
+  alternates: {
+    canonical: "https://360-foot.com/actu",
+  },
   openGraph: {
-    title: "Actualites football - 360 Foot",
+    title: "Actualités football africain et européen - 360 Foot",
     description:
-      "Toutes les actualites du football africain et europeen sur 360 Foot.",
+      "Toutes les actualités du football africain et européen sur 360 Foot.",
     type: "website",
     url: "https://360-foot.com/actu",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Actualités football africain et européen - 360 Foot",
+    description: "Toutes les actualités du football africain et européen sur 360 Foot.",
   },
 };
 

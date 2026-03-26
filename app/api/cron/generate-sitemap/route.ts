@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://360foot.com";
+const BASE_URL = "https://360-foot.com";
 
 export async function GET(request: Request) {
   try {
@@ -38,18 +38,22 @@ export async function GET(request: Request) {
     const urls: Array<{ loc: string; lastmod: string; priority: string; changefreq: string }> = [];
 
     // Static pages
+    const now = new Date().toISOString();
     urls.push(
-      { loc: BASE_URL, lastmod: new Date().toISOString(), priority: "1.0", changefreq: "hourly" },
-      { loc: `${BASE_URL}/resultats`, lastmod: new Date().toISOString(), priority: "0.9", changefreq: "hourly" },
-      { loc: `${BASE_URL}/classements`, lastmod: new Date().toISOString(), priority: "0.8", changefreq: "daily" },
-      { loc: `${BASE_URL}/transferts`, lastmod: new Date().toISOString(), priority: "0.7", changefreq: "daily" },
+      { loc: BASE_URL, lastmod: now, priority: "1.0", changefreq: "hourly" },
+      { loc: `${BASE_URL}/actu`, lastmod: now, priority: "0.9", changefreq: "hourly" },
+      { loc: `${BASE_URL}/resultats`, lastmod: now, priority: "0.9", changefreq: "hourly" },
+      { loc: `${BASE_URL}/classements`, lastmod: now, priority: "0.8", changefreq: "daily" },
+      { loc: `${BASE_URL}/transferts`, lastmod: now, priority: "0.7", changefreq: "daily" },
+      { loc: `${BASE_URL}/bons-plans`, lastmod: now, priority: "0.6", changefreq: "weekly" },
+      { loc: `${BASE_URL}/methodologie`, lastmod: now, priority: "0.3", changefreq: "monthly" },
+      { loc: `${BASE_URL}/mentions-legales`, lastmod: now, priority: "0.2", changefreq: "monthly" },
     );
 
-    // Articles
+    // Articles — all under /actu/
     for (const article of articles || []) {
-      const prefix = article.type === "preview" ? "avant-match" : article.type === "transfer" ? "transferts" : "resultats";
       urls.push({
-        loc: `${BASE_URL}/${prefix}/${article.slug}`,
+        loc: `${BASE_URL}/actu/${article.slug}`,
         lastmod: article.updated_at || article.published_at,
         priority: "0.8",
         changefreq: "weekly",

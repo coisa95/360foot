@@ -26,16 +26,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!article) return { title: "Article introuvable - 360 Foot" };
 
+  const articleUrl = `https://360-foot.com/actu/${slug}`;
+  const articleTitle = article.seo_title || article.title;
+  const articleDescription = article.seo_description || article.excerpt;
+  const articleImage = article.og_image_url || article.image || "https://360-foot.com/icon-512.png";
+
   return {
-    title: article.seo_title || `${article.title} - 360 Foot`,
-    description: article.seo_description || article.excerpt,
+    title: articleTitle,
+    description: articleDescription,
+    alternates: {
+      canonical: articleUrl,
+    },
     openGraph: {
-      title: article.seo_title || article.title,
-      description: article.seo_description || article.excerpt,
+      title: articleTitle,
+      description: articleDescription,
       type: "article",
-      url: `https://360-foot.com/actu/${slug}`,
-      images: (article.og_image_url || article.image) ? [{ url: article.og_image_url || article.image }] : undefined,
+      url: articleUrl,
+      images: [{ url: articleImage }],
       publishedTime: article.published_at,
+      section: "Football",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: articleTitle,
+      description: articleDescription,
+      images: [articleImage],
     },
   };
 }

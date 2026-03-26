@@ -33,6 +33,7 @@ export const metadata: Metadata = {
     "Premier League",
     "Champions League",
   ],
+  // Canonical is set per-page, not globally
   openGraph: {
     type: "website",
     locale: "fr_FR",
@@ -41,11 +42,20 @@ export const metadata: Metadata = {
     title: "360 Foot — Actu Football Afrique & Europe en Direct",
     description:
       "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
+    images: [
+      {
+        url: "https://360-foot.com/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "360 Foot — Actu Football Afrique & Europe",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "360 Foot",
     description: "Toute l'actu football Afrique & Europe en direct.",
+    images: ["https://360-foot.com/icon-512.png"],
   },
   robots: {
     index: true,
@@ -98,6 +108,8 @@ export default function RootLayout({
   return (
     <html lang="fr" className={cn("dark font-sans antialiased", geist.variable)}>
       <head>
+        <link rel="preconnect" href="https://images.pexels.com" />
+        <link rel="dns-prefetch" href="https://images.pexels.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
