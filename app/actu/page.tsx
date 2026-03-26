@@ -148,37 +148,36 @@ export default async function ActuPage({ searchParams }: Props) {
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
-        <h1 className="mt-6 text-3xl font-bold md:text-4xl">
-          <span className="text-lime-400">Actualités</span> Football
-        </h1>
-        <p className="mt-2 text-gray-400">
-          Les dernières infos du football africain et européen
-        </p>
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">
+            <span className="text-lime-400">Actu</span> Football
+          </h1>
 
-        {/* Category tabs */}
-        <div className="mt-6 flex flex-wrap gap-2">
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat.value}
-              href={cat.value === "all" ? "/actu" : `/actu?categorie=${cat.value}`}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                activeCategory === cat.value
-                  ? "bg-lime-500 text-dark-bg"
-                  : "bg-dark-card text-gray-400 hover:bg-dark-surface hover:text-white"
-              }`}
-            >
-              {cat.label}
-            </Link>
-          ))}
+          {/* Category tabs — compact, scrollable on mobile */}
+          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide sm:gap-2">
+            {CATEGORIES.map((cat) => (
+              <Link
+                key={cat.value}
+                href={cat.value === "all" ? "/actu" : `/actu?categorie=${cat.value}`}
+                className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium transition-colors sm:px-4 sm:py-1.5 sm:text-sm ${
+                  activeCategory === cat.value
+                    ? "bg-lime-500 text-dark-bg"
+                    : "bg-dark-card text-gray-400 hover:bg-dark-surface hover:text-white"
+                }`}
+              >
+                {cat.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
         {featuredArticle ? (
           <>
-            {/* Featured article - large card */}
-            <Link href={`/actu/${featuredArticle.slug}`} className="group mt-8 block">
+            {/* Featured article - compact on mobile, large on desktop */}
+            <Link href={`/actu/${featuredArticle.slug}`} className="group mt-4 block sm:mt-6">
               <Card className="overflow-hidden border-dark-border bg-dark-card transition-all hover:border-lime-500/30">
                 <div className="grid md:grid-cols-2">
-                  <div className="relative aspect-video md:aspect-auto md:min-h-[300px]">
+                  <div className="relative aspect-[2/1] sm:aspect-video md:aspect-auto md:min-h-[280px]">
                     <Image
                       src={`/api/og?title=${encodeURIComponent(featuredArticle.title)}&type=${featuredArticle.type || "result"}&league=${encodeURIComponent((featuredArticle.league as Record<string, unknown>)?.name as string || "")}`}
                       alt={featuredArticle.title}
@@ -186,9 +185,15 @@ export default async function ActuPage({ searchParams }: Props) {
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
+                    {/* Badge overlay on mobile */}
+                    <div className="absolute left-2 top-2 md:hidden">
+                      <Badge className={`text-[10px] ${TYPE_COLORS[featuredArticle.type] || "bg-lime-500/10 text-lime-400"}`}>
+                        {TYPE_LABELS[featuredArticle.type] || featuredArticle.type}
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="flex flex-col justify-center p-6">
-                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <div className="flex flex-col justify-center p-3 sm:p-4 md:p-6">
+                    <div className="mb-2 hidden flex-wrap items-center gap-2 md:flex">
                       <Badge className={TYPE_COLORS[featuredArticle.type] || "bg-lime-500/10 text-lime-400"}>
                         {TYPE_LABELS[featuredArticle.type] || featuredArticle.type}
                       </Badge>
@@ -198,15 +203,15 @@ export default async function ActuPage({ searchParams }: Props) {
                         </span>
                       )}
                     </div>
-                    <h2 className="mb-3 text-2xl font-bold leading-tight text-white transition-colors group-hover:text-lime-400">
+                    <h2 className="mb-1 text-base font-bold leading-tight text-white transition-colors group-hover:text-lime-400 sm:mb-2 sm:text-lg md:mb-3 md:text-2xl">
                       {featuredArticle.title}
                     </h2>
                     {featuredArticle.excerpt && (
-                      <p className="mb-4 line-clamp-3 text-gray-400">
+                      <p className="mb-2 line-clamp-2 text-xs text-gray-400 sm:line-clamp-3 sm:text-sm md:mb-4">
                         {featuredArticle.excerpt}
                       </p>
                     )}
-                    <time className="text-xs text-gray-500" dateTime={featuredArticle.created_at}>
+                    <time className="text-[10px] text-gray-500 sm:text-xs" dateTime={featuredArticle.created_at}>
                       {new Date(featuredArticle.created_at).toLocaleDateString("fr-FR", {
                         day: "numeric",
                         month: "long",
