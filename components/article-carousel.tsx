@@ -49,7 +49,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
   return (
     <div className="relative">
       {/* Carousel container */}
-      <div className="relative overflow-hidden rounded-2xl shadow-xl shadow-black/20" style={{ minHeight: "320px" }}>
+      <div className="relative overflow-hidden rounded-xl md:rounded-2xl shadow-xl shadow-black/20" style={{ minHeight: "200px" }}>
         {articles.map((article, i) => {
           const typeColor = TYPE_COLORS[article.type] || "bg-lime-500/20 text-lime-400 border-lime-500/25";
           const typeLabel = TYPE_LABELS[article.type] || "Actu";
@@ -65,9 +65,10 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
                 ${i === current ? "opacity-100 z-10" : "opacity-0 z-0"}
               `}
             >
-              <div className="grid h-full md:grid-cols-2 bg-dark-card/90 border border-dark-border/50 rounded-2xl overflow-hidden backdrop-blur-sm">
+              {/* Mobile: overlay text on image | Desktop: side by side */}
+              <div className="relative h-full md:grid md:grid-cols-2 bg-dark-card/90 border border-dark-border/50 rounded-xl md:rounded-2xl overflow-hidden backdrop-blur-sm">
                 {/* Image */}
-                <div className="relative aspect-video md:aspect-auto md:min-h-[320px]">
+                <div className="relative h-[200px] md:h-auto md:min-h-[320px]">
                   <Image
                     src={article.og_image_url || `/api/og?title=${encodeURIComponent(article.title)}&type=${article.type}`}
                     alt={article.title}
@@ -75,32 +76,33 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark-bg/60 to-transparent md:bg-gradient-to-r md:from-transparent md:to-dark-card/30" />
+                  {/* Mobile: dark overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/70 to-transparent md:bg-gradient-to-r md:from-transparent md:to-dark-card/30" />
                 </div>
 
-                {/* Content */}
-                <div className="flex flex-col justify-center p-6 md:p-8">
-                  <div className="mb-3 flex flex-wrap items-center gap-2">
-                    <span className={`rounded-lg border px-2.5 py-0.5 text-[11px] font-semibold ${typeColor}`}>
+                {/* Content — mobile: overlaid on image | desktop: side panel */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 md:relative md:flex md:flex-col md:justify-center md:p-8">
+                  <div className="mb-1 md:mb-3 flex flex-wrap items-center gap-1.5 md:gap-2">
+                    <span className={`rounded-md md:rounded-lg border px-2 py-0.5 text-[10px] md:text-[11px] font-semibold ${typeColor}`}>
                       {typeLabel}
                     </span>
                     {leagueName && (
-                      <span className="text-xs text-gray-400">{leagueName}</span>
+                      <span className="text-[10px] md:text-xs text-gray-400">{leagueName}</span>
                     )}
                   </div>
 
-                  <h2 className="mb-3 text-xl font-bold leading-tight text-white md:text-2xl line-clamp-3">
+                  <h2 className="mb-1 md:mb-3 text-sm md:text-2xl font-bold leading-tight text-white line-clamp-2 md:line-clamp-3">
                     {article.title}
                   </h2>
 
                   {article.excerpt && (
-                    <p className="mb-4 line-clamp-2 text-sm text-gray-400">
+                    <p className="hidden md:block mb-4 line-clamp-2 text-sm text-gray-400">
                       {article.excerpt}
                     </p>
                   )}
 
                   <div className="flex items-center justify-between">
-                    <time className="text-xs text-gray-500" dateTime={article.published_at}>
+                    <time className="text-[10px] md:text-xs text-gray-500" dateTime={article.published_at}>
                       {new Date(article.published_at).toLocaleDateString("fr-FR", {
                         day: "numeric",
                         month: "long",
@@ -108,8 +110,8 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
                         minute: "2-digit",
                       })}
                     </time>
-                    <span className="text-xs font-medium text-lime-400">
-                      Lire l&apos;article →
+                    <span className="text-[10px] md:text-xs font-medium text-lime-400">
+                      Lire →
                     </span>
                   </div>
                 </div>
@@ -119,12 +121,12 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
         })}
       </div>
 
-      {/* Navigation arrows */}
+      {/* Navigation arrows — hidden on mobile, visible on md+ */}
       {total > 1 && (
         <>
           <button
             onClick={() => setCurrent((prev) => (prev - 1 + total) % total)}
-            className="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg"
+            className="hidden md:block absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg"
             aria-label="Précédent"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -133,7 +135,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
           </button>
           <button
             onClick={() => setCurrent((prev) => (prev + 1) % total)}
-            className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg"
+            className="hidden md:block absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg"
             aria-label="Suivant"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -145,15 +147,15 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
 
       {/* Dots */}
       {total > 1 && (
-        <div className="flex justify-center gap-2 mt-4">
+        <div className="flex justify-center gap-1.5 md:gap-2 mt-2 md:mt-4">
           {articles.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
               className={`rounded-full transition-all duration-500 ${
                 i === current
-                  ? "w-8 h-2 bg-gradient-to-r from-lime-400 to-emerald-400 shadow-lg shadow-lime-500/30"
-                  : "w-2 h-2 bg-gray-600 hover:bg-gray-500"
+                  ? "w-5 md:w-8 h-1.5 md:h-2 bg-gradient-to-r from-lime-400 to-emerald-400 shadow-lg shadow-lime-500/30"
+                  : "w-1.5 md:w-2 h-1.5 md:h-2 bg-gray-600 hover:bg-gray-500"
               }`}
               aria-label={`Article ${i + 1}`}
             />

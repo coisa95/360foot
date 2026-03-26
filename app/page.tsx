@@ -68,23 +68,23 @@ export default async function HomePage() {
   const remainingArticles = articles.slice(6);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      {/* Hero */}
-      <section className="mb-10 bg-glow-lime rounded-2xl p-6">
-        <h1 className="text-3xl font-bold text-white md:text-4xl">
+    <div className="mx-auto max-w-7xl px-4 py-4 md:py-8">
+      {/* Hero — compact on mobile */}
+      <section className="mb-4 md:mb-10 bg-glow-lime rounded-xl md:rounded-2xl px-4 py-3 md:p-6">
+        <h1 className="text-lg font-bold text-white md:text-4xl">
           Actu Football{" "}
           <span className="bg-gradient-to-r from-lime-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
             Afrique &amp; Europe
           </span>
         </h1>
-        <p className="mt-3 text-gray-400 text-lg">
+        <p className="mt-1 md:mt-3 text-gray-400 text-xs md:text-lg hidden sm:block">
           Résultats, analyses, transferts — couverture 24/7 du football africain et européen.
         </p>
       </section>
 
       {/* SECTION 1: Articles en vedette — Carousel */}
       {articles.length > 0 && (
-        <section className="mb-8">
+        <section className="mb-4 md:mb-8">
           <ArticleCarousel
             articles={articles.slice(0, 6).map((a: Record<string, unknown>) => ({
               slug: a.slug as string,
@@ -98,7 +98,7 @@ export default async function HomePage() {
           />
 
           {/* Bouton voir toutes les actus */}
-          <div className="mt-6 text-center">
+          <div className="mt-3 md:mt-6 text-center">
             <Link
               href="/actu"
               className="inline-block rounded-xl bg-gradient-to-r from-lime-500/10 to-emerald-500/10 border border-lime-500/20 px-6 py-2.5 text-sm font-semibold text-lime-400 shadow-lg shadow-lime-500/5 transition-all duration-300 hover:from-lime-500/20 hover:to-emerald-500/20 hover:shadow-xl hover:shadow-lime-500/10 hover:-translate-y-0.5"
@@ -109,9 +109,9 @@ export default async function HomePage() {
         </section>
       )}
 
-      <Separator className="my-6 bg-dark-border" />
+      <Separator className="my-3 md:my-6 bg-dark-border" />
 
-      <div className="grid gap-8 lg:grid-cols-3">
+      <div className="grid gap-4 md:gap-8 lg:grid-cols-3">
         {/* Main Content */}
         <div className="lg:col-span-2">
           {/* SECTION 2: Matchs du jour */}
