@@ -54,6 +54,42 @@ export const metadata: Metadata = {
   },
 };
 
+// JSON-LD Organization + WebSite schema for Google Knowledge Panel
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://360-foot.com/#organization",
+      name: "360 Foot",
+      url: "https://360-foot.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://360-foot.com/icon-512.png",
+        width: 512,
+        height: 512,
+      },
+      description:
+        "Média football spécialisé sur l'actualité du football africain et européen. Résultats, classements, transferts et analyses en direct.",
+      foundingDate: "2025",
+      sameAs: [],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://360-foot.com/#website",
+      url: "https://360-foot.com",
+      name: "360 Foot",
+      publisher: { "@id": "https://360-foot.com/#organization" },
+      inLanguage: "fr-FR",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://360-foot.com/actu?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -61,6 +97,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={cn("dark font-sans antialiased", geist.variable)}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-screen bg-background text-foreground">
         <Header />
         <AffiliateTicker />

@@ -1,6 +1,15 @@
 export function GET() {
   const robotsTxt = `User-agent: *
 Allow: /
+Disallow: /api/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
 
 Sitemap: https://360-foot.com/sitemap.xml
 `;
