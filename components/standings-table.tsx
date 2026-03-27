@@ -43,7 +43,7 @@ export function StandingsTable({
         <h3 className="text-sm font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{leagueName}</h3>
         {compact && (
           <Link
-            href={`/classement/${leagueSlug}`}
+            href={`/ligue/${leagueSlug}/classement`}
             className="text-xs text-lime-400 hover:underline"
           >
             Voir tout

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AffiliateTicker } from "@/components/affiliate-ticker";
+import { LeagueSidebar } from "@/components/league-sidebar";
 
 const geist = localFont({
   src: "./fonts/GeistVF.woff",
@@ -118,7 +119,10 @@ export default function RootLayout({
       <body className="min-h-screen bg-background text-foreground">
         <Header />
         <AffiliateTicker />
-        <main className="min-h-[calc(100vh-8rem)]">{children}</main>
+        <div className="flex">
+          <LeagueSidebar />
+          <main className="min-h-[calc(100vh-8rem)] flex-1 lg:ml-56">{children}</main>
+        </div>
         <Footer />
       </body>
     </html>

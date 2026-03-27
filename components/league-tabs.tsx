@@ -1,0 +1,48 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+interface LeagueTabsProps {
+  leagueSlug: string;
+}
+
+const TABS = [
+  { key: "resume", label: "Résumé", path: "" },
+  { key: "classement", label: "Classement", path: "/classement" },
+  { key: "resultats", label: "Résultats", path: "/resultats" },
+  { key: "calendrier", label: "Calendrier", path: "/calendrier" },
+];
+
+export default function LeagueTabs({ leagueSlug }: LeagueTabsProps) {
+  const pathname = usePathname();
+
+  function isActive(tabPath: string) {
+    const base = `/ligue/${leagueSlug}`;
+    if (tabPath === "") return pathname === base || pathname === `${base}/`;
+    return pathname.startsWith(`${base}${tabPath}`);
+  }
+
+  return (
+    <nav className="overflow-x-auto scrollbar-hide">
+      <div className="flex min-w-max">
+        {TABS.map((tab) => {
+          const active = isActive(tab.path);
+          return (
+            <Link
+              key={tab.key}
+              href={`/ligue/${leagueSlug}${tab.path}`}
+              className={`px-5 py-3 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
+                active
+                  ? "text-lime-400 border-lime-400"
+                  : "text-gray-400 border-transparent hover:text-gray-200 hover:border-gray-600"
+              }`}
+            >
+              {tab.label}
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}

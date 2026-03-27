@@ -29,18 +29,18 @@ const LEAGUES = [
 ];
 
 const CLASSEMENTS = [
-  { href: "/classement/ligue-1-cote-divoire", label: "🇨🇮 Ligue 1 CI" },
-  { href: "/classement/ligue-pro-senegal", label: "🇸🇳 Ligue Pro SN" },
-  { href: "/classement/elite-one-cameroun", label: "🇨🇲 Elite One CM" },
-  { href: "/classement/championnat-national-benin", label: "🇧🇯 Champ. Bénin" },
-  { href: "/classement/linafoot-ligue-1", label: "🇨🇩 Linafoot RDC" },
-  { href: "/classement/ligue-1-france", label: "🇫🇷 Ligue 1" },
-  { href: "/classement/premier-league", label: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League" },
-  { href: "/classement/la-liga", label: "🇪🇸 La Liga" },
-  { href: "/classement/serie-a", label: "🇮🇹 Serie A" },
-  { href: "/classement/bundesliga", label: "🇩🇪 Bundesliga" },
-  { href: "/classement/mls", label: "🇺🇸 MLS" },
-  { href: "/classement/saudi-pro-league", label: "🇸🇦 Saudi Pro League" },
+  { href: "/ligue/ligue-1-cote-divoire/classement", label: "🇨🇮 Ligue 1 CI" },
+  { href: "/ligue/ligue-pro-senegal/classement", label: "🇸🇳 Ligue Pro SN" },
+  { href: "/ligue/elite-one-cameroun/classement", label: "🇨🇲 Elite One CM" },
+  { href: "/ligue/championnat-national-benin/classement", label: "🇧🇯 Champ. Bénin" },
+  { href: "/ligue/linafoot-ligue-1/classement", label: "🇨🇩 Linafoot RDC" },
+  { href: "/ligue/ligue-1-france/classement", label: "🇫🇷 Ligue 1" },
+  { href: "/ligue/premier-league/classement", label: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League" },
+  { href: "/ligue/la-liga/classement", label: "🇪🇸 La Liga" },
+  { href: "/ligue/serie-a/classement", label: "🇮🇹 Serie A" },
+  { href: "/ligue/bundesliga/classement", label: "🇩🇪 Bundesliga" },
+  { href: "/ligue/mls/classement", label: "🇺🇸 MLS" },
+  { href: "/ligue/saudi-pro-league/classement", label: "🇸🇦 Saudi Pro League" },
 ];
 
 export function Header() {
