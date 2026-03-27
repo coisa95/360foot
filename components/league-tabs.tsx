@@ -12,6 +12,7 @@ const TABS = [
   { key: "classement", label: "Classement", path: "/classement" },
   { key: "resultats", label: "Résultats", path: "/resultats" },
   { key: "calendrier", label: "Calendrier", path: "/calendrier" },
+  { key: "actualites", label: "Actualités", path: "/actualites" },
 ];
 
 export default function LeagueTabs({ leagueSlug }: LeagueTabsProps) {

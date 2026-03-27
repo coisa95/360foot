@@ -116,14 +116,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-background text-foreground">
+      <body className="min-h-screen bg-background text-foreground overflow-x-hidden">
         <Header />
         <AffiliateTicker />
-        <div className="flex">
-          <LeagueSidebar />
-          <main className="min-h-[calc(100vh-8rem)] flex-1 lg:ml-56">{children}</main>
+        <LeagueSidebar />
+        <div className="lg:ml-56">
+          <main className="min-h-[calc(100vh-8rem)]">{children}</main>
+          <Footer />
         </div>
-        <Footer />
       </body>
     </html>
   );

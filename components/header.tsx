@@ -7,12 +7,11 @@ import { useState } from "react";
 const NAV_LINKS = [
   { href: "/", label: "Accueil" },
   { href: "/actu", label: "Actualités" },
-  { href: "/resultats", label: "Résultats" },
   { href: "/transferts", label: "Transferts" },
   { href: "/bons-plans", label: "Bons Plans" },
 ];
 
-const LEAGUES = [
+const MOBILE_LEAGUES = [
   { href: "/ligue/ligue-1-cote-divoire", label: "🇨🇮 Ligue 1 CI" },
   { href: "/ligue/ligue-pro-senegal", label: "🇸🇳 Ligue Pro SN" },
   { href: "/ligue/elite-one-cameroun", label: "🇨🇲 Elite One CM" },
@@ -28,24 +27,8 @@ const LEAGUES = [
   { href: "/ligue/saudi-pro-league", label: "🇸🇦 Saudi Pro League" },
 ];
 
-const CLASSEMENTS = [
-  { href: "/ligue/ligue-1-cote-divoire/classement", label: "🇨🇮 Ligue 1 CI" },
-  { href: "/ligue/ligue-pro-senegal/classement", label: "🇸🇳 Ligue Pro SN" },
-  { href: "/ligue/elite-one-cameroun/classement", label: "🇨🇲 Elite One CM" },
-  { href: "/ligue/championnat-national-benin/classement", label: "🇧🇯 Champ. Bénin" },
-  { href: "/ligue/linafoot-ligue-1/classement", label: "🇨🇩 Linafoot RDC" },
-  { href: "/ligue/ligue-1-france/classement", label: "🇫🇷 Ligue 1" },
-  { href: "/ligue/premier-league/classement", label: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League" },
-  { href: "/ligue/la-liga/classement", label: "🇪🇸 La Liga" },
-  { href: "/ligue/serie-a/classement", label: "🇮🇹 Serie A" },
-  { href: "/ligue/bundesliga/classement", label: "🇩🇪 Bundesliga" },
-  { href: "/ligue/mls/classement", label: "🇺🇸 MLS" },
-  { href: "/ligue/saudi-pro-league/classement", label: "🇸🇦 Saudi Pro League" },
-];
-
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mobileClassementsOpen, setMobileClassementsOpen] = useState(false);
   const [mobileLiguesOpen, setMobileLiguesOpen] = useState(false);
 
   return (
@@ -67,7 +50,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden items-center gap-5 lg:flex">
+        <nav className="hidden items-center gap-6 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -77,48 +60,6 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-
-          {/* Classements dropdown */}
-          <div className="group relative">
-            <button className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-lime-400">
-              Classements
-              <svg className="h-3 w-3 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div className="invisible absolute left-0 top-full z-50 mt-2 w-56 rounded-xl border border-dark-border/50 bg-dark-card/95 backdrop-blur-xl p-2 opacity-0 shadow-2xl shadow-black/40 transition-all group-hover:visible group-hover:opacity-100">
-              {CLASSEMENTS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="block rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-surface hover:text-lime-400"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Ligues dropdown */}
-          <div className="group relative">
-            <button className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-lime-400">
-              Ligues
-              <svg className="h-3 w-3 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div className="invisible absolute left-0 top-full z-50 mt-2 w-56 rounded-xl border border-dark-border/50 bg-dark-card/95 backdrop-blur-xl p-2 opacity-0 shadow-2xl shadow-black/40 transition-all group-hover:visible group-hover:opacity-100">
-              {LEAGUES.map((league) => (
-                <Link
-                  key={league.href}
-                  href={league.href}
-                  className="block rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-surface hover:text-lime-400"
-                >
-                  {league.label}
-                </Link>
-              ))}
-            </div>
-          </div>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -127,26 +68,11 @@ export function Header() {
           className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-lime-400 lg:hidden"
           aria-label="Menu"
         >
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {menuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             )}
           </svg>
         </button>
@@ -167,35 +93,8 @@ export function Header() {
               </Link>
             ))}
 
-            {/* Mobile Classements accordion */}
+            {/* Mobile Ligues accordion (sidebar replacement on mobile) */}
             <div className="mt-2 border-t border-dark-border pt-2">
-              <button
-                onClick={() => setMobileClassementsOpen(!mobileClassementsOpen)}
-                className="flex w-full items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500"
-              >
-                Classements
-                <svg className={`h-3 w-3 transition-transform ${mobileClassementsOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {mobileClassementsOpen && (
-                <div className="ml-2">
-                  {CLASSEMENTS.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMenuOpen(false)}
-                      className="block rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Mobile Ligues accordion */}
-            <div className="border-t border-dark-border pt-2">
               <button
                 onClick={() => setMobileLiguesOpen(!mobileLiguesOpen)}
                 className="flex w-full items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500"
@@ -207,7 +106,7 @@ export function Header() {
               </button>
               {mobileLiguesOpen && (
                 <div className="ml-2">
-                  {LEAGUES.map((league) => (
+                  {MOBILE_LEAGUES.map((league) => (
                     <Link
                       key={league.href}
                       href={league.href}
