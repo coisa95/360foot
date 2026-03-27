@@ -7,8 +7,19 @@ import { useState } from "react";
 const NAV_LINKS = [
   { href: "/", label: "Accueil" },
   { href: "/actu", label: "Actualités" },
+  { href: "/resultats", label: "Résultats" },
   { href: "/transferts", label: "Transferts" },
   { href: "/bons-plans", label: "Bons Plans" },
+];
+
+const DROPDOWN_LEAGUES = [
+  { href: "/ligue/ligue-1-cote-divoire", label: "🇨🇮 Ligue 1 Côte d'Ivoire" },
+  { href: "/ligue/ligue-pro-senegal", label: "🇸🇳 Ligue Pro Sénégal" },
+  { href: "/ligue/elite-one-cameroun", label: "🇨🇲 Elite One Cameroun" },
+  { href: "/ligue/ligue-1-france", label: "🇫🇷 Ligue 1 France" },
+  { href: "/ligue/premier-league", label: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League" },
+  { href: "/ligue/la-liga", label: "🇪🇸 La Liga" },
+  { href: "/ligue/champions-league", label: "🏆 Champions League" },
 ];
 
 const MOBILE_LEAGUES = [
@@ -30,6 +41,7 @@ const MOBILE_LEAGUES = [
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileLiguesOpen, setMobileLiguesOpen] = useState(false);
+  const [liguesDropdownOpen, setLiguesDropdownOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-dark-border/50 bg-dark-bg/90 backdrop-blur-xl shadow-lg shadow-black/20">
@@ -60,6 +72,33 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+
+          {/* Ligues Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setLiguesDropdownOpen(true)}
+            onMouseLeave={() => setLiguesDropdownOpen(false)}
+          >
+            <button className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-lime-400">
+              Ligues
+              <svg className={`h-3 w-3 transition-transform ${liguesDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {liguesDropdownOpen && (
+              <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-dark-border bg-dark-bg/95 backdrop-blur-xl shadow-xl shadow-black/30 py-2 z-50">
+                {DROPDOWN_LEAGUES.map((league) => (
+                  <Link
+                    key={league.href}
+                    href={league.href}
+                    className="block px-4 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
+                  >
+                    {league.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -93,11 +132,11 @@ export function Header() {
               </Link>
             ))}
 
-            {/* Mobile Ligues accordion (sidebar replacement on mobile) */}
-            <div className="mt-2 border-t border-dark-border pt-2">
+            {/* Mobile Ligues accordion */}
+            <div className="mt-1 border-t border-dark-border pt-1">
               <button
                 onClick={() => setMobileLiguesOpen(!mobileLiguesOpen)}
-                className="flex w-full items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500"
+                className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
               >
                 Ligues
                 <svg className={`h-3 w-3 transition-transform ${mobileLiguesOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
