@@ -82,23 +82,24 @@ export default async function TeamPage({ params }: Props) {
     .single();
 
   // Find this team's position in the standings data
+  // data_json stores flat objects: { rank, team_name, team_api_id, played, won, drawn, lost, points, goals_for, goals_against, ... }
   let standings: any = null;
   if (standingsRow?.data_json) {
     const allStandings = Array.isArray(standingsRow.data_json) ? standingsRow.data_json : [];
     const teamEntry = allStandings.find((s: any) =>
-      s.team?.id === team.api_football_id ||
-      s.team?.name?.toLowerCase() === team.name?.toLowerCase()
+      s.team_api_id === team.api_football_id ||
+      s.team_name?.toLowerCase() === team.name?.toLowerCase()
     );
     if (teamEntry) {
       standings = {
         position: teamEntry.rank,
         points: teamEntry.points,
-        played: teamEntry.all?.played || 0,
-        won: teamEntry.all?.win || 0,
-        drawn: teamEntry.all?.draw || 0,
-        lost: teamEntry.all?.lose || 0,
-        goals_for: teamEntry.all?.goals?.for || 0,
-        goals_against: teamEntry.all?.goals?.against || 0,
+        played: teamEntry.played || 0,
+        won: teamEntry.won || 0,
+        drawn: teamEntry.drawn || 0,
+        lost: teamEntry.lost || 0,
+        goals_for: teamEntry.goals_for || 0,
+        goals_against: teamEntry.goals_against || 0,
       };
     }
   }
