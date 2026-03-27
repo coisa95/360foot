@@ -11,6 +11,15 @@
     },
     "app/api/cron/enrich-matches/route.ts": {
       "maxDuration": 300
+    },
+    "app/api/cron/enrich-previews/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/fetch-top-players/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/fetch-team-stats/route.ts": {
+      "maxDuration": 300
     }
   },
   "crons": [
@@ -18,8 +27,11 @@
     { "path": "/api/cron/generate-articles", "schedule": "10 * * * *" },
     { "path": "/api/cron/generate-previews", "schedule": "20 * * * *" },
     { "path": "/api/cron/enrich-matches", "schedule": "*/10 * * * *" },
+    { "path": "/api/cron/enrich-previews", "schedule": "40 * * * *" },
     { "path": "/api/cron/update-standings", "schedule": "30 * * * *" },
     { "path": "/api/cron/scrape-transfers", "schedule": "0 8,14,20 * * *" },
+    { "path": "/api/cron/fetch-top-players", "schedule": "0 6 * * *" },
+    { "path": "/api/cron/fetch-team-stats", "schedule": "0 5 * * *" },
     { "path": "/api/cron/generate-sitemap", "schedule": "0 3 * * *" },
     { "path": "/api/cron/process-rss", "schedule": "0 */3 * * *" }
   ]

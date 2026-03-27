@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description =
     match.status === "FT"
       ? `Score final : ${homeName} ${match.score_home} - ${match.score_away} ${awayName}. ${leagueName}. Résumé, buteurs, stats et compositions.`
-      : `Avant-match ${homeName} vs ${awayName} en ${leagueName}. Heure, compositions probables et analyse.`;
+      : `Avant-match ${homeName} vs ${awayName} en ${leagueName}. Pronostics, compositions probables et analyse.`;
 
   return {
     title,
@@ -118,10 +118,13 @@ export default async function MatchPage({ params }: Props) {
   const leagueName = match.league?.name || "";
   const leagueSlug = match.league?.slug || "";
 
-  // Extract data from stats_json
+  // Extract data from JSON columns
   const statsJson = match.stats_json as any;
   const eventsJson = match.events_json as any[] | null;
   const lineupsJson = match.lineups_json as any[] | null;
+  const predictionsJson = match.predictions_json as any | null;
+  const h2hJson = match.h2h_json as any[] | null;
+  const injuriesJson = match.injuries_json as any[] | null;
 
   // Match info
   const referee = statsJson?.fixture?.referee || statsJson?.matchInfo?.referee || null;
@@ -132,7 +135,6 @@ export default async function MatchPage({ params }: Props) {
   // Statistics
   const statistics = statsJson?.statistics as Record<string, { home: any; away: any }> | null;
 
-  // Key stats to display in priority order
   const PRIORITY_STATS = [
     "Ball Possession", "Total Shots", "Shots on Goal", "Shots off Goal",
     "Corner Kicks", "Offsides", "Fouls", "Yellow Cards", "Red Cards",
@@ -141,6 +143,7 @@ export default async function MatchPage({ params }: Props) {
 
   const isFinished = match.status === "FT";
   const isLive = ["1H", "2H", "HT", "ET", "P", "BT"].includes(match.status);
+  const isUpcoming = match.status === "NS";
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
@@ -197,7 +200,7 @@ export default async function MatchPage({ params }: Props) {
             {/* Home team */}
             <div className="flex-1 text-center">
               {match.home_team?.logo_url && (
-                // eslint-disable-next-line @next/next/no-img-element
+                /* eslint-disable-next-line @next/next/no-img-element */
                 <img src={match.home_team.logo_url} alt={homeName} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
               <h2 className="text-sm font-bold sm:text-lg">{homeName}</h2>
@@ -232,7 +235,7 @@ export default async function MatchPage({ params }: Props) {
             {/* Away team */}
             <div className="flex-1 text-center">
               {match.away_team?.logo_url && (
-                // eslint-disable-next-line @next/next/no-img-element
+                /* eslint-disable-next-line @next/next/no-img-element */
                 <img src={match.away_team.logo_url} alt={awayName} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
               <h2 className="text-sm font-bold sm:text-lg">{awayName}</h2>
@@ -240,13 +243,195 @@ export default async function MatchPage({ params }: Props) {
           </div>
         </Card>
 
+        {/* ── Predictions (Upcoming matches only) ── */}
+        {isUpcoming && predictionsJson && (
+          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
+            <h3 className="mb-4 text-lg font-bold text-lime-400">🔮 Pronostic</h3>
+
+            {/* Advice */}
+            {predictionsJson.advice && (
+              <div className="mb-4 rounded-lg bg-dark-bg p-3 text-center">
+                <p className="text-sm font-medium text-white">{predictionsJson.advice}</p>
+              </div>
+            )}
+
+            {/* Win probability */}
+            {predictionsJson.percent && (
+              <div className="mb-4">
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="font-medium">{homeName}</span>
+                  <span className="text-gray-400">Nul</span>
+                  <span className="font-medium">{awayName}</span>
+                </div>
+                <div className="flex h-3 gap-0.5 overflow-hidden rounded-full">
+                  <div
+                    className="bg-lime-400 rounded-l-full transition-all flex items-center justify-center"
+                    style={{ width: predictionsJson.percent.home || "33%" }}
+                  >
+                    <span className="text-[10px] font-bold text-black">{predictionsJson.percent.home}</span>
+                  </div>
+                  <div
+                    className="bg-gray-500 transition-all flex items-center justify-center"
+                    style={{ width: predictionsJson.percent.draw || "33%" }}
+                  >
+                    <span className="text-[10px] font-bold text-white">{predictionsJson.percent.draw}</span>
+                  </div>
+                  <div
+                    className="bg-blue-400 rounded-r-full transition-all flex items-center justify-center"
+                    style={{ width: predictionsJson.percent.away || "33%" }}
+                  >
+                    <span className="text-[10px] font-bold text-black">{predictionsJson.percent.away}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Form */}
+            {(predictionsJson.home_form || predictionsJson.away_form) && (
+              <div className="grid grid-cols-2 gap-4 mt-3">
+                {predictionsJson.home_form && (
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Forme {homeName}</p>
+                    <div className="flex gap-1">
+                      {predictionsJson.home_form.split("").map((r: string, i: number) => (
+                        <span key={i} className={`inline-flex h-6 w-6 items-center justify-center rounded text-xs font-bold ${
+                          r === "W" ? "bg-green-500/20 text-green-400" :
+                          r === "D" ? "bg-gray-500/20 text-gray-400" :
+                          "bg-red-500/20 text-red-400"
+                        }`}>
+                          {r === "W" ? "V" : r === "D" ? "N" : "D"}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {predictionsJson.away_form && (
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Forme {awayName}</p>
+                    <div className="flex gap-1">
+                      {predictionsJson.away_form.split("").map((r: string, i: number) => (
+                        <span key={i} className={`inline-flex h-6 w-6 items-center justify-center rounded text-xs font-bold ${
+                          r === "W" ? "bg-green-500/20 text-green-400" :
+                          r === "D" ? "bg-gray-500/20 text-gray-400" :
+                          "bg-red-500/20 text-red-400"
+                        }`}>
+                          {r === "W" ? "V" : r === "D" ? "N" : "D"}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Comparison */}
+            {predictionsJson.comparison && Object.keys(predictionsJson.comparison).length > 0 && (
+              <div className="mt-4 space-y-2">
+                <Separator className="bg-gray-800" />
+                <p className="text-xs text-gray-500 font-medium mt-2">Comparaison</p>
+                {Object.entries(predictionsJson.comparison).map(([key, val]: [string, any]) => {
+                  const homePercent = parseInt(val.home) || 50;
+                  const compLabels: Record<string, string> = {
+                    "Form": "Forme", "Att": "Attaque", "Def": "Défense",
+                    "Poisson Distribution": "Distribution", "H2H": "Confrontations",
+                    "Goals": "Buts", "Total": "Global",
+                  };
+                  return (
+                    <div key={key}>
+                      <div className="flex justify-between text-xs mb-1">
+                        <span>{val.home}</span>
+                        <span className="text-gray-500">{compLabels[key] || key}</span>
+                        <span>{val.away}</span>
+                      </div>
+                      <div className="flex h-1.5 gap-0.5 overflow-hidden rounded-full">
+                        <div className="bg-lime-400 rounded-l-full" style={{ width: `${homePercent}%` }} />
+                        <div className="bg-blue-400 rounded-r-full" style={{ width: `${100 - homePercent}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </Card>
+        )}
+
+        {/* ── Head to Head ── */}
+        {h2hJson && h2hJson.length > 0 && (
+          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
+            <h3 className="mb-4 text-lg font-bold text-lime-400">⚔️ Confrontations directes</h3>
+            <div className="space-y-2">
+              {h2hJson.map((h2h: any, idx: number) => (
+                <div key={idx} className="flex items-center justify-between rounded-lg bg-dark-bg px-3 py-2 text-sm">
+                  <span className="text-xs text-gray-500 w-20">
+                    {new Date(h2h.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
+                  </span>
+                  <span className={`flex-1 text-right ${h2h.homeScore > h2h.awayScore ? "text-white font-medium" : "text-gray-400"}`}>
+                    {h2h.homeTeam}
+                  </span>
+                  <span className="mx-3 font-bold text-lime-400">
+                    {h2h.homeScore} - {h2h.awayScore}
+                  </span>
+                  <span className={`flex-1 ${h2h.awayScore > h2h.homeScore ? "text-white font-medium" : "text-gray-400"}`}>
+                    {h2h.awayTeam}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        {/* ── Injuries ── */}
+        {injuriesJson && injuriesJson.length > 0 && (
+          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
+            <h3 className="mb-4 text-lg font-bold text-lime-400">🏥 Absents et blessés</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Home team injuries */}
+              <div>
+                <p className="text-sm font-medium text-white mb-2">{homeName}</p>
+                <div className="space-y-1">
+                  {injuriesJson
+                    .filter((inj: any) => inj.team === homeName)
+                    .map((inj: any, idx: number) => (
+                      <div key={idx} className="flex items-center gap-2 text-sm">
+                        <span className="text-red-400">✕</span>
+                        <span className="flex-1 text-gray-300">{inj.player}</span>
+                        <span className="text-xs text-gray-500">{inj.reason}</span>
+                      </div>
+                    ))}
+                  {injuriesJson.filter((inj: any) => inj.team === homeName).length === 0 && (
+                    <p className="text-xs text-gray-500">Aucun absent signalé</p>
+                  )}
+                </div>
+              </div>
+              {/* Away team injuries */}
+              <div>
+                <p className="text-sm font-medium text-white mb-2">{awayName}</p>
+                <div className="space-y-1">
+                  {injuriesJson
+                    .filter((inj: any) => inj.team === awayName)
+                    .map((inj: any, idx: number) => (
+                      <div key={idx} className="flex items-center gap-2 text-sm">
+                        <span className="text-red-400">✕</span>
+                        <span className="flex-1 text-gray-300">{inj.player}</span>
+                        <span className="text-xs text-gray-500">{inj.reason}</span>
+                      </div>
+                    ))}
+                  {injuriesJson.filter((inj: any) => inj.team === awayName).length === 0 && (
+                    <p className="text-xs text-gray-500">Aucun absent signalé</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
+        )}
+
         {/* ── Events (Goals, Cards, Subs) ── */}
         {eventsJson && eventsJson.length > 0 && (
           <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
             <h3 className="mb-4 text-lg font-bold text-lime-400">Événements du match</h3>
             <div className="space-y-2">
               {eventsJson
-                .filter((e: any) => e.type !== "subst") // Hide substitutions for cleaner view
+                .filter((e: any) => e.type !== "subst")
                 .map((event: any, index: number) => {
                   const isHome = event.team === homeName;
                   return (

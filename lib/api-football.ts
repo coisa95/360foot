@@ -266,3 +266,197 @@ export async function getPlayerStats(playerId: number, season: number): Promise<
     season: String(season),
   });
 }
+
+// ============================================
+// TRANSFERS
+// ============================================
+
+export interface Transfer {
+  player: { id: number; name: string };
+  update: string;
+  transfers: {
+    date: string;
+    type: string; // "Free", "Loan", "N/A", or fee amount
+    teams: {
+      in: { id: number; name: string; logo: string };
+      out: { id: number; name: string; logo: string };
+    };
+  }[];
+}
+
+export async function getTransfers(teamId: number): Promise<Transfer[]> {
+  return fetchApi<Transfer[]>("/transfers", { team: String(teamId) });
+}
+
+export async function getPlayerTransfers(playerId: number): Promise<Transfer[]> {
+  return fetchApi<Transfer[]>("/transfers", { player: String(playerId) });
+}
+
+// ============================================
+// TOP SCORERS / ASSISTS / CARDS
+// ============================================
+
+export interface TopPlayer {
+  player: {
+    id: number;
+    name: string;
+    firstname: string;
+    lastname: string;
+    age: number;
+    nationality: string;
+    photo: string;
+  };
+  statistics: {
+    team: { id: number; name: string; logo: string };
+    league: { id: number; name: string; logo: string };
+    games: { appearances: number; lineups: number; minutes: number; rating: string | null };
+    goals: { total: number | null; assists: number | null; conceded: number | null; saves: number | null };
+    passes: { total: number | null; key: number | null; accuracy: number | null };
+    shots: { total: number | null; on: number | null };
+    cards: { yellow: number; yellowred: number; red: number };
+    penalty: { scored: number | null; missed: number | null };
+  }[];
+}
+
+export async function getTopScorers(leagueId: number, season: number): Promise<TopPlayer[]> {
+  return fetchApi<TopPlayer[]>("/players/topscorers", {
+    league: String(leagueId),
+    season: String(season),
+  });
+}
+
+export async function getTopAssists(leagueId: number, season: number): Promise<TopPlayer[]> {
+  return fetchApi<TopPlayer[]>("/players/topassists", {
+    league: String(leagueId),
+    season: String(season),
+  });
+}
+
+export async function getTopYellowCards(leagueId: number, season: number): Promise<TopPlayer[]> {
+  return fetchApi<TopPlayer[]>("/players/topyellowcards", {
+    league: String(leagueId),
+    season: String(season),
+  });
+}
+
+export async function getTopRedCards(leagueId: number, season: number): Promise<TopPlayer[]> {
+  return fetchApi<TopPlayer[]>("/players/topredcards", {
+    league: String(leagueId),
+    season: String(season),
+  });
+}
+
+// ============================================
+// PREDICTIONS & HEAD TO HEAD
+// ============================================
+
+export interface Prediction {
+  predictions: {
+    winner: { id: number; name: string; comment: string } | null;
+    win_or_draw: boolean;
+    under_over: string | null;
+    goals: { home: string; away: string };
+    advice: string;
+    percent: { home: string; draw: string; away: string };
+  };
+  league: { id: number; name: string; logo: string };
+  teams: {
+    home: { id: number; name: string; logo: string; last_5: { form: string; att: string; def: string; goals: { for: { total: number }; against: { total: number } } } };
+    away: { id: number; name: string; logo: string; last_5: { form: string; att: string; def: string; goals: { for: { total: number }; against: { total: number } } } };
+  };
+  comparison: Record<string, { home: string; away: string }>;
+  h2h: MatchFixture[];
+}
+
+export async function getPredictions(fixtureId: number): Promise<Prediction[]> {
+  return fetchApi<Prediction[]>("/predictions", { fixture: String(fixtureId) });
+}
+
+export async function getHeadToHead(team1Id: number, team2Id: number, last?: number): Promise<MatchFixture[]> {
+  const params: Record<string, string> = {
+    h2h: `${team1Id}-${team2Id}`,
+  };
+  if (last) params.last = String(last);
+  return fetchApi<MatchFixture[]>("/fixtures/headtohead", params);
+}
+
+// ============================================
+// INJURIES / SIDELINED
+// ============================================
+
+export interface Injury {
+  player: { id: number; name: string; photo: string; type: string; reason: string };
+  team: { id: number; name: string; logo: string };
+  fixture: { id: number; date: string };
+  league: { id: number; name: string; country: string; logo: string; flag: string; season: number };
+}
+
+export async function getInjuries(fixtureId: number): Promise<Injury[]> {
+  return fetchApi<Injury[]>("/injuries", { fixture: String(fixtureId) });
+}
+
+export async function getInjuriesByTeam(teamId: number, season: number): Promise<Injury[]> {
+  return fetchApi<Injury[]>("/injuries", {
+    team: String(teamId),
+    season: String(season),
+  });
+}
+
+// ============================================
+// TEAM STATISTICS
+// ============================================
+
+export interface TeamStatistics {
+  league: { id: number; name: string };
+  team: { id: number; name: string; logo: string };
+  form: string;
+  fixtures: {
+    played: { home: number; away: number; total: number };
+    wins: { home: number; away: number; total: number };
+    draws: { home: number; away: number; total: number };
+    loses: { home: number; away: number; total: number };
+  };
+  goals: {
+    for: { total: { home: number; away: number; total: number }; average: { home: string; away: string; total: string }; minute: Record<string, { total: number | null; percentage: string | null }> };
+    against: { total: { home: number; away: number; total: number }; average: { home: string; away: string; total: string } };
+  };
+  biggest: {
+    streak: { wins: number; draws: number; loses: number };
+    wins: { home: string; away: string };
+    loses: { home: string; away: string };
+    goals: { for: { home: number; away: number }; against: { home: number; away: number } };
+  };
+  clean_sheet: { home: number; away: number; total: number };
+  failed_to_score: { home: number; away: number; total: number };
+  penalty: { scored: { total: number; percentage: string }; missed: { total: number; percentage: string } };
+  lineups: { formation: string; played: number }[];
+}
+
+export async function getTeamStatistics(teamId: number, leagueId: number, season: number): Promise<TeamStatistics> {
+  return fetchApi<TeamStatistics>("/teams/statistics", {
+    team: String(teamId),
+    league: String(leagueId),
+    season: String(season),
+  });
+}
+
+// ============================================
+// COACHES
+// ============================================
+
+export interface Coach {
+  id: number;
+  name: string;
+  firstname: string;
+  lastname: string;
+  age: number;
+  birth: { date: string; place: string; country: string };
+  nationality: string;
+  photo: string;
+  team: { id: number; name: string; logo: string };
+  career: { team: { id: number; name: string; logo: string }; start: string; end: string | null }[];
+}
+
+export async function getCoach(teamId: number): Promise<Coach[]> {
+  return fetchApi<Coach[]>("/coachs", { team: String(teamId) });
+}
