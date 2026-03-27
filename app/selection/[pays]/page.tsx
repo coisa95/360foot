@@ -32,11 +32,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://360-foot.com/selection/${pays}`,
+    },
     openGraph: {
       title,
       description,
       type: "website",
       url: `https://360-foot.com/selection/${pays}`,
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title,
+      description,
     },
   };
 }
@@ -77,6 +85,22 @@ export default async function NationalTeamPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-dark-bg text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SportsTeam",
+            name: country.fullName,
+            sport: "Football",
+            url: `https://360-foot.com/selection/${pays}`,
+            location: {
+              "@type": "Country",
+              name: country.name,
+            },
+          }),
+        }}
+      />
       <div className="container mx-auto px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 

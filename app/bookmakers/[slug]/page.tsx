@@ -30,11 +30,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://360-foot.com/bookmakers/${slug}`,
+    },
     openGraph: {
       title,
       description,
       type: "website",
       url: `https://360-foot.com/bookmakers/${slug}`,
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title,
+      description,
     },
   };
 }
@@ -59,6 +67,35 @@ export default async function BookmakerPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-dark-bg text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            itemReviewed: {
+              "@type": "Organization",
+              name: bookmaker.name,
+              url: bookmaker.affiliate_url || `https://360-foot.com/bookmakers/${slug}`,
+            },
+            reviewRating: bookmaker.rating
+              ? {
+                  "@type": "Rating",
+                  ratingValue: bookmaker.rating,
+                  bestRating: 5,
+                }
+              : undefined,
+            author: {
+              "@type": "Organization",
+              name: "360 Foot",
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "360 Foot",
+            },
+          }),
+        }}
+      />
       <div className="container mx-auto px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 

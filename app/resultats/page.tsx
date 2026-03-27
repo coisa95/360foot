@@ -4,6 +4,7 @@ import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const revalidate = 300;
@@ -219,12 +220,12 @@ export default async function ResultatsPage({ searchParams }: Props) {
                               )}
                             </span>
                             {String(homeTeam?.logo_url || "") !== "" && (
-                              /* eslint-disable-next-line @next/next/no-img-element */
-                              <img
+                              <Image
                                 src={String(homeTeam?.logo_url)}
                                 alt={String(homeTeam?.name)}
+                                width={32}
+                                height={32}
                                 className="h-8 w-8 object-contain"
-                                loading="lazy"
                               />
                             )}
                           </div>
@@ -241,12 +242,12 @@ export default async function ResultatsPage({ searchParams }: Props) {
                           {/* Away team */}
                           <div className="flex flex-1 items-center gap-3">
                             {String(awayTeam?.logo_url || "") !== "" && (
-                              /* eslint-disable-next-line @next/next/no-img-element */
-                              <img
+                              <Image
                                 src={String(awayTeam?.logo_url)}
                                 alt={String(awayTeam?.name)}
+                                width={32}
+                                height={32}
                                 className="h-8 w-8 object-contain"
-                                loading="lazy"
                               />
                             )}
                             <span className="text-sm font-medium text-white">

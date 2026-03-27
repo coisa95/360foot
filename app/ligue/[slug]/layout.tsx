@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import LeagueTabs from "@/components/league-tabs";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
-/* eslint-disable @next/next/no-img-element, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const revalidate = 300;
 
@@ -65,9 +66,11 @@ export default async function LeagueLayout({ params, children }: Props) {
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-5">
           <div className="flex items-center gap-3">
             {league.logo_url && (
-              <img
+              <Image
                 src={league.logo_url}
                 alt={league.name}
+                width={56}
+                height={56}
                 className="h-10 w-10 sm:h-14 sm:w-14 object-contain"
               />
             )}

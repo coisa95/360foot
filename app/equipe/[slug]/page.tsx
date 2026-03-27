@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 
 export const revalidate = 300;
@@ -39,6 +40,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical: `https://360-foot.com/equipe/${slug}` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/equipe/${slug}` },
+    twitter: {
+      card: "summary_large_image" as const,
+      title,
+      description,
+    },
   };
 }
 
@@ -172,8 +178,7 @@ export default async function TeamPage({ params }: Props) {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
               {team.logo_url && (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={team.logo_url} alt={`Logo ${team.name}`} className="h-16 w-16 object-contain" />
+                <Image src={team.logo_url} alt={`Logo ${team.name}`} width={64} height={64} className="h-16 w-16 object-contain" />
               )}
               <div>
                 <h1 className="text-3xl font-bold text-lime-400">{team.name}</h1>

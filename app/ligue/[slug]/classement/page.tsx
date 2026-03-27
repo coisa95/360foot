@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 
 export const revalidate = 300;
@@ -48,6 +49,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/classement` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/classement` },
+    twitter: {
+      card: "summary_large_image" as const,
+      title,
+      description,
+    },
   };
 }
 
@@ -88,6 +94,20 @@ export default async function LeagueStandingsPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Accueil", item: "https://360-foot.com" },
+              { "@type": "ListItem", position: 2, name: league.name, item: `https://360-foot.com/ligue/${slug}` },
+              { "@type": "ListItem", position: 3, name: "Classement" },
+            ],
+          }),
+        }}
+      />
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-gray-500">
           Saison {season}
@@ -125,7 +145,6 @@ export default async function LeagueStandingsPage({ params }: Props) {
               </tr>
             </thead>
             <tbody>
-              {/* eslint-disable @next/next/no-img-element */}
               {standings.map((row, index) => {
                 const teamSlug = teamSlugMap.get(row.team_api_id);
                 return (
@@ -141,7 +160,7 @@ export default async function LeagueStandingsPage({ params }: Props) {
                     <td className="p-1.5 sm:p-3">
                       <div className="flex items-center gap-1.5">
                         {row.team_logo && (
-                          <img src={row.team_logo} alt={row.team_name} className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0" />
+                          <Image src={row.team_logo} alt={row.team_name} width={20} height={20} className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0" />
                         )}
                         {teamSlug ? (
                           <Link href={`/equipe/${teamSlug}`} className="font-medium hover:text-lime-400 transition-colors truncate">

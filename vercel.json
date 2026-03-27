@@ -33,6 +33,6 @@
     { "path": "/api/cron/fetch-top-players", "schedule": "0 6 * * *" },
     { "path": "/api/cron/fetch-team-stats", "schedule": "0 5 * * *" },
     { "path": "/api/cron/generate-sitemap", "schedule": "0 3 * * *" },
-    { "path": "/api/cron/process-rss", "schedule": "0 */3 * * *" }
+    { "path": "/api/cron/process-rss", "schedule": "50 * * * *" }
   ]
 }
