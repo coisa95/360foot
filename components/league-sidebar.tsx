@@ -1,7 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
-
-/* eslint-disable @next/next/no-img-element */
 
 interface League {
   id: string;
@@ -101,9 +100,11 @@ export async function LeagueSidebar({ activeSlug }: LeagueSidebarProps) {
                       }`}
                     >
                       {league.logo_url ? (
-                        <img
+                        <Image
                           src={league.logo_url}
                           alt=""
+                          width={20}
+                          height={20}
                           className="h-5 w-5 shrink-0 rounded-sm object-contain"
                         />
                       ) : (

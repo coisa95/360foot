@@ -45,6 +45,18 @@ export default async function BookmakersPage() {
 
   return (
     <main className="min-h-screen bg-dark-bg text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: "Comparateur de Bookmakers — 360 Foot",
+            description: "Comparatif des meilleurs bookmakers football en Afrique.",
+            url: "https://360-foot.com/bookmakers",
+          }),
+        }}
+      />
       <div className="container mx-auto px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 

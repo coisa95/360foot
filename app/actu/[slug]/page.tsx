@@ -6,6 +6,7 @@ import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export const revalidate = 300;
@@ -213,12 +214,14 @@ export default async function ArticlePage({ params }: Props) {
 
           {/* Image */}
           {(article.og_image_url || article.image) && (
-            <div className="mb-8 rounded-xl overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className="relative mb-8 rounded-xl overflow-hidden aspect-video">
+              <Image
                 src={article.og_image_url || article.image}
                 alt={article.title}
-                className="w-full h-auto object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 768px"
+                priority
               />
             </div>
           )}

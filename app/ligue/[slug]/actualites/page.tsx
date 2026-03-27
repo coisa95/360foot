@@ -32,6 +32,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/actualites` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/actualites` },
+    twitter: {
+      card: "summary_large_image" as const,
+      title,
+      description,
+    },
   };
 }
 
@@ -57,6 +62,20 @@ export default async function LeagueNewsPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Accueil", item: "https://360-foot.com" },
+              { "@type": "ListItem", position: 2, name: league.name, item: `https://360-foot.com/ligue/${slug}` },
+              { "@type": "ListItem", position: 3, name: "Actualités" },
+            ],
+          }),
+        }}
+      />
       {articles && articles.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {articles.map((article: any) => (

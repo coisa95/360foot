@@ -6,6 +6,7 @@ import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 
 export const revalidate = 300;
@@ -101,7 +102,19 @@ export default async function LeagueResumePage({ params }: Props) {
 
   return (
     <>
-      {/* Main grid: on mobile = stacked (classement → matchs → buteurs → actus), on desktop = 2 cols */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SportsOrganization",
+            name: league.name,
+            sport: "Football",
+            url: `https://360-foot.com/ligue/${slug}`,
+          }),
+        }}
+      />
+      {/* Main grid: on mobile = classement+buteurs first, then matchs+actus. On desktop = 2 cols */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         {/* Right sidebar on desktop, but first on mobile */}
         <div className="order-1 lg:order-2 space-y-4">
@@ -124,8 +137,7 @@ export default async function LeagueResumePage({ params }: Props) {
                   <div key={idx} className="flex items-center gap-2">
                     <span className="w-4 text-center text-[10px] font-bold text-gray-500">{idx + 1}</span>
                     {player.photo && (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={player.photo} alt={player.name} className="h-5 w-5 rounded-full object-cover" />
+                      <Image src={player.photo} alt={player.name} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-white text-[11px] truncate">{player.name}</p>

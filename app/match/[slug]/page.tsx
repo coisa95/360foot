@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export const revalidate = 300;
@@ -200,8 +201,7 @@ export default async function MatchPage({ params }: Props) {
             {/* Home team */}
             <div className="flex-1 text-center">
               {match.home_team?.logo_url && (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={match.home_team.logo_url} alt={homeName} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
+                <Image src={match.home_team.logo_url} alt={homeName} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
               <h2 className="text-sm font-bold sm:text-lg">{homeName}</h2>
             </div>
@@ -235,8 +235,7 @@ export default async function MatchPage({ params }: Props) {
             {/* Away team */}
             <div className="flex-1 text-center">
               {match.away_team?.logo_url && (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={match.away_team.logo_url} alt={awayName} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
+                <Image src={match.away_team.logo_url} alt={awayName} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
               <h2 className="text-sm font-bold sm:text-lg">{awayName}</h2>
             </div>

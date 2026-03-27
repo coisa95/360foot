@@ -32,6 +32,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/resultats` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/resultats` },
+    twitter: {
+      card: "summary_large_image" as const,
+      title,
+      description,
+    },
   };
 }
 
@@ -70,6 +75,20 @@ export default async function LeagueResultsPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Accueil", item: "https://360-foot.com" },
+              { "@type": "ListItem", position: 2, name: league.name, item: `https://360-foot.com/ligue/${slug}` },
+              { "@type": "ListItem", position: 3, name: "Résultats" },
+            ],
+          }),
+        }}
+      />
       {grouped.size > 0 ? (
         <div className="space-y-4">
           {Array.from(grouped.entries()).map(([dateLabel, dateMatches]) => (

@@ -19,6 +19,12 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://360-foot.com/confidentialite",
   },
+  twitter: {
+    card: "summary_large_image" as const,
+    title: "Politique de confidentialite - 360 Foot",
+    description:
+      "Politique de confidentialite de 360 Foot. Decouvrez comment nous collectons, utilisons et protegeons vos donnees personnelles.",
+  },
 };
 
 export default function PrivacyPage() {
