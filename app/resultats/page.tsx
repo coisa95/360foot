@@ -285,10 +285,8 @@ export default async function ResultatsPage({ searchParams }: Props) {
             ))}
           </div>
         ) : (
-          <div className="mt-8 rounded-lg border border-dark-border bg-dark-card p-8 text-center">
-            <p className="text-gray-500">
-              Aucun résultat disponible pour le moment.
-            </p>
+          <div className="mt-8 rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+            <p className="text-sm text-gray-500">Aucun résultat disponible pour le moment.</p>
           </div>
         )}
 

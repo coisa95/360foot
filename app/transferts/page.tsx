@@ -175,11 +175,9 @@ export default async function TransfersPage() {
                 </Card>
               ))
             ) : (
-              <Card className="bg-dark-card border-gray-800 p-8 text-center">
-                <p className="text-gray-400">
-                  Les transferts sont mis à jour automatiquement. Revenez bientôt !
-                </p>
-              </Card>
+              <div className="rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+                <p className="text-sm text-gray-500">Aucun transfert disponible pour le moment.</p>
+              </div>
             )}
           </div>
         </div>
