@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   description:
     "Retrouvez toutes les actualités du football africain et européen : résultats, transferts, analyses et avant-matchs.",
   alternates: {
-    canonical: "https://360foot.info/actu",
+    canonical: "https://360-foot.com/actu",
   },
   openGraph: {
     title: "Actualités football africain et européen - 360 Foot",
     description:
       "Toutes les actualités du football africain et européen sur 360 Foot.",
     type: "website",
-    url: "https://360foot.info/actu",
+    url: "https://360-foot.com/actu",
   },
   twitter: {
     card: "summary_large_image",

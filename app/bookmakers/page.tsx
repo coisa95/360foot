@@ -12,14 +12,14 @@ export const metadata: Metadata = {
   description:
     "Comparez les meilleurs bookmakers pour parier sur le football africain. Bonus de bienvenue, cotes et avis sur les sites de paris sportifs.",
   alternates: {
-    canonical: "https://360foot.info/bookmakers",
+    canonical: "https://360-foot.com/bookmakers",
   },
   openGraph: {
     title: "Paris sportifs - Comparateur de bookmakers - 360 Foot",
     description:
       "Comparez les meilleurs bookmakers pour parier sur le football africain. Bonus de bienvenue, cotes et avis sur les sites de paris sportifs.",
     type: "website",
-    url: "https://360foot.info/bookmakers",
+    url: "https://360-foot.com/bookmakers",
   },
 };
 

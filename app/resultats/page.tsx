@@ -13,14 +13,14 @@ export const metadata: Metadata = {
   description:
     "Tous les résultats et scores du football africain et européen en direct. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League, Champions League.",
   alternates: {
-    canonical: "https://360foot.info/resultats",
+    canonical: "https://360-foot.com/resultats",
   },
   openGraph: {
     title: "Résultats football en direct - 360 Foot",
     description:
       "Scores et résultats du football africain et européen en temps réel.",
     type: "website",
-    url: "https://360foot.info/resultats",
+    url: "https://360-foot.com/resultats",
   },
 };
 

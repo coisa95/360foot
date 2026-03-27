@@ -13,14 +13,14 @@ export const metadata: Metadata = {
   description:
     "Guides complets sur les paris sportifs et comparateur des meilleurs bookmakers en Afrique. Bonus, stratégies et conseils pour parier sur le football.",
   alternates: {
-    canonical: "https://360foot.info/bons-plans",
+    canonical: "https://360-foot.com/bons-plans",
   },
   openGraph: {
     title: "Bons Plans - Guides & Comparateur de bookmakers - 360 Foot",
     description:
       "Guides complets sur les paris sportifs et comparateur des meilleurs bookmakers en Afrique.",
     type: "website",
-    url: "https://360foot.info/bons-plans",
+    url: "https://360-foot.com/bons-plans",
   },
   twitter: {
     card: "summary_large_image",

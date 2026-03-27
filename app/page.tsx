@@ -11,7 +11,7 @@ export const revalidate = 300;
 
 export const metadata = {
   alternates: {
-    canonical: "https://360foot.info",
+    canonical: "https://360-foot.com",
   },
 };
 

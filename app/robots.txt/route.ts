@@ -17,8 +17,8 @@ Disallow: /api/
 Disallow: /actu?page=
 Disallow: /actu?categorie=*&page=
 
-Sitemap: https://360foot.info/sitemap.xml
-Sitemap: https://360foot.info/news-sitemap.xml
+Sitemap: https://360-foot.com/sitemap.xml
+Sitemap: https://360-foot.com/news-sitemap.xml
 `;
 
   return new Response(robotsTxt, {

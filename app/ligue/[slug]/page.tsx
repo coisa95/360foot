@@ -34,8 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: `https://360foot.info/ligue/${slug}` },
-    openGraph: { title, description, type: "website", url: `https://360foot.info/ligue/${slug}` },
+    alternates: { canonical: `https://360-foot.com/ligue/${slug}` },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}` },
   };
 }
 

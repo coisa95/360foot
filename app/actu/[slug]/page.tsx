@@ -26,10 +26,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!article) return { title: "Article introuvable - 360 Foot" };
 
-  const articleUrl = `https://360foot.info/actu/${slug}`;
+  const articleUrl = `https://360-foot.com/actu/${slug}`;
   const articleTitle = article.seo_title || article.title;
   const articleDescription = article.seo_description || article.excerpt;
-  const articleImage = article.og_image_url || article.image || "https://360foot.info/icon-512.png";
+  const articleImage = article.og_image_url || article.image || "https://360-foot.com/icon-512.png";
 
   return {
     title: articleTitle,
@@ -101,11 +101,11 @@ export default async function ArticlePage({ params }: Props) {
     { label: article.title },
   ];
 
-  const articleImageUrl = article.og_image_url || article.image || "https://360foot.info/icon-512.png";
+  const articleImageUrl = article.og_image_url || article.image || "https://360-foot.com/icon-512.png";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
-    "@id": `https://360foot.info/actu/${slug}#article`,
+    "@id": `https://360-foot.com/actu/${slug}#article`,
     headline: article.title,
     description: article.seo_description || article.excerpt,
     image: articleImageUrl,
@@ -114,28 +114,28 @@ export default async function ArticlePage({ params }: Props) {
     author: {
       "@type": "Person",
       name: "Rédaction 360 Foot",
-      url: "https://360foot.info/methodologie",
+      url: "https://360-foot.com/methodologie",
     },
     publisher: {
       "@type": "Organization",
-      "@id": "https://360foot.info/#organization",
+      "@id": "https://360-foot.com/#organization",
       name: "360 Foot",
-      url: "https://360foot.info",
+      url: "https://360-foot.com",
       logo: {
         "@type": "ImageObject",
-        url: "https://360foot.info/icon-512.png",
+        url: "https://360-foot.com/icon-512.png",
         width: 512,
         height: 512,
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://360foot.info/actu/${slug}`,
+      "@id": `https://360-foot.com/actu/${slug}`,
     },
     articleSection: "Football",
     inLanguage: "fr-FR",
     isPartOf: {
-      "@id": "https://360foot.info/#website",
+      "@id": "https://360-foot.com/#website",
     },
   };
 
@@ -223,7 +223,7 @@ export default async function ArticlePage({ params }: Props) {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <span className="text-sm font-medium text-gray-400">Partager :</span>
             <a
-              href={`https://twitter.com/intent/tweet?url=https://360foot.info/actu/${slug}&text=${encodeURIComponent(article.title)}`}
+              href={`https://twitter.com/intent/tweet?url=https://360-foot.com/actu/${slug}&text=${encodeURIComponent(article.title)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 rounded-lg bg-[#1DA1F2]/10 px-3 py-1.5 text-xs font-medium text-[#1DA1F2] transition-colors hover:bg-[#1DA1F2]/20"
@@ -232,7 +232,7 @@ export default async function ArticlePage({ params }: Props) {
               X / Twitter
             </a>
             <a
-              href={`https://www.facebook.com/sharer/sharer.php?u=https://360foot.info/actu/${slug}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=https://360-foot.com/actu/${slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 rounded-lg bg-[#1877F2]/10 px-3 py-1.5 text-xs font-medium text-[#1877F2] transition-colors hover:bg-[#1877F2]/20"
@@ -241,7 +241,7 @@ export default async function ArticlePage({ params }: Props) {
               Facebook
             </a>
             <a
-              href={`https://wa.me/?text=${encodeURIComponent(article.title + " — https://360foot.info/actu/" + slug)}`}
+              href={`https://wa.me/?text=${encodeURIComponent(article.title + " — https://360-foot.com/actu/" + slug)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 rounded-lg bg-[#25D366]/10 px-3 py-1.5 text-xs font-medium text-[#25D366] transition-colors hover:bg-[#25D366]/20"
@@ -250,7 +250,7 @@ export default async function ArticlePage({ params }: Props) {
               WhatsApp
             </a>
             <a
-              href={`https://t.me/share/url?url=https://360foot.info/actu/${slug}&text=${encodeURIComponent(article.title)}`}
+              href={`https://t.me/share/url?url=https://360-foot.com/actu/${slug}&text=${encodeURIComponent(article.title)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 rounded-lg bg-[#0088cc]/10 px-3 py-1.5 text-xs font-medium text-[#0088cc] transition-colors hover:bg-[#0088cc]/20"

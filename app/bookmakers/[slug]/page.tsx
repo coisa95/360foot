@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       type: "website",
-      url: `https://360foot.info/bookmakers/${slug}`,
+      url: `https://360-foot.com/bookmakers/${slug}`,
     },
   };
 }
