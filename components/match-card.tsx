@@ -18,9 +18,9 @@ interface MatchCardProps {
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   NS: { label: "À venir", color: "text-blue-400" },
-  "1H": { label: "1MT", color: "text-red-400" },
+  "1H": { label: "🔴 1MT", color: "text-red-400" },
   HT: { label: "MT", color: "text-yellow-400" },
-  "2H": { label: "2MT", color: "text-red-400" },
+  "2H": { label: "🔴 2MT", color: "text-red-400" },
   FT: { label: "Terminé", color: "text-emerald-400" },
   AET: { label: "AP", color: "text-emerald-400" },
   PEN: { label: "TAB", color: "text-emerald-400" },
@@ -37,6 +37,8 @@ export function MatchCard({
   status,
   date,
   leagueName,
+  homeTeamSlug,
+  awayTeamSlug,
   leagueSlug,
 }: MatchCardProps) {
   const matchDate = new Date(date);
@@ -47,12 +49,12 @@ export function MatchCard({
 
   return (
     <Link href={`/match/${slug}`} className="group block">
-      <div className={`flex items-center gap-2 rounded-lg border bg-dark-card/80 px-2.5 py-2 transition-colors hover:border-lime-500/20 ${isLive ? "border-red-500/30" : "border-dark-border/50"}`}>
-        {/* Date / Status */}
-        <div className="w-11 shrink-0 text-center">
+      <div className={`flex items-center gap-2 rounded-lg border bg-dark-card/80 px-3 py-2.5 transition-colors hover:border-lime-500/20 ${isLive ? "border-red-500/30" : "border-dark-border/50"}`}>
+        {/* Date / Time */}
+        <div className="w-12 shrink-0 text-center">
           {status === "NS" ? (
             <>
-              <p className="text-[11px] font-bold text-blue-400">{timeStr}</p>
+              <p className="text-xs font-bold text-blue-400">{timeStr}</p>
               <p className="text-[9px] text-gray-500">{dateStr}</p>
             </>
           ) : (
@@ -65,25 +67,27 @@ export function MatchCard({
 
         {/* Teams + Score */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-1">
-            <span className="text-[11px] sm:text-xs font-medium text-gray-200 truncate group-hover:text-white">{homeTeam}</span>
+          {/* Home */}
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-medium text-gray-200 truncate group-hover:text-white">{homeTeam}</span>
             {status !== "NS" && (
-              <span className={`text-[11px] sm:text-xs font-bold tabular-nums shrink-0 ${(homeScore ?? 0) > (awayScore ?? 0) ? "text-white" : "text-gray-400"}`}>
+              <span className={`text-xs font-bold tabular-nums ${(homeScore ?? 0) > (awayScore ?? 0) ? "text-white" : "text-gray-400"}`}>
                 {homeScore ?? 0}
               </span>
             )}
           </div>
-          <div className="flex items-center justify-between gap-1 mt-0.5">
-            <span className="text-[11px] sm:text-xs font-medium text-gray-200 truncate group-hover:text-white">{awayTeam}</span>
+          {/* Away */}
+          <div className="flex items-center justify-between gap-2 mt-0.5">
+            <span className="text-xs font-medium text-gray-200 truncate group-hover:text-white">{awayTeam}</span>
             {status !== "NS" && (
-              <span className={`text-[11px] sm:text-xs font-bold tabular-nums shrink-0 ${(awayScore ?? 0) > (homeScore ?? 0) ? "text-white" : "text-gray-400"}`}>
+              <span className={`text-xs font-bold tabular-nums ${(awayScore ?? 0) > (homeScore ?? 0) ? "text-white" : "text-gray-400"}`}>
                 {awayScore ?? 0}
               </span>
             )}
           </div>
         </div>
 
-        {/* League badge */}
+        {/* League badge (if provided) */}
         {leagueName && (
           <div className="hidden sm:block shrink-0">
             {leagueSlug ? (

@@ -111,17 +111,17 @@ export default async function LeagueStandingsPage({ params }: Props) {
           <table className="w-full text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-gray-800 text-gray-400">
-                <th className="text-left p-1.5 sm:p-3 w-6 sm:w-8">#</th>
-                <th className="text-left p-1.5 sm:p-3">Équipe</th>
-                <th className="text-center p-1.5 sm:p-3">MJ</th>
-                <th className="text-center p-1.5 sm:p-3 hidden sm:table-cell">V</th>
-                <th className="text-center p-1.5 sm:p-3 hidden sm:table-cell">N</th>
-                <th className="text-center p-1.5 sm:p-3 hidden sm:table-cell">D</th>
-                <th className="text-center p-1.5 sm:p-3 hidden md:table-cell">BP</th>
-                <th className="text-center p-1.5 sm:p-3 hidden md:table-cell">BC</th>
-                <th className="text-center p-1.5 sm:p-3">Diff</th>
-                <th className="text-center p-1.5 sm:p-3 font-bold text-lime-400">Pts</th>
-                <th className="text-center p-1.5 sm:p-3 hidden lg:table-cell">Forme</th>
+                <th className="text-left p-2 sm:p-3 w-6 sm:w-8">#</th>
+                <th className="text-left p-2 sm:p-3">Équipe</th>
+                <th className="text-center p-2 sm:p-3">MJ</th>
+                <th className="text-center p-2 sm:p-3 hidden sm:table-cell">V</th>
+                <th className="text-center p-2 sm:p-3 hidden sm:table-cell">N</th>
+                <th className="text-center p-2 sm:p-3 hidden sm:table-cell">D</th>
+                <th className="text-center p-2 sm:p-3 hidden md:table-cell">BP</th>
+                <th className="text-center p-2 sm:p-3 hidden md:table-cell">BC</th>
+                <th className="text-center p-2 sm:p-3">Diff</th>
+                <th className="text-center p-2 sm:p-3 font-bold text-lime-400">Pts</th>
+                <th className="text-center p-2 sm:p-3 hidden lg:table-cell">Forme</th>
               </tr>
             </thead>
             <tbody>
@@ -137,8 +137,8 @@ export default async function LeagueStandingsPage({ params }: Props) {
                       index >= standings.length - 3 ? "border-l-2 border-l-red-500" : ""
                     }`}
                   >
-                    <td className="p-1.5 sm:p-3 text-gray-400 font-mono">{row.rank}</td>
-                    <td className="p-1.5 sm:p-3">
+                    <td className="p-2 sm:p-3 text-gray-400 font-mono">{row.rank}</td>
+                    <td className="p-2 sm:p-3">
                       <div className="flex items-center gap-1.5">
                         {row.team_logo && (
                           <img src={row.team_logo} alt={row.team_name} className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0" />
@@ -152,24 +152,24 @@ export default async function LeagueStandingsPage({ params }: Props) {
                         )}
                       </div>
                     </td>
-                    <td className="text-center p-1.5 sm:p-3">{row.played}</td>
-                    <td className="text-center p-1.5 sm:p-3 text-green-400 hidden sm:table-cell">{row.won}</td>
-                    <td className="text-center p-1.5 sm:p-3 text-gray-400 hidden sm:table-cell">{row.drawn}</td>
-                    <td className="text-center p-1.5 sm:p-3 text-red-400 hidden sm:table-cell">{row.lost}</td>
-                    <td className="text-center p-1.5 sm:p-3 hidden md:table-cell">{row.goals_for}</td>
-                    <td className="text-center p-1.5 sm:p-3 hidden md:table-cell">{row.goals_against}</td>
-                    <td className="text-center p-1.5 sm:p-3">
+                    <td className="text-center p-2 sm:p-3">{row.played}</td>
+                    <td className="text-center p-2 sm:p-3 text-green-400 hidden sm:table-cell">{row.won}</td>
+                    <td className="text-center p-2 sm:p-3 text-gray-400 hidden sm:table-cell">{row.drawn}</td>
+                    <td className="text-center p-2 sm:p-3 text-red-400 hidden sm:table-cell">{row.lost}</td>
+                    <td className="text-center p-2 sm:p-3 hidden md:table-cell">{row.goals_for}</td>
+                    <td className="text-center p-2 sm:p-3 hidden md:table-cell">{row.goals_against}</td>
+                    <td className="text-center p-2 sm:p-3">
                       <span className={row.goal_diff > 0 ? "text-green-400" : row.goal_diff < 0 ? "text-red-400" : "text-gray-400"}>
                         {row.goal_diff > 0 ? "+" : ""}{row.goal_diff}
                       </span>
                     </td>
-                    <td className="text-center p-1.5 sm:p-3 font-bold text-lime-400">{row.points}</td>
-                    <td className="text-center p-1.5 sm:p-3 hidden lg:table-cell">
+                    <td className="text-center p-2 sm:p-3 font-bold text-lime-400">{row.points}</td>
+                    <td className="text-center p-2 sm:p-3 hidden lg:table-cell">
                       <div className="flex justify-center gap-0.5">
                         {row.form && row.form.split("").slice(-5).map((r, i) => (
                           <span
                             key={i}
-                            className={`inline-flex w-4 h-4 sm:w-5 sm:h-5 rounded text-[10px] sm:text-xs font-bold items-center justify-center ${
+                            className={`inline-flex w-5 h-5 rounded text-xs font-bold items-center justify-center ${
                               r === "W" ? "bg-green-600 text-white" :
                               r === "D" ? "bg-gray-600 text-white" :
                               r === "L" ? "bg-red-600 text-white" :

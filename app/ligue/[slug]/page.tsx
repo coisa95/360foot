@@ -101,10 +101,10 @@ export default async function LeagueResumePage({ params }: Props) {
 
   return (
     <>
-      {/* Main grid: on mobile = classement+buteurs first, then matchs+actus. On desktop = 2 cols */}
+      {/* Main grid: on mobile = stacked (classement → matchs → buteurs → actus), on desktop = 2 cols */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-        {/* Sidebar: Classement + Buteurs — first on mobile, right on desktop */}
-        <div className="order-1 lg:order-2 space-y-3">
+        {/* Right sidebar on desktop, but first on mobile */}
+        <div className="order-1 lg:order-2 space-y-4">
           {/* Classement top 5 */}
           {standings.length > 0 && (
             <StandingsTable
@@ -139,7 +139,7 @@ export default async function LeagueResumePage({ params }: Props) {
           )}
         </div>
 
-        {/* Main content: Matchs + Actus — second on mobile, left on desktop */}
+        {/* Left: Matchs + Actus */}
         <div className="order-2 lg:order-1 lg:col-span-2 space-y-4">
           {/* Matchs de la semaine */}
           <div>
