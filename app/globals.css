@@ -90,6 +90,19 @@
   }
 }
 
+@layer components {
+  /* Article image captions & credits — smaller, faded */
+  .prose figcaption,
+  .prose .image-credit,
+  .prose .photo-credit,
+  .prose .credit,
+  .prose em:has(+ img),
+  .prose figure em,
+  .prose figure small {
+    @apply text-xs text-gray-500 italic text-center;
+  }
+}
+
 @layer utilities {
   /* Subtle background glow */
   .bg-glow-blue {

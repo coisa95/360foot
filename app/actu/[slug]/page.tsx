@@ -231,12 +231,14 @@ export default async function ArticlePage({ params }: Props) {
 
           {/* Contenu de l'article */}
           <div
-            className="prose prose-invert prose-lime max-w-none
-              prose-headings:text-white prose-headings:font-bold
+            className="prose prose-invert prose-lime max-w-none text-justify
+              prose-headings:text-white prose-headings:font-bold prose-headings:text-left
               prose-p:text-gray-300 prose-p:leading-relaxed
               prose-a:text-lime-400 prose-a:no-underline hover:prose-a:underline
               prose-strong:text-white
-              prose-li:text-gray-300"
+              prose-li:text-gray-300
+              prose-figcaption:text-xs prose-figcaption:text-gray-500 prose-figcaption:italic prose-figcaption:text-center prose-figcaption:mt-2
+              prose-img:rounded-lg prose-img:mx-auto"
             dangerouslySetInnerHTML={{ __html: enrichedContent }}
           />
 
