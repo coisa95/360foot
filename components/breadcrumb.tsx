@@ -31,7 +31,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
         <ol className="flex flex-wrap items-center gap-1 text-sm text-gray-500">
           {items.map((item, index) => (
             <li key={index} className="flex items-center gap-1">
-              {index > 0 && <span className="text-gray-600">/</span>}
+              {index > 0 && <span className="text-gray-600" aria-hidden="true">/</span>}
               {item.href ? (
                 <Link
                   href={item.href}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const NAV_LINKS = [
   { href: "/", label: "Accueil" },
@@ -42,6 +42,16 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileLiguesOpen, setMobileLiguesOpen] = useState(false);
   const [liguesDropdownOpen, setLiguesDropdownOpen] = useState(false);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-dark-border/50 bg-dark-bg/90 backdrop-blur-xl shadow-lg shadow-black/20">

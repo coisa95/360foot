@@ -118,7 +118,9 @@ export default async function LeagueFixturesPage({ params }: Props) {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500 py-12">Aucun match à venir.</p>
+        <div className="rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+          <p className="text-sm text-gray-500">Aucun match à venir pour le moment.</p>
+        </div>
       )}
 
       <AffiliateTrio />

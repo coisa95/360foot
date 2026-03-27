@@ -116,7 +116,9 @@ export default async function LeagueResultsPage({ params }: Props) {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500 py-12">Aucun résultat disponible.</p>
+        <div className="rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+          <p className="text-sm text-gray-500">Aucun résultat disponible pour le moment.</p>
+        </div>
       )}
 
       <AffiliateTrio />

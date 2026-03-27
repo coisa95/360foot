@@ -426,133 +426,142 @@ export default async function MatchPage({ params }: Props) {
         )}
 
         {/* ── Events (Goals, Cards, Subs) ── */}
-        {eventsJson && eventsJson.length > 0 && (
-          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
-            <h3 className="mb-4 text-lg font-bold text-lime-400">Événements du match</h3>
-            <div className="space-y-2">
-              {eventsJson
-                .filter((e: any) => e.type !== "subst")
-                .map((event: any, index: number) => {
-                  const isHome = event.team === homeName;
-                  return (
-                    <div
-                      key={index}
-                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
-                        isHome ? "bg-dark-bg" : "bg-dark-surface"
-                      }`}
-                    >
-                      <span className="w-10 text-center font-mono text-xs text-lime-400">
-                        {event.minute}&apos;{event.extra ? `+${event.extra}` : ""}
-                      </span>
-                      <span className="text-base">{getEventIcon(event.type, event.detail || "")}</span>
-                      <span className="flex-1 font-medium">
-                        {event.player}
-                        {event.assist && (
-                          <span className="ml-1 text-xs text-gray-500">(pass. {event.assist})</span>
-                        )}
-                      </span>
-                      <span className="text-xs text-gray-500">{event.team}</span>
-                    </div>
-                  );
-                })}
+        {isFinished && (
+          eventsJson && eventsJson.length > 0 ? (
+            <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
+              <h3 className="mb-4 text-lg font-bold text-lime-400">Événements du match</h3>
+              <div className="space-y-2">
+                {eventsJson
+                  .filter((e: any) => e.type !== "subst")
+                  .map((event: any, index: number) => {
+                    const isHome = event.team === homeName;
+                    return (
+                      <div
+                        key={index}
+                        className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
+                          isHome ? "bg-dark-bg" : "bg-dark-surface"
+                        }`}
+                      >
+                        <span className="w-10 text-center font-mono text-xs text-lime-400">
+                          {event.minute}&apos;{event.extra ? `+${event.extra}` : ""}
+                        </span>
+                        <span className="text-base">{getEventIcon(event.type, event.detail || "")}</span>
+                        <span className="flex-1 font-medium">
+                          {event.player}
+                          {event.assist && (
+                            <span className="ml-1 text-xs text-gray-500">(pass. {event.assist})</span>
+                          )}
+                        </span>
+                        <span className="text-xs text-gray-500">{event.team}</span>
+                      </div>
+                    );
+                  })}
+              </div>
+            </Card>
+          ) : (
+            <div className="mt-4 rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+              <p className="text-sm text-gray-500">Données non disponibles pour les événements.</p>
             </div>
-          </Card>
+          )
         )}
 
         {/* ── Statistics ── */}
-        {statistics && Object.keys(statistics).length > 0 && (
-          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
-            <h3 className="mb-4 text-lg font-bold text-lime-400">Statistiques</h3>
-            <div className="space-y-4">
-              {PRIORITY_STATS.filter((key) => statistics[key]).map((key) => {
-                const stat = statistics[key];
-                const homeVal = parseStatValue(stat.home);
-                const awayVal = parseStatValue(stat.away);
-                const total = homeVal + awayVal || 1;
-                const homePercent = (homeVal / total) * 100;
-                const isPossession = key === "Ball Possession";
+        {isFinished && (
+          statistics && Object.keys(statistics).length > 0 ? (
+            <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
+              <h3 className="mb-4 text-lg font-bold text-lime-400">Statistiques</h3>
+              <div className="space-y-4">
+                {PRIORITY_STATS.filter((key) => statistics[key]).map((key) => {
+                  const stat = statistics[key];
+                  const homeVal = parseStatValue(stat.home);
+                  const awayVal = parseStatValue(stat.away);
+                  const total = homeVal + awayVal || 1;
+                  const homePercent = (homeVal / total) * 100;
+                  const isPossession = key === "Ball Possession";
 
-                return (
-                  <div key={key}>
-                    <div className="mb-1 flex justify-between text-sm">
-                      <span className="font-medium">{isPossession ? `${stat.home}` : homeVal}</span>
-                      <span className="text-gray-400">{getStatLabel(key)}</span>
-                      <span className="font-medium">{isPossession ? `${stat.away}` : awayVal}</span>
+                  return (
+                    <div key={key}>
+                      <div className="mb-1 flex justify-between text-sm">
+                        <span className="font-medium">{isPossession ? `${stat.home}` : homeVal}</span>
+                        <span className="text-gray-400">{getStatLabel(key)}</span>
+                        <span className="font-medium">{isPossession ? `${stat.away}` : awayVal}</span>
+                      </div>
+                      <div className="flex h-2 gap-0.5 overflow-hidden rounded-full">
+                        <div
+                          className="rounded-l-full bg-lime-400 transition-all"
+                          style={{ width: `${homePercent}%` }}
+                        />
+                        <div
+                          className="rounded-r-full bg-gray-600 transition-all"
+                          style={{ width: `${100 - homePercent}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="flex h-2 gap-0.5 overflow-hidden rounded-full">
-                      <div
-                        className="rounded-l-full bg-lime-400 transition-all"
-                        style={{ width: `${homePercent}%` }}
-                      />
-                      <div
-                        className="rounded-r-full bg-gray-600 transition-all"
-                        style={{ width: `${100 - homePercent}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
+            </Card>
+          ) : (
+            <div className="mt-4 rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+              <p className="text-sm text-gray-500">Données non disponibles pour les statistiques.</p>
             </div>
-          </Card>
+          )
         )}
 
         {/* ── Lineups ── */}
-        {lineupsJson && lineupsJson.length >= 2 && (
-          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
-            <h3 className="mb-4 text-lg font-bold text-lime-400">Compositions</h3>
-            <div className="grid gap-6 sm:grid-cols-2">
-              {lineupsJson.map((lineup: any, idx: number) => (
-                <div key={idx}>
-                  <div className="mb-3 flex items-center justify-between">
-                    <h4 className="font-bold text-white">{lineup.team}</h4>
-                    {lineup.formation && (
-                      <Badge className="bg-dark-surface text-gray-400 border-gray-700">
-                        {lineup.formation}
-                      </Badge>
+        {isFinished && (
+          lineupsJson && lineupsJson.length >= 2 ? (
+            <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
+              <h3 className="mb-4 text-lg font-bold text-lime-400">Compositions</h3>
+              <div className="grid gap-6 sm:grid-cols-2">
+                {lineupsJson.map((lineup: any, idx: number) => (
+                  <div key={idx}>
+                    <div className="mb-3 flex items-center justify-between">
+                      <h4 className="font-bold text-white">{lineup.team}</h4>
+                      {lineup.formation && (
+                        <Badge className="bg-dark-surface text-gray-400 border-gray-700">
+                          {lineup.formation}
+                        </Badge>
+                      )}
+                    </div>
+                    {lineup.coach && (
+                      <p className="mb-2 text-xs text-gray-500">Coach : {lineup.coach}</p>
+                    )}
+                    <div className="space-y-1">
+                      {(lineup.startXI || []).map((p: any, i: number) => (
+                        <div key={i} className="flex items-center gap-2 text-sm">
+                          <span className="w-6 text-center text-xs font-mono text-gray-500">
+                            {p.number || "-"}
+                          </span>
+                          <span className="flex-1">{p.name}</span>
+                          <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {(lineup.substitutes || []).length > 0 && (
+                      <>
+                        <Separator className="my-2 bg-gray-800" />
+                        <p className="mb-1 text-xs text-gray-500">Remplaçants</p>
+                        <div className="space-y-1">
+                          {(lineup.substitutes || []).slice(0, 7).map((p: any, i: number) => (
+                            <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
+                              <span className="w-6 text-center font-mono">{p.number || "-"}</span>
+                              <span className="flex-1">{p.name}</span>
+                              <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
                     )}
                   </div>
-                  {lineup.coach && (
-                    <p className="mb-2 text-xs text-gray-500">Coach : {lineup.coach}</p>
-                  )}
-                  <div className="space-y-1">
-                    {(lineup.startXI || []).map((p: any, i: number) => (
-                      <div key={i} className="flex items-center gap-2 text-sm">
-                        <span className="w-6 text-center text-xs font-mono text-gray-500">
-                          {p.number || "-"}
-                        </span>
-                        <span className="flex-1">{p.name}</span>
-                        <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
-                      </div>
-                    ))}
-                  </div>
-                  {(lineup.substitutes || []).length > 0 && (
-                    <>
-                      <Separator className="my-2 bg-gray-800" />
-                      <p className="mb-1 text-xs text-gray-500">Remplaçants</p>
-                      <div className="space-y-1">
-                        {(lineup.substitutes || []).slice(0, 7).map((p: any, i: number) => (
-                          <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
-                            <span className="w-6 text-center font-mono">{p.number || "-"}</span>
-                            <span className="flex-1">{p.name}</span>
-                            <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
+            </Card>
+          ) : (
+            <div className="mt-4 rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+              <p className="text-sm text-gray-500">Données non disponibles pour les compositions.</p>
             </div>
-          </Card>
-        )}
-
-        {/* ── No data message for finished matches ── */}
-        {isFinished && !eventsJson && !statistics && (
-          <Card className="mt-4 border-gray-800 bg-dark-card p-6 text-center">
-            <p className="text-gray-400">
-              Les données détaillées de ce match seront bientôt disponibles.
-            </p>
-          </Card>
+          )
         )}
 
         {/* ── Related article ── */}

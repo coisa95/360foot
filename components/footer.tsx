@@ -83,12 +83,17 @@ export function Footer() {
         </div>
 
         {/* Responsible Gaming + Copyright */}
-        <div className="mt-10 border-t border-dark-border pt-6">
+        <div className="mt-10 border-t border-dark-border pt-6 space-y-3">
+          <div className="mx-auto max-w-lg rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-4 py-3 text-center">
+            <p className="text-sm font-semibold text-yellow-400">
+              18+ | Jeu responsable
+            </p>
+            <p className="mt-1 text-xs text-yellow-400/70">
+              Jouer comporte des risques : endettement, isolement, dépendance.
+              Appelez le 0 974 75 13 13 (appel non surtaxé).
+            </p>
+          </div>
           <p className="text-center text-xs text-gray-600">
-            18+ | Jouer comporte des risques : endettement, isolement, dépendance.
-            Appelez le 0 974 75 13 13 (appel non surtaxé).
-          </p>
-          <p className="mt-2 text-center text-xs text-gray-600">
             &copy; {new Date().getFullYear()} 360 Foot. Tous droits réservés. Contenu
             généré par intelligence artificielle.
           </p>

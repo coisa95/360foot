@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,16 +33,35 @@ interface ArticleSlide {
 export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
   const [current, setCurrent] = useState(0);
   const total = articles.length;
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const resetAutoplay = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % total);
+    }, 6000);
+  }, [total]);
+
+  const goTo = useCallback((index: number) => {
+    setCurrent(index);
+    resetAutoplay();
+  }, [resetAutoplay]);
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % total);
-  }, [total]);
+    resetAutoplay();
+  }, [total, resetAutoplay]);
+
+  const prev = useCallback(() => {
+    setCurrent((prev) => (prev - 1 + total) % total);
+    resetAutoplay();
+  }, [total, resetAutoplay]);
 
   useEffect(() => {
     if (total <= 1) return;
-    const interval = setInterval(next, 6000);
-    return () => clearInterval(interval);
-  }, [next, total]);
+    resetAutoplay();
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [resetAutoplay, total]);
 
   if (total === 0) return null;
 
@@ -121,24 +140,24 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
         })}
       </div>
 
-      {/* Navigation arrows — hidden on mobile, visible on md+ */}
+      {/* Navigation arrows — visible on all screens */}
       {total > 1 && (
         <>
           <button
-            onClick={() => setCurrent((prev) => (prev - 1 + total) % total)}
-            className="hidden md:block absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg"
+            onClick={(e) => { e.preventDefault(); prev(); }}
+            className="absolute left-2 md:left-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-1.5 md:p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-400"
             aria-label="Précédent"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <button
-            onClick={() => setCurrent((prev) => (prev + 1) % total)}
-            className="hidden md:block absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg"
+            onClick={(e) => { e.preventDefault(); next(); }}
+            className="absolute right-2 md:right-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-1.5 md:p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-400"
             aria-label="Suivant"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </button>
@@ -151,7 +170,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
           {articles.map((_, i) => (
             <button
               key={i}
-              onClick={() => setCurrent(i)}
+              onClick={() => goTo(i)}
               className={`rounded-full transition-all duration-500 ${
                 i === current
                   ? "w-5 md:w-8 h-1.5 md:h-2 bg-gradient-to-r from-lime-400 to-emerald-400 shadow-lg shadow-lime-500/30"

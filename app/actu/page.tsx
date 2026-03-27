@@ -295,32 +295,36 @@ export default async function ActuPage({ searchParams }: Props) {
                   </Link>
                 )}
 
-                {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-                  let pageNum: number;
+                {(() => {
+                  const pages: (number | "...")[] = [];
                   if (totalPages <= 7) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 4) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 3) {
-                    pageNum = totalPages - 6 + i;
+                    for (let i = 1; i <= totalPages; i++) pages.push(i);
                   } else {
-                    pageNum = currentPage - 3 + i;
+                    pages.push(1);
+                    if (currentPage > 3) pages.push("...");
+                    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) pages.push(i);
+                    if (currentPage < totalPages - 2) pages.push("...");
+                    pages.push(totalPages);
                   }
-
-                  return (
-                    <Link
-                      key={pageNum}
-                      href={`/actu?${activeCategory !== "all" ? `categorie=${activeCategory}&` : ""}page=${pageNum}`}
-                      className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
-                        currentPage === pageNum
-                          ? "bg-lime-500 text-dark-bg"
-                          : "bg-dark-card text-gray-400 hover:bg-dark-surface hover:text-white"
-                      }`}
-                    >
-                      {pageNum}
-                    </Link>
+                  const baseHref = activeCategory !== "all" ? `categorie=${activeCategory}&` : "";
+                  return pages.map((p, idx) =>
+                    p === "..." ? (
+                      <span key={`ellipsis-${idx}`} className="flex h-10 w-10 items-center justify-center text-sm text-gray-500">…</span>
+                    ) : (
+                      <Link
+                        key={p}
+                        href={`/actu?${baseHref}page=${p}`}
+                        className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                          currentPage === p
+                            ? "bg-lime-500 text-dark-bg"
+                            : "bg-dark-card text-gray-400 hover:bg-dark-surface hover:text-white"
+                        }`}
+                      >
+                        {p}
+                      </Link>
+                    )
                   );
-                })}
+                })()}
 
                 {currentPage < totalPages && (
                   <Link

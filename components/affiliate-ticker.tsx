@@ -63,7 +63,7 @@ export function AffiliateTicker() {
                 <div>
                   <span className="text-white font-bold text-sm">{slide.name}</span>
                   <span className="text-white/80 text-sm ml-2 hidden sm:inline">— {slide.text}</span>
-                  <span className="text-white/80 text-xs ml-2 sm:hidden">{slide.text}</span>
+                  <p className="text-white/80 text-[11px] leading-tight sm:hidden mt-0.5">{slide.text}</p>
                 </div>
               </div>
               <span className="flex items-center gap-1 rounded-lg bg-white/20 backdrop-blur-sm px-3 py-1.5 text-xs font-bold text-white">
