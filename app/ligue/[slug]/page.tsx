@@ -30,13 +30,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!league) return { title: "Ligue introuvable - 360 Foot" };
 
   const title = `${league.name} - Classement, résultats et actualités`;
-  const description = `Classement complet de la ${league.name}, meilleurs buteurs, passeurs, derniers résultats et toute l'actualité.`;
+  const fullDesc = `Classement complet de la ${league.name}, meilleurs buteurs, passeurs, derniers résultats et toute l'actualité.`;
+  const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}` },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
   };
 }
 
@@ -137,7 +138,7 @@ export default async function LeagueResumePage({ params }: Props) {
                   <div key={idx} className="flex items-center gap-2">
                     <span className="w-4 text-center text-[10px] font-bold text-gray-500">{idx + 1}</span>
                     {player.photo && (
-                      <Image src={player.photo} alt={player.name} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
+                      <Image src={player.photo} alt={`Photo ${player.name}`} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-white text-[11px] truncate">{player.name}</p>

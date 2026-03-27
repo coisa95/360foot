@@ -20,6 +20,7 @@ export const metadata: Metadata = {
       "Comparez les meilleurs bookmakers pour parier sur le football africain. Bonus de bienvenue, cotes et avis sur les sites de paris sportifs.",
     type: "website",
     url: "https://360-foot.com/bookmakers",
+    images: ["/api/og?title=Paris%20sportifs%20-%20Comparateur%20de%20bookmakers"],
   },
 };
 

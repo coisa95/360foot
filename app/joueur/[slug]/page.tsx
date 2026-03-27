@@ -27,7 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!player) return { title: "Joueur introuvable - 360 Foot" };
 
   const title = `${player.name} - Fiche joueur, stats et actualites - 360 Foot`;
-  const description = `Fiche complete de ${player.name} (${player.team?.name}) : poste, nationalite, statistiques et derniers articles.`;
+  const fullDesc = `Fiche complete de ${player.name} (${player.team?.name}) : poste, nationalite, statistiques et derniers articles.`;
+  const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
@@ -40,6 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       type: "profile",
       url: `https://360-foot.com/joueur/${slug}`,
+      images: [`/api/og?title=${encodeURIComponent(title)}`],
     },
   };
 }

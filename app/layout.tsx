@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s | 360 Foot",
   },
   description:
-    "Résultats, classements, transferts et analyses football. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League, Champions League. Toute l'actu foot en direct.",
+    "Résultats, classements, transferts et analyses football. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League et Champions League.",
   keywords: [
     "football",
     "foot",

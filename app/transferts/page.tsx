@@ -20,6 +20,7 @@ export const metadata: Metadata = {
       "Suivez tous les transferts du football africain : arrivées, départs, prêts et montants des transferts des joueurs africains.",
     type: "website",
     url: "https://360-foot.com/transferts",
+    images: ["/api/og?title=Transferts%20-%20Mercato%20football%20africain"],
   },
 };
 

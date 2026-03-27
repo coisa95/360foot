@@ -27,7 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!country) return { title: "Selection introuvable - 360 Foot" };
 
   const title = `${country.fullName} - Matchs et actualites - 360 Foot`;
-  const description = `Suivez l'${country.fullName} : derniers matchs, resultats, compositions et toute l'actualite de la selection.`;
+  const fullDesc = `Suivez l'${country.fullName} : derniers matchs, resultats, compositions et toute l'actualite de la selection.`;
+  const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
@@ -40,6 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       type: "website",
       url: `https://360-foot.com/selection/${pays}`,
+      images: [`/api/og?title=${encodeURIComponent(title)}`],
     },
     twitter: {
       card: "summary_large_image" as const,

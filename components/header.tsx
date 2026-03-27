@@ -38,7 +38,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2.5 group">
           <Image
             src="/logo-360.png"
-            alt="360 Foot"
+            alt="Logo 360 Foot"
             width={40}
             height={40}
             className="rounded-lg transition-all group-hover:scale-105"

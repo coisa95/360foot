@@ -29,7 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const articleUrl = `https://360-foot.com/actu/${slug}`;
   const articleTitle = article.seo_title || article.title;
-  const articleDescription = article.seo_description || article.excerpt;
+  const rawDescription = article.seo_description || article.excerpt || "";
+  const articleDescription = rawDescription.length > 155 ? rawDescription.slice(0, 152) + "..." : rawDescription;
   const articleImage = article.og_image_url || article.image || "https://360-foot.com/icon-512.png";
 
   return {
