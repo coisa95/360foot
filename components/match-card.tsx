@@ -37,8 +37,6 @@ export function MatchCard({
   status,
   date,
   leagueName,
-  homeTeamSlug,
-  awayTeamSlug,
   leagueSlug,
 }: MatchCardProps) {
   const matchDate = new Date(date);
