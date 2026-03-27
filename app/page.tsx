@@ -10,8 +10,22 @@ import Link from "next/link";
 export const revalidate = 300;
 
 export const metadata = {
+  title: "360 Foot — Actu Football Afrique & Europe en Direct",
+  description: "Résultats, classements, transferts et analyses football. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League, Champions League.",
   alternates: {
     canonical: "https://360-foot.com",
+  },
+  openGraph: {
+    title: "360 Foot — Actu Football Afrique & Europe en Direct",
+    description: "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
+    type: "website" as const,
+    url: "https://360-foot.com",
+    images: ["/og-home.png"],
+  },
+  twitter: {
+    card: "summary_large_image" as const,
+    title: "360 Foot — Actu Football Afrique & Europe en Direct",
+    description: "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
   },
 };
 
