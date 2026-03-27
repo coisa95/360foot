@@ -71,7 +71,7 @@ export default async function LeagueResultsPage({ params }: Props) {
   return (
     <>
       {grouped.size > 0 ? (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {Array.from(grouped.entries()).map(([dateLabel, dateMatches]) => (
             <div key={dateLabel}>
               <h3 className="text-sm font-semibold text-gray-400 mb-2 capitalize">{dateLabel}</h3>

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 
 interface MatchCardProps {
   slug: string;
@@ -17,19 +16,17 @@ interface MatchCardProps {
   awayLogoUrl?: string | null;
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const config: Record<string, { label: string; className: string }> = {
-    NS: { label: "À venir", className: "bg-blue-500/15 text-blue-400 border border-blue-500/20" },
-    "1H": { label: "1re MT", className: "bg-red-500/15 text-red-400 border border-red-500/20 animate-pulse" },
-    HT: { label: "Mi-temps", className: "bg-yellow-500/15 text-yellow-400 border border-yellow-500/20" },
-    "2H": { label: "2e MT", className: "bg-red-500/15 text-red-400 border border-red-500/20 animate-pulse" },
-    FT: { label: "Terminé", className: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20" },
-    PST: { label: "Reporté", className: "bg-orange-500/15 text-orange-400 border border-orange-500/20" },
-    CANC: { label: "Annulé", className: "bg-red-500/15 text-red-400 border border-red-500/20" },
-  };
-  const { label, className } = config[status] || config.NS;
-  return <Badge className={`rounded-lg text-[10px] ${className}`}>{label}</Badge>;
-}
+const STATUS_LABELS: Record<string, { label: string; color: string }> = {
+  NS: { label: "À venir", color: "text-blue-400" },
+  "1H": { label: "1MT", color: "text-red-400" },
+  HT: { label: "MT", color: "text-yellow-400" },
+  "2H": { label: "2MT", color: "text-red-400" },
+  FT: { label: "Terminé", color: "text-emerald-400" },
+  AET: { label: "AP", color: "text-emerald-400" },
+  PEN: { label: "TAB", color: "text-emerald-400" },
+  PST: { label: "Reporté", color: "text-orange-400" },
+  CANC: { label: "Annulé", color: "text-red-400" },
+};
 
 export function MatchCard({
   slug,
@@ -40,89 +37,63 @@ export function MatchCard({
   status,
   date,
   leagueName,
-  homeTeamSlug,
-  awayTeamSlug,
   leagueSlug,
 }: MatchCardProps) {
   const matchDate = new Date(date);
-  const timeStr = matchDate.toLocaleTimeString("fr-FR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const timeStr = matchDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  const dateStr = matchDate.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  const statusConf = STATUS_LABELS[status] || STATUS_LABELS.NS;
+  const isLive = status === "1H" || status === "2H";
 
   return (
-    <div className="rounded-xl border border-dark-border/50 bg-dark-card/80 p-4 shadow-lg shadow-black/10 transition-all duration-300 hover:border-lime-500/20 hover:shadow-xl hover:shadow-lime-500/5 backdrop-blur-sm">
-      <div className="mb-3 flex items-center justify-between">
-        {leagueName ? (
-          leagueSlug ? (
-            <Link href={`/ligue/${leagueSlug}`} className="text-[11px] font-medium text-gray-400 hover:text-lime-400 transition-colors">
-              {leagueName}
-            </Link>
+    <Link href={`/match/${slug}`} className="group block">
+      <div className={`flex items-center gap-2 rounded-lg border bg-dark-card/80 px-2.5 py-2 transition-colors hover:border-lime-500/20 ${isLive ? "border-red-500/30" : "border-dark-border/50"}`}>
+        {/* Date / Status */}
+        <div className="w-11 shrink-0 text-center">
+          {status === "NS" ? (
+            <>
+              <p className="text-[11px] font-bold text-blue-400">{timeStr}</p>
+              <p className="text-[9px] text-gray-500">{dateStr}</p>
+            </>
           ) : (
-            <span className="text-[11px] font-medium text-gray-400">{leagueName}</span>
-          )
-        ) : (
-          <span />
-        )}
-        <StatusBadge status={status} />
-      </div>
+            <>
+              <p className={`text-[10px] font-semibold ${statusConf.color}`}>{statusConf.label}</p>
+              <p className="text-[9px] text-gray-500">{dateStr}</p>
+            </>
+          )}
+        </div>
 
-      <Link href={`/match/${slug}`} className="block group">
-        <div className="flex items-center justify-between">
-          {/* Home Team */}
-          <div className="flex-1 text-right">
-            {homeTeamSlug ? (
-              <span className="text-sm font-semibold text-gray-200 group-hover:text-white transition-colors">
-                {homeTeam}
+        {/* Teams + Score */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-[11px] sm:text-xs font-medium text-gray-200 truncate group-hover:text-white">{homeTeam}</span>
+            {status !== "NS" && (
+              <span className={`text-[11px] sm:text-xs font-bold tabular-nums shrink-0 ${(homeScore ?? 0) > (awayScore ?? 0) ? "text-white" : "text-gray-400"}`}>
+                {homeScore ?? 0}
               </span>
-            ) : (
-              <span className="text-sm font-semibold text-gray-200 group-hover:text-white transition-colors">{homeTeam}</span>
             )}
           </div>
-
-          {/* Score / Time */}
-          <div className="mx-4 min-w-[4.5rem] text-center">
-            {status === "NS" ? (
-              <div className="rounded-lg bg-blue-500/10 px-3 py-1">
-                <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">{timeStr}</span>
-              </div>
-            ) : (
-              <div className="rounded-lg bg-dark-surface px-3 py-1">
-                <span className="text-lg font-bold text-white">
-                  {homeScore ?? 0} <span className="text-gray-500">-</span> {awayScore ?? 0}
-                </span>
-              </div>
+          <div className="flex items-center justify-between gap-1 mt-0.5">
+            <span className="text-[11px] sm:text-xs font-medium text-gray-200 truncate group-hover:text-white">{awayTeam}</span>
+            {status !== "NS" && (
+              <span className={`text-[11px] sm:text-xs font-bold tabular-nums shrink-0 ${(awayScore ?? 0) > (homeScore ?? 0) ? "text-white" : "text-gray-400"}`}>
+                {awayScore ?? 0}
+              </span>
             )}
           </div>
+        </div>
 
-          {/* Away Team */}
-          <div className="flex-1 text-left">
-            <span className="text-sm font-semibold text-gray-200 group-hover:text-white transition-colors">{awayTeam}</span>
+        {/* League badge */}
+        {leagueName && (
+          <div className="hidden sm:block shrink-0">
+            {leagueSlug ? (
+              <span className="text-[9px] text-gray-500">{leagueName}</span>
+            ) : (
+              <span className="text-[9px] text-gray-500">{leagueName}</span>
+            )}
           </div>
-        </div>
-      </Link>
-
-      <div className="mt-3 flex items-center justify-between">
-        <div className="flex gap-3">
-          {homeTeamSlug && (
-            <Link href={`/equipe/${homeTeamSlug}`} className="text-[10px] text-gray-500 hover:text-lime-400 transition-colors">
-              {homeTeam}
-            </Link>
-          )}
-          {awayTeamSlug && (
-            <Link href={`/equipe/${awayTeamSlug}`} className="text-[10px] text-gray-500 hover:text-lime-400 transition-colors">
-              {awayTeam}
-            </Link>
-          )}
-        </div>
-        <span className="text-[11px] text-gray-500">
-          {matchDate.toLocaleDateString("fr-FR", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })}
-        </span>
+        )}
       </div>
-    </div>
+    </Link>
   );
 }

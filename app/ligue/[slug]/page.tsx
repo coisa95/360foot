@@ -101,20 +101,56 @@ export default async function LeagueResumePage({ params }: Props) {
 
   return (
     <>
-      {/* Main grid: left content + right sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: Matchs de la semaine */}
-        <div className="lg:col-span-2 space-y-6">
+      {/* Main grid: on mobile = classement+buteurs first, then matchs+actus. On desktop = 2 cols */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+        {/* Sidebar: Classement + Buteurs — first on mobile, right on desktop */}
+        <div className="order-1 lg:order-2 space-y-3">
+          {/* Classement top 5 */}
+          {standings.length > 0 && (
+            <StandingsTable
+              leagueName="Classement"
+              leagueSlug={league.slug}
+              standings={standings}
+              compact
+            />
+          )}
+
+          {/* Top Buteurs */}
+          {topScorers.length > 0 && (
+            <Card className="border-gray-800 bg-dark-card p-3">
+              <h2 className="text-sm font-bold text-lime-400 mb-2">Meilleurs buteurs</h2>
+              <div className="space-y-1.5">
+                {topScorers.slice(0, 5).map((player: any, idx: number) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <span className="w-4 text-center text-[10px] font-bold text-gray-500">{idx + 1}</span>
+                    {player.photo && (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={player.photo} alt={player.name} className="h-5 w-5 rounded-full object-cover" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-white text-[11px] truncate">{player.name}</p>
+                      <p className="text-[9px] text-gray-500 truncate">{player.team}</p>
+                    </div>
+                    <span className="text-xs font-bold text-lime-400">{player.goals}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {/* Main content: Matchs + Actus — second on mobile, left on desktop */}
+        <div className="order-2 lg:order-1 lg:col-span-2 space-y-4">
           {/* Matchs de la semaine */}
           <div>
-            <h2 className="text-lg font-bold mb-3 flex items-center justify-between">
+            <h2 className="text-sm sm:text-lg font-bold mb-2 flex items-center justify-between">
               Matchs de la semaine
-              <Link href={`/ligue/${slug}/calendrier`} className="text-xs text-lime-400 hover:underline font-normal">
+              <Link href={`/ligue/${slug}/calendrier`} className="text-[10px] sm:text-xs text-lime-400 hover:underline font-normal">
                 Voir tout →
               </Link>
             </h2>
             {weekMatches && weekMatches.length > 0 ? (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {weekMatches.map((match: any) => (
                   <MatchCard
                     key={match.id}
@@ -139,13 +175,13 @@ export default async function LeagueResumePage({ params }: Props) {
           {/* Dernières actus */}
           {articles && articles.length > 0 && (
             <div>
-              <h2 className="text-lg font-bold mb-3 flex items-center justify-between">
+              <h2 className="text-sm sm:text-lg font-bold mb-2 flex items-center justify-between">
                 Dernières actualités
-                <Link href={`/ligue/${slug}/actualites`} className="text-xs text-lime-400 hover:underline font-normal">
+                <Link href={`/ligue/${slug}/actualites`} className="text-[10px] sm:text-xs text-lime-400 hover:underline font-normal">
                   Voir tout →
                 </Link>
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {articles.map((article: any) => (
                   <ArticleCard
                     key={article.id}
@@ -158,44 +194,6 @@ export default async function LeagueResumePage({ params }: Props) {
                 ))}
               </div>
             </div>
-          )}
-        </div>
-
-        {/* Right sidebar: Classement top 5 + Buteurs */}
-        <div className="space-y-6">
-          {/* Classement top 5 */}
-          {standings.length > 0 && (
-            <div>
-              <StandingsTable
-                leagueName="Classement"
-                leagueSlug={league.slug}
-                standings={standings}
-                compact
-              />
-            </div>
-          )}
-
-          {/* Top Buteurs */}
-          {topScorers.length > 0 && (
-            <Card className="border-gray-800 bg-dark-card p-4">
-              <h2 className="text-sm font-bold text-lime-400 mb-3">Meilleurs buteurs</h2>
-              <div className="space-y-2">
-                {topScorers.slice(0, 5).map((player: any, idx: number) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span className="w-5 text-center text-xs font-bold text-gray-500">{idx + 1}</span>
-                    {player.photo && (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={player.photo} alt={player.name} className="h-6 w-6 rounded-full object-cover" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-white text-xs truncate">{player.name}</p>
-                      <p className="text-[10px] text-gray-500 truncate">{player.team}</p>
-                    </div>
-                    <span className="text-sm font-bold text-lime-400">{player.goals}</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
           )}
         </div>
       </div>

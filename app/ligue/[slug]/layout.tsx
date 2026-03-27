@@ -62,37 +62,35 @@ export default async function LeagueLayout({ params, children }: Props) {
 
       {/* Flashscore-style Hero */}
       <div className="border-b border-dark-border bg-dark-card/50">
-        <div className="container mx-auto px-4 py-5">
-          <div className="flex items-center gap-4">
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-5">
+          <div className="flex items-center gap-3">
             {league.logo_url && (
               <img
                 src={league.logo_url}
                 alt={league.name}
-                className="h-14 w-14 object-contain"
+                className="h-10 w-10 sm:h-14 sm:w-14 object-contain"
               />
             )}
             <div>
-              <div className="flex items-center gap-2">
-                {league.country_code && (
-                  <span className="text-sm text-gray-500">{league.country}</span>
-                )}
-              </div>
-              <h1 className="text-2xl font-bold text-white sm:text-3xl">
+              {league.country_code && (
+                <span className="text-xs sm:text-sm text-gray-500">{league.country}</span>
+              )}
+              <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold text-white">
                 {league.name}
               </h1>
-              <span className="text-sm text-gray-500">{seasonDisplay}</span>
+              <span className="text-xs sm:text-sm text-gray-500">{seasonDisplay}</span>
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4">
           <LeagueTabs leagueSlug={slug} />
         </div>
       </div>
 
       {/* Tab content */}
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
         {children}
       </div>
     </div>
