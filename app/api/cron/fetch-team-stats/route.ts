@@ -14,11 +14,15 @@ const LEAGUE_IDS = [
   386, // Ligue 1 Côte d'Ivoire
   403, // Ligue 1 Sénégal
   411, // Elite One Cameroun
+  598, // Première Division Mali
+  423, // Ligue 1 Burkina Faso
   61,  // Ligue 1 France
   39,  // Premier League
   140, // La Liga
   135, // Serie A
   78,  // Bundesliga
+  253, // MLS
+  307, // Saudi Pro League
 ];
 
 export async function GET(request: Request) {

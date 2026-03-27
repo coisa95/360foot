@@ -21,6 +21,8 @@ const LEAGUE_IDS = [
   140, // La Liga
   135, // Serie A
   78,  // Bundesliga
+  253, // MLS
+  307, // Saudi Pro League
   2,   // Champions League
   3,   // Europa League
 ];
