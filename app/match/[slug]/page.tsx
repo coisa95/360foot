@@ -45,8 +45,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: `https://360-foot.com/match/${slug}` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/match/${slug}` },
+    alternates: { canonical: `https://360foot.info/match/${slug}` },
+    openGraph: { title, description, type: "website", url: `https://360foot.info/match/${slug}` },
     twitter: { card: "summary_large_image", title, description },
   };
 }

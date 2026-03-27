@@ -27,7 +27,7 @@ export async function GET() {
     supabase.from("players").select("slug, updated_at"),
   ]);
 
-  const baseUrl = "https://360-foot.com";
+  const baseUrl = "https://360foot.info";
 
   const staticPages = [
     { url: "/", priority: "1.0", changefreq: "hourly" },

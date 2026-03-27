@@ -47,13 +47,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates: {
-      canonical: `https://360-foot.com/classement/${slug}`,
+      canonical: `https://360foot.info/classement/${slug}`,
     },
     openGraph: {
       title,
       description,
       type: "website",
-      url: `https://360-foot.com/classement/${slug}`,
+      url: `https://360foot.info/classement/${slug}`,
     },
   };
 }

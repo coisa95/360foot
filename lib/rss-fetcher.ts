@@ -5,7 +5,7 @@ import type { RSSItem } from "./rss-prompt";
 const parser = new Parser({
   timeout: 10000,
   headers: {
-    "User-Agent": "360FootBot/1.0 (+https://360-foot.com)",
+    "User-Agent": "360FootBot/1.0 (+https://360foot.info)",
   },
 });
 

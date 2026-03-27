@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   description:
     "Mentions legales du site 360 Foot. Informations sur l'editeur, l'hebergeur et les conditions d'utilisation du site.",
   alternates: {
-    canonical: "https://360-foot.com/mentions-legales",
+    canonical: "https://360foot.info/mentions-legales",
   },
   openGraph: {
     title: "Mentions legales - 360 Foot",
     description:
       "Mentions legales du site 360 Foot. Informations sur l'editeur, l'hebergeur et les conditions d'utilisation.",
     type: "website",
-    url: "https://360-foot.com/mentions-legales",
+    url: "https://360foot.info/mentions-legales",
   },
 };
 
@@ -42,7 +42,7 @@ export default function LegalPage() {
           <Separator className="bg-gray-800 mb-4" />
           <div className="space-y-2 text-gray-300">
             <p><span className="text-gray-400">Nom du site :</span> 360 Foot</p>
-            <p><span className="text-gray-400">URL :</span> https://360-foot.com</p>
+            <p><span className="text-gray-400">URL :</span> https://360foot.info</p>
             <p><span className="text-gray-400">Email :</span> contact@360-foot.com</p>
             <p><span className="text-gray-400">Directeur de la publication :</span> Le responsable de 360 Foot</p>
           </div>

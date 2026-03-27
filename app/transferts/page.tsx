@@ -12,14 +12,14 @@ export const metadata: Metadata = {
   description:
     "Suivez tous les transferts du football africain : arrivées, départs, prêts et montants des transferts des joueurs africains.",
   alternates: {
-    canonical: "https://360-foot.com/transferts",
+    canonical: "https://360foot.info/transferts",
   },
   openGraph: {
     title: "Transferts - Dernières infos mercato football africain - 360 Foot",
     description:
       "Suivez tous les transferts du football africain : arrivées, départs, prêts et montants des transferts des joueurs africains.",
     type: "website",
-    url: "https://360-foot.com/transferts",
+    url: "https://360foot.info/transferts",
   },
 };
 

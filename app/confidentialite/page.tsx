@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   description:
     "Politique de confidentialite de 360 Foot. Decouvrez comment nous collectons, utilisons et protegeons vos donnees personnelles.",
   alternates: {
-    canonical: "https://360-foot.com/confidentialite",
+    canonical: "https://360foot.info/confidentialite",
   },
   openGraph: {
     title: "Politique de confidentialite - 360 Foot",
     description:
       "Politique de confidentialite de 360 Foot. Decouvrez comment nous collectons, utilisons et protegeons vos donnees personnelles.",
     type: "website",
-    url: "https://360-foot.com/confidentialite",
+    url: "https://360foot.info/confidentialite",
   },
 };
 
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
             (ci-apres &quot;nous&quot;, &quot;notre&quot; ou &quot;le Site&quot;)
             collecte, utilise et protege les informations personnelles des
             utilisateurs de notre site web accessible a l&apos;adresse
-            https://360-foot.com.
+            https://360foot.info.
           </p>
         </Card>
 

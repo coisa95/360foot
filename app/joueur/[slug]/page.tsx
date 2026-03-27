@@ -33,13 +33,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates: {
-      canonical: `https://360-foot.com/joueur/${slug}`,
+      canonical: `https://360foot.info/joueur/${slug}`,
     },
     openGraph: {
       title,
       description,
       type: "profile",
-      url: `https://360-foot.com/joueur/${slug}`,
+      url: `https://360foot.info/joueur/${slug}`,
     },
   };
 }

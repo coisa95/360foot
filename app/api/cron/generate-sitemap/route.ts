@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 
-const BASE_URL = "https://360-foot.com";
+const BASE_URL = "https://360foot.info";
 
 export async function GET(request: Request) {
   try {

@@ -13,7 +13,7 @@ const geist = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://360-foot.com"),
+  metadataBase: new URL("https://360foot.info"),
   title: {
     default: "360 Foot — Actu Football Afrique & Europe en Direct",
     template: "%s | 360 Foot",
@@ -37,14 +37,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    url: "https://360-foot.com",
+    url: "https://360foot.info",
     siteName: "360 Foot",
     title: "360 Foot — Actu Football Afrique & Europe en Direct",
     description:
       "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
     images: [
       {
-        url: "https://360-foot.com/og-home.png",
+        url: "https://360foot.info/og-home.png",
         width: 1200,
         height: 630,
         alt: "360 Foot — Actu Football Afrique & Europe en Direct",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "360 Foot — Actu Football Afrique & Europe en Direct",
     description: "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
-    images: ["https://360-foot.com/og-home.png"],
+    images: ["https://360foot.info/og-home.png"],
   },
   robots: {
     index: true,
@@ -70,12 +70,12 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://360-foot.com/#organization",
+      "@id": "https://360foot.info/#organization",
       name: "360 Foot",
-      url: "https://360-foot.com",
+      url: "https://360foot.info",
       logo: {
         "@type": "ImageObject",
-        url: "https://360-foot.com/icon-512.png",
+        url: "https://360foot.info/icon-512.png",
         width: 512,
         height: 512,
       },
@@ -86,14 +86,14 @@ const jsonLd = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://360-foot.com/#website",
-      url: "https://360-foot.com",
+      "@id": "https://360foot.info/#website",
+      url: "https://360foot.info",
       name: "360 Foot",
-      publisher: { "@id": "https://360-foot.com/#organization" },
+      publisher: { "@id": "https://360foot.info/#organization" },
       inLanguage: "fr-FR",
       potentialAction: {
         "@type": "SearchAction",
-        target: "https://360-foot.com/actu?q={search_term_string}",
+        target: "https://360foot.info/actu?q={search_term_string}",
         "query-input": "required name=search_term_string",
       },
     },
