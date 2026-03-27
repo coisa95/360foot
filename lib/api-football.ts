@@ -178,10 +178,10 @@ const LEAGUE_SEASONS: Record<number, number> = {
   848: 2025, // Conference League
   6:   2025, // CAN
   29:  2025, // Qualifs Coupe du Monde - Afrique
-  36:  2027, // CAN Qualifications
+  36:  2025, // CAN Qualifications
   // Compétitions internationales
   10:  2026, // Matchs amicaux
-  32:  2024, // Qualifs Coupe du Monde - Europe
+  32:  2025, // Qualifs Coupe du Monde - Europe
   34:  2026, // Qualifs Coupe du Monde - Amérique du Sud
   1:   2026, // Coupe du Monde
 };

@@ -82,17 +82,34 @@ export default async function ArticlePage({ params }: Props) {
     supabase.from("leagues").select("name, slug"),
   ]);
 
-  // Apply internal links to article content
+  // Apply internal links to article content + sanitize HTML
   let enrichedContent = article.content || "";
   try {
+    const sanitizeHtml = (await import("sanitize-html")).default;
+    enrichedContent = sanitizeHtml(enrichedContent, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img", "figure", "figcaption", "iframe"]),
+      allowedAttributes: {
+        ...sanitizeHtml.defaults.allowedAttributes,
+        img: ["src", "alt", "width", "height", "loading", "class", "style"],
+        a: ["href", "target", "rel", "class", "style"],
+        div: ["class", "style"],
+        p: ["class", "style"],
+        span: ["class", "style"],
+        h2: ["class", "id"],
+        h3: ["class", "id"],
+        figure: ["class"],
+        figcaption: ["class"],
+      },
+      allowedSchemes: ["https", "http"],
+    });
     enrichedContent = addInternalLinks(
-      article.content || "",
+      enrichedContent,
       (teams || []).map((t: Record<string, unknown>) => ({ name: t.name as string, slug: t.slug as string })),
       (players || []).map((p: Record<string, unknown>) => ({ name: p.name as string, slug: p.slug as string })),
       (leagues || []).map((l: Record<string, unknown>) => ({ name: l.name as string, slug: l.slug as string }))
     );
   } catch (e) {
-    console.error("Error adding internal links:", e);
+    console.error("Error processing article content:", e);
   }
 
   const breadcrumbItems = [

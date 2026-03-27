@@ -20,6 +20,18 @@
     },
     "app/api/cron/fetch-team-stats/route.ts": {
       "maxDuration": 300
+    },
+    "app/api/cron/collect-matches/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/update-standings/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/scrape-transfers/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/generate-sitemap/route.ts": {
+      "maxDuration": 300
     }
   },
   "crons": [

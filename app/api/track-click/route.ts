@@ -1,14 +1,36 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
+import { Redis } from "@upstash/redis";
+
+let redis: Redis | null = null;
+try {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+  }
+} catch { /* Redis optional */ }
 
 export async function POST(request: Request) {
   try {
+    // Rate limiting: max 20 clicks per IP per minute
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (redis) {
+      const key = `ratelimit:click:${ip}`;
+      const count = await redis.incr(key);
+      if (count === 1) await redis.expire(key, 60);
+      if (count > 20) {
+        return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+      }
+    }
+
     const body = await request.json();
     const { bookmaker_name, article_id, page_url } = body;
 
-    if (!bookmaker_name) {
+    if (!bookmaker_name || typeof bookmaker_name !== "string" || bookmaker_name.length > 100) {
       return NextResponse.json(
-        { error: "bookmaker_name is required" },
+        { error: "Invalid bookmaker_name" },
         { status: 400 }
       );
     }
