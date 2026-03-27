@@ -38,16 +38,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? `${homeName} ${match.score_home}-${match.score_away} ${awayName} — ${leagueName}`
       : `${homeName} vs ${awayName} — ${leagueName}`;
 
-  const description =
+  const rawDesc =
     match.status === "FT"
       ? `Score final : ${homeName} ${match.score_home} - ${match.score_away} ${awayName}. ${leagueName}. Résumé, buteurs, stats et compositions.`
       : `Avant-match ${homeName} vs ${awayName} en ${leagueName}. Pronostics, compositions probables et analyse.`;
+  const description = rawDesc.length > 155 ? rawDesc.slice(0, 152) + "..." : rawDesc;
 
   return {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/match/${slug}` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/match/${slug}` },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/match/${slug}`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
     twitter: { card: "summary_large_image", title, description },
   };
 }
@@ -201,7 +202,7 @@ export default async function MatchPage({ params }: Props) {
             {/* Home team */}
             <div className="flex-1 text-center">
               {match.home_team?.logo_url && (
-                <Image src={match.home_team.logo_url} alt={homeName} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
+                <Image src={match.home_team.logo_url} alt={`Logo ${homeName}`} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
               <h2 className="text-sm font-bold sm:text-lg">{homeName}</h2>
             </div>
@@ -235,7 +236,7 @@ export default async function MatchPage({ params }: Props) {
             {/* Away team */}
             <div className="flex-1 text-center">
               {match.away_team?.logo_url && (
-                <Image src={match.away_team.logo_url} alt={awayName} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
+                <Image src={match.away_team.logo_url} alt={`Logo ${awayName}`} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
               <h2 className="text-sm font-bold sm:text-lg">{awayName}</h2>
             </div>

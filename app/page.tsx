@@ -107,15 +107,15 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-4 md:py-8">
-      {/* Hero — minimal on mobile */}
-      <section className="mb-2 md:mb-10 hidden md:block bg-glow-lime rounded-2xl p-6">
-        <h1 className="text-4xl font-bold text-white">
+      {/* Hero — compact on mobile, full on desktop */}
+      <section className="mb-2 md:mb-10 md:bg-glow-lime md:rounded-2xl md:p-6">
+        <h1 className="text-xl md:text-4xl font-bold text-white">
           Actu Football{" "}
           <span className="bg-gradient-to-r from-lime-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
             Afrique &amp; Europe
           </span>
         </h1>
-        <p className="mt-3 text-gray-400 text-lg">
+        <p className="hidden md:block mt-3 text-gray-400 text-lg">
           Résultats, analyses, transferts — couverture 24/7 du football africain et européen.
         </p>
       </section>

@@ -25,13 +25,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!league) return { title: "Calendrier introuvable" };
 
   const title = `Calendrier ${league.name} - Prochains matchs`;
-  const description = `Calendrier et prochains matchs de ${league.name}.`;
+  const fullDesc = `Calendrier et prochains matchs de ${league.name}.`;
+  const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/calendrier` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/calendrier` },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/calendrier`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {
       card: "summary_large_image" as const,
       title,

@@ -42,13 +42,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!league) return { title: "Classement introuvable" };
 
   const title = `Classement ${league.name} - Tableau complet`;
-  const description = `Classement complet de la ${league.name} : points, victoires, défaites, nuls, buts marqués et encaissés.`;
+  const fullDesc = `Classement complet de la ${league.name} : points, victoires, défaites, nuls, buts marqués et encaissés.`;
+  const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/classement` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/classement` },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/classement`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {
       card: "summary_large_image" as const,
       title,
@@ -160,7 +161,7 @@ export default async function LeagueStandingsPage({ params }: Props) {
                     <td className="p-1.5 sm:p-3">
                       <div className="flex items-center gap-1.5">
                         {row.team_logo && (
-                          <Image src={row.team_logo} alt={row.team_name} width={20} height={20} className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0" />
+                          <Image src={row.team_logo} alt={`Logo ${row.team_name}`} width={20} height={20} className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0" />
                         )}
                         {teamSlug ? (
                           <Link href={`/equipe/${teamSlug}`} className="font-medium hover:text-lime-400 transition-colors truncate">

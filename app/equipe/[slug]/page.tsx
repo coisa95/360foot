@@ -33,13 +33,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!team) return { title: "Équipe introuvable - 360 Foot" };
 
   const title = `${team.name} - Effectif, résultats et classement - 360 Foot`;
-  const description = `Toutes les infos sur ${team.name} : effectif, derniers résultats, statistiques détaillées, classement en ${team.league.name} et actualités.`;
+  const fullDesc = `Toutes les infos sur ${team.name} : effectif, résultats, stats, classement en ${team.league.name} et actualités.`;
+  const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/equipe/${slug}` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/equipe/${slug}` },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/equipe/${slug}`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {
       card: "summary_large_image" as const,
       title,

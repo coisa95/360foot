@@ -25,7 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!bookmaker) return { title: "Bookmaker introuvable - 360 Foot" };
 
   const title = `${bookmaker.name} - Avis, bonus et inscription - 360 Foot`;
-  const description = `Decouvrez notre avis sur ${bookmaker.name} : bonus de bienvenue, cotes, methodes de paiement et pays disponibles.`;
+  const fullDesc = `Decouvrez notre avis sur ${bookmaker.name} : bonus de bienvenue, cotes, methodes de paiement et pays disponibles.`;
+  const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
@@ -38,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       type: "website",
       url: `https://360-foot.com/bookmakers/${slug}`,
+      images: [`/api/og?title=${encodeURIComponent(title)}`],
     },
     twitter: {
       card: "summary_large_image" as const,

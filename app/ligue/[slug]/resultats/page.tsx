@@ -25,13 +25,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!league) return { title: "Résultats introuvables" };
 
   const title = `Résultats ${league.name} - Tous les scores`;
-  const description = `Tous les résultats et scores des matchs de ${league.name}.`;
+  const fullDesc = `Tous les résultats et scores des matchs de ${league.name}.`;
+  const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/resultats` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/resultats` },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/resultats`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {
       card: "summary_large_image" as const,
       title,

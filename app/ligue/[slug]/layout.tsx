@@ -68,7 +68,7 @@ export default async function LeagueLayout({ params, children }: Props) {
             {league.logo_url && (
               <Image
                 src={league.logo_url}
-                alt={league.name}
+                alt={`Logo ${league.name}`}
                 width={56}
                 height={56}
                 className="h-10 w-10 sm:h-14 sm:w-14 object-contain"

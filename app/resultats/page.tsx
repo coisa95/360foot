@@ -22,6 +22,7 @@ export const metadata: Metadata = {
       "Scores et résultats du football africain et européen en temps réel.",
     type: "website",
     url: "https://360-foot.com/resultats",
+    images: ["/api/og?title=R%C3%A9sultats%20football%20en%20direct"],
   },
 };
 
@@ -222,7 +223,7 @@ export default async function ResultatsPage({ searchParams }: Props) {
                             {String(homeTeam?.logo_url || "") !== "" && (
                               <Image
                                 src={String(homeTeam?.logo_url)}
-                                alt={String(homeTeam?.name)}
+                                alt={`Logo ${String(homeTeam?.name)}`}
                                 width={32}
                                 height={32}
                                 className="h-8 w-8 object-contain"
@@ -244,7 +245,7 @@ export default async function ResultatsPage({ searchParams }: Props) {
                             {String(awayTeam?.logo_url || "") !== "" && (
                               <Image
                                 src={String(awayTeam?.logo_url)}
-                                alt={String(awayTeam?.name)}
+                                alt={`Logo ${String(awayTeam?.name)}`}
                                 width={32}
                                 height={32}
                                 className="h-8 w-8 object-contain"

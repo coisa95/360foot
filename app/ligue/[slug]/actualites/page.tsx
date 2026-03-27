@@ -25,13 +25,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!league) return { title: "Actualités introuvables" };
 
   const title = `Actualités ${league.name} - Articles et analyses`;
-  const description = `Toutes les actualités, analyses et articles sur ${league.name}.`;
+  const fullDesc = `Toutes les actualités, analyses et articles sur ${league.name}.`;
+  const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/actualites` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/actualites` },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/actualites`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {
       card: "summary_large_image" as const,
       title,

@@ -102,7 +102,7 @@ export async function LeagueSidebar({ activeSlug }: LeagueSidebarProps) {
                       {league.logo_url ? (
                         <Image
                           src={league.logo_url}
-                          alt=""
+                          alt={`Logo ${league.name}`}
                           width={20}
                           height={20}
                           className="h-5 w-5 shrink-0 rounded-sm object-contain"
