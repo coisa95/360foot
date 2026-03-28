@@ -32,8 +32,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!team) return { title: "Équipe introuvable - 360 Foot" };
 
+  const leagueName = team.league?.name || "";
   const title = `${team.name} - Effectif, résultats et classement - 360 Foot`;
-  const fullDesc = `Toutes les infos sur ${team.name} : effectif, résultats, stats, classement en ${team.league.name} et actualités.`;
+  const fullDesc = leagueName
+    ? `Toutes les infos sur ${team.name} : effectif, résultats, stats, classement en ${leagueName} et actualités.`
+    : `Toutes les infos sur ${team.name} : effectif, résultats, stats et actualités.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
@@ -130,7 +133,7 @@ export default async function TeamPage({ params }: Props) {
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
-    { label: team.league.name, href: `/ligue/${team.league.slug}` },
+    ...(team.league ? [{ label: team.league.name, href: `/ligue/${team.league.slug}` }] : []),
     { label: team.name },
   ];
 
@@ -139,7 +142,7 @@ export default async function TeamPage({ params }: Props) {
     "@type": "SportsTeam",
     name: team.name,
     sport: "Football",
-    memberOf: { "@type": "SportsOrganization", name: team.league.name },
+    memberOf: team.league ? { "@type": "SportsOrganization", name: team.league.name } : undefined,
     coach: team.coach ? { "@type": "Person", name: team.coach } : undefined,
     location: team.venue ? { "@type": "Place", name: team.venue } : undefined,
   };
@@ -197,11 +200,13 @@ export default async function TeamPage({ params }: Props) {
                 </div>
               </div>
             </div>
-            <Link href={`/ligue/${team.league.slug}`}>
-              <Badge className="bg-lime-500/20 text-lime-400 border-lime-500/30">
-                {team.league.name}
-              </Badge>
-            </Link>
+            {team.league && (
+              <Link href={`/ligue/${team.league.slug}`}>
+                <Badge className="bg-lime-500/20 text-lime-400 border-lime-500/30">
+                  {team.league.name}
+                </Badge>
+              </Link>
+            )}
           </div>
         </Card>
 

@@ -233,7 +233,8 @@ export default async function MatchPage({ params }: Props) {
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
-    { label: leagueName, href: `/ligue/${leagueSlug}` },
+    { label: "Compétitions", href: "/competitions" },
+    ...(leagueName ? [{ label: leagueName, href: `/ligue/${leagueSlug}` }] : []),
     { label: `${homeName} vs ${awayName}` },
   ];
 
