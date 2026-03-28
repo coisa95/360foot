@@ -59,8 +59,8 @@ cron.schedule("10 * * * *", () => triggerJob("/api/cron/generate-articles"));
 // Every hour at :20 — Generate preview articles
 cron.schedule("20 * * * *", () => triggerJob("/api/cron/generate-previews"));
 
-// Every 20 min — Enrich finished matches with events/stats
-cron.schedule("*/20 * * * *", () => triggerJob("/api/cron/enrich-matches"));
+// Every 10 min — Enrich finished matches with events/stats
+cron.schedule("*/10 * * * *", () => triggerJob("/api/cron/enrich-matches"));
 
 // Every hour at :40 — Enrich upcoming matches with predictions
 cron.schedule("40 * * * *", () => triggerJob("/api/cron/enrich-previews"));
@@ -96,7 +96,7 @@ log("INFO", "12 CRON jobs scheduled:");
 log("INFO", "  - collect-matches     → 0 * * * *");
 log("INFO", "  - generate-articles   → 10 * * * *");
 log("INFO", "  - generate-previews   → 20 * * * *");
-log("INFO", "  - enrich-matches      → */20 * * * *");
+log("INFO", "  - enrich-matches      → */10 * * * *");
 log("INFO", "  - enrich-previews     → 40 * * * *");
 log("INFO", "  - update-standings    → 30 * * * *");
 log("INFO", "  - fetch-top-players   → 0 6 * * *");
