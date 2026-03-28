@@ -105,21 +105,7 @@ export async function GET(request: Request) {
         if (totalSaves > 0) statsJson.saves = totalSaves;
         if (parseFloat(bestRating) > 0) statsJson.rating = bestRating;
 
-        // Also update player info if missing
         const updateData: Record<string, unknown> = { stats_json: statsJson };
-
-        if (!player.name && playerData.player.name) {
-          updateData.name = playerData.player.name;
-        }
-
-        // Update nationality, birth date, height, weight from API if available
-        const extraInfo: Record<string, string> = {};
-        if (playerData.player.nationality) extraInfo.nationality = playerData.player.nationality;
-        if (playerData.player.height) extraInfo.height = playerData.player.height;
-        if (playerData.player.weight) extraInfo.weight = playerData.player.weight;
-        if (Object.keys(extraInfo).length > 0) {
-          updateData.extra_json = extraInfo;
-        }
 
         const { error: updateError } = await supabase
           .from("players")
