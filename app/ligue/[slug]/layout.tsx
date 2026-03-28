@@ -39,6 +39,7 @@ export default async function LeagueLayout({ params, children }: Props) {
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
+    { label: "Compétitions", href: "/competitions" },
     { label: league.name, href: `/ligue/${slug}` },
   ];
 

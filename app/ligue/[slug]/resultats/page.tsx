@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase";
 import { MatchCard } from "@/components/match-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
+import { CollapsibleSection } from "@/components/collapsible-section";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -84,17 +85,17 @@ export default async function LeagueResultsPage({ params }: Props) {
             "@type": "BreadcrumbList",
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "Accueil", item: "https://360-foot.com" },
-              { "@type": "ListItem", position: 2, name: league.name, item: `https://360-foot.com/ligue/${slug}` },
-              { "@type": "ListItem", position: 3, name: "Résultats" },
+              { "@type": "ListItem", position: 2, name: "Compétitions", item: "https://360-foot.com/competitions" },
+              { "@type": "ListItem", position: 3, name: league.name, item: `https://360-foot.com/ligue/${slug}` },
+              { "@type": "ListItem", position: 4, name: "Résultats" },
             ],
           }),
         }}
       />
       {grouped.size > 0 ? (
-        <div className="space-y-4">
-          {Array.from(grouped.entries()).map(([dateLabel, dateMatches]) => (
-            <div key={dateLabel}>
-              <h3 className="text-sm font-semibold text-gray-400 mb-2 capitalize">{dateLabel}</h3>
+        <div className="space-y-3">
+          {Array.from(grouped.entries()).map(([dateLabel, dateMatches], idx) => (
+            <CollapsibleSection key={dateLabel} title={dateLabel} defaultOpen={idx === 0}>
               <div className="space-y-2">
                 {dateMatches.map((match: any) => (
                   <MatchCard
@@ -112,7 +113,7 @@ export default async function LeagueResultsPage({ params }: Props) {
                   />
                 ))}
               </div>
-            </div>
+            </CollapsibleSection>
           ))}
         </div>
       ) : (

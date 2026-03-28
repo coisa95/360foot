@@ -119,8 +119,9 @@ export default async function LeagueStandingsPage({ params }: Props) {
             "@type": "BreadcrumbList",
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "Accueil", item: "https://360-foot.com" },
-              { "@type": "ListItem", position: 2, name: league.name, item: `https://360-foot.com/ligue/${slug}` },
-              { "@type": "ListItem", position: 3, name: "Classement" },
+              { "@type": "ListItem", position: 2, name: "Compétitions", item: "https://360-foot.com/competitions" },
+              { "@type": "ListItem", position: 3, name: league.name, item: `https://360-foot.com/ligue/${slug}` },
+              { "@type": "ListItem", position: 4, name: "Classement" },
             ],
           }),
         }}
