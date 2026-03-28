@@ -126,8 +126,8 @@ export async function GET(request: Request) {
 
     const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-    // In backfill mode, process 7 leagues per batch to stay under 300s timeout
-    const BATCH_SIZE = 7;
+    // In backfill mode, process 3 leagues per batch to stay under 300s timeout
+    const BATCH_SIZE = 3;
     const leaguesToProcess = isBackfill
       ? LEAGUE_IDS.slice(batchIndex * BATCH_SIZE, (batchIndex + 1) * BATCH_SIZE)
       : LEAGUE_IDS;
