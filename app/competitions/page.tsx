@@ -23,32 +23,43 @@ export const metadata: Metadata = {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-// Categorize leagues by type
+// Categorize leagues by type — name-based rules first (cups/international), then country-based (domestic)
 function categorize(league: any): string {
   const name = (league.name || "").toLowerCase();
   const country = (league.country || "").toLowerCase();
 
-  // African countries (French + English names)
-  const africanCountries = ["ivory coast", "cote d'ivoire", "côte d'ivoire", "senegal", "sénégal", "cameroon", "cameroun", "mali", "burkina faso", "benin", "bénin", "congo", "ghana", "nigeria", "egypt", "égypte", "morocco", "maroc", "algeria", "algérie", "tunisia", "tunisie"];
-  if (africanCountries.some((c) => country.includes(c))) return "Afrique";
+  // 1) Continental club competitions (must come before country checks)
+  if (name.includes("caf champions") || name.includes("confédération caf") || name.includes("confederation cup")) return "Compétitions continentales";
+  if (name.includes("champions league") || name.includes("europa") || name.includes("conference league")) return "Compétitions continentales";
+  if (name.includes("libertadores") || name.includes("sudamericana") || name.includes("copa sudamericana")) return "Compétitions continentales";
+  if (name.includes("concacaf champions") || name.includes("concacaf league")) return "Compétitions continentales";
+  if (name.includes("afc champions") || name.includes("afc cup")) return "Compétitions continentales";
 
-  // African continental club competitions (CAF Champions League, Confederation Cup)
-  if (name.includes("caf") || (name.includes("confédération") && name.includes("africaine"))) return "Compétitions continentales";
-  if (name.includes("confederation cup")) return "Compétitions continentales";
-
-  // European club competitions (UEFA Champions League, Europa, Conference)
-  if (name.includes("champion") && name.includes("league")) return "Compétitions continentales";
-  if (name.includes("europa")) return "Compétitions continentales";
-  if (name.includes("conference league")) return "Compétitions continentales";
-
-  // International competitions (CAN, World Cup qualifiers, friendlies)
-  if (name.includes("can") || name.includes("africa")) return "Compétitions internationales";
+  // 2) International competitions (sélections — must come before country checks)
+  if (name === "can" || name.includes("coupe d'afrique")) return "Compétitions internationales";
+  if (name === "euro" || name.includes("euro championship")) return "Compétitions internationales";
+  if (name.includes("copa america")) return "Compétitions internationales";
+  if (name.includes("coupe d'asie") || name.includes("asian cup")) return "Compétitions internationales";
+  if (name.includes("concacaf gold cup") || name.includes("gold cup")) return "Compétitions internationales";
   if (name.includes("qualif") || name.includes("world cup") || name.includes("coupe du monde")) return "Compétitions internationales";
   if (name.includes("amicaux") || name.includes("friendl")) return "Compétitions internationales";
 
-  // European domestic leagues (French + English country names)
-  const europeanCountries = ["france", "england", "angleterre", "spain", "espagne", "italy", "italie", "germany", "allemagne", "portugal", "netherlands", "pays-bas", "belgium", "belgique"];
+  // 3) Domestic leagues by region
+  // Afrique
+  const africanCountries = ["ivory coast", "cote d'ivoire", "côte d'ivoire", "senegal", "sénégal", "cameroon", "cameroun", "mali", "burkina faso", "benin", "bénin", "congo", "ghana", "nigeria", "egypt", "égypte", "morocco", "maroc", "algeria", "algérie", "tunisia", "tunisie", "afrique"];
+  if (africanCountries.some((c) => country.includes(c))) return "Afrique";
+
+  // Europe
+  const europeanCountries = ["france", "england", "angleterre", "spain", "espagne", "italy", "italie", "germany", "allemagne", "portugal", "netherlands", "pays-bas", "belgium", "belgique", "europe"];
   if (europeanCountries.some((c) => country.includes(c))) return "Europe";
+
+  // Amérique
+  const americanCountries = ["usa", "états-unis", "amérique", "amérique du sud", "mexico", "mexique", "brazil", "brésil", "argentina", "argentine", "colombia", "colombie"];
+  if (americanCountries.some((c) => country.includes(c))) return "Amérique";
+
+  // Asie
+  const asianCountries = ["asie", "arabie saoudite", "saudi", "japan", "japon", "china", "chine", "south korea", "cor��e", "qatar", "uae", "émirats"];
+  if (asianCountries.some((c) => country.includes(c))) return "Asie";
 
   return "Autres";
 }
@@ -63,7 +74,7 @@ export default async function CompetitionsPage() {
 
   // Group by category
   const categories = new Map<string, any[]>();
-  const order = ["Afrique", "Europe", "Compétitions continentales", "Compétitions internationales", "Autres"];
+  const order = ["Afrique", "Europe", "Amérique", "Asie", "Compétitions continentales", "Compétitions internationales", "Autres"];
 
   for (const league of leagues || []) {
     const cat = categorize(league);

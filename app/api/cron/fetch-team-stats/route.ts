@@ -27,6 +27,9 @@ const LEAGUE_IDS = [
   307, // Saudi Pro League
   12,  // CAF Champions League
   20,  // CAF Confederation Cup
+  17,  // AFC Champions League
+  16,  // CONCACAF Champions League
+  13,  // Copa Libertadores
 ];
 
 export async function GET(request: Request) {
