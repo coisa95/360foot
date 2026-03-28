@@ -6,42 +6,16 @@ import { useState, useEffect } from "react";
 
 const NAV_LINKS = [
   { href: "/", label: "Accueil" },
+  { href: "/competitions", label: "Compétitions" },
   { href: "/actu", label: "Actualités" },
   { href: "/matchs", label: "Matchs" },
   { href: "/transferts", label: "Transferts" },
   { href: "/bons-plans", label: "Bons Plans" },
-];
-
-const DROPDOWN_LEAGUES = [
-  { href: "/ligue/ligue-1-cote-divoire", label: "🇨🇮 Ligue 1 Côte d'Ivoire" },
-  { href: "/ligue/ligue-pro-senegal", label: "🇸🇳 Ligue Pro Sénégal" },
-  { href: "/ligue/elite-one-cameroun", label: "🇨🇲 Elite One Cameroun" },
-  { href: "/ligue/ligue-1-france", label: "🇫🇷 Ligue 1 France" },
-  { href: "/ligue/premier-league", label: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League" },
-  { href: "/ligue/la-liga", label: "🇪🇸 La Liga" },
-  { href: "/ligue/champions-league", label: "🏆 Champions League" },
-];
-
-const MOBILE_LEAGUES = [
-  { href: "/ligue/ligue-1-cote-divoire", label: "🇨🇮 Ligue 1 CI" },
-  { href: "/ligue/ligue-pro-senegal", label: "🇸🇳 Ligue Pro SN" },
-  { href: "/ligue/elite-one-cameroun", label: "🇨🇲 Elite One CM" },
-  { href: "/ligue/championnat-national-benin", label: "🇧🇯 Champ. Bénin" },
-  { href: "/ligue/linafoot-ligue-1", label: "🇨🇩 Linafoot RDC" },
-  { href: "/ligue/ligue-1-france", label: "🇫🇷 Ligue 1" },
-  { href: "/ligue/premier-league", label: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League" },
-  { href: "/ligue/la-liga", label: "🇪🇸 La Liga" },
-  { href: "/ligue/serie-a", label: "🇮🇹 Serie A" },
-  { href: "/ligue/bundesliga", label: "🇩🇪 Bundesliga" },
-  { href: "/ligue/champions-league", label: "🏆 Champions League" },
-  { href: "/ligue/mls", label: "🇺🇸 MLS" },
-  { href: "/ligue/saudi-pro-league", label: "🇸🇦 Saudi Pro League" },
+  { href: "/recherche", label: "Recherche", icon: true },
 ];
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mobileLiguesOpen, setMobileLiguesOpen] = useState(false);
-  const [liguesDropdownOpen, setLiguesDropdownOpen] = useState(false);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -73,60 +47,20 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-6 lg:flex">
-          {/* Accueil */}
-          <Link href="/" className="text-sm text-gray-400 transition-colors hover:text-lime-400">
-            Accueil
-          </Link>
-
-          {/* Compétitions Dropdown — juste après Accueil */}
-          <div
-            className="relative"
-            onMouseEnter={() => setLiguesDropdownOpen(true)}
-            onMouseLeave={() => setLiguesDropdownOpen(false)}
-          >
-            <button className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-lime-400">
-              Compétitions
-              <svg className={`h-3 w-3 transition-transform ${liguesDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            {liguesDropdownOpen && (
-              <div className="absolute left-0 top-full mt-2 w-64 rounded-xl border border-dark-border bg-dark-bg/95 backdrop-blur-xl shadow-xl shadow-black/30 py-2 z-50">
-                {DROPDOWN_LEAGUES.map((league) => (
-                  <Link
-                    key={league.href}
-                    href={league.href}
-                    className="block px-4 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
-                  >
-                    {league.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Remaining nav links (skip Accueil) */}
-          {NAV_LINKS.filter((link) => link.href !== "/").map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-gray-400 transition-colors hover:text-lime-400"
+              className={`text-sm text-gray-400 transition-colors hover:text-lime-400 ${link.icon ? "flex items-center gap-1" : ""}`}
             >
+              {link.icon && (
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              )}
               {link.label}
             </Link>
           ))}
-
-          {/* Search */}
-          <Link
-            href="/recherche"
-            className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-lime-400"
-            aria-label="Recherche"
-          >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            Recherche
-          </Link>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -149,65 +83,21 @@ export function Header() {
       {menuOpen && (
         <div className="border-t border-dark-border bg-dark-bg px-4 pb-4 lg:hidden">
           <nav className="flex flex-col gap-1 pt-2">
-            {/* Accueil */}
-            <Link
-              href="/"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
-            >
-              Accueil
-            </Link>
-
-            {/* Mobile Compétitions accordion — juste après Accueil */}
-            <div>
-              <button
-                onClick={() => setMobileLiguesOpen(!mobileLiguesOpen)}
-                className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
-              >
-                Compétitions
-                <svg className={`h-3 w-3 transition-transform ${mobileLiguesOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {mobileLiguesOpen && (
-                <div className="ml-2">
-                  {MOBILE_LEAGUES.map((league) => (
-                    <Link
-                      key={league.href}
-                      href={league.href}
-                      onClick={() => setMenuOpen(false)}
-                      className="block rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
-                    >
-                      {league.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Remaining nav links (skip Accueil) */}
-            {NAV_LINKS.filter((link) => link.href !== "/").map((link) => (
+            {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
+                className={`rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400 ${link.icon ? "flex items-center gap-2" : ""}`}
               >
+                {link.icon && (
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                )}
                 {link.label}
               </Link>
             ))}
-
-            {/* Recherche */}
-            <Link
-              href="/recherche"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
-            >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              Recherche
-            </Link>
           </nav>
         </div>
       )}
