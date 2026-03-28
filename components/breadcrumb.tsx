@@ -27,10 +27,10 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <nav aria-label="Fil d'Ariane" className="mb-4">
-        <ol className="flex flex-wrap items-center gap-1 text-sm text-gray-500">
+      <nav aria-label="Fil d'Ariane" className="mb-4 overflow-hidden">
+        <ol className="flex items-center gap-1 text-xs text-gray-500 whitespace-nowrap overflow-hidden">
           {items.map((item, index) => (
-            <li key={index} className="flex items-center gap-1">
+            <li key={index} className={`flex items-center gap-1 shrink-0 ${index === items.length - 1 ? "min-w-0 shrink" : ""}`}>
               {index > 0 && <span className="text-gray-600" aria-hidden="true">/</span>}
               {item.href ? (
                 <Link
@@ -40,7 +40,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-gray-400">{item.label}</span>
+                <span className="text-gray-400 truncate">{item.label}</span>
               )}
             </li>
           ))}
