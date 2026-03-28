@@ -78,6 +78,19 @@ export default async function LeagueResumePage({ params }: Props) {
 
   const topScorers = (standingsData?.top_scorers_json as any[]) || [];
 
+  // Lookup player slugs for top scorers
+  const scorerNames = topScorers.slice(0, 5).map((p: any) => p.name).filter(Boolean);
+  const scorerSlugMap: Record<string, string> = {};
+  if (scorerNames.length > 0) {
+    const { data: scorerPlayers } = await supabase
+      .from("players")
+      .select("name, slug")
+      .in("name", scorerNames);
+    if (scorerPlayers) {
+      for (const p of scorerPlayers) scorerSlugMap[p.name] = p.slug;
+    }
+  }
+
   // Matches this week (past + upcoming within 7 days)
   const now = new Date();
   const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
@@ -141,7 +154,11 @@ export default async function LeagueResumePage({ params }: Props) {
                       <Image src={player.photo} alt={`Photo ${player.name}`} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-white text-[11px] truncate">{player.name}</p>
+                      {scorerSlugMap[player.name] ? (
+                        <Link href={`/joueur/${scorerSlugMap[player.name]}`} className="font-medium text-white text-[11px] truncate block hover:text-lime-400 transition-colors">{player.name}</Link>
+                      ) : (
+                        <p className="font-medium text-white text-[11px] truncate">{player.name}</p>
+                      )}
                       <p className="text-[9px] text-gray-500 truncate">{player.team}</p>
                     </div>
                     <span className="text-xs font-bold text-lime-400">{player.goals}</span>

@@ -66,6 +66,36 @@ export default async function TransfersPage() {
     .order("created_at", { ascending: false })
     .limit(6);
 
+  // Lookup player slugs for linking
+  const playerNames = transfers?.map((t) => t.player_name).filter(Boolean) || [];
+  const playerSlugMap: Record<string, string> = {};
+  if (playerNames.length > 0) {
+    const { data: matchedPlayers } = await supabase
+      .from("players")
+      .select("name, slug")
+      .in("name", playerNames);
+    if (matchedPlayers) {
+      for (const p of matchedPlayers) playerSlugMap[p.name] = p.slug;
+    }
+  }
+
+  // Lookup team slugs for linking
+  const teamNames = new Set<string>();
+  transfers?.forEach((t) => {
+    if (t.from_team) teamNames.add(t.from_team);
+    if (t.to_team) teamNames.add(t.to_team);
+  });
+  const teamSlugMap: Record<string, string> = {};
+  if (teamNames.size > 0) {
+    const { data: matchedTeams } = await supabase
+      .from("teams")
+      .select("name, slug")
+      .in("name", Array.from(teamNames));
+    if (matchedTeams) {
+      for (const t of matchedTeams) teamSlugMap[t.name] = t.slug;
+    }
+  }
+
   return (
     <main className="min-h-screen bg-dark-bg text-white">
       <div className="mx-auto max-w-7xl px-4 py-6">
@@ -151,9 +181,15 @@ export default async function TransfersPage() {
                     {/* Player info + clubs */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-bold text-white truncate">
-                          {t.player_name}
-                        </span>
+                        {playerSlugMap[t.player_name] ? (
+                          <Link href={`/joueur/${playerSlugMap[t.player_name]}`} className="text-sm font-bold text-white truncate hover:text-lime-400 transition-colors">
+                            {t.player_name}
+                          </Link>
+                        ) : (
+                          <span className="text-sm font-bold text-white truncate">
+                            {t.player_name}
+                          </span>
+                        )}
                         <Badge className={`text-[10px] px-1.5 py-0 ${badge}`}>
                           {label}
                         </Badge>
@@ -165,12 +201,20 @@ export default async function TransfersPage() {
                         {t.from_team_logo && (
                           <Image src={t.from_team_logo} alt="" width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
                         )}
-                        <span className="text-gray-400 truncate">{t.from_team || "?"}</span>
+                        {teamSlugMap[t.from_team] ? (
+                          <Link href={`/equipe/${teamSlugMap[t.from_team]}`} className="text-gray-400 truncate hover:text-lime-400 transition-colors">{t.from_team}</Link>
+                        ) : (
+                          <span className="text-gray-400 truncate">{t.from_team || "?"}</span>
+                        )}
                         <span className="text-lime-400 font-bold shrink-0">→</span>
                         {t.to_team_logo && (
                           <Image src={t.to_team_logo} alt="" width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
                         )}
-                        <span className="text-white truncate">{t.to_team || "?"}</span>
+                        {teamSlugMap[t.to_team] ? (
+                          <Link href={`/equipe/${teamSlugMap[t.to_team]}`} className="text-white truncate hover:text-lime-400 transition-colors">{t.to_team}</Link>
+                        ) : (
+                          <span className="text-white truncate">{t.to_team || "?"}</span>
+                        )}
                       </div>
                     </div>
 
