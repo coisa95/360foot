@@ -4,183 +4,203 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Transferts - Dernières infos mercato football africain - 360 Foot",
+  title: "Transferts — Mercato football africain et européen",
   description:
-    "Suivez tous les transferts du football africain : arrivées, départs, prêts et montants des transferts des joueurs africains.",
+    "Suivez tous les transferts du football africain et européen : arrivées, départs, prêts et montants.",
   alternates: {
     canonical: "https://360-foot.com/transferts",
   },
   openGraph: {
-    title: "Transferts - Dernières infos mercato football africain - 360 Foot",
+    title: "Transferts — Mercato football africain et européen",
     description:
-      "Suivez tous les transferts du football africain : arrivées, départs, prêts et montants des transferts des joueurs africains.",
+      "Suivez tous les transferts du football africain et européen : arrivées, départs, prêts et montants.",
     type: "website",
     url: "https://360-foot.com/transferts",
-    images: ["/api/og?title=Transferts%20-%20Mercato%20football%20africain"],
+    images: ["/api/og?title=Transferts%20-%20Mercato%20football"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Transferts — Mercato football africain et européen",
+    description:
+      "Suivez tous les transferts du football africain et européen.",
+  },
+};
+
+const TYPE_LABELS: Record<string, string> = {
+  "N/A": "Transfert",
+  Free: "Libre",
+  Loan: "Prêt",
+  transfer: "Transfert",
+  loan: "Prêt",
+  free: "Libre",
+};
+
+const TYPE_BADGE: Record<string, string> = {
+  "N/A": "bg-lime-500/15 text-lime-400 border-lime-500/20",
+  Free: "bg-gray-500/15 text-gray-400 border-gray-500/20",
+  Loan: "bg-blue-500/15 text-blue-400 border-blue-500/20",
+  transfer: "bg-lime-500/15 text-lime-400 border-lime-500/20",
+  loan: "bg-blue-500/15 text-blue-400 border-blue-500/20",
+  free: "bg-gray-500/15 text-gray-400 border-gray-500/20",
 };
 
 export default async function TransfersPage() {
   const supabase = createClient();
 
-  // Get transfers (simple columns, no joins)
   const { data: transfers } = await supabase
     .from("transfers")
     .select("*")
     .order("date", { ascending: false })
-    .limit(50);
+    .limit(60);
 
-  // Also get transfer articles
   const { data: transferArticles } = await supabase
     .from("articles")
     .select("id, title, slug, excerpt, created_at")
     .eq("type", "transfer")
     .order("created_at", { ascending: false })
-    .limit(10);
-
-  const breadcrumbItems = [
-    { label: "Accueil", href: "/" },
-    { label: "Transferts" },
-  ];
-
-  const typeLabels: Record<string, string> = {
-    "N/A": "Transfert",
-    Free: "Libre",
-    Loan: "Prêt",
-    transfer: "Transfert",
-    loan: "Prêt",
-    free: "Libre",
-  };
-
-  const typeBadgeColor: Record<string, string> = {
-    "N/A": "bg-lime-500/20 text-lime-400 border-lime-500/30",
-    Free: "bg-gray-500/20 text-gray-400 border-gray-500/30",
-    Loan: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-    transfer: "bg-lime-500/20 text-lime-400 border-lime-500/30",
-    loan: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-    free: "bg-gray-500/20 text-gray-400 border-gray-500/30",
-  };
+    .limit(6);
 
   return (
     <main className="min-h-screen bg-dark-bg text-white">
-      <div className="container mx-auto px-4 py-6">
-        <Breadcrumb items={breadcrumbItems} />
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <Breadcrumb items={[{ label: "Accueil", href: "/" }, { label: "Transferts" }]} />
 
-        <div className="mt-6">
-          <h1 className="text-3xl font-bold text-lime-400">Transferts</h1>
-          <p className="text-gray-400 mt-1">
-            Derniers mouvements de joueurs dans le football africain et européen
+        <div className="mt-6 mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-white">
+            Transferts{" "}
+            <span className="bg-gradient-to-r from-lime-400 to-emerald-400 bg-clip-text text-transparent">
+              Mercato
+            </span>
+          </h1>
+          <p className="text-gray-400 mt-1 text-sm">
+            Derniers mouvements de joueurs — football africain et européen
           </p>
         </div>
 
-        <AffiliateTrio />
-
         {/* Articles transferts */}
         {transferArticles && transferArticles.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-xl font-bold text-white mb-4">
-              Analyses transferts
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <section className="mb-6">
+            <h2 className="section-title mb-3">Analyses transferts</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {transferArticles.map((article) => (
-                <a
-                  key={article.id}
-                  href={`/actu/${article.slug}`}
-                  className="block"
-                >
-                  <Card className="bg-dark-card border-gray-800 p-4 hover:border-lime-500/30 transition-colors h-full">
-                    <h3 className="font-bold text-white hover:text-lime-400 transition-colors">
+                <Link key={article.id} href={`/actu/${article.slug}`} className="group block">
+                  <Card className="h-full border-dark-border/50 bg-dark-card/80 p-4 transition-all hover:border-lime-500/20 hover:-translate-y-0.5">
+                    <h3 className="font-semibold text-sm text-gray-100 line-clamp-2 group-hover:text-lime-400 transition-colors">
                       {article.title}
                     </h3>
                     {article.excerpt && (
-                      <p className="text-gray-400 text-sm mt-2 line-clamp-2">
-                        {article.excerpt}
-                      </p>
+                      <p className="text-gray-500 text-xs mt-2 line-clamp-2">{article.excerpt}</p>
                     )}
-                    <p className="text-gray-600 text-xs mt-2">
+                    <time className="block text-[11px] text-gray-600 mt-2">
                       {new Date(article.created_at).toLocaleDateString("fr-FR", {
                         day: "numeric",
                         month: "long",
-                        year: "numeric",
                       })}
-                    </p>
+                    </time>
                   </Card>
-                </a>
+                </Link>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
-        {/* Liste des transferts */}
-        <div className="mt-8">
-          <h2 className="text-xl font-bold text-white mb-4">
-            Tableau des transferts
-          </h2>
-          <div className="space-y-3">
-            {transfers && transfers.length > 0 ? (
-              transfers.map((transfer) => (
-                <Card
-                  key={transfer.id}
-                  className="bg-dark-card border-gray-800 p-4 hover:border-gray-700 transition-colors"
-                >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-1">
-                        <span className="text-lg font-bold text-white">
-                          {transfer.player_name}
+        <AffiliateTrio />
+
+        {/* Tableau des transferts */}
+        <section className="mt-6">
+          <h2 className="section-title mb-4">Tableau des transferts</h2>
+
+          {transfers && transfers.length > 0 ? (
+            <div className="space-y-2">
+              {transfers.map((t) => {
+                const badge = TYPE_BADGE[t.transfer_type] || TYPE_BADGE["N/A"];
+                const label = TYPE_LABELS[t.transfer_type] || t.transfer_type || "Transfert";
+                const hasFee = t.fee && t.fee !== "Non communiqué" && t.fee !== "-";
+                const hasPhoto = t.player_photo;
+                const hasNat = t.player_nationality;
+
+                return (
+                  <div
+                    key={t.id}
+                    className="flex items-center gap-3 rounded-lg border border-dark-border/50 bg-dark-card/80 px-3 py-3 transition-colors hover:border-lime-500/15"
+                  >
+                    {/* Player photo */}
+                    {hasPhoto ? (
+                      <Image
+                        src={t.player_photo}
+                        alt={t.player_name}
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 shrink-0 rounded-full object-cover border border-dark-border"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dark-surface border border-dark-border">
+                        <span className="text-xs text-gray-500">
+                          {t.player_name?.charAt(0) || "?"}
                         </span>
-                        {transfer.transfer_type && (
-                          <Badge
-                            className={
-                              typeBadgeColor[transfer.transfer_type] ||
-                              "bg-lime-500/20 text-lime-400 border-lime-500/30"
-                            }
-                          >
-                            {typeLabels[transfer.transfer_type] ||
-                              transfer.transfer_type}
-                          </Badge>
+                      </div>
+                    )}
+
+                    {/* Player info + clubs */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm font-bold text-white truncate">
+                          {t.player_name}
+                        </span>
+                        <Badge className={`text-[10px] px-1.5 py-0 ${badge}`}>
+                          {label}
+                        </Badge>
+                        {hasNat && (
+                          <span className="text-[10px] text-gray-500">{t.player_nationality}</span>
                         )}
                       </div>
-
-                      <div className="flex items-center gap-2 text-sm text-gray-400">
-                        <span>{transfer.from_team || "?"}</span>
-                        <span className="text-lime-400 font-bold">→</span>
-                        <span className="text-white">
-                          {transfer.to_team || "?"}
-                        </span>
+                      <div className="flex items-center gap-1.5 mt-0.5 text-xs">
+                        {t.from_team_logo && (
+                          <Image src={t.from_team_logo} alt="" width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
+                        )}
+                        <span className="text-gray-400 truncate">{t.from_team || "?"}</span>
+                        <span className="text-lime-400 font-bold shrink-0">→</span>
+                        {t.to_team_logo && (
+                          <Image src={t.to_team_logo} alt="" width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
+                        )}
+                        <span className="text-white truncate">{t.to_team || "?"}</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                      {transfer.fee && transfer.fee !== "Non communiqué" && (
-                        <span className="text-lime-400 font-bold text-sm">
-                          {transfer.fee}
-                        </span>
+                    {/* Fee + Date */}
+                    <div className="shrink-0 text-right">
+                      {hasFee && (
+                        <p className="text-sm font-bold text-lime-400">{t.fee}</p>
                       )}
-                      {transfer.date && (
-                        <span className="text-gray-500 text-sm whitespace-nowrap">
-                          {new Date(transfer.date).toLocaleDateString("fr-FR", {
+                      {t.market_value && !hasFee && (
+                        <p className="text-xs text-gray-500">Valeur: {t.market_value}</p>
+                      )}
+                      {t.date && (
+                        <p className="text-[10px] text-gray-500 mt-0.5">
+                          {new Date(t.date).toLocaleDateString("fr-FR", {
                             day: "numeric",
                             month: "short",
-                            year: "numeric",
                           })}
-                        </span>
+                        </p>
                       )}
                     </div>
                   </div>
-                </Card>
-              ))
-            ) : (
-              <div className="rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
-                <p className="text-sm text-gray-500">Aucun transfert disponible pour le moment.</p>
-              </div>
-            )}
-          </div>
-        </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+              <p className="text-sm text-gray-500">Aucun transfert disponible pour le moment.</p>
+            </div>
+          )}
+        </section>
       </div>
     </main>
   );

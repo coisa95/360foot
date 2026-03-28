@@ -20,6 +20,12 @@
     },
     "app/api/cron/fetch-team-stats/route.ts": {
       "maxDuration": 300
+    },
+    "app/api/cron/sync-transfers/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/migrate/route.ts": {
+      "maxDuration": 60
     }
   },
   "crons": [
@@ -30,6 +36,7 @@
     { "path": "/api/cron/enrich-previews", "schedule": "40 * * * *" },
     { "path": "/api/cron/update-standings", "schedule": "30 * * * *" },
     { "path": "/api/cron/scrape-transfers", "schedule": "0 8,14,20 * * *" },
+    { "path": "/api/cron/sync-transfers", "schedule": "0 7,19 * * *" },
     { "path": "/api/cron/fetch-top-players", "schedule": "0 6 * * *" },
     { "path": "/api/cron/fetch-team-stats", "schedule": "0 5 * * *" },
     { "path": "/api/cron/generate-sitemap", "schedule": "0 3 * * *" },
