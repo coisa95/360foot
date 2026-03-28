@@ -73,7 +73,40 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-6 lg:flex">
-          {NAV_LINKS.map((link) => (
+          {/* Accueil */}
+          <Link href="/" className="text-sm text-gray-400 transition-colors hover:text-lime-400">
+            Accueil
+          </Link>
+
+          {/* Compétitions Dropdown — juste après Accueil */}
+          <div
+            className="relative"
+            onMouseEnter={() => setLiguesDropdownOpen(true)}
+            onMouseLeave={() => setLiguesDropdownOpen(false)}
+          >
+            <button className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-lime-400">
+              Compétitions
+              <svg className={`h-3 w-3 transition-transform ${liguesDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {liguesDropdownOpen && (
+              <div className="absolute left-0 top-full mt-2 w-64 rounded-xl border border-dark-border bg-dark-bg/95 backdrop-blur-xl shadow-xl shadow-black/30 py-2 z-50">
+                {DROPDOWN_LEAGUES.map((league) => (
+                  <Link
+                    key={league.href}
+                    href={league.href}
+                    className="block px-4 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
+                  >
+                    {league.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Remaining nav links (skip Accueil) */}
+          {NAV_LINKS.filter((link) => link.href !== "/").map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -94,33 +127,6 @@ export function Header() {
             </svg>
             Recherche
           </Link>
-
-          {/* Compétitions Dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setLiguesDropdownOpen(true)}
-            onMouseLeave={() => setLiguesDropdownOpen(false)}
-          >
-            <button className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-lime-400">
-              Compétitions
-              <svg className={`h-3 w-3 transition-transform ${liguesDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            {liguesDropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-dark-border bg-dark-bg/95 backdrop-blur-xl shadow-xl shadow-black/30 py-2 z-50">
-                {DROPDOWN_LEAGUES.map((league) => (
-                  <Link
-                    key={league.href}
-                    href={league.href}
-                    className="block px-4 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
-                  >
-                    {league.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -143,31 +149,17 @@ export function Header() {
       {menuOpen && (
         <div className="border-t border-dark-border bg-dark-bg px-4 pb-4 lg:hidden">
           <nav className="flex flex-col gap-1 pt-2">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
-              >
-                {link.label}
-              </Link>
-            ))}
-
-            {/* Recherche */}
+            {/* Accueil */}
             <Link
-              href="/recherche"
+              href="/"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
+              className="rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
             >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              Recherche
+              Accueil
             </Link>
 
-            {/* Mobile Compétitions accordion */}
-            <div className="mt-1 border-t border-dark-border pt-1">
+            {/* Mobile Compétitions accordion — juste après Accueil */}
+            <div>
               <button
                 onClick={() => setMobileLiguesOpen(!mobileLiguesOpen)}
                 className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
@@ -192,6 +184,30 @@ export function Header() {
                 </div>
               )}
             </div>
+
+            {/* Remaining nav links (skip Accueil) */}
+            {NAV_LINKS.filter((link) => link.href !== "/").map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            {/* Recherche */}
+            <Link
+              href="/recherche"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Recherche
+            </Link>
           </nav>
         </div>
       )}
