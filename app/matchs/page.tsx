@@ -9,7 +9,7 @@ import Link from "next/link";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Matchs en direct et résultats — Football africain et européen — 360 Foot",
+  title: "Matchs en direct — Résultats football — 360 Foot",
   description:
     "Tous les matchs de football en direct, résultats et calendrier. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League, Champions League.",
   alternates: { canonical: "https://360-foot.com/matchs" },
@@ -133,6 +133,8 @@ export default async function MatchsPage({ searchParams }: Props) {
     <main className="min-h-screen bg-dark-bg text-white">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
+
+        <h1 className="sr-only">Matchs de football du jour</h1>
 
         {/* Date navigation */}
         <div className="mt-4 flex gap-1 overflow-x-auto pb-2 scrollbar-hide">

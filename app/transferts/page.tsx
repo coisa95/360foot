@@ -199,7 +199,7 @@ export default async function TransfersPage() {
                       </div>
                       <div className="flex items-center gap-1.5 mt-0.5 text-xs">
                         {t.from_team_logo && (
-                          <Image src={t.from_team_logo} alt="" width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
+                          <Image src={t.from_team_logo} alt={`Logo ${t.from_team}`} width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
                         )}
                         {teamSlugMap[t.from_team] ? (
                           <Link href={`/equipe/${teamSlugMap[t.from_team]}`} className="text-gray-400 truncate hover:text-lime-400 transition-colors">{t.from_team}</Link>
@@ -208,7 +208,7 @@ export default async function TransfersPage() {
                         )}
                         <span className="text-lime-400 font-bold shrink-0">→</span>
                         {t.to_team_logo && (
-                          <Image src={t.to_team_logo} alt="" width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
+                          <Image src={t.to_team_logo} alt={`Logo ${t.to_team}`} width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
                         )}
                         {teamSlugMap[t.to_team] ? (
                           <Link href={`/equipe/${teamSlugMap[t.to_team]}`} className="text-white truncate hover:text-lime-400 transition-colors">{t.to_team}</Link>
