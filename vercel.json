@@ -27,6 +27,12 @@
     "app/api/cron/populate-players/route.ts": {
       "maxDuration": 300
     },
+    "app/api/cron/enrich-players/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/sync-transfers-apifb/route.ts": {
+      "maxDuration": 300
+    },
     "app/api/cron/collect-matches/route.ts": {
       "maxDuration": 300
     }
@@ -44,6 +50,8 @@
     { "path": "/api/cron/fetch-team-stats", "schedule": "0 5 * * *" },
     { "path": "/api/cron/generate-sitemap", "schedule": "0 3 * * *" },
     { "path": "/api/cron/process-rss", "schedule": "50 * * * *" },
-    { "path": "/api/cron/populate-players", "schedule": "0 4,12,20 * * *" }
+    { "path": "/api/cron/populate-players", "schedule": "0 4,12,20 * * *" },
+    { "path": "/api/cron/enrich-players", "schedule": "0 5,13,21 * * *" },
+    { "path": "/api/cron/sync-transfers-apifb", "schedule": "0 8,20 * * *" }
   ]
 }

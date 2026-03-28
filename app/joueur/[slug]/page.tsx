@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 
 export const revalidate = 300;
@@ -57,6 +58,18 @@ export default async function PlayerPage({ params }: Props) {
     .single();
 
   if (!player) notFound();
+
+  // Fetch recent matches where this player's team played
+  const recentMatches = player.team_id
+    ? (await supabase
+        .from("matches")
+        .select("slug, date, score_home, score_away, status, home_team:teams!home_team_id(name, slug), away_team:teams!away_team_id(name, slug)")
+        .or(`home_team_id.eq.${player.team_id},away_team_id.eq.${player.team_id}`)
+        .eq("status", "FT")
+        .order("date", { ascending: false })
+        .limit(5)
+      ).data
+    : null;
 
   const { data: relatedArticles } = await supabase
     .from("articles")
@@ -124,7 +137,17 @@ export default async function PlayerPage({ params }: Props) {
         {/* Fiche joueur */}
         <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-            <div>
+            <div className="flex items-start gap-4">
+              {player.photo_url && (
+                <Image
+                  src={player.photo_url}
+                  alt={`Photo ${player.name}`}
+                  width={80}
+                  height={80}
+                  className="h-20 w-20 rounded-full object-cover border-2 border-lime-400/30"
+                />
+              )}
+              <div>
               <h1 className="text-3xl font-bold text-lime-400">{player.name}</h1>
               <div className="flex flex-wrap gap-3 mt-3">
                 {player.position && (
@@ -142,6 +165,7 @@ export default async function PlayerPage({ params }: Props) {
                     {calculateAge(player.birth_date)} ans
                   </Badge>
                 )}
+              </div>
               </div>
             </div>
             {player.team && (
@@ -218,6 +242,26 @@ export default async function PlayerPage({ params }: Props) {
                   );
                 }
               )}
+            </div>
+          </Card>
+        )}
+
+        {/* Derniers matchs de l'équipe */}
+        {recentMatches && recentMatches.length > 0 && (
+          <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
+            <h2 className="text-lg font-bold text-lime-400 mb-4">Derniers matchs</h2>
+            <div className="space-y-2">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {recentMatches.map((m: any) => (
+                <Link key={m.slug} href={`/match/${m.slug}`} className="flex items-center justify-between rounded-lg bg-dark-card px-3 py-2 text-sm hover:bg-gray-800/50 transition-colors">
+                  <span className="text-xs text-gray-500 w-20">
+                    {new Date(m.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
+                  </span>
+                  <span className="flex-1 text-right text-white">{m.home_team?.name}</span>
+                  <span className="mx-3 font-bold text-lime-400">{m.score_home} - {m.score_away}</span>
+                  <span className="flex-1 text-white">{m.away_team?.name}</span>
+                </Link>
+              ))}
             </div>
           </Card>
         )}
