@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { MatchLeagueGroup } from "@/components/match-league-group";
+import { LeagueFilter } from "@/components/league-filter";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -161,32 +162,13 @@ export default async function MatchsPage({ searchParams }: Props) {
           })}
         </div>
 
-        {/* League filter */}
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          <Link
-            href={buildHref(selectedDateStr)}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-              !ligue
-                ? "bg-lime-500 text-black"
-                : "bg-dark-card text-gray-400 hover:bg-dark-surface hover:text-white"
-            }`}
-          >
-            Toutes
-          </Link>
-          {(leagues || []).map((l: any) => (
-            <Link
-              key={l.slug}
-              href={buildHref(selectedDateStr, l.slug)}
-              className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-                ligue === l.slug
-                  ? "bg-lime-500 text-black"
-                  : "bg-dark-card text-gray-400 hover:bg-dark-surface hover:text-white"
-              }`}
-            >
-              {l.name}
-            </Link>
-          ))}
-        </div>
+        {/* League filter — collapsible */}
+        <LeagueFilter
+          leagues={leagues || []}
+          selectedDateStr={selectedDateStr}
+          currentLigue={ligue}
+          todayDateStr={formatDateParam(today)}
+        />
 
         {/* Matches grouped by league — collapsible */}
         {matchesByLeague.size > 0 ? (
