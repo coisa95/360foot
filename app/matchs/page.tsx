@@ -97,7 +97,7 @@ export default async function MatchsPage({ searchParams }: Props) {
   // Fetch leagues for filter
   const { data: leagues } = await supabase
     .from("leagues")
-    .select("name, slug")
+    .select("name, slug, logo_url")
     .order("name");
 
   // Group matches by league
@@ -133,10 +133,6 @@ export default async function MatchsPage({ searchParams }: Props) {
     <main className="min-h-screen bg-dark-bg text-white">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
-
-        <h1 className="mt-6 text-3xl font-bold md:text-4xl">
-          <span className="text-lime-400">Matchs</span> du jour
-        </h1>
 
         {/* Date navigation */}
         <div className="mt-4 flex gap-1 overflow-x-auto pb-2 scrollbar-hide">

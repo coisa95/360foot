@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -29,7 +30,6 @@ export function LeagueFilter({
   return (
     <div className="mt-4">
       <div className="flex items-center gap-2">
-        {/* "Toutes" pill */}
         <Link
           href={buildHref(selectedDateStr, todayDateStr)}
           className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
@@ -41,14 +41,22 @@ export function LeagueFilter({
           Toutes
         </Link>
 
-        {/* Active filter badge */}
         {currentLigue && (
-          <span className="rounded-full bg-lime-500 px-3 py-1.5 text-xs font-medium text-black">
-            {leagues.find((l) => l.slug === currentLigue)?.name || currentLigue}
+          <span className="flex items-center gap-1.5 rounded-full bg-lime-500 px-3 py-1.5 text-xs font-medium text-black">
+            {(() => {
+              const found = leagues.find((l) => l.slug === currentLigue);
+              return (
+                <>
+                  {found?.logo_url && (
+                    <Image src={found.logo_url} alt="" width={14} height={14} className="h-3.5 w-3.5 object-contain" />
+                  )}
+                  {found?.name || currentLigue}
+                </>
+              );
+            })()}
           </span>
         )}
 
-        {/* Toggle button */}
         <button
           onClick={() => setOpen(!open)}
           className="flex items-center gap-1 rounded-full bg-dark-card px-3 py-1.5 text-xs font-medium text-gray-400 hover:bg-dark-surface hover:text-white transition-colors"
@@ -68,21 +76,27 @@ export function LeagueFilter({
         </button>
       </div>
 
-      {/* Expandable league list */}
       {open && (
-        <div className="mt-2 flex flex-wrap gap-1.5 rounded-lg border border-gray-800 bg-dark-card/50 p-3">
+        <div className="mt-2 rounded-lg border border-gray-800 bg-dark-card/50 p-2 max-h-72 overflow-y-auto">
           {leagues.map((l: any) => (
             <Link
               key={l.slug}
               href={buildHref(selectedDateStr, todayDateStr, l.slug)}
               onClick={() => setOpen(false)}
-              className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+              className={`flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors ${
                 currentLigue === l.slug
-                  ? "bg-lime-500 text-black"
-                  : "bg-dark-bg text-gray-400 hover:bg-gray-700 hover:text-white"
+                  ? "bg-lime-500/15 text-lime-400"
+                  : "text-gray-300 hover:bg-gray-800 hover:text-white"
               }`}
             >
-              {l.name}
+              {l.logo_url ? (
+                <Image src={l.logo_url} alt="" width={20} height={20} className="h-5 w-5 object-contain shrink-0" />
+              ) : (
+                <div className="h-5 w-5 rounded bg-gray-700 flex items-center justify-center text-[10px] text-gray-500 shrink-0">
+                  {l.name?.charAt(0)}
+                </div>
+              )}
+              <span className="truncate">{l.name}</span>
             </Link>
           ))}
         </div>
