@@ -154,9 +154,9 @@ export default async function HomePage() {
         <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute top-10 left-1/2 w-40 h-40 bg-cyan-500/8 rounded-full blur-3xl" />
         <div className="relative">
-          <h1 className="text-[1.35rem] md:text-5xl font-extrabold text-white leading-tight whitespace-nowrap">
-            Actu Football{" "}
-            <span className="bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(163,230,53,0.3)]">
+          <h1 className="font-extrabold text-white leading-tight">
+            <span className="block text-lg sm:text-2xl md:text-5xl">Actu Football</span>
+            <span className="block text-lg sm:text-2xl md:text-5xl bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(163,230,53,0.3)]">
               Afrique &amp; Europe
             </span>
           </h1>
