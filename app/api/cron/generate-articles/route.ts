@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
-import { getMatchDetails } from "@/lib/api-football";
+import { getMatchDetails, getVenue } from "@/lib/api-football";
 import { generateArticle } from "@/lib/claude";
 import { getArticleImages, injectImagesIntoHTML } from "@/lib/images";
 import {
@@ -126,7 +126,26 @@ export async function GET(request: Request) {
         const parsed = JSON.parse(cleanData);
         const slug = generateSlug(parsed.title || "article");
 
-        // Fetch and inject images
+        // Fetch venue photo from API-Football if venue ID available
+        let venuePhotoUrl: string | undefined;
+        let venueName: string | undefined;
+        let venueCity: string | undefined;
+        try {
+          const venueId = fixture?.fixture?.venue?.id;
+          if (venueId) {
+            const venues = await getVenue(venueId);
+            if (venues?.[0]?.image) {
+              venuePhotoUrl = venues[0].image;
+              venueName = venues[0].name;
+              venueCity = venues[0].city;
+              console.log(`Venue photo found for ${venueName}: ${venuePhotoUrl}`);
+            }
+          }
+        } catch (venueErr) {
+          console.warn("Venue photo fetch failed (non-blocking):", venueErr);
+        }
+
+        // Fetch and inject images (venue photo used as featured when available)
         let contentWithImages = parsed.content;
         let ogImageUrl: string | null = null;
         try {
@@ -139,6 +158,9 @@ export async function GET(request: Request) {
             league: (league?.name as string) || "",
             type: "result",
             tags: parsed.tags || [],
+            venuePhotoUrl,
+            venueName,
+            venueCity,
           });
           contentWithImages = injectImagesIntoHTML(parsed.content, images);
           ogImageUrl = images[0]?.url || null;

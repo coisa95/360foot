@@ -5,6 +5,9 @@ export interface ArticleImageInput {
   competition?: string;
   type: string;
   tags: string[];
+  venuePhotoUrl?: string;
+  venueName?: string;
+  venueCity?: string;
 }
 
 export interface ArticleContext {
