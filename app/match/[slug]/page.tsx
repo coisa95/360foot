@@ -725,6 +725,7 @@ export default async function MatchPage({ params }: Props) {
               excerpt={relatedArticle.excerpt || ""}
               type={relatedArticle.type}
               publishedAt={relatedArticle.published_at}
+              imageUrl={relatedArticle.og_image_url || null}
             />
           </div>
         )}

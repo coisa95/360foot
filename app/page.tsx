@@ -220,6 +220,7 @@ export default async function HomePage() {
                       type={article.type as string}
                       publishedAt={article.published_at as string}
                       leagueName={league?.name as string | undefined}
+                      imageUrl={(article.og_image_url as string) || null}
                     />
                   );
                 })}
