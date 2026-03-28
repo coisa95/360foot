@@ -37,18 +37,5 @@
       "maxDuration": 300
     }
   },
-  "crons": [
-    { "path": "/api/cron/collect-matches", "schedule": "0 * * * *" },
-    { "path": "/api/cron/generate-articles", "schedule": "10 * * * *" },
-    { "path": "/api/cron/generate-previews", "schedule": "20 * * * *" },
-    { "path": "/api/cron/enrich-matches", "schedule": "*/20 * * * *" },
-    { "path": "/api/cron/enrich-previews", "schedule": "40 * * * *" },
-    { "path": "/api/cron/update-standings", "schedule": "30 * * * *" },
-    { "path": "/api/cron/fetch-top-players", "schedule": "0 6 * * *" },
-    { "path": "/api/cron/fetch-team-stats", "schedule": "0 5 * * *" },
-    { "path": "/api/cron/generate-sitemap", "schedule": "0 3 * * *" },
-    { "path": "/api/cron/process-rss", "schedule": "50 * * * *" },
-    { "path": "/api/cron/populate-players", "schedule": "0 4,12,20 * * *" },
-    { "path": "/api/cron/enrich-players", "schedule": "0 5,13,21 * * *" }
-  ]
+  "crons": []
 }

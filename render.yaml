@@ -1,0 +1,16 @@
+services:
+  - type: worker
+    name: 360foot-cron
+    runtime: node
+    region: frankfurt
+    plan: free
+    rootDir: workers
+    buildCommand: npm install && npx tsc
+    startCommand: node dist/index.js
+    envVars:
+      - key: SITE_URL
+        value: https://360-foot.com
+      - key: CRON_SECRET
+        sync: false
+      - key: NODE_ENV
+        value: production
