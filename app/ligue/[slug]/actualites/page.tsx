@@ -88,6 +88,7 @@ export default async function LeagueNewsPage({ params }: Props) {
               excerpt={article.excerpt || ""}
               type={article.type}
               publishedAt={article.published_at}
+              imageUrl={article.og_image_url || null}
             />
           ))}
         </div>

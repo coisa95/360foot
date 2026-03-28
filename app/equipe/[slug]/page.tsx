@@ -389,6 +389,7 @@ export default async function TeamPage({ params }: Props) {
                   type={article.type || "news"}
                   publishedAt={article.created_at || ""}
                   leagueName={article.league?.name || undefined}
+                  imageUrl={article.og_image_url || null}
                 />
               ))}
             </div>

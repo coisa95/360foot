@@ -281,6 +281,7 @@ export default async function PlayerPage({ params }: Props) {
                   excerpt={(article.excerpt as string) || ""}
                   type={article.type as string}
                   publishedAt={article.published_at as string}
+                  imageUrl={(article.og_image_url as string) || null}
                 />
               ))}
             </div>
