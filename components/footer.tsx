@@ -1,17 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const FOOTER_LINKS = {
-  Compétitions: [
-    { href: "/ligue/ligue-1-cote-divoire", label: "Ligue 1 Côte d'Ivoire" },
-    { href: "/ligue/ligue-pro-senegal", label: "Ligue Pro Sénégal" },
-    { href: "/ligue/elite-one-cameroun", label: "Elite One Cameroun" },
-    { href: "/ligue/championnat-national-benin", label: "Championnat Bénin" },
-    { href: "/ligue/ligue-1-france", label: "Ligue 1 France" },
-    { href: "/ligue/premier-league", label: "Premier League" },
-    { href: "/ligue/champions-league", label: "Champions League" },
-    { href: "/competitions", label: "Toutes les compétitions →" },
-  ],
   Rubriques: [
+    { href: "/competitions", label: "Compétitions" },
     { href: "/matchs", label: "Matchs" },
     { href: "/actu", label: "Actualités" },
     { href: "/transferts", label: "Transferts" },
@@ -28,20 +20,18 @@ const FOOTER_LINKS = {
 export function Footer() {
   return (
     <footer className="border-t border-dark-border/50 bg-dark-bg">
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-12">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="shrink-0">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-lime-400 to-emerald-500 text-[10px] font-bold text-dark-bg">
-                360
-              </div>
+              <Image src="/logo-360.png" alt="360 Foot" width={28} height={28} className="rounded" />
               <span className="text-sm font-bold">
                 <span className="text-white">360</span>{" "}
                 <span className="text-lime-400">Foot</span>
               </span>
             </Link>
-            <p className="mt-2 text-xs text-gray-500 leading-relaxed">
+            <p className="mt-1.5 text-[10px] text-gray-500 max-w-[200px] leading-relaxed">
               Football d&apos;Afrique et d&apos;Europe — résultats, classements, transferts.
             </p>
           </div>
@@ -49,15 +39,15 @@ export function Footer() {
           {/* Links */}
           {Object.entries(FOOTER_LINKS).map(([title, links]) => (
             <div key={title}>
-              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h3 className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
                 {title}
               </h3>
-              <ul className="space-y-1">
+              <ul className="space-y-0.5">
                 {links.map((link) => (
-                  <li key={link.href + link.label}>
+                  <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-xs text-gray-500 transition-colors hover:text-lime-400"
+                      className="text-[11px] text-gray-500 transition-colors hover:text-lime-400"
                     >
                       {link.label}
                     </Link>
@@ -69,14 +59,12 @@ export function Footer() {
         </div>
 
         {/* Responsible Gaming + Copyright */}
-        <div className="mt-6 border-t border-dark-border/50 pt-4 space-y-2">
-          <div className="mx-auto max-w-md rounded border border-yellow-500/20 bg-yellow-500/5 px-3 py-2 text-center">
-            <p className="text-xs font-semibold text-yellow-400">18+ | Jeu responsable</p>
-            <p className="text-[10px] text-yellow-400/70">
-              Jouer comporte des risques. Appelez le 0 974 75 13 13.
-            </p>
+        <div className="mt-4 border-t border-dark-border/50 pt-3 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div className="flex items-center gap-2 rounded border border-yellow-500/20 bg-yellow-500/5 px-2.5 py-1.5">
+            <span className="text-[10px] font-semibold text-yellow-400">18+ | Jeu responsable</span>
+            <span className="text-[9px] text-yellow-400/70">— 0 974 75 13 13</span>
           </div>
-          <p className="text-center text-[10px] text-gray-600">
+          <p className="text-[10px] text-gray-600">
             &copy; {new Date().getFullYear()} 360 Foot. Tous droits réservés.
           </p>
         </div>
