@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   Table,
   TableBody,
@@ -12,6 +13,7 @@ interface StandingRow {
   rank: number;
   teamName: string;
   teamSlug: string;
+  teamLogo?: string;
   played: number;
   won: number;
   drawn: number;
@@ -39,12 +41,12 @@ export function StandingsTable({
 
   return (
     <div className="rounded-xl border border-dark-border/50 bg-dark-card/80 shadow-lg shadow-black/10 backdrop-blur-sm overflow-hidden">
-      <div className="flex items-center justify-between border-b border-dark-border/50 px-4 py-3 bg-gradient-to-r from-dark-surface/50 to-transparent">
-        <h3 className="text-sm font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{leagueName}</h3>
+      <div className={`flex items-center justify-between border-b border-dark-border/50 bg-gradient-to-r from-dark-surface/50 to-transparent ${compact ? "px-3 py-2" : "px-4 py-3"}`}>
+        <h3 className={`font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent ${compact ? "text-xs" : "text-sm"}`}>{leagueName}</h3>
         {compact && (
           <Link
             href={`/ligue/${leagueSlug}/classement`}
-            className="text-xs text-lime-400 hover:underline"
+            className="text-[10px] text-lime-400 hover:underline"
           >
             Voir tout
           </Link>
@@ -53,9 +55,9 @@ export function StandingsTable({
       <Table>
         <TableHeader>
           <TableRow className="border-dark-border hover:bg-transparent">
-            <TableHead className="w-8 text-gray-500">#</TableHead>
-            <TableHead className="text-gray-500">Équipe</TableHead>
-            <TableHead className="text-center text-gray-500">MJ</TableHead>
+            <TableHead className={`text-gray-500 ${compact ? "w-6 px-2 py-1 text-[10px]" : "w-8"}`}>#</TableHead>
+            <TableHead className={`text-gray-500 ${compact ? "px-1 py-1 text-[10px]" : ""}`}>Équipe</TableHead>
+            <TableHead className={`text-center text-gray-500 ${compact ? "px-1 py-1 text-[10px]" : ""}`}>MJ</TableHead>
             {!compact && (
               <>
                 <TableHead className="text-center text-gray-500">V</TableHead>
@@ -65,8 +67,8 @@ export function StandingsTable({
                 <TableHead className="text-center text-gray-500">BC</TableHead>
               </>
             )}
-            <TableHead className="text-center text-gray-500">Diff</TableHead>
-            <TableHead className="text-center text-gray-500">Pts</TableHead>
+            <TableHead className={`text-center text-gray-500 ${compact ? "px-1 py-1 text-[10px]" : ""}`}>Diff</TableHead>
+            <TableHead className={`text-center text-gray-500 ${compact ? "px-1 py-1 text-[10px]" : ""}`}>Pts</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -75,16 +77,19 @@ export function StandingsTable({
               key={row.rank}
               className="border-dark-border hover:bg-dark-surface"
             >
-              <TableCell className="text-xs text-gray-400">{row.rank}</TableCell>
-              <TableCell>
+              <TableCell className={`text-gray-400 ${compact ? "px-2 py-1 text-[10px]" : "text-xs"}`}>{row.rank}</TableCell>
+              <TableCell className={compact ? "px-1 py-1" : ""}>
                 <Link
                   href={`/equipe/${row.teamSlug}`}
-                  className="text-sm text-white hover:text-lime-400"
+                  className={`flex items-center gap-1.5 text-white hover:text-lime-400 ${compact ? "text-xs" : "text-sm"}`}
                 >
-                  {row.teamName}
+                  {row.teamLogo && (
+                    <Image src={row.teamLogo} alt={`Logo ${row.teamName}`} width={16} height={16} className="w-4 h-4 object-contain shrink-0" unoptimized />
+                  )}
+                  <span className="truncate">{row.teamName}</span>
                 </Link>
               </TableCell>
-              <TableCell className="text-center text-sm text-gray-400">
+              <TableCell className={`text-center text-gray-400 ${compact ? "px-1 py-1 text-xs" : "text-sm"}`}>
                 {row.played}
               </TableCell>
               {!compact && (
@@ -106,10 +111,10 @@ export function StandingsTable({
                   </TableCell>
                 </>
               )}
-              <TableCell className="text-center text-sm text-gray-400">
+              <TableCell className={`text-center text-gray-400 ${compact ? "px-1 py-1 text-xs" : "text-sm"}`}>
                 {row.goalDiff > 0 ? `+${row.goalDiff}` : row.goalDiff}
               </TableCell>
-              <TableCell className="text-center text-sm font-bold text-lime-400">
+              <TableCell className={`text-center font-bold text-lime-400 ${compact ? "px-1 py-1 text-xs" : "text-sm"}`}>
                 {row.points}
               </TableCell>
             </TableRow>

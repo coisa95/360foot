@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 interface MatchCardProps {
   slug: string;
@@ -37,6 +38,8 @@ export function MatchCard({
   status,
   date,
   leagueName,
+  homeLogoUrl,
+  awayLogoUrl,
 }: MatchCardProps) {
   const matchDate = new Date(date);
   const timeStr = matchDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
@@ -64,7 +67,12 @@ export function MatchCard({
         {/* Teams + Score */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs sm:text-sm font-medium text-gray-200 truncate group-hover:text-white">{homeTeam}</span>
+            <div className="flex items-center gap-1.5 min-w-0">
+              {homeLogoUrl && (
+                <Image src={homeLogoUrl} alt={`Logo ${homeTeam}`} width={18} height={18} className="w-4 h-4 sm:w-[18px] sm:h-[18px] object-contain shrink-0" unoptimized />
+              )}
+              <span className="text-xs sm:text-sm font-medium text-gray-200 truncate group-hover:text-white">{homeTeam}</span>
+            </div>
             {status !== "NS" && (
               <span className={`text-xs sm:text-sm font-bold tabular-nums shrink-0 ${(homeScore ?? 0) > (awayScore ?? 0) ? "text-white" : "text-gray-400"}`}>
                 {homeScore ?? 0}
@@ -72,7 +80,12 @@ export function MatchCard({
             )}
           </div>
           <div className="flex items-center justify-between gap-2 mt-0.5">
-            <span className="text-xs sm:text-sm font-medium text-gray-200 truncate group-hover:text-white">{awayTeam}</span>
+            <div className="flex items-center gap-1.5 min-w-0">
+              {awayLogoUrl && (
+                <Image src={awayLogoUrl} alt={`Logo ${awayTeam}`} width={18} height={18} className="w-4 h-4 sm:w-[18px] sm:h-[18px] object-contain shrink-0" unoptimized />
+              )}
+              <span className="text-xs sm:text-sm font-medium text-gray-200 truncate group-hover:text-white">{awayTeam}</span>
+            </div>
             {status !== "NS" && (
               <span className={`text-xs sm:text-sm font-bold tabular-nums shrink-0 ${(awayScore ?? 0) > (homeScore ?? 0) ? "text-white" : "text-gray-400"}`}>
                 {awayScore ?? 0}

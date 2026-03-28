@@ -183,6 +183,8 @@ export default async function HomePage() {
                   status={match.status as string}
                   date={match.date as string}
                   leagueName={(league?.name as string) || ""}
+                  homeLogoUrl={(homeTeam?.logo_url as string) || null}
+                  awayLogoUrl={(awayTeam?.logo_url as string) || null}
                 />
               );
             })}
@@ -241,6 +243,7 @@ export default async function HomePage() {
                       rank: (row.rank as number) || 0,
                       teamName: (row.team_name as string) || "",
                       teamSlug: (row.team_slug as string) || "",
+                      teamLogo: (row.team_logo as string) || "",
                       played: (row.played as number) || 0,
                       won: (row.won as number) || 0,
                       drawn: (row.drawn as number) || 0,
