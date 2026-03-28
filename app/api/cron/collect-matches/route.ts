@@ -126,11 +126,13 @@ export async function GET(request: Request) {
 
     const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-    // In backfill mode, process 3 leagues per batch to stay under 300s timeout
-    const BATCH_SIZE = 3;
+    // In backfill mode, process 1 league per batch (big leagues have 300+ matches)
+    const BATCH_SIZE = isBackfill ? 1 : LEAGUE_IDS.length;
     const leaguesToProcess = isBackfill
       ? LEAGUE_IDS.slice(batchIndex * BATCH_SIZE, (batchIndex + 1) * BATCH_SIZE)
       : LEAGUE_IDS;
+
+    const FRIENDLY_LEAGUE_IDS = [10, 32, 34, 29];
 
     for (let i = 0; i < leaguesToProcess.length; i++) {
       const leagueId = leaguesToProcess[i];
@@ -144,29 +146,20 @@ export async function GET(request: Request) {
 
         const leagueUUID = leagueMap.get(leagueId);
 
+        // Phase 1: Filter matches and collect all unique teams
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const filteredMatches: any[] = [];
+        const allTeamsMap = new Map<number, { name: string; logo: string }>();
+
         for (const match of matches) {
-          // Filtrer les matchs de catégories jeunes
           const leagueName = match.league?.name || "";
           const homeTeamName = match.teams?.home?.name || "";
           const awayTeamName = match.teams?.away?.name || "";
           const fullText = `${leagueName} ${homeTeamName} ${awayTeamName}`;
           const fullTextLower = fullText.toLowerCase();
-          const isYouth = YOUTH_KEYWORDS.some(
-            (kw) => fullTextLower.includes(kw.toLowerCase())
-          );
-          if (isYouth) continue;
 
-          // Filtrer les équipes hors périmètre (faux positifs API-Football)
-          const isExcluded = EXCLUDED_TEAM_KEYWORDS.some(
-            (kw) => homeTeamName.includes(kw) || awayTeamName.includes(kw)
-          );
-          if (isExcluded) {
-            console.log(`Match exclu (hors périmètre): ${homeTeamName} vs ${awayTeamName}`);
-            continue;
-          }
-
-          // Pour les matchs amicaux et qualifs, filtrer par pays d'intérêt
-          const FRIENDLY_LEAGUE_IDS = [10, 32, 34, 29]; // Amicaux, Qualifs Europe, Amérique du Sud, Afrique
+          if (YOUTH_KEYWORDS.some((kw) => fullTextLower.includes(kw.toLowerCase()))) continue;
+          if (EXCLUDED_TEAM_KEYWORDS.some((kw) => homeTeamName.includes(kw) || awayTeamName.includes(kw))) continue;
           if (FRIENDLY_LEAGUE_IDS.includes(leagueId)) {
             const isRelevant = RELEVANT_COUNTRIES.some(
               (country) =>
@@ -176,64 +169,56 @@ export async function GET(request: Request) {
             if (!isRelevant) continue;
           }
 
-          const homeTeam = match.teams.home;
-          const awayTeam = match.teams.away;
+          filteredMatches.push(match);
+          allTeamsMap.set(match.teams.home.id, { name: match.teams.home.name, logo: match.teams.home.logo });
+          allTeamsMap.set(match.teams.away.id, { name: match.teams.away.name, logo: match.teams.away.logo });
+        }
 
-          // Upsert teams
-          const teamsToUpsert = [
-            {
-              api_football_id: homeTeam.id,
-              name: homeTeam.name,
-              slug: homeTeam.name
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/(^-|-$)/g, ""),
-              logo_url: homeTeam.logo,
-              league_id: leagueUUID || null,
-            },
-            {
-              api_football_id: awayTeam.id,
-              name: awayTeam.name,
-              slug: awayTeam.name
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/(^-|-$)/g, ""),
-              logo_url: awayTeam.logo,
-              league_id: leagueUUID || null,
-            },
-          ];
+        if (filteredMatches.length === 0) continue;
 
+        // Phase 2: Batch upsert all teams at once
+        const teamsToUpsert = Array.from(allTeamsMap.entries()).map(([apiId, team]) => ({
+          api_football_id: apiId,
+          name: team.name,
+          slug: team.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+          logo_url: team.logo,
+          league_id: leagueUUID || null,
+        }));
+
+        // Upsert in chunks of 50 to avoid payload limits
+        for (let c = 0; c < teamsToUpsert.length; c += 50) {
+          const chunk = teamsToUpsert.slice(c, c + 50);
           const { error: teamError } = await supabase
             .from("teams")
-            .upsert(teamsToUpsert, { onConflict: "api_football_id" });
+            .upsert(chunk, { onConflict: "api_football_id" });
+          if (teamError) errors.push(`Team batch upsert: ${teamError.message}`);
+          else totalTeamsUpserted += chunk.length;
+        }
 
-          if (teamError) {
-            errors.push(`Team upsert: ${teamError.message}`);
-          } else {
-            totalTeamsUpserted += teamsToUpsert.length;
+        // Phase 3: Batch fetch all team UUIDs at once
+        const teamApiIds = Array.from(allTeamsMap.keys());
+        const teamUUIDMap = new Map<number, string>();
+
+        for (let c = 0; c < teamApiIds.length; c += 100) {
+          const chunk = teamApiIds.slice(c, c + 100);
+          const { data: teamRows } = await supabase
+            .from("teams")
+            .select("id, api_football_id")
+            .in("api_football_id", chunk);
+          for (const t of teamRows || []) {
+            if (t.api_football_id) teamUUIDMap.set(t.api_football_id, t.id);
           }
+        }
 
-          // Get team UUIDs from DB
-          const { data: homeTeamRow } = await supabase
-            .from("teams")
-            .select("id")
-            .eq("api_football_id", homeTeam.id)
-            .single();
-
-          const { data: awayTeamRow } = await supabase
-            .from("teams")
-            .select("id")
-            .eq("api_football_id", awayTeam.id)
-            .single();
-
+        // Phase 4: Batch upsert all matches
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const matchDataBatch = filteredMatches.map((match: any) => {
           const matchDate = match.fixture.date.split("T")[0];
-          const slug = generateSlug(homeTeam.name, awayTeam.name, matchDate);
-
-          // Upsert match with correct schema columns
-          const matchData = {
+          const slug = generateSlug(match.teams.home.name, match.teams.away.name, matchDate);
+          return {
             api_football_id: match.fixture.id,
-            home_team_id: homeTeamRow?.id || null,
-            away_team_id: awayTeamRow?.id || null,
+            home_team_id: teamUUIDMap.get(match.teams.home.id) || null,
+            away_team_id: teamUUIDMap.get(match.teams.away.id) || null,
             league_id: leagueUUID || null,
             slug,
             date: match.fixture.date,
@@ -242,15 +227,17 @@ export async function GET(request: Request) {
             score_away: match.goals.away,
             stats_json: match,
           };
+        });
 
+        for (let c = 0; c < matchDataBatch.length; c += 50) {
+          const chunk = matchDataBatch.slice(c, c + 50);
           const { error: matchError } = await supabase
             .from("matches")
-            .upsert(matchData, { onConflict: "api_football_id" });
-
+            .upsert(chunk, { onConflict: "api_football_id" });
           if (matchError) {
-            errors.push(`Match ${slug}: ${matchError.message}`);
+            errors.push(`Match batch upsert: ${matchError.message}`);
           } else {
-            totalMatches++;
+            totalMatches += chunk.length;
           }
         }
       } catch (err) {
@@ -264,7 +251,7 @@ export async function GET(request: Request) {
       teams_upserted: totalTeamsUpserted,
       leagues_processed: leaguesToProcess.length,
       date_range: `${fromStr} to ${toStr}`,
-      ...(isBackfill && { batch: batchIndex, total_batches: Math.ceil(LEAGUE_IDS.length / BATCH_SIZE) }),
+      ...(isBackfill && { batch: batchIndex, total_batches: LEAGUE_IDS.length }),
       errors: errors.length > 0 ? errors.slice(0, 10) : undefined,
     });
   } catch (error) {
