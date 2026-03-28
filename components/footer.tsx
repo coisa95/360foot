@@ -1,21 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
 
-const FOOTER_LINKS = {
-  Rubriques: [
-    { href: "/competitions", label: "Compétitions" },
-    { href: "/matchs", label: "Matchs" },
-    { href: "/actu", label: "Actualités" },
-    { href: "/transferts", label: "Transferts" },
-    { href: "/recherche", label: "Recherche" },
-    { href: "/bons-plans", label: "Bons Plans" },
-  ],
-  Infos: [
-    { href: "/a-propos", label: "À propos" },
-    { href: "/confidentialite", label: "Confidentialité" },
-    { href: "/mentions-legales", label: "Mentions légales" },
-  ],
-};
+const RUBRIQUES = [
+  { href: "/competitions", label: "Compétitions" },
+  { href: "/matchs", label: "Matchs" },
+  { href: "/actu", label: "Actualités" },
+  { href: "/transferts", label: "Transferts" },
+  { href: "/recherche", label: "Recherche" },
+  { href: "/bons-plans", label: "Bons Plans" },
+];
+
+const INFOS = [
+  { href: "/a-propos", label: "À propos" },
+  { href: "/confidentialite", label: "Confidentialité" },
+  { href: "/mentions-legales", label: "Mentions légales" },
+];
 
 export function Footer() {
   return (
@@ -31,19 +30,19 @@ export function Footer() {
                 <span className="text-lime-400">Foot</span>
               </span>
             </Link>
-            <p className="mt-1.5 text-[10px] text-gray-500 max-w-[200px] leading-relaxed">
-              Football d&apos;Afrique et d&apos;Europe — résultats, classements, transferts.
+            <p className="mt-1.5 text-[10px] text-gray-500 max-w-[220px] leading-relaxed">
+              Football africain et européen — résultats, classements, transferts.
             </p>
           </div>
 
-          {/* Links */}
-          {Object.entries(FOOTER_LINKS).map(([title, links]) => (
-            <div key={title}>
+          {/* Links: Rubriques + Infos side by side */}
+          <div className="flex gap-10 sm:gap-16">
+            <div>
               <h3 className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
-                {title}
+                Rubriques
               </h3>
               <ul className="space-y-0.5">
-                {links.map((link) => (
+                {RUBRIQUES.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
@@ -55,7 +54,24 @@ export function Footer() {
                 ))}
               </ul>
             </div>
-          ))}
+            <div>
+              <h3 className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                Infos
+              </h3>
+              <ul className="space-y-0.5">
+                {INFOS.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-[11px] text-gray-500 transition-colors hover:text-lime-400"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
 
         {/* Responsible Gaming + Copyright */}
