@@ -1,9 +1,6 @@
 import { createClient } from "@/lib/supabase";
-import { StandingsTable } from "@/components/standings-table";
-import { MatchCard } from "@/components/match-card";
-import { ArticleCard } from "@/components/article-card";
-import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Card } from "@/components/ui/card";
+import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -15,7 +12,22 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+interface StandingEntry {
+  rank: number;
+  team_name: string;
+  team_logo: string;
+  team_api_id: number;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  goals_for: number;
+  goals_against: number;
+  goal_diff: number;
+  points: number;
+  group: string;
+  form: string;
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -27,10 +39,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!league) return { title: "Ligue introuvable - 360 Foot" };
+  if (!league) return { title: "Classement introuvable" };
 
-  const title = `${league.name} - Classement, résultats et actualités`;
-  const fullDesc = `Classement complet de la ${league.name}, meilleurs buteurs, passeurs, derniers résultats et toute l'actualité.`;
+  const title = `Classement ${league.name} - Tableau complet`;
+  const fullDesc = `Classement complet de la ${league.name} : points, victoires, défaites, nuls, buts marqués et encaissés.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
@@ -38,10 +50,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
+    twitter: { card: "summary_large_image" as const, title, description },
   };
 }
 
-export default async function LeagueResumePage({ params }: Props) {
+export default async function LeagueStandingsPage({ params }: Props) {
   const { slug } = await params;
   const supabase = createClient();
 
@@ -53,88 +66,43 @@ export default async function LeagueResumePage({ params }: Props) {
 
   if (!league) notFound();
 
-  // Standings + top scorers/assists
-  const { data: standingsData } = await supabase
+  const { data: standingsRows } = await supabase
     .from("standings")
-    .select("data_json, top_scorers_json, top_assists_json, top_yellow_cards_json, top_red_cards_json")
+    .select("data_json, season, updated_at")
     .eq("league_id", league.id)
     .order("updated_at", { ascending: false })
-    .limit(1)
-    .single();
+    .limit(1);
 
-  const rawStandings = ((standingsData?.data_json as any[]) || []).map((row: any) => ({
-    rank: row.rank || 0,
-    teamName: row.team_name || "",
-    teamSlug: row.team_slug || "",
-    played: row.played || 0,
-    won: row.won || 0,
-    drawn: row.drawn || 0,
-    lost: row.lost || 0,
-    goalsFor: row.goals_for || 0,
-    goalsAgainst: row.goals_against || 0,
-    goalDiff: row.goal_diff || 0,
-    points: row.points || 0,
-    group: (row.group || "") as string,
-  }));
+  const standings: StandingEntry[] = standingsRows?.[0]?.data_json || [];
+  const season = standingsRows?.[0]?.season || "";
+  const updatedAt = standingsRows?.[0]?.updated_at;
 
   // Group standings by group field
-  const standingsGroupsMap = new Map<string, typeof rawStandings>();
-  for (const row of rawStandings) {
-    const key = row.group;
-    if (!standingsGroupsMap.has(key)) standingsGroupsMap.set(key, []);
-    standingsGroupsMap.get(key)!.push(row);
+  const groupsMap = new Map<string, StandingEntry[]>();
+  for (const row of standings) {
+    const groupKey = row.group || "";
+    if (!groupsMap.has(groupKey)) groupsMap.set(groupKey, []);
+    groupsMap.get(groupKey)!.push(row);
   }
-  const standingsGroups = Array.from(standingsGroupsMap.entries());
-  const hasMultipleGroups = standingsGroups.length > 1;
+  const groups = Array.from(groupsMap.entries());
+  const hasMultipleGroups = groups.length > 1;
 
-  // Clean group name: "Ligue 1 - Groupe A " → "Groupe A"
   function cleanGroupName(raw: string): string {
     const match = raw.match(/(Groupe\s+\w+)/i);
     return match ? match[1].trim() : raw.trim();
   }
 
-  // For single-group leagues, keep backward-compatible flat array
-  const standings = rawStandings;
+  // Get team slugs for linking
+  const teamApiIds = standings.map((s) => s.team_api_id).filter(Boolean);
+  const { data: teams } = await supabase
+    .from("teams")
+    .select("api_football_id, slug")
+    .in("api_football_id", teamApiIds);
 
-  const topScorers = (standingsData?.top_scorers_json as any[]) || [];
-  const topYellowCards = (standingsData?.top_yellow_cards_json as any[]) || [];
-  const topRedCards = (standingsData?.top_red_cards_json as any[]) || [];
-
-  // Lookup player slugs for top scorers
-  const scorerNames = topScorers.slice(0, 5).map((p: any) => p.name).filter(Boolean);
-  const scorerSlugMap: Record<string, string> = {};
-  if (scorerNames.length > 0) {
-    const { data: scorerPlayers } = await supabase
-      .from("players")
-      .select("name, slug")
-      .in("name", scorerNames);
-    if (scorerPlayers) {
-      for (const p of scorerPlayers) scorerSlugMap[p.name] = p.slug;
-    }
+  const teamSlugMap = new Map<number, string>();
+  for (const t of teams || []) {
+    if (t.api_football_id && t.slug) teamSlugMap.set(t.api_football_id, t.slug);
   }
-
-  // Matches this week (past + upcoming within 7 days)
-  const now = new Date();
-  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
-  const weekAhead = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
-
-  const { data: weekMatches } = await supabase
-    .from("matches")
-    .select("*, home_team:teams!home_team_id(*), away_team:teams!away_team_id(*)")
-    .eq("league_id", league.id)
-    .gte("date", weekAgo)
-    .lte("date", weekAhead)
-    .order("date", { ascending: true })
-    .limit(10);
-
-  // Latest articles
-  const { data: articles } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("league_id", league.id)
-    .not("published_at", "is", null)
-    .order("published_at", { ascending: false })
-    .limit(3);
 
   return (
     <>
@@ -143,165 +111,130 @@ export default async function LeagueResumePage({ params }: Props) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "SportsOrganization",
-            name: league.name,
-            sport: "Football",
-            url: `https://360-foot.com/ligue/${slug}`,
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Accueil", item: "https://360-foot.com" },
+              { "@type": "ListItem", position: 2, name: "Compétitions", item: "https://360-foot.com/competitions" },
+              { "@type": "ListItem", position: 3, name: league.name },
+            ],
           }),
         }}
       />
-      {/* Main grid: on mobile = classement+buteurs first, then matchs+actus. On desktop = 2 cols */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-        {/* Right sidebar on desktop, but first on mobile */}
-        <div className="order-1 lg:order-2 space-y-4">
-          {/* Classement top 5 */}
-          {standings.length > 0 && !hasMultipleGroups && (
-            <StandingsTable
-              leagueName="Classement"
-              leagueSlug={league.slug}
-              standings={standings}
-              compact
-            />
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-sm text-gray-500">
+          Saison {season}
+          {updatedAt && (
+            <span className="ml-2">
+              · Mis à jour le{" "}
+              {new Date(updatedAt).toLocaleDateString("fr-FR", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
           )}
-          {hasMultipleGroups && standingsGroups.map(([groupName, groupRows]) => (
-            <StandingsTable
-              key={groupName}
-              leagueName={cleanGroupName(groupName)}
-              leagueSlug={league.slug}
-              standings={groupRows}
-              compact
-            />
-          ))}
-
-          {/* Top Buteurs */}
-          {topScorers.length > 0 && (
-            <Card className="border-gray-800 bg-dark-card p-3">
-              <h2 className="text-sm font-bold text-lime-400 mb-2">Meilleurs buteurs</h2>
-              <div className="space-y-1.5">
-                {topScorers.slice(0, 5).map((player: any, idx: number) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span className="w-4 text-center text-[10px] font-bold text-gray-500">{idx + 1}</span>
-                    {player.photo && (
-                      <Image src={player.photo} alt={`Photo ${player.name}`} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      {scorerSlugMap[player.name] ? (
-                        <Link href={`/joueur/${scorerSlugMap[player.name]}`} className="font-medium text-white text-[11px] truncate block hover:text-lime-400 transition-colors">{player.name}</Link>
-                      ) : (
-                        <p className="font-medium text-white text-[11px] truncate">{player.name}</p>
-                      )}
-                      <p className="text-[9px] text-gray-500 truncate">{player.team}</p>
-                    </div>
-                    <span className="text-xs font-bold text-lime-400">{player.goals}</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* Cartons jaunes */}
-          {topYellowCards.length > 0 && (
-            <Card className="border-gray-800 bg-dark-card p-3">
-              <h2 className="text-sm font-bold text-yellow-400 mb-2">Cartons jaunes</h2>
-              <div className="space-y-1.5">
-                {topYellowCards.slice(0, 5).map((player: any, idx: number) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span className="w-4 text-center text-[10px] font-bold text-gray-500">{idx + 1}</span>
-                    {player.photo && (
-                      <Image src={player.photo} alt={`Photo ${player.name}`} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-white text-[11px] truncate">{player.name}</p>
-                      <p className="text-[9px] text-gray-500 truncate">{player.team}</p>
-                    </div>
-                    <span className="text-xs font-bold text-yellow-400">{player.yellowCards}</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* Cartons rouges */}
-          {topRedCards.length > 0 && (
-            <Card className="border-gray-800 bg-dark-card p-3">
-              <h2 className="text-sm font-bold text-red-400 mb-2">Cartons rouges</h2>
-              <div className="space-y-1.5">
-                {topRedCards.slice(0, 5).map((player: any, idx: number) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span className="w-4 text-center text-[10px] font-bold text-gray-500">{idx + 1}</span>
-                    {player.photo && (
-                      <Image src={player.photo} alt={`Photo ${player.name}`} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-white text-[11px] truncate">{player.name}</p>
-                      <p className="text-[9px] text-gray-500 truncate">{player.team}</p>
-                    </div>
-                    <span className="text-xs font-bold text-red-400">{player.redCards}</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
-        </div>
-
-        {/* Left: Matchs + Actus */}
-        <div className="order-2 lg:order-1 lg:col-span-2 space-y-4">
-          {/* Matchs de la semaine */}
-          <div>
-            <h2 className="text-sm sm:text-lg font-bold mb-2 flex items-center justify-between">
-              Matchs de la semaine
-              <Link href={`/ligue/${slug}/calendrier`} className="text-[10px] sm:text-xs text-lime-400 hover:underline font-normal">
-                Voir tout →
-              </Link>
-            </h2>
-            {weekMatches && weekMatches.length > 0 ? (
-              <div className="space-y-1.5">
-                {weekMatches.map((match: any) => (
-                  <MatchCard
-                    key={match.id}
-                    slug={match.slug}
-                    homeTeam={match.home_team?.name || ""}
-                    awayTeam={match.away_team?.name || ""}
-                    homeTeamSlug={match.home_team?.slug}
-                    awayTeamSlug={match.away_team?.slug}
-                    homeScore={match.score_home}
-                    awayScore={match.score_away}
-                    status={match.status}
-                    date={match.date}
-                    leagueName=""
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500 py-4">Aucun match cette semaine.</p>
-            )}
-          </div>
-
-          {/* Dernières actus */}
-          {articles && articles.length > 0 && (
-            <div>
-              <h2 className="text-sm sm:text-lg font-bold mb-2 flex items-center justify-between">
-                Dernières actualités
-                <Link href={`/ligue/${slug}/actualites`} className="text-[10px] sm:text-xs text-lime-400 hover:underline font-normal">
-                  Voir tout →
-                </Link>
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {articles.map((article: any) => (
-                  <ArticleCard
-                    key={article.id}
-                    slug={article.slug}
-                    title={article.title}
-                    excerpt={article.excerpt || ""}
-                    type={article.type}
-                    publishedAt={article.published_at}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        </p>
       </div>
+
+      {standings.length > 0 ? (
+        <div className={hasMultipleGroups ? "space-y-6" : ""}>
+          {groups.map(([groupName, groupStandings]) => (
+            <div key={groupName}>
+              {hasMultipleGroups && (
+                <h2 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                  <span className="w-1 h-5 bg-lime-400 rounded-full" />
+                  {cleanGroupName(groupName)}
+                </h2>
+              )}
+              <Card className="bg-dark-bg border-gray-800 overflow-x-auto">
+                <table className="w-full text-xs sm:text-sm min-w-[640px]">
+                  <thead>
+                    <tr className="border-b border-gray-800 text-gray-400">
+                      <th className="text-left p-1.5 sm:p-3 w-6 sm:w-8 sticky left-0 bg-dark-bg z-10">#</th>
+                      <th className="text-left p-1.5 sm:p-3 sticky left-6 sm:left-8 bg-dark-bg z-10 min-w-[120px]">Équipe</th>
+                      <th className="text-center p-1.5 sm:p-3">MJ</th>
+                      <th className="text-center p-1.5 sm:p-3 font-bold text-lime-400">Pts</th>
+                      <th className="text-center p-1.5 sm:p-3">Diff</th>
+                      <th className="text-center p-1.5 sm:p-3">V</th>
+                      <th className="text-center p-1.5 sm:p-3">N</th>
+                      <th className="text-center p-1.5 sm:p-3">D</th>
+                      <th className="text-center p-1.5 sm:p-3">BP</th>
+                      <th className="text-center p-1.5 sm:p-3">BC</th>
+                      <th className="text-center p-1.5 sm:p-3">Forme</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {groupStandings.map((row, index) => {
+                      const teamSlug = teamSlugMap.get(row.team_api_id);
+                      return (
+                        <tr
+                          key={`${row.team_api_id}-${row.rank}`}
+                          className={`border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors ${
+                            index < 3 ? "border-l-2 border-l-lime-400" : ""
+                          } ${
+                            index >= groupStandings.length - 3 ? "border-l-2 border-l-red-500" : ""
+                          }`}
+                        >
+                          <td className="p-1.5 sm:p-3 text-gray-400 font-mono sticky left-0 bg-dark-bg z-10">{row.rank}</td>
+                          <td className="p-1.5 sm:p-3 sticky left-6 sm:left-8 bg-dark-bg z-10">
+                            <div className="flex items-center gap-1.5">
+                              {row.team_logo && (
+                                <Image src={row.team_logo} alt={`Logo ${row.team_name}`} width={20} height={20} className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0" />
+                              )}
+                              {teamSlug ? (
+                                <Link href={`/equipe/${teamSlug}`} className="font-medium hover:text-lime-400 transition-colors truncate">
+                                  {row.team_name}
+                                </Link>
+                              ) : (
+                                <span className="font-medium truncate">{row.team_name}</span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="text-center p-1.5 sm:p-3">{row.played}</td>
+                          <td className="text-center p-1.5 sm:p-3 font-bold text-lime-400">{row.points}</td>
+                          <td className="text-center p-1.5 sm:p-3">
+                            <span className={row.goal_diff > 0 ? "text-green-400" : row.goal_diff < 0 ? "text-red-400" : "text-gray-400"}>
+                              {row.goal_diff > 0 ? "+" : ""}{row.goal_diff}
+                            </span>
+                          </td>
+                          <td className="text-center p-1.5 sm:p-3 text-green-400">{row.won}</td>
+                          <td className="text-center p-1.5 sm:p-3 text-gray-400">{row.drawn}</td>
+                          <td className="text-center p-1.5 sm:p-3 text-red-400">{row.lost}</td>
+                          <td className="text-center p-1.5 sm:p-3">{row.goals_for}</td>
+                          <td className="text-center p-1.5 sm:p-3">{row.goals_against}</td>
+                          <td className="text-center p-1.5 sm:p-3">
+                            <div className="flex justify-center gap-0.5">
+                              {row.form && row.form.split("").slice(-5).map((r, i) => (
+                                <span
+                                  key={i}
+                                  className={`inline-flex w-4 h-4 sm:w-5 sm:h-5 rounded text-[10px] sm:text-xs font-bold items-center justify-center ${
+                                    r === "W" ? "bg-green-600 text-white" :
+                                    r === "D" ? "bg-gray-600 text-white" :
+                                    r === "L" ? "bg-red-600 text-white" :
+                                    "bg-gray-700 text-gray-400"
+                                  }`}
+                                >
+                                  {r === "W" ? "V" : r === "D" ? "N" : r === "L" ? "D" : "-"}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </Card>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <Card className="bg-dark-bg border-gray-800 p-8 text-center">
+          <p className="text-gray-400">Aucun classement disponible pour cette ligue.</p>
+        </Card>
+      )}
 
       <AffiliateTrio />
     </>
