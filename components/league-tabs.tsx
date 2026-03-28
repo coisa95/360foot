@@ -8,8 +8,7 @@ interface LeagueTabsProps {
 }
 
 const TABS = [
-  { key: "resume", label: "Résumé", path: "" },
-  { key: "classement", label: "Classement", path: "/classement" },
+  { key: "classement", label: "Classement", path: "" },
   { key: "resultats", label: "Résultats", path: "/resultats" },
   { key: "calendrier", label: "Calendrier", path: "/calendrier" },
   { key: "actualites", label: "Actualités", path: "/actualites" },
