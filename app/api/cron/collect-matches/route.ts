@@ -91,9 +91,12 @@ export async function GET(request: Request) {
     let fromStr: string;
     let toStr: string;
 
+    // Backfill supports ?batch=0,1,2... to process leagues in batches of 7
+    const batchParam = url.searchParams.get("batch");
+    const batchIndex = batchParam ? parseInt(batchParam, 10) : 0;
+
     if (isBackfill) {
-      // Full season: from August 1 of season year to June 30 next year
-      // Most seasons start Aug/Sep. Use a wide window.
+      // Full season: from July 1 of season year to June 30 next year
       const seasonYear = getCurrentSeason();
       fromStr = `${seasonYear}-07-01`;
       toStr = `${seasonYear + 1}-06-30`;
@@ -123,8 +126,14 @@ export async function GET(request: Request) {
 
     const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-    for (let i = 0; i < LEAGUE_IDS.length; i++) {
-      const leagueId = LEAGUE_IDS[i];
+    // In backfill mode, process 7 leagues per batch to stay under 300s timeout
+    const BATCH_SIZE = 7;
+    const leaguesToProcess = isBackfill
+      ? LEAGUE_IDS.slice(batchIndex * BATCH_SIZE, (batchIndex + 1) * BATCH_SIZE)
+      : LEAGUE_IDS;
+
+    for (let i = 0; i < leaguesToProcess.length; i++) {
+      const leagueId = leaguesToProcess[i];
 
       // Respect rate limit: 10 requests/min → wait 7s between calls
       if (i > 0) await delay(7000);
@@ -253,7 +262,9 @@ export async function GET(request: Request) {
       success: true,
       matches_upserted: totalMatches,
       teams_upserted: totalTeamsUpserted,
+      leagues_processed: leaguesToProcess.length,
       date_range: `${fromStr} to ${toStr}`,
+      ...(isBackfill && { batch: batchIndex, total_batches: Math.ceil(LEAGUE_IDS.length / BATCH_SIZE) }),
       errors: errors.length > 0 ? errors.slice(0, 10) : undefined,
     });
   } catch (error) {

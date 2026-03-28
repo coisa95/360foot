@@ -58,22 +58,22 @@ export async function GET(request: Request) {
       if (!leagueUUID) continue;
 
       // Rate limit: 4 calls per league (scorers + assists + yellow + red), wait 7s between
-      if (i > 0) await delay(7000);
+      if (i > 0) await delay(4000);
 
       try {
         const season = getCurrentSeason(leagueId);
 
         // Fetch top scorers
         const scorers = await getTopScorers(leagueId, season);
-        await delay(7000);
+        await delay(4000);
 
         // Fetch top assists
         const assists = await getTopAssists(leagueId, season);
-        await delay(7000);
+        await delay(4000);
 
         // Fetch top yellow cards
         const yellowCards = await getTopYellowCards(leagueId, season);
-        await delay(7000);
+        await delay(4000);
 
         // Fetch top red cards
         const redCards = await getTopRedCards(leagueId, season);
