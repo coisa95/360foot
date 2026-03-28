@@ -165,7 +165,7 @@ const LEAGUE_SEASONS: Record<number, number> = {
   598: 2025, // Première Division Mali
   423: 2026, // Ligue 1 Burkina Faso
   415: 2025, // Championnat National Bénin
-  844: 2025, // Linafoot Ligue 1 RD Congo
+  424: 2025, // Linafoot Ligue 1 RD Congo
   // Ligues européennes
   61:  2025, // Ligue 1 France
   39:  2025, // Premier League

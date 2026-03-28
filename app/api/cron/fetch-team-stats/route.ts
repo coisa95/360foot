@@ -17,7 +17,7 @@ const LEAGUE_IDS = [
   598, // Première Division Mali
   423, // Ligue 1 Burkina Faso
   415, // Championnat National Bénin
-  844, // Linafoot Ligue 1 RD Congo
+  424, // Linafoot Ligue 1 RD Congo
   61,  // Ligue 1 France
   39,  // Premier League
   140, // La Liga
