@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
-import { getMatchesByRange } from "@/lib/api-football";
+import { getMatchesByRange, getCurrentSeason } from "@/lib/api-football";
+
+export const maxDuration = 300;
 
 const LEAGUE_IDS = [
   // Ligues africaines
@@ -81,14 +83,29 @@ export async function GET(request: Request) {
 
     const supabase = createClient();
 
-    // Get matches from the last 7 days + next 7 days
+    // Support backfill mode: ?backfill=true fetches full season
+    const url = new URL(request.url);
+    const isBackfill = url.searchParams.get("backfill") === "true";
+
     const now = new Date();
-    const from = new Date(now);
-    from.setDate(from.getDate() - 7);
-    const to = new Date(now);
-    to.setDate(to.getDate() + 7);
-    const fromStr = from.toISOString().split("T")[0];
-    const toStr = to.toISOString().split("T")[0];
+    let fromStr: string;
+    let toStr: string;
+
+    if (isBackfill) {
+      // Full season: from August 1 of season year to June 30 next year
+      // Most seasons start Aug/Sep. Use a wide window.
+      const seasonYear = getCurrentSeason();
+      fromStr = `${seasonYear}-07-01`;
+      toStr = `${seasonYear + 1}-06-30`;
+    } else {
+      // Normal mode: last 7 days + next 7 days
+      const from = new Date(now);
+      from.setDate(from.getDate() - 7);
+      const to = new Date(now);
+      to.setDate(to.getDate() + 7);
+      fromStr = from.toISOString().split("T")[0];
+      toStr = to.toISOString().split("T")[0];
+    }
 
     // Fetch all league UUID mappings from DB
     const { data: leagues } = await supabase

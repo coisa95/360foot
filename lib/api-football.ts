@@ -462,3 +462,59 @@ export interface Coach {
 export async function getCoach(teamId: number): Promise<Coach[]> {
   return fetchApi<Coach[]>("/coachs", { team: String(teamId) });
 }
+
+// ============================================
+// VENUES
+// ============================================
+
+export interface Venue {
+  id: number;
+  name: string;
+  address: string;
+  city: string;
+  country: string;
+  capacity: number;
+  surface: string;
+  image: string;
+}
+
+export async function getVenue(venueId: number): Promise<Venue[]> {
+  return fetchApi<Venue[]>("/venues", { id: String(venueId) });
+}
+
+// ============================================
+// FIXTURE PLAYER RATINGS
+// ============================================
+
+export interface FixturePlayer {
+  team: { id: number; name: string; logo: string };
+  players: {
+    player: { id: number; name: string; photo: string };
+    statistics: {
+      games: { minutes: number | null; number: number; position: string; rating: string | null };
+      goals: { total: number | null; conceded: number | null; assists: number | null; saves: number | null };
+      shots: { total: number | null; on: number | null };
+      passes: { total: number | null; key: number | null; accuracy: string | null };
+      tackles: { total: number | null; blocks: number | null; interceptions: number | null };
+      duels: { total: number | null; won: number | null };
+      dribbles: { attempts: number | null; success: number | null };
+      fouls: { drawn: number | null; committed: number | null };
+      cards: { yellow: number; red: number };
+    }[];
+  }[];
+}
+
+export async function getFixturePlayers(fixtureId: number): Promise<FixturePlayer[]> {
+  return fetchApi<FixturePlayer[]>("/fixtures/players", { fixture: String(fixtureId) });
+}
+
+// ============================================
+// ROUNDS
+// ============================================
+
+export async function getLeagueRounds(leagueId: number, season: number): Promise<string[]> {
+  return fetchApi<string[]>("/fixtures/rounds", {
+    league: String(leagueId),
+    season: String(season),
+  });
+}
