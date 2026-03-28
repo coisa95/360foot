@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     );
     const data = await res.json();
     const seasons = data.response?.[0]?.seasons || [];
-    const current = seasons.find((s: any) => s.current);
+    const current = seasons.find((s: { current: boolean }) => s.current);
     const last3 = seasons.slice(-3);
     results.push({ id, name: data.response?.[0]?.league?.name, currentSeason: current, recentSeasons: last3 });
     await new Promise((r) => setTimeout(r, 7000));
