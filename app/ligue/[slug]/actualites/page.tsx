@@ -4,7 +4,7 @@ import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-export const revalidate = 300;
+export const revalidate = 900;
 
 type Props = {
   params: Promise<{ slug: string }>;

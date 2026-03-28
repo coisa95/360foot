@@ -7,7 +7,7 @@ import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
-export const revalidate = 300;
+export const revalidate = 600;
 
 export const metadata = {
   title: "360 Foot — Actu Football Afrique & Europe en Direct",

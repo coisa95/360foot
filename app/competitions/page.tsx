@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-export const revalidate = 300;
+export const revalidate = 900;
 
 export const metadata: Metadata = {
   title: "Compétitions football — Afrique et Europe — 360 Foot",

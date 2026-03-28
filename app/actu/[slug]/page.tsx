@@ -9,7 +9,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-export const revalidate = 300;
+export const revalidate = 1800;
 
 type Props = {
   params: Promise<{ slug: string }>;

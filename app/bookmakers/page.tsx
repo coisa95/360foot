@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const revalidate = 300;
+export const revalidate = 21600;
 
 export const metadata: Metadata = {
   title: "Paris sportifs - Comparateur de bookmakers - 360 Foot",

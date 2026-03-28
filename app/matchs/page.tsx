@@ -6,7 +6,7 @@ import { LeagueFilter } from "@/components/league-filter";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const revalidate = 300;
+export const revalidate = 600;
 
 export const metadata: Metadata = {
   title: "Matchs en direct — Résultats football — 360 Foot",
