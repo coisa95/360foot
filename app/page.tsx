@@ -110,17 +110,24 @@ async function getStandings() {
   }
 }
 
-function SectionHeader({ title, href, linkText }: { title: string; href?: string; linkText?: string }) {
+function SectionHeader({ title, href, linkText, accent = "lime" }: { title: string; href?: string; linkText?: string; accent?: "lime" | "blue" | "purple" | "orange" }) {
+  const accents = {
+    lime: { bar: "from-lime-400 to-emerald-500", text: "text-lime-400", hover: "hover:text-lime-300" },
+    blue: { bar: "from-blue-400 to-cyan-500", text: "text-blue-400", hover: "hover:text-blue-300" },
+    purple: { bar: "from-purple-400 to-pink-500", text: "text-purple-400", hover: "hover:text-purple-300" },
+    orange: { bar: "from-orange-400 to-amber-500", text: "text-orange-400", hover: "hover:text-orange-300" },
+  };
+  const a = accents[accent];
   return (
     <div className="flex items-center justify-between mb-4 md:mb-6">
       <div className="flex items-center gap-3">
-        <div className="w-1 h-6 rounded-full bg-gradient-to-b from-lime-400 to-emerald-500" />
+        <div className={`w-1 h-6 rounded-full bg-gradient-to-b ${a.bar}`} />
         <h2 className="text-lg md:text-xl font-bold text-white">{title}</h2>
       </div>
       {href && (
         <Link
           href={href}
-          className="text-xs md:text-sm text-lime-400/80 hover:text-lime-400 transition-colors font-medium"
+          className={`text-xs md:text-sm ${a.text} ${a.hover} transition-colors font-medium`}
         >
           {linkText || "Voir tout"} →
         </Link>
@@ -141,12 +148,15 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-4 md:py-8 space-y-6 md:space-y-10">
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-br from-dark-card via-dark-surface to-dark-card border border-dark-border/30 p-5 md:p-10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-lime-500/8 via-transparent to-emerald-500/5" />
+      <section className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-br from-[#0d1117] via-[#111827] to-[#0d1117] border border-lime-500/20 p-5 md:p-10">
+        {/* Colored glow effects */}
+        <div className="absolute -top-20 -right-20 w-60 h-60 bg-lime-500/15 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-10 left-1/2 w-40 h-40 bg-cyan-500/8 rounded-full blur-3xl" />
         <div className="relative">
           <h1 className="text-2xl md:text-5xl font-extrabold text-white leading-tight">
             Actu Football{" "}
-            <span className="bg-gradient-to-r from-lime-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(163,230,53,0.3)]">
               Afrique &amp; Europe
             </span>
           </h1>
@@ -154,14 +164,14 @@ export default async function HomePage() {
             Résultats en direct, analyses, transferts — votre couverture 24/7 du football.
           </p>
           <div className="mt-4 md:mt-6 flex flex-wrap gap-2 md:gap-3">
-            <Link href="/matchs" className="inline-flex items-center gap-1.5 rounded-full bg-lime-500/15 border border-lime-500/25 px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-semibold text-lime-400 hover:bg-lime-500/25 transition-all">
-              <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-lime-500" /></span>
+            <Link href="/matchs" className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-lime-500/20 to-emerald-500/20 border border-lime-500/30 px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-semibold text-lime-300 hover:from-lime-500/30 hover:to-emerald-500/30 hover:shadow-lg hover:shadow-lime-500/10 transition-all">
+              <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-lime-400" /></span>
               Matchs en direct
             </Link>
-            <Link href="/actu" className="inline-flex items-center rounded-full bg-white/5 border border-white/10 px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-medium text-gray-300 hover:bg-white/10 transition-all">
+            <Link href="/actu" className="inline-flex items-center rounded-full bg-blue-500/10 border border-blue-500/20 px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-medium text-blue-300 hover:bg-blue-500/20 transition-all">
               Dernières actus
             </Link>
-            <Link href="/transferts" className="inline-flex items-center rounded-full bg-white/5 border border-white/10 px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-medium text-gray-300 hover:bg-white/10 transition-all">
+            <Link href="/transferts" className="inline-flex items-center rounded-full bg-purple-500/10 border border-purple-500/20 px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-medium text-purple-300 hover:bg-purple-500/20 transition-all">
               Transferts
             </Link>
           </div>
@@ -171,7 +181,7 @@ export default async function HomePage() {
       {/* ── CAROUSEL ARTICLES EN VEDETTE ── */}
       {articles.length > 0 && (
         <section>
-          <SectionHeader title="A la une" href="/actu" linkText="Toutes les actus" />
+          <SectionHeader title="A la une" href="/actu" linkText="Toutes les actus" accent="orange" />
           <ArticleCarousel
             articles={articles.slice(0, 6).map((a: Record<string, unknown>) => ({
               slug: a.slug as string,
@@ -189,7 +199,7 @@ export default async function HomePage() {
       {/* ── MATCHS DU JOUR ── */}
       {matches.length > 0 && (
         <section>
-          <SectionHeader title="Matchs du jour" href="/matchs" linkText="Tous les matchs" />
+          <SectionHeader title="Matchs du jour" href="/matchs" linkText="Tous les matchs" accent="blue" />
           <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
             {matches.map((match: Record<string, unknown>) => {
               const homeTeam = match.home_team as Record<string, unknown> | null;
@@ -224,7 +234,7 @@ export default async function HomePage() {
         <div className="lg:col-span-2">
           {remainingArticles.length > 0 && (
             <section>
-              <SectionHeader title="Plus d'actualités" href="/actu" />
+              <SectionHeader title="Plus d'actualités" href="/actu" accent="purple" />
               <div className="grid gap-4 sm:grid-cols-2">
                 {remainingArticles.map((article: Record<string, unknown>) => {
                   const league = article.league as Record<string, unknown> | null;
@@ -248,7 +258,7 @@ export default async function HomePage() {
 
         {/* Sidebar — Classements */}
         <aside className="space-y-4">
-          <SectionHeader title="Classements" href="/competitions" />
+          <SectionHeader title="Classements" href="/competitions" accent="lime" />
           {standings.length > 0
             ? standings.map((standing: Record<string, unknown>) => {
                 const leagues = standing.leagues as Record<string, unknown> | null;
