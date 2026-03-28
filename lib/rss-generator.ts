@@ -26,7 +26,7 @@ export async function generateArticleFromRSS(
   try {
     // 1. Appel Claude pour générer l'article
     const response = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
+      model: "claude-sonnet-4-20250514",
       max_tokens: 4000,
       system: RSS_ARTICLE_SYSTEM_PROMPT,
       messages: [{ role: "user", content: buildRSSUserPrompt(item) }],
