@@ -20,12 +20,17 @@ const LEAGUE_IDS = [
   // Autres ligues majeures
   253, // MLS
   307, // Saudi Pro League
-  // Compétitions continentales & internationales
-  2,   // Champions League
-  3,   // Europa League
-  848, // Conference League
+  // Compétitions continentales (clubs)
+  2,   // Champions League (UEFA)
+  3,   // Europa League (UEFA)
+  848, // Conference League (UEFA)
   12,  // CAF Champions League
   20,  // CAF Confederation Cup
+  17,  // AFC Champions League
+  16,  // CONCACAF Champions League
+  13,  // Copa Libertadores
+  11,  // Copa Sudamericana
+  // Compétitions internationales (sélections)
   // 6,   // CAN — Terminée (CAN 2025)
   29,  // Qualifs Coupe du Monde - Afrique
   32,  // Qualifs Coupe du Monde - Europe
