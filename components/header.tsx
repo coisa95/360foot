@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 const NAV_LINKS = [
   { href: "/", label: "Accueil" },
   { href: "/actu", label: "Actualités" },
-  { href: "/resultats", label: "Résultats" },
+  { href: "/matchs", label: "Matchs" },
   { href: "/transferts", label: "Transferts" },
   { href: "/bons-plans", label: "Bons Plans" },
 ];
@@ -83,6 +83,18 @@ export function Header() {
             </Link>
           ))}
 
+          {/* Search */}
+          <Link
+            href="/recherche"
+            className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-lime-400"
+            aria-label="Recherche"
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Recherche
+          </Link>
+
           {/* Ligues Dropdown */}
           <div
             className="relative"
@@ -141,6 +153,18 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+
+            {/* Recherche */}
+            <Link
+              href="/recherche"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Recherche
+            </Link>
 
             {/* Mobile Ligues accordion */}
             <div className="mt-1 border-t border-dark-border pt-1">
