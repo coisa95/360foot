@@ -18,8 +18,6 @@ const LEAGUE_IDS = [
   423, // Ligue 1 Burkina Faso
   415, // Championnat National Bénin
   424, // Linafoot Ligue 1 RD Congo
-  378, // Ligue 1 Guinée
-  968, // Championnat D1 Gabon
   61,  // Ligue 1 France
   39,  // Premier League
   140, // La Liga

@@ -166,8 +166,6 @@ const LEAGUE_SEASONS: Record<number, number> = {
   423: 2026, // Ligue 1 Burkina Faso
   415: 2025, // Championnat National Bénin
   424: 2025, // Linafoot Ligue 1 RD Congo
-  378: 2025, // Ligue 1 Guinée
-  968: 2025, // Championnat D1 Gabon
   // Ligues européennes
   61:  2025, // Ligue 1 France
   39:  2025, // Premier League
