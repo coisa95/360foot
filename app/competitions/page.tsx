@@ -28,8 +28,8 @@ function categorize(league: any): string {
   const name = (league.name || "").toLowerCase();
   const country = (league.country || "").toLowerCase();
 
-  // African countries
-  const africanCountries = ["ivory coast", "cote d'ivoire", "côte d'ivoire", "senegal", "sénégal", "cameroon", "cameroun", "mali", "burkina faso", "benin", "bénin", "congo", "ghana", "nigeria", "egypt", "morocco", "algeria", "tunisia"];
+  // African countries (French + English names)
+  const africanCountries = ["ivory coast", "cote d'ivoire", "côte d'ivoire", "senegal", "sénégal", "cameroon", "cameroun", "mali", "burkina faso", "benin", "bénin", "congo", "ghana", "nigeria", "egypt", "égypte", "morocco", "maroc", "algeria", "algérie", "tunisia", "tunisie"];
   if (africanCountries.some((c) => country.includes(c))) return "Afrique";
 
   // European club competitions (Champions League, Europa, Conference)
@@ -42,8 +42,8 @@ function categorize(league: any): string {
   if (name.includes("qualif") || name.includes("world cup") || name.includes("coupe du monde")) return "Compétitions internationales";
   if (name.includes("amicaux") || name.includes("friendl")) return "Compétitions internationales";
 
-  // European
-  const europeanCountries = ["france", "england", "spain", "italy", "germany", "portugal", "netherlands", "belgium"];
+  // European domestic leagues (French + English country names)
+  const europeanCountries = ["france", "england", "angleterre", "spain", "espagne", "italy", "italie", "germany", "allemagne", "portugal", "netherlands", "pays-bas", "belgium", "belgique"];
   if (europeanCountries.some((c) => country.includes(c))) return "Europe";
 
   return "Autres";
