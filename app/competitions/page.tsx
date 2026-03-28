@@ -47,7 +47,7 @@ function categorize(league: any): string {
 
   // 3) Domestic leagues by region
   // Afrique
-  const africanCountries = ["ivory coast", "cote d'ivoire", "côte d'ivoire", "senegal", "sénégal", "cameroon", "cameroun", "mali", "burkina faso", "benin", "bénin", "congo", "ghana", "nigeria", "egypt", "égypte", "morocco", "maroc", "algeria", "algérie", "tunisia", "tunisie", "afrique"];
+  const africanCountries = ["ivory coast", "cote d'ivoire", "côte d'ivoire", "senegal", "sénégal", "cameroon", "cameroun", "mali", "burkina faso", "benin", "bénin", "congo", "ghana", "nigeria", "egypt", "égypte", "morocco", "maroc", "algeria", "algérie", "tunisia", "tunisie", "afrique", "guinée", "guinea", "gabon"];
   if (africanCountries.some((c) => country.includes(c))) return "Afrique";
 
   // Europe
