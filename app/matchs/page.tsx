@@ -1,10 +1,8 @@
 import { createClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { AffiliateTrio } from "@/components/affiliate-trio";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { MatchLeagueGroup } from "@/components/match-league-group";
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
 export const revalidate = 300;
@@ -190,96 +188,17 @@ export default async function MatchsPage({ searchParams }: Props) {
           ))}
         </div>
 
-        {/* Matches grouped by league */}
+        {/* Matches grouped by league — collapsible */}
         {matchesByLeague.size > 0 ? (
-          <div className="mt-6 space-y-4">
+          <div className="mt-6 space-y-3">
             {Array.from(matchesByLeague.values()).map((group) => (
-              <Card key={group.leagueSlug} className="border-gray-800 bg-dark-card overflow-hidden">
-                {/* League header */}
-                <Link
-                  href={`/ligue/${group.leagueSlug}`}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-dark-bg/50 border-b border-gray-800 hover:bg-gray-800/50 transition-colors"
-                >
-                  {group.leagueLogo && (
-                    <Image src={group.leagueLogo} alt="" width={16} height={16} className="h-4 w-4 object-contain" />
-                  )}
-                  <span className="text-xs font-semibold text-gray-300">{group.leagueName}</span>
-                </Link>
-
-                {/* Match rows */}
-                <div className="divide-y divide-gray-800/50">
-                  {group.matches.map((match: any) => {
-                    const homeTeam = match.home_team;
-                    const awayTeam = match.away_team;
-                    const isFinished = ["FT", "AET", "PEN"].includes(match.status);
-                    const isLive = ["1H", "2H", "HT", "ET", "P", "BT"].includes(match.status);
-                    const isUpcoming = match.status === "NS";
-                    const matchTime = new Date(match.date).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-
-                    return (
-                      <Link
-                        key={match.slug}
-                        href={`/match/${match.slug}`}
-                        className="flex items-center px-4 py-2.5 hover:bg-gray-800/30 transition-colors"
-                      >
-                        {/* Time / Status */}
-                        <div className="w-14 shrink-0 text-center">
-                          {isUpcoming && (
-                            <span className="text-xs font-bold text-blue-400">{matchTime}</span>
-                          )}
-                          {isLive && (
-                            <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-[10px] animate-pulse">
-                              EN COURS
-                            </Badge>
-                          )}
-                          {isFinished && (
-                            <span className="text-[10px] font-semibold text-emerald-400">
-                              {match.status === "AET" ? "A.P." : match.status === "PEN" ? "T.A.B." : "Terminé"}
-                            </span>
-                          )}
-                          {!isUpcoming && !isLive && !isFinished && (
-                            <span className="text-[10px] text-gray-500">{match.status}</span>
-                          )}
-                        </div>
-
-                        {/* Teams */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2 min-w-0 flex-1">
-                              {homeTeam?.logo_url && (
-                                <Image src={homeTeam.logo_url} alt="" width={18} height={18} className="h-4.5 w-4.5 object-contain shrink-0" />
-                              )}
-                              <span className={`text-xs sm:text-sm truncate ${isFinished && (match.score_home ?? 0) > (match.score_away ?? 0) ? "font-bold text-white" : "text-gray-300"}`}>
-                                {homeTeam?.name || "Équipe A"}
-                              </span>
-                            </div>
-                            {!isUpcoming && (
-                              <span className={`text-sm font-bold tabular-nums shrink-0 ${isFinished && (match.score_home ?? 0) > (match.score_away ?? 0) ? "text-white" : "text-gray-400"}`}>
-                                {match.score_home ?? 0}
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center justify-between gap-2 mt-0.5">
-                            <div className="flex items-center gap-2 min-w-0 flex-1">
-                              {awayTeam?.logo_url && (
-                                <Image src={awayTeam.logo_url} alt="" width={18} height={18} className="h-4.5 w-4.5 object-contain shrink-0" />
-                              )}
-                              <span className={`text-xs sm:text-sm truncate ${isFinished && (match.score_away ?? 0) > (match.score_home ?? 0) ? "font-bold text-white" : "text-gray-300"}`}>
-                                {awayTeam?.name || "Équipe B"}
-                              </span>
-                            </div>
-                            {!isUpcoming && (
-                              <span className={`text-sm font-bold tabular-nums shrink-0 ${isFinished && (match.score_away ?? 0) > (match.score_home ?? 0) ? "text-white" : "text-gray-400"}`}>
-                                {match.score_away ?? 0}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </Card>
+              <MatchLeagueGroup
+                key={group.leagueSlug}
+                leagueName={group.leagueName}
+                leagueSlug={group.leagueSlug}
+                leagueLogo={group.leagueLogo}
+                matches={group.matches}
+              />
             ))}
           </div>
         ) : (
