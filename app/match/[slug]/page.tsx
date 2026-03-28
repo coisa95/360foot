@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const revalidate = 300;
@@ -117,6 +118,8 @@ export default async function MatchPage({ params }: Props) {
 
   const homeName = match.home_team?.name || "Équipe A";
   const awayName = match.away_team?.name || "Équipe B";
+  const homeSlug = match.home_team?.slug || "";
+  const awaySlug = match.away_team?.slug || "";
   const leagueName = match.league?.name || "";
   const leagueSlug = match.league?.slug || "";
 
@@ -136,6 +139,79 @@ export default async function MatchPage({ params }: Props) {
 
   // Statistics
   const statistics = statsJson?.statistics as Record<string, { home: any; away: any }> | null;
+
+  // Build player name → slug lookup map
+  const playerNames = new Set<string>();
+  if (eventsJson) {
+    for (const e of eventsJson) {
+      if (e.player) playerNames.add(e.player);
+      if (e.assist) playerNames.add(e.assist);
+    }
+  }
+  if (lineupsJson) {
+    for (const lineup of lineupsJson) {
+      for (const p of [...(lineup.startXI || []), ...(lineup.substitutes || [])]) {
+        if (p.name) playerNames.add(p.name);
+      }
+    }
+  }
+  if (injuriesJson) {
+    for (const inj of injuriesJson) {
+      if (inj.player) playerNames.add(inj.player);
+    }
+  }
+
+  const playerSlugMap: Record<string, string> = {};
+  if (playerNames.size > 0) {
+    // Batch lookup: search by last name fragments for better matching
+    const nameArray = Array.from(playerNames);
+    const { data: matchedPlayers } = await supabase
+      .from("players")
+      .select("name, slug")
+      .in("name", nameArray);
+
+    if (matchedPlayers) {
+      for (const p of matchedPlayers) {
+        playerSlugMap[p.name] = p.slug;
+      }
+    }
+
+    // Try partial matching for unmatched names (last name match)
+    const unmatched = nameArray.filter((n) => !playerSlugMap[n]);
+    if (unmatched.length > 0 && unmatched.length <= 50) {
+      for (const name of unmatched) {
+        const lastName = name.split(" ").pop() || name;
+        if (lastName.length < 3) continue;
+        const { data: found } = await supabase
+          .from("players")
+          .select("name, slug")
+          .ilike("name", `%${lastName}%`)
+          .limit(1)
+          .maybeSingle();
+        if (found) playerSlugMap[name] = found.slug;
+      }
+    }
+  }
+
+  // Helper to render player name as link or plain text
+  const PlayerLink = ({ name, className }: { name: string; className?: string }) => {
+    const slug = playerSlugMap[name];
+    if (slug) {
+      return <Link href={`/joueur/${slug}`} className={`hover:text-lime-400 transition-colors ${className || ""}`}>{name}</Link>;
+    }
+    return <span className={className}>{name}</span>;
+  };
+
+  // Helper to render team name as link
+  const TeamLink = ({ name, className }: { name: string; className?: string }) => {
+    let slug = "";
+    if (name === homeName) slug = homeSlug;
+    else if (name === awayName) slug = awaySlug;
+    if (slug) {
+      return <Link href={`/equipe/${slug}`} className={`hover:text-lime-400 transition-colors ${className || ""}`}>{name}</Link>;
+    }
+    return <span className={className}>{name}</span>;
+  };
 
   const PRIORITY_STATS = [
     "Ball Possession", "Total Shots", "Shots on Goal", "Shots off Goal",
@@ -204,7 +280,7 @@ export default async function MatchPage({ params }: Props) {
               {match.home_team?.logo_url && (
                 <Image src={match.home_team.logo_url} alt={`Logo ${homeName}`} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
-              <h2 className="text-sm font-bold sm:text-lg">{homeName}</h2>
+              <h2 className="text-sm font-bold sm:text-lg">{homeSlug ? <Link href={`/equipe/${homeSlug}`} className="hover:text-lime-400 transition-colors">{homeName}</Link> : homeName}</h2>
             </div>
 
             {/* Score */}
@@ -238,7 +314,7 @@ export default async function MatchPage({ params }: Props) {
               {match.away_team?.logo_url && (
                 <Image src={match.away_team.logo_url} alt={`Logo ${awayName}`} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
-              <h2 className="text-sm font-bold sm:text-lg">{awayName}</h2>
+              <h2 className="text-sm font-bold sm:text-lg">{awaySlug ? <Link href={`/equipe/${awaySlug}`} className="hover:text-lime-400 transition-colors">{awayName}</Link> : awayName}</h2>
             </div>
           </div>
         </Card>
@@ -394,7 +470,7 @@ export default async function MatchPage({ params }: Props) {
                     .map((inj: any, idx: number) => (
                       <div key={idx} className="flex items-center gap-2 text-sm">
                         <span className="text-red-400">✕</span>
-                        <span className="flex-1 text-gray-300">{inj.player}</span>
+                        <span className="flex-1 text-gray-300"><PlayerLink name={inj.player} className="text-gray-300" /></span>
                         <span className="text-xs text-gray-500">{inj.reason}</span>
                       </div>
                     ))}
@@ -412,7 +488,7 @@ export default async function MatchPage({ params }: Props) {
                     .map((inj: any, idx: number) => (
                       <div key={idx} className="flex items-center gap-2 text-sm">
                         <span className="text-red-400">✕</span>
-                        <span className="flex-1 text-gray-300">{inj.player}</span>
+                        <span className="flex-1 text-gray-300"><PlayerLink name={inj.player} className="text-gray-300" /></span>
                         <span className="text-xs text-gray-500">{inj.reason}</span>
                       </div>
                     ))}
@@ -447,12 +523,12 @@ export default async function MatchPage({ params }: Props) {
                         </span>
                         <span className="text-base">{getEventIcon(event.type, event.detail || "")}</span>
                         <span className="flex-1 font-medium">
-                          {event.player}
+                          <PlayerLink name={event.player} />
                           {event.assist && (
-                            <span className="ml-1 text-xs text-gray-500">(pass. {event.assist})</span>
+                            <span className="ml-1 text-xs text-gray-500">(pass. <PlayerLink name={event.assist} className="text-gray-500" />)</span>
                           )}
                         </span>
-                        <span className="text-xs text-gray-500">{event.team}</span>
+                        <TeamLink name={event.team} className="text-xs text-gray-500" />
                       </div>
                     );
                   })}
@@ -517,7 +593,7 @@ export default async function MatchPage({ params }: Props) {
                 {lineupsJson.map((lineup: any, idx: number) => (
                   <div key={idx}>
                     <div className="mb-3 flex items-center justify-between">
-                      <h4 className="font-bold text-white">{lineup.team}</h4>
+                      <h4 className="font-bold text-white"><TeamLink name={lineup.team} /></h4>
                       {lineup.formation && (
                         <Badge className="bg-dark-surface text-gray-400 border-gray-700">
                           {lineup.formation}
@@ -533,7 +609,7 @@ export default async function MatchPage({ params }: Props) {
                           <span className="w-6 text-center text-xs font-mono text-gray-500">
                             {p.number || "-"}
                           </span>
-                          <span className="flex-1">{p.name}</span>
+                          <span className="flex-1"><PlayerLink name={p.name} /></span>
                           <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
                         </div>
                       ))}
@@ -546,7 +622,7 @@ export default async function MatchPage({ params }: Props) {
                           {(lineup.substitutes || []).slice(0, 7).map((p: any, i: number) => (
                             <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
                               <span className="w-6 text-center font-mono">{p.number || "-"}</span>
-                              <span className="flex-1">{p.name}</span>
+                              <span className="flex-1"><PlayerLink name={p.name} className="text-gray-400" /></span>
                               <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
                             </div>
                           ))}
