@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
-import { getMatchDetails } from "@/lib/api-football";
+import { getMatchDetails, getFixturePlayers } from "@/lib/api-football";
 
 export const maxDuration = 300;
 
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       .from("matches")
       .select("id, api_football_id, slug, status")
       .eq("status", "FT")
-      .is("events_json", null)
+      .or("events_json.is.null,players_json.is.null")
       .gte("date", sevenDaysAgo.toISOString())
       .order("date", { ascending: false })
       .limit(10); // Max 10 per run to respect API rate limits
@@ -117,23 +117,60 @@ export async function GET(request: Request) {
           halftime: fixture.score?.halftime || null,
         };
 
+        // Fetch player ratings with delay
+        await delay(7000);
+        let playersJson = null;
+        try {
+          const fixturePlayers = await getFixturePlayers(match.api_football_id);
+          if (fixturePlayers && fixturePlayers.length > 0) {
+            playersJson = fixturePlayers.map((fp) => ({
+              team: fp.team.name,
+              teamId: fp.team.id,
+              players: fp.players.map((p) => {
+                const stats = p.statistics?.[0];
+                return {
+                  name: p.player.name,
+                  number: stats?.games?.number || null,
+                  position: stats?.games?.position || "",
+                  rating: stats?.games?.rating || null,
+                  stats: {
+                    goals: stats?.goals?.total || 0,
+                    assists: stats?.goals?.assists || 0,
+                    shots: stats?.shots?.total || 0,
+                    passes: stats?.passes?.total || 0,
+                    tackles: stats?.tackles?.total || 0,
+                    saves: stats?.goals?.saves || 0,
+                  },
+                };
+              }),
+            }));
+          }
+        } catch (playerErr) {
+          console.warn(`Could not fetch player ratings for ${match.slug}: ${String(playerErr)}`);
+        }
+
         // Update match with enriched data
+        const updateData: Record<string, unknown> = {
+          events_json: events,
+          lineups_json: lineups,
+          stats_json: {
+            ...(typeof match === "object" ? {} : {}),
+            fixture: fixture.fixture,
+            teams: fixture.teams,
+            league: fixture.league,
+            goals: fixture.goals,
+            score: fixture.score,
+            statistics,
+            matchInfo,
+          },
+        };
+        if (playersJson) {
+          updateData.players_json = playersJson;
+        }
+
         const { error: updateError } = await supabase
           .from("matches")
-          .update({
-            events_json: events,
-            lineups_json: lineups,
-            stats_json: {
-              ...(typeof match === "object" ? {} : {}),
-              fixture: fixture.fixture,
-              teams: fixture.teams,
-              league: fixture.league,
-              goals: fixture.goals,
-              score: fixture.score,
-              statistics,
-              matchInfo,
-            },
-          })
+          .update(updateData)
           .eq("id", match.id);
 
         if (updateError) {

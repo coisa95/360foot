@@ -86,6 +86,29 @@ function generateContextualAlt(
 export async function getArticleImages(
   input: ArticleImageInput
 ): Promise<ArticleImage[]> {
+  const images: ArticleImage[] = [];
+
+  // ── Use venue photo from API-Football as featured image if available ──
+  if (input.venuePhotoUrl) {
+    const venueLabel = input.venueName
+      ? `${input.venueName}${input.venueCity ? `, ${input.venueCity}` : ""}`
+      : "Stade";
+    const altText =
+      input.teams.length >= 2
+        ? `${venueLabel} — ${input.teams[0]} vs ${input.teams[1]} | 360 Foot`
+        : `${venueLabel} — ${input.league} | 360 Foot`;
+
+    images.push({
+      url: input.venuePhotoUrl,
+      alt: altText,
+      credit: `Photo du stade : API-Football`,
+      width: 1200,
+      height: 675,
+      position: "featured",
+    });
+  }
+
+  // ── Pexels fallback / mid-article image ──
   const articleCtx = {
     title: input.title,
     content: "",
@@ -97,7 +120,6 @@ export async function getArticleImages(
 
   const queries = generateContextualQueries(articleCtx);
   const ctx = detectContext(articleCtx);
-  const images: ArticleImage[] = [];
 
   for (const query of queries) {
     if (images.length >= 2) break; // Max 2 images par article
