@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { AffiliateTrio } from "@/components/affiliate-trio";
+import { CollapsibleSection } from "@/components/collapsible-section";
 import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -100,12 +101,9 @@ export default async function CompetitionsPage() {
         </p>
 
         <div className="mt-8 space-y-8">
-          {order.filter((cat) => categories.has(cat)).map((cat) => (
-            <section key={cat}>
-              <h2 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                <span className="w-1 h-5 bg-lime-400 rounded-full" />
-                {cat}
-              </h2>
+          {order.filter((cat) => categories.has(cat)).map((cat) => {
+            const collapsible = ["Compétitions continentales", "Compétitions internationales", "Autres"].includes(cat);
+            const grid = (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {categories.get(cat)!.map((league: any) => (
                   <Link key={league.slug} href={`/ligue/${league.slug}`}>
@@ -129,8 +127,26 @@ export default async function CompetitionsPage() {
                   </Link>
                 ))}
               </div>
-            </section>
-          ))}
+            );
+
+            if (collapsible) {
+              return (
+                <CollapsibleSection key={cat} title={cat}>
+                  {grid}
+                </CollapsibleSection>
+              );
+            }
+
+            return (
+              <section key={cat}>
+                <h2 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                  <span className="w-1 h-5 bg-lime-400 rounded-full" />
+                  {cat}
+                </h2>
+                {grid}
+              </section>
+            );
+          })}
         </div>
 
         <div className="mt-12">
