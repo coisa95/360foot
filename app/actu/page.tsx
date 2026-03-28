@@ -188,11 +188,12 @@ export default async function ActuPage({ searchParams }: Props) {
                 <div className="grid md:grid-cols-2">
                   <div className="relative aspect-[2/1] sm:aspect-video md:aspect-auto md:min-h-[280px]">
                     <Image
-                      src={`/api/og?title=${encodeURIComponent(featuredArticle.title)}&type=${featuredArticle.type || "result"}&league=${encodeURIComponent((featuredArticle.league as Record<string, unknown>)?.name as string || "")}`}
+                      src={featuredArticle.og_image_url || `/api/og?title=${encodeURIComponent(featuredArticle.title)}&type=${featuredArticle.type || "result"}&league=${encodeURIComponent((featuredArticle.league as Record<string, unknown>)?.name as string || "")}`}
                       alt={featuredArticle.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
+                      unoptimized={!!featuredArticle.og_image_url}
                     />
                     {/* Badge overlay on mobile */}
                     <div className="absolute left-2 top-2 md:hidden">
@@ -243,11 +244,12 @@ export default async function ActuPage({ searchParams }: Props) {
                       <Card className="h-full overflow-hidden border-dark-border bg-dark-card transition-all hover:border-lime-500/30 hover:bg-dark-surface">
                         <div className="relative aspect-video">
                           <Image
-                            src={`/api/og?title=${encodeURIComponent(article.title as string)}&type=${articleType}&league=${encodeURIComponent((league?.name as string) || "")}`}
+                            src={(article.og_image_url as string) || `/api/og?title=${encodeURIComponent(article.title as string)}&type=${articleType}&league=${encodeURIComponent((league?.name as string) || "")}`}
                             alt={article.title as string}
                             fill
                             className="object-cover"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            unoptimized={!!(article.og_image_url)}
                           />
                           <div className="absolute left-2 top-2">
                             <Badge className={`text-[10px] ${TYPE_COLORS[articleType] || "bg-lime-500/10 text-lime-400"}`}>
