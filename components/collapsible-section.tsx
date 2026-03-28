@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 export function CollapsibleSection({
   title,
@@ -12,11 +12,14 @@ export function CollapsibleSection({
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  const contentId = useId();
 
   return (
     <section>
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={contentId}
         className="flex w-full items-center gap-2 text-lg font-bold text-white mb-3 group"
       >
         <span className="w-1 h-5 bg-lime-400 rounded-full" />
@@ -30,7 +33,7 @@ export function CollapsibleSection({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {open && children}
+      {open && <div id={contentId}>{children}</div>}
     </section>
   );
 }

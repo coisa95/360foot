@@ -59,6 +59,8 @@ export function LeagueFilter({
 
         <button
           onClick={() => setOpen(!open)}
+          aria-expanded={open}
+          aria-label="Filtrer par ligue"
           className="flex items-center gap-1 rounded-full bg-dark-card px-3 py-1.5 text-xs font-medium text-gray-400 hover:bg-dark-surface hover:text-white transition-colors"
         >
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

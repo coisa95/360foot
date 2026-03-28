@@ -6,7 +6,7 @@ import { Metadata } from "next";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Methodologie - Comment 360 Foot produit ses contenus - 360 Foot",
+  title: "Méthodologie — Comment 360 Foot produit ses contenus",
   description:
     "Decouvrez notre methodologie : comment 360 Foot utilise l'intelligence artificielle pour generer des articles de qualite sur le football africain.",
   alternates: {

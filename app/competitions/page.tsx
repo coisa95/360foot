@@ -10,15 +10,21 @@ import Link from "next/link";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Toutes les compétitions — Football africain et européen — 360 Foot",
+  title: "Compétitions football — Afrique et Europe — 360 Foot",
   description:
-    "Retrouvez toutes les compétitions de football suivies par 360 Foot : ligues africaines, championnats européens, coupes continentales et compétitions internationales.",
+    "Toutes les compétitions de football sur 360 Foot : ligues africaines, championnats européens, coupes continentales et internationales.",
   alternates: { canonical: "https://360-foot.com/competitions" },
   openGraph: {
-    title: "Toutes les compétitions — 360 Foot",
+    title: "Compétitions football — 360 Foot",
     description: "Ligues africaines, championnats européens, coupes continentales et internationales.",
     type: "website",
     url: "https://360-foot.com/competitions",
+    images: ["/api/og?title=Comp%C3%A9titions"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Compétitions football — 360 Foot",
+    description: "Ligues africaines, championnats européens, coupes continentales et internationales.",
   },
 };
 
@@ -110,7 +116,7 @@ export default async function CompetitionsPage() {
                     <Card className="border-gray-800 bg-dark-card p-4 hover:border-lime-500/30 transition-colors">
                       <div className="flex items-center gap-3">
                         {league.logo_url ? (
-                          <Image src={league.logo_url} alt="" width={32} height={32} className="h-8 w-8 object-contain" />
+                          <Image src={league.logo_url} alt={`Logo ${league.name}`} width={32} height={32} className="h-8 w-8 object-contain" />
                         ) : (
                           <div className="h-8 w-8 rounded bg-gray-700 flex items-center justify-center text-xs text-gray-500">
                             {league.name?.charAt(0)}

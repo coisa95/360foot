@@ -61,8 +61,10 @@ export default function RecherchePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
+          <label htmlFor="search-input" className="sr-only">Rechercher</label>
           <input
-            type="text"
+            id="search-input"
+            type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher un joueur, une équipe, un article..."
@@ -86,7 +88,7 @@ export default function RecherchePage() {
                 <div className="space-y-1">
                   {results.leagues.map((l: any) => (
                     <Link key={l.slug} href={`/ligue/${l.slug}`} className="flex items-center gap-3 rounded-lg bg-dark-card px-4 py-3 hover:bg-gray-800/50 transition-colors">
-                      {l.logo_url && <Image src={l.logo_url} alt="" width={24} height={24} className="h-6 w-6 object-contain" />}
+                      {l.logo_url && <Image src={l.logo_url} alt={`Logo ${l.name}`} width={24} height={24} className="h-6 w-6 object-contain" />}
                       <span className="text-sm font-medium text-white">{l.name}</span>
                       {l.country && <span className="text-xs text-gray-500">{l.country}</span>}
                     </Link>
@@ -102,7 +104,7 @@ export default function RecherchePage() {
                 <div className="space-y-1">
                   {results.teams.map((t: any) => (
                     <Link key={t.slug} href={`/equipe/${t.slug}`} className="flex items-center gap-3 rounded-lg bg-dark-card px-4 py-3 hover:bg-gray-800/50 transition-colors">
-                      {t.logo_url && <Image src={t.logo_url} alt="" width={24} height={24} className="h-6 w-6 object-contain" />}
+                      {t.logo_url && <Image src={t.logo_url} alt={`Logo ${t.name}`} width={24} height={24} className="h-6 w-6 object-contain" />}
                       <div className="min-w-0 flex-1">
                         <span className="text-sm font-medium text-white block truncate">{t.name}</span>
                         {t.league_name && <span className="text-xs text-gray-500">{t.league_name}</span>}
@@ -121,7 +123,7 @@ export default function RecherchePage() {
                   {results.players.map((p: any) => (
                     <Link key={p.slug} href={`/joueur/${p.slug}`} className="flex items-center gap-3 rounded-lg bg-dark-card px-4 py-3 hover:bg-gray-800/50 transition-colors">
                       {p.photo_url ? (
-                        <Image src={p.photo_url} alt="" width={32} height={32} className="h-8 w-8 rounded-full object-cover" />
+                        <Image src={p.photo_url} alt={`Photo ${p.name}`} width={32} height={32} className="h-8 w-8 rounded-full object-cover" />
                       ) : (
                         <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center text-xs text-gray-400">
                           {p.name?.charAt(0)}
