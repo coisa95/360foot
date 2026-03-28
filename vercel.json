@@ -35,7 +35,7 @@
     },
     "app/api/cron/sync-transfers/route.ts": {
       "maxDuration": 300
-    },
+    }
   },
   "crons": [
     { "path": "/api/cron/collect-matches", "schedule": "0 * * * *" },
