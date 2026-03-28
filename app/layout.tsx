@@ -6,6 +6,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AffiliateTicker } from "@/components/affiliate-ticker";
 import { LeagueSidebar } from "@/components/league-sidebar";
+import { SwRegister } from "@/components/sw-register";
 
 const geist = localFont({
   src: "./fonts/GeistVF.woff",
@@ -109,6 +110,11 @@ export default function RootLayout({
   return (
     <html lang="fr" className={cn("dark font-sans antialiased", geist.variable)}>
       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#a3e635" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="360 Foot" />
         <link rel="preconnect" href="https://images.pexels.com" />
         <link rel="dns-prefetch" href="https://images.pexels.com" />
         <script
@@ -127,6 +133,7 @@ export default function RootLayout({
           <main id="main-content" className="min-h-[calc(100vh-8rem)]">{children}</main>
           <Footer />
         </div>
+        <SwRegister />
       </body>
     </html>
   );
