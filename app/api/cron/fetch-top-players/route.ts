@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
-import { getTopScorers, getTopAssists, getCurrentSeason } from "@/lib/api-football";
+import { getTopScorers, getTopAssists, getTopYellowCards, getTopRedCards, getCurrentSeason } from "@/lib/api-football";
 
 export const maxDuration = 300;
 
@@ -57,7 +57,7 @@ export async function GET(request: Request) {
       const leagueUUID = leagueMap.get(leagueId);
       if (!leagueUUID) continue;
 
-      // Rate limit: 2 calls per league (scorers + assists), wait 7s between
+      // Rate limit: 4 calls per league (scorers + assists + yellow + red), wait 7s between
       if (i > 0) await delay(7000);
 
       try {
@@ -69,9 +69,17 @@ export async function GET(request: Request) {
 
         // Fetch top assists
         const assists = await getTopAssists(leagueId, season);
+        await delay(7000);
 
-        // Format top scorers (top 10)
-        const topScorers = (scorers || []).slice(0, 10).map((p) => ({
+        // Fetch top yellow cards
+        const yellowCards = await getTopYellowCards(leagueId, season);
+        await delay(7000);
+
+        // Fetch top red cards
+        const redCards = await getTopRedCards(leagueId, season);
+
+        // Format helper
+        const formatPlayer = (p: typeof scorers[0]) => ({
           name: p.player.name,
           photo: p.player.photo,
           nationality: p.player.nationality,
@@ -81,27 +89,23 @@ export async function GET(request: Request) {
           assists: p.statistics[0]?.goals?.assists || 0,
           appearances: p.statistics[0]?.games?.appearances || 0,
           rating: p.statistics[0]?.games?.rating || null,
-        }));
+          yellowCards: p.statistics[0]?.cards?.yellow || 0,
+          redCards: p.statistics[0]?.cards?.red || 0,
+        });
 
-        // Format top assists (top 10)
-        const topAssists = (assists || []).slice(0, 10).map((p) => ({
-          name: p.player.name,
-          photo: p.player.photo,
-          nationality: p.player.nationality,
-          team: p.statistics[0]?.team?.name || "",
-          teamLogo: p.statistics[0]?.team?.logo || "",
-          assists: p.statistics[0]?.goals?.assists || 0,
-          goals: p.statistics[0]?.goals?.total || 0,
-          appearances: p.statistics[0]?.games?.appearances || 0,
-          rating: p.statistics[0]?.games?.rating || null,
-        }));
+        const topScorers = (scorers || []).slice(0, 10).map(formatPlayer);
+        const topAssists = (assists || []).slice(0, 10).map(formatPlayer);
+        const topYellowCards = (yellowCards || []).slice(0, 10).map(formatPlayer);
+        const topRedCards = (redCards || []).slice(0, 10).map(formatPlayer);
 
-        // Update standings row with top scorers and assists
+        // Update standings row
         const { error } = await supabase
           .from("standings")
           .update({
             top_scorers_json: topScorers,
             top_assists_json: topAssists,
+            top_yellow_cards_json: topYellowCards,
+            top_red_cards_json: topRedCards,
           })
           .eq("league_id", leagueUUID)
           .eq("season", String(season));
@@ -110,7 +114,7 @@ export async function GET(request: Request) {
           errors.push(`League ${leagueId}: ${error.message}`);
         } else {
           updated++;
-          console.log(`Updated top players for league ${leagueId}: ${topScorers.length} scorers, ${topAssists.length} assists`);
+          console.log(`Updated top players for league ${leagueId}: ${topScorers.length} scorers, ${topAssists.length} assists, ${topYellowCards.length} yellow, ${topRedCards.length} red`);
         }
       } catch (err) {
         errors.push(`League ${leagueId}: ${String(err)}`);

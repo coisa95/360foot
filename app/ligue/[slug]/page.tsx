@@ -56,13 +56,13 @@ export default async function LeagueResumePage({ params }: Props) {
   // Standings + top scorers/assists
   const { data: standingsData } = await supabase
     .from("standings")
-    .select("data_json, top_scorers_json, top_assists_json")
+    .select("data_json, top_scorers_json, top_assists_json, top_yellow_cards_json, top_red_cards_json")
     .eq("league_id", league.id)
     .order("updated_at", { ascending: false })
     .limit(1)
     .single();
 
-  const standings = ((standingsData?.data_json as any[]) || []).map((row: any) => ({
+  const rawStandings = ((standingsData?.data_json as any[]) || []).map((row: any) => ({
     rank: row.rank || 0,
     teamName: row.team_name || "",
     teamSlug: row.team_slug || "",
@@ -74,9 +74,31 @@ export default async function LeagueResumePage({ params }: Props) {
     goalsAgainst: row.goals_against || 0,
     goalDiff: row.goal_diff || 0,
     points: row.points || 0,
+    group: (row.group || "") as string,
   }));
 
+  // Group standings by group field
+  const standingsGroupsMap = new Map<string, typeof rawStandings>();
+  for (const row of rawStandings) {
+    const key = row.group;
+    if (!standingsGroupsMap.has(key)) standingsGroupsMap.set(key, []);
+    standingsGroupsMap.get(key)!.push(row);
+  }
+  const standingsGroups = Array.from(standingsGroupsMap.entries());
+  const hasMultipleGroups = standingsGroups.length > 1;
+
+  // Clean group name: "Ligue 1 - Groupe A " → "Groupe A"
+  function cleanGroupName(raw: string): string {
+    const match = raw.match(/(Groupe\s+\w+)/i);
+    return match ? match[1].trim() : raw.trim();
+  }
+
+  // For single-group leagues, keep backward-compatible flat array
+  const standings = rawStandings;
+
   const topScorers = (standingsData?.top_scorers_json as any[]) || [];
+  const topYellowCards = (standingsData?.top_yellow_cards_json as any[]) || [];
+  const topRedCards = (standingsData?.top_red_cards_json as any[]) || [];
 
   // Lookup player slugs for top scorers
   const scorerNames = topScorers.slice(0, 5).map((p: any) => p.name).filter(Boolean);
@@ -133,7 +155,7 @@ export default async function LeagueResumePage({ params }: Props) {
         {/* Sidebar: Classement + Buteurs — first on mobile, right on desktop */}
         <div className="order-1 lg:order-2 space-y-3">
           {/* Classement top 5 */}
-          {standings.length > 0 && (
+          {standings.length > 0 && !hasMultipleGroups && (
             <StandingsTable
               leagueName="Classement"
               leagueSlug={league.slug}
@@ -141,6 +163,15 @@ export default async function LeagueResumePage({ params }: Props) {
               compact
             />
           )}
+          {hasMultipleGroups && standingsGroups.map(([groupName, groupRows]) => (
+            <StandingsTable
+              key={groupName}
+              leagueName={cleanGroupName(groupName)}
+              leagueSlug={league.slug}
+              standings={groupRows}
+              compact
+            />
+          ))}
 
           {/* Top Buteurs */}
           {topScorers.length > 0 && (
@@ -162,6 +193,50 @@ export default async function LeagueResumePage({ params }: Props) {
                       <p className="text-[9px] text-gray-500 truncate">{player.team}</p>
                     </div>
                     <span className="text-xs font-bold text-lime-400">{player.goals}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+
+          {/* Cartons jaunes */}
+          {topYellowCards.length > 0 && (
+            <Card className="border-gray-800 bg-dark-card p-3">
+              <h2 className="text-sm font-bold text-yellow-400 mb-2">Cartons jaunes</h2>
+              <div className="space-y-1.5">
+                {topYellowCards.slice(0, 5).map((player: any, idx: number) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <span className="w-4 text-center text-[10px] font-bold text-gray-500">{idx + 1}</span>
+                    {player.photo && (
+                      <Image src={player.photo} alt={`Photo ${player.name}`} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-white text-[11px] truncate">{player.name}</p>
+                      <p className="text-[9px] text-gray-500 truncate">{player.team}</p>
+                    </div>
+                    <span className="text-xs font-bold text-yellow-400">{player.yellowCards}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+
+          {/* Cartons rouges */}
+          {topRedCards.length > 0 && (
+            <Card className="border-gray-800 bg-dark-card p-3">
+              <h2 className="text-sm font-bold text-red-400 mb-2">Cartons rouges</h2>
+              <div className="space-y-1.5">
+                {topRedCards.slice(0, 5).map((player: any, idx: number) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <span className="w-4 text-center text-[10px] font-bold text-gray-500">{idx + 1}</span>
+                    {player.photo && (
+                      <Image src={player.photo} alt={`Photo ${player.name}`} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-white text-[11px] truncate">{player.name}</p>
+                      <p className="text-[9px] text-gray-500 truncate">{player.team}</p>
+                    </div>
+                    <span className="text-xs font-bold text-red-400">{player.redCards}</span>
                   </div>
                 ))}
               </div>
