@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export const revalidate = 300;
+export const revalidate = 900;
 
 type Props = {
   params: Promise<{ slug: string }>;

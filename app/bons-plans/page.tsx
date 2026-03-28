@@ -6,7 +6,7 @@ import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const revalidate = 300;
+export const revalidate = 21600;
 
 export const metadata: Metadata = {
   title: "Bons Plans - Guides & Comparateur de bookmakers",

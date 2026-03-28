@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export const revalidate = 300;
+export const revalidate = 600;
 
 type Props = {
   params: Promise<{ slug: string }>;

@@ -6,7 +6,7 @@ import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-export const revalidate = 300;
+export const revalidate = 900;
 
 const countryMap: Record<string, { name: string; fullName: string; flag: string }> = {
   CI: { name: "Cote d'Ivoire", fullName: "Equipe nationale de Cote d'Ivoire", flag: "🇨🇮" },
