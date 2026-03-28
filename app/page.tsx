@@ -154,25 +154,22 @@ export default async function HomePage() {
         <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute top-10 left-1/2 w-40 h-40 bg-cyan-500/8 rounded-full blur-3xl" />
         <div className="relative">
-          <h1 className="font-extrabold text-white leading-tight">
-            <span className="block text-lg sm:text-2xl md:text-5xl">Actu Football</span>
-            <span className="block text-lg sm:text-2xl md:text-5xl bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(163,230,53,0.3)]">
+          <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-white leading-tight whitespace-nowrap">
+            Foot{" "}
+            <span className="bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(163,230,53,0.3)]">
               Afrique &amp; Europe
             </span>
           </h1>
-          <p className="mt-2 md:mt-4 text-sm md:text-lg text-gray-400 max-w-2xl">
-            Résultats en direct, analyses, transferts — votre couverture 24/7 du football.
+          <p className="mt-2 md:mt-4 text-xs md:text-lg text-gray-400 max-w-2xl">
+            Résultats, analyses et transferts — couverture 24/7.
           </p>
-          <div className="mt-4 md:mt-6 flex flex-wrap gap-2 md:gap-3">
-            <Link href="/matchs" className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-lime-500/20 to-emerald-500/20 border border-lime-500/30 px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-semibold text-lime-300 hover:from-lime-500/30 hover:to-emerald-500/30 hover:shadow-lg hover:shadow-lime-500/10 transition-all">
+          <div className="mt-3 md:mt-6 flex gap-2 md:gap-3">
+            <Link href="/matchs" className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-lime-500/20 to-emerald-500/20 border border-lime-500/30 px-3.5 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-semibold text-lime-300 hover:from-lime-500/30 hover:to-emerald-500/30 hover:shadow-lg hover:shadow-lime-500/10 transition-all">
               <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-lime-400" /></span>
               Matchs en direct
             </Link>
-            <Link href="/actu" className="inline-flex items-center rounded-full bg-blue-500/10 border border-blue-500/20 px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-medium text-blue-300 hover:bg-blue-500/20 transition-all">
-              Dernières actus
-            </Link>
-            <Link href="/transferts" className="inline-flex items-center rounded-full bg-purple-500/10 border border-purple-500/20 px-4 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-medium text-purple-300 hover:bg-purple-500/20 transition-all">
-              Transferts
+            <Link href="/actu" className="inline-flex items-center rounded-full bg-blue-500/10 border border-blue-500/20 px-3.5 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-medium text-blue-300 hover:bg-blue-500/20 transition-all">
+              Actualités
             </Link>
           </div>
         </div>
