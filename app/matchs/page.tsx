@@ -9,7 +9,7 @@ import Link from "next/link";
 export const revalidate = 600;
 
 export const metadata: Metadata = {
-  title: "Matchs en direct — Résultats football — 360 Foot",
+  title: "Matchs en direct — Résultats football",
   description:
     "Tous les matchs de football en direct, résultats et calendrier. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League, Champions League.",
   alternates: { canonical: "https://360-foot.com/matchs" },
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://360-foot.com/matchs",
     images: ["/api/og?title=Matchs%20en%20direct"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Matchs en direct et résultats — 360 Foot",
+    description: "Scores en direct, résultats et matchs à venir du football africain et européen.",
   },
 };
 

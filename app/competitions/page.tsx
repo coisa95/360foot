@@ -10,7 +10,7 @@ import Link from "next/link";
 export const revalidate = 900;
 
 export const metadata: Metadata = {
-  title: "Compétitions football — Afrique et Europe — 360 Foot",
+  title: "Compétitions football — Afrique et Europe",
   description:
     "Toutes les compétitions de football sur 360 Foot : ligues africaines, championnats européens, coupes continentales et internationales.",
   alternates: { canonical: "https://360-foot.com/competitions" },

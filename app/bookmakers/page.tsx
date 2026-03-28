@@ -8,7 +8,7 @@ import Link from "next/link";
 export const revalidate = 21600;
 
 export const metadata: Metadata = {
-  title: "Paris sportifs - Comparateur de bookmakers - 360 Foot",
+  title: "Paris sportifs - Comparateur de bookmakers",
   description:
     "Comparez les meilleurs bookmakers pour parier sur le football africain. Bonus de bienvenue, cotes et avis sur les sites de paris sportifs.",
   alternates: {
