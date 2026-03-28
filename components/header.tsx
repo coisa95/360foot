@@ -95,14 +95,14 @@ export function Header() {
             Recherche
           </Link>
 
-          {/* Ligues Dropdown */}
+          {/* Compétitions Dropdown */}
           <div
             className="relative"
             onMouseEnter={() => setLiguesDropdownOpen(true)}
             onMouseLeave={() => setLiguesDropdownOpen(false)}
           >
             <button className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-lime-400">
-              Ligues
+              Compétitions
               <svg className={`h-3 w-3 transition-transform ${liguesDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
@@ -166,13 +166,13 @@ export function Header() {
               Recherche
             </Link>
 
-            {/* Mobile Ligues accordion */}
+            {/* Mobile Compétitions accordion */}
             <div className="mt-1 border-t border-dark-border pt-1">
               <button
                 onClick={() => setMobileLiguesOpen(!mobileLiguesOpen)}
                 className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400"
               >
-                Ligues
+                Compétitions
                 <svg className={`h-3 w-3 transition-transform ${mobileLiguesOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
