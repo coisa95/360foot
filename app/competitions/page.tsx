@@ -32,10 +32,14 @@ function categorize(league: any): string {
   const africanCountries = ["ivory coast", "cote d'ivoire", "côte d'ivoire", "senegal", "sénégal", "cameroon", "cameroun", "mali", "burkina faso", "benin", "bénin", "congo", "ghana", "nigeria", "egypt", "égypte", "morocco", "maroc", "algeria", "algérie", "tunisia", "tunisie"];
   if (africanCountries.some((c) => country.includes(c))) return "Afrique";
 
-  // European club competitions (Champions League, Europa, Conference)
-  if (name.includes("champion") && name.includes("league")) return "Coupes européennes";
-  if (name.includes("europa")) return "Coupes européennes";
-  if (name.includes("conference")) return "Coupes européennes";
+  // African continental club competitions (CAF Champions League, Confederation Cup)
+  if (name.includes("caf") || (name.includes("confédération") && name.includes("africaine"))) return "Compétitions continentales";
+  if (name.includes("confederation cup")) return "Compétitions continentales";
+
+  // European club competitions (UEFA Champions League, Europa, Conference)
+  if (name.includes("champion") && name.includes("league")) return "Compétitions continentales";
+  if (name.includes("europa")) return "Compétitions continentales";
+  if (name.includes("conference league")) return "Compétitions continentales";
 
   // International competitions (CAN, World Cup qualifiers, friendlies)
   if (name.includes("can") || name.includes("africa")) return "Compétitions internationales";
@@ -59,7 +63,7 @@ export default async function CompetitionsPage() {
 
   // Group by category
   const categories = new Map<string, any[]>();
-  const order = ["Afrique", "Europe", "Coupes européennes", "Compétitions internationales", "Autres"];
+  const order = ["Afrique", "Europe", "Compétitions continentales", "Compétitions internationales", "Autres"];
 
   for (const league of leagues || []) {
     const cat = categorize(league);
