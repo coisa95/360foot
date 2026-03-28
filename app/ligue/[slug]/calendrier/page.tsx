@@ -2,7 +2,6 @@ import { createClient } from "@/lib/supabase";
 import { MatchCard } from "@/components/match-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { CollapsibleSection } from "@/components/collapsible-section";
-import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -154,34 +153,32 @@ export default async function LeagueFixturesPage({ params, searchParams }: Props
         }}
       />
 
-      {/* Round navigation — collapsible */}
+      {/* Round navigation — horizontal scroll */}
       {sortedRounds.length > 1 && (
-        <CollapsibleSection title={`Journées (${sortedRounds.length})`} defaultOpen={false}>
-          <Card className="border-gray-800 bg-dark-card p-3 mb-4">
-            <div className="flex flex-wrap gap-1.5">
-              {sortedRounds.map((round) => {
-                const roundNum = extractRoundNumber(round);
-                const isActive = round === activeRound;
-                const roundLabel = cleanRoundName(round);
-                const linkParam = roundNum > 0 ? String(roundNum) : round;
+        <div className="mb-4 -mx-4 px-4">
+          <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
+            {sortedRounds.map((round) => {
+              const roundNum = extractRoundNumber(round);
+              const isActive = round === activeRound;
+              const roundLabel = cleanRoundName(round);
+              const linkParam = roundNum > 0 ? String(roundNum) : round;
 
-                return (
-                  <Link
-                    key={round}
-                    href={`/ligue/${slug}/calendrier?journee=${encodeURIComponent(linkParam)}`}
-                    className={`inline-flex items-center justify-center min-w-[2rem] px-2 py-1 rounded text-xs font-medium transition-colors ${
-                      isActive
-                        ? "bg-lime-400 text-black"
-                        : "bg-dark-bg text-gray-400 hover:text-white hover:bg-gray-700"
-                    }`}
-                  >
-                    {roundNum > 0 ? `J${roundNum}` : roundLabel}
-                  </Link>
-                );
-              })}
-            </div>
-          </Card>
-        </CollapsibleSection>
+              return (
+                <Link
+                  key={round}
+                  href={`/ligue/${slug}/calendrier?journee=${encodeURIComponent(linkParam)}`}
+                  className={`inline-flex items-center justify-center min-w-[2.5rem] px-3 py-2 rounded-full text-xs font-semibold transition-all shrink-0 ${
+                    isActive
+                      ? "bg-lime-400 text-black shadow-md shadow-lime-500/20"
+                      : "bg-dark-card border border-dark-border/50 text-gray-400 hover:text-white hover:border-lime-500/30"
+                  }`}
+                >
+                  {roundNum > 0 ? `J${roundNum}` : roundLabel}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
       )}
 
       {/* Active round title */}
