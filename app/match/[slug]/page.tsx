@@ -235,7 +235,6 @@ export default async function MatchPage({ params }: Props) {
     { label: "Accueil", href: "/" },
     { label: "Compétitions", href: "/competitions" },
     ...(leagueName ? [{ label: leagueName, href: `/ligue/${leagueSlug}` }] : []),
-    { label: `${homeName} vs ${awayName}` },
   ];
 
   const jsonLd = {
