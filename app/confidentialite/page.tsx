@@ -6,7 +6,7 @@ import { Metadata } from "next";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Politique de confidentialité — 360 Foot",
+  title: "Politique de confidentialité",
   description:
     "Politique de confidentialité de 360 Foot. Découvrez comment nous collectons, utilisons et protégeons vos données personnelles.",
   alternates: {

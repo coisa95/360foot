@@ -36,6 +36,7 @@ async function getLatestArticles() {
       .from("articles")
       .select("slug, title, excerpt, type, published_at, league:leagues!league_id(name), og_image_url")
       .not("published_at", "is", null)
+      .neq("type", "preview")
       .order("published_at", { ascending: false })
       .limit(12);
     return data || [];

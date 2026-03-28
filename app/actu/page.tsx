@@ -22,6 +22,7 @@ export const metadata: Metadata = {
       "Toutes les actualités du football africain et européen sur 360 Foot.",
     type: "website",
     url: "https://360-foot.com/actu",
+    images: ["/api/og?title=Actualit%C3%A9s%20football"],
   },
   twitter: {
     card: "summary_large_image",

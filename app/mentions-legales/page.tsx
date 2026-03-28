@@ -6,7 +6,7 @@ import { Metadata } from "next";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Mentions légales — 360 Foot",
+  title: "Mentions légales",
   description:
     "Mentions légales du site 360 Foot. Informations sur l'éditeur, l'hébergeur et les conditions d'utilisation du site.",
   alternates: {

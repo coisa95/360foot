@@ -10,7 +10,7 @@ import Link from "next/link";
 export const revalidate = 900;
 
 export const metadata: Metadata = {
-  title: "Transferts — Mercato football africain et européen",
+  title: "Transferts — Mercato football africain",
   description:
     "Suivez tous les transferts du football africain et européen : arrivées, départs, prêts et montants.",
   alternates: {

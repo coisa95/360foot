@@ -6,7 +6,7 @@ import { Metadata } from "next";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "À propos de 360 Foot — Média football propulsé par l'IA",
+  title: "À propos — Média football propulsé par l'IA",
   description:
     "Découvrez 360 Foot, le média innovant dédié au football africain et européen. Actualités, résultats, transferts et analyses propulsés par l'IA.",
   alternates: {
