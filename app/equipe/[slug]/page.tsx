@@ -199,7 +199,7 @@ export default async function TeamPage({ params }: Props) {
                     <span className="flex items-center gap-1">
                       👨‍💼 {team.coach}
                       {team.coach_nationality && (
-                        <span className="text-xs text-gray-600">({team.coach_nationality})</span>
+                        <span className="text-xs text-gray-500">({team.coach_nationality})</span>
                       )}
                     </span>
                   )}
@@ -289,14 +289,14 @@ export default async function TeamPage({ params }: Props) {
                   <div className="rounded-lg bg-dark-bg p-3 text-center">
                     <p className="text-xs text-gray-500">Buts marqués</p>
                     <p className="text-2xl font-bold text-lime-400">{teamStats.goals.for.total.total}</p>
-                    <p className="text-[10px] text-gray-600">
+                    <p className="text-[10px] text-gray-500">
                       🏠 {teamStats.goals.for.total.home} | ✈️ {teamStats.goals.for.total.away}
                     </p>
                   </div>
                   <div className="rounded-lg bg-dark-bg p-3 text-center">
                     <p className="text-xs text-gray-500">Buts encaissés</p>
                     <p className="text-2xl font-bold text-red-400">{teamStats.goals.against?.total?.total || 0}</p>
-                    <p className="text-[10px] text-gray-600">
+                    <p className="text-[10px] text-gray-500">
                       🏠 {teamStats.goals.against?.total?.home || 0} | ✈️ {teamStats.goals.against?.total?.away || 0}
                     </p>
                   </div>
@@ -334,7 +334,7 @@ export default async function TeamPage({ params }: Props) {
                   <p className="text-2xl font-bold text-white">
                     {teamStats.penalty.scored.total}/{teamStats.penalty.scored.total + (teamStats.penalty.missed?.total || 0)}
                   </p>
-                  <p className="text-[10px] text-gray-600">{teamStats.penalty.scored.percentage} réussite</p>
+                  <p className="text-[10px] text-gray-500">{teamStats.penalty.scored.percentage} réussite</p>
                 </div>
               )}
 
@@ -343,7 +343,7 @@ export default async function TeamPage({ params }: Props) {
                 <div className="rounded-lg bg-dark-bg p-3 text-center">
                   <p className="text-xs text-gray-500">Plus longue série</p>
                   <p className="text-2xl font-bold text-green-400">{teamStats.biggest.streak.wins}V</p>
-                  <p className="text-[10px] text-gray-600">{teamStats.biggest.streak.draws}N · {teamStats.biggest.streak.loses}D</p>
+                  <p className="text-[10px] text-gray-500">{teamStats.biggest.streak.draws}N · {teamStats.biggest.streak.loses}D</p>
                 </div>
               )}
             </div>

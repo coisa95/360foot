@@ -77,7 +77,7 @@ export async function LeagueSidebar({ activeSlug }: LeagueSidebarProps) {
 
   return (
     <aside className="hidden lg:block fixed top-[65px] left-0 z-40 max-h-[calc(100vh-65px)] w-56 overflow-y-auto border-r border-dark-border bg-dark-bg scrollbar-hide hover:scrollbar-thin hover:scrollbar-track-transparent hover:scrollbar-thumb-dark-border">
-      <nav className="py-3">
+      <nav aria-label="Ligues" className="py-3">
         {groups.map((group) => (
           <div key={group.label} className="mb-2">
             {/* Group heading */}

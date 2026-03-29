@@ -33,7 +33,7 @@ export async function GET() {
     { url: "/", priority: "1.0", changefreq: "hourly" },
     { url: "/actu", priority: "0.9", changefreq: "hourly" },
     { url: "/resultats", priority: "0.9", changefreq: "hourly" },
-    { url: "/classements", priority: "0.8", changefreq: "daily" },
+    { url: "/competitions", priority: "0.8", changefreq: "daily" },
     { url: "/transferts", priority: "0.8", changefreq: "daily" },
     { url: "/bons-plans", priority: "0.7", changefreq: "weekly" },
     { url: "/methodologie", priority: "0.3", changefreq: "monthly" },

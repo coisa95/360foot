@@ -182,7 +182,7 @@ export default function RecherchePage() {
 
         {query.length < 2 && (
           <div className="mt-12 text-center">
-            <p className="text-gray-600 text-sm">Tapez au moins 2 caractères pour lancer la recherche</p>
+            <p className="text-gray-500 text-sm">Tapez au moins 2 caractères pour lancer la recherche</p>
           </div>
         )}
       </div>

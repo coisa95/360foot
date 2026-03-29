@@ -43,7 +43,7 @@ export async function GET(request: Request) {
       { loc: BASE_URL, lastmod: now, priority: "1.0", changefreq: "hourly" },
       { loc: `${BASE_URL}/actu`, lastmod: now, priority: "0.9", changefreq: "hourly" },
       { loc: `${BASE_URL}/resultats`, lastmod: now, priority: "0.9", changefreq: "hourly" },
-      { loc: `${BASE_URL}/classements`, lastmod: now, priority: "0.8", changefreq: "daily" },
+      { loc: `${BASE_URL}/competitions`, lastmod: now, priority: "0.8", changefreq: "daily" },
       { loc: `${BASE_URL}/transferts`, lastmod: now, priority: "0.7", changefreq: "daily" },
       { loc: `${BASE_URL}/bons-plans`, lastmod: now, priority: "0.6", changefreq: "weekly" },
       { loc: `${BASE_URL}/methodologie`, lastmod: now, priority: "0.3", changefreq: "monthly" },

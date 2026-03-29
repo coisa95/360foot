@@ -275,10 +275,10 @@ export default async function MatchPage({ params }: Props) {
               {new Date(match.date).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
             </p>
             {venue && (
-              <p className="mt-1 text-xs text-gray-600">{venue}{city ? `, ${city}` : ""}</p>
+              <p className="mt-1 text-xs text-gray-500">{venue}{city ? `, ${city}` : ""}</p>
             )}
             {referee && (
-              <p className="mt-1 text-xs text-gray-600">Arbitre : {referee}</p>
+              <p className="mt-1 text-xs text-gray-500">Arbitre : {referee}</p>
             )}
           </div>
 
@@ -618,7 +618,7 @@ export default async function MatchPage({ params }: Props) {
                             {p.number || "-"}
                           </span>
                           <span className="flex-1"><PlayerLink name={p.name} /></span>
-                          <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
+                          <span className="text-[10px] text-gray-500 uppercase">{p.pos}</span>
                         </div>
                       ))}
                     </div>
@@ -631,7 +631,7 @@ export default async function MatchPage({ params }: Props) {
                             <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
                               <span className="w-6 text-center font-mono">{p.number || "-"}</span>
                               <span className="flex-1"><PlayerLink name={p.name} className="text-gray-400" /></span>
-                              <span className="text-[10px] text-gray-600 uppercase">{p.pos}</span>
+                              <span className="text-[10px] text-gray-500 uppercase">{p.pos}</span>
                             </div>
                           ))}
                         </div>

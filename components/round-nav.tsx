@@ -31,7 +31,7 @@ export function RoundNav({ rounds, activeRound, slug, basePath = "calendrier" }:
   }, [activeRound, scrollToActive]);
 
   return (
-    <div className="mb-4 -mx-4 px-4">
+    <nav aria-label="Navigation des journées" className="mb-4 -mx-4 px-4">
       <div
         ref={containerRef}
         className="flex gap-1.5 overflow-x-auto pb-2"
@@ -69,6 +69,6 @@ export function RoundNav({ rounds, activeRound, slug, basePath = "calendrier" }:
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }

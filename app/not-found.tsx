@@ -58,7 +58,7 @@ export default function NotFound() {
         </Link>
       </div>
 
-      <p className="text-xs text-gray-600">
+      <p className="text-xs text-gray-500">
         Si le problème persiste, retournez à l&apos;<Link href="/" className="text-lime-400 hover:underline">accueil</Link>.
       </p>
     </div>

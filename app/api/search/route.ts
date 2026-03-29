@@ -1,12 +1,23 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 
+const RATE_LIMIT_WINDOW = 60; // seconds
+const RATE_LIMIT_MAX = 30; // requests per window
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q")?.trim();
 
   if (!q || q.length < 2) {
     return NextResponse.json({ players: [], teams: [], articles: [], leagues: [] });
+  }
+
+  // Cap query length to prevent abuse
+  if (q.length > 100) {
+    return NextResponse.json(
+      { error: "Query too long" },
+      { status: 400 }
+    );
   }
 
   const supabase = createClient();
@@ -39,7 +50,7 @@ export async function GET(request: Request) {
   ]);
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  return NextResponse.json({
+  const response = NextResponse.json({
     players: (playersRes.data || []).map((p: any) => ({
       name: p.name,
       slug: p.slug,
@@ -66,4 +77,11 @@ export async function GET(request: Request) {
       country: l.country,
     })),
   });
+
+  // Rate limiting headers (informational; enforce via middleware or edge for strict limiting)
+  response.headers.set("X-RateLimit-Limit", String(RATE_LIMIT_MAX));
+  response.headers.set("X-RateLimit-Window", `${RATE_LIMIT_WINDOW}s`);
+  response.headers.set("Cache-Control", "public, s-maxage=10, stale-while-revalidate=30");
+
+  return response;
 }
