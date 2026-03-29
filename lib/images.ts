@@ -39,7 +39,7 @@ function buildOgImageUrl(input: ArticleImageInput): string {
   if (input.homeTeamLogo) params.set("homeLogo", input.homeTeamLogo);
   if (input.awayTeamLogo) params.set("awayLogo", input.awayTeamLogo);
   if (input.leagueLogo) params.set("leagueLogo", input.leagueLogo);
-  return `https://360-foot.com/api/og?${params.toString()}`;
+  return `/api/og?${params.toString()}`;
 }
 
 // ----- Main function -----
@@ -150,7 +150,7 @@ export function buildArticleOgUrl(input: {
   if (input.homeTeamLogo) params.set("homeLogo", input.homeTeamLogo);
   if (input.awayTeamLogo) params.set("awayLogo", input.awayTeamLogo);
   if (input.leagueLogo) params.set("leagueLogo", input.leagueLogo);
-  return `https://360-foot.com/api/og?${params.toString()}`;
+  return `/api/og?${params.toString()}`;
 }
 
 // ----- HTML injection -----

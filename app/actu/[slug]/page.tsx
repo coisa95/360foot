@@ -224,6 +224,7 @@ export default async function ArticlePage({ params }: Props) {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 768px"
                 priority
+                unoptimized={!!(article.og_image_url || article.image)?.includes("/api/og")}
               />
             </div>
           )}
