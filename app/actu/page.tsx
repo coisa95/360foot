@@ -140,7 +140,8 @@ export default async function ActuPage({ searchParams }: Props) {
   }
 
   const { data: articles, count } = await query
-    .range(offset, offset + perPage - 1) as { data: any[] | null; count: number | null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .range(offset, offset + perPage - 1) as { data: Record<string, unknown>[] | null; count: number | null };
 
   const totalPages = Math.ceil((count || 0) / perPage);
 

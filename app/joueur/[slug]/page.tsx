@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .from("players")
     .select("name,slug,team:teams!team_id(name,slug)")
     .eq("slug", slug)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .single() as { data: any };
 
   if (!player) return { title: "Joueur introuvable - 360 Foot" };
@@ -55,6 +56,7 @@ export default async function PlayerPage({ params }: Props) {
     .from("players")
     .select("id,name,slug,position,nationality,birth_date,number,photo_url,stats_json,team_id,team:teams!team_id(name,slug,league:leagues!league_id(name,slug))")
     .eq("slug", slug)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .single() as { data: any };
 
   if (!player) notFound();
