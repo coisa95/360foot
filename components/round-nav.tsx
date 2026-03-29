@@ -7,9 +7,10 @@ interface RoundNavProps {
   rounds: { raw: string; label: string; num: number; param: string }[];
   activeRound: string;
   slug: string;
+  basePath?: string;
 }
 
-export function RoundNav({ rounds, activeRound, slug }: RoundNavProps) {
+export function RoundNav({ rounds, activeRound, slug, basePath = "calendrier" }: RoundNavProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLAnchorElement>(null);
 
@@ -35,7 +36,7 @@ export function RoundNav({ rounds, activeRound, slug }: RoundNavProps) {
             <Link
               key={round.raw}
               ref={isActive ? activeRef : null}
-              href={`/ligue/${slug}/calendrier?journee=${encodeURIComponent(round.param)}`}
+              href={`/ligue/${slug}/${basePath}?journee=${encodeURIComponent(round.param)}`}
               className={`inline-flex items-center justify-center min-w-[2.5rem] px-3 py-2 rounded-full text-xs font-semibold transition-all shrink-0 ${
                 isActive
                   ? "bg-lime-400 text-black shadow-md shadow-lime-500/20"
