@@ -60,7 +60,7 @@ export default async function LeagueStandingsPage({ params }: Props) {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("*")
+    .select("id,name,slug,country,country_code,logo_url")
     .eq("slug", slug)
     .single();
 

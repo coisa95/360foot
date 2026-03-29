@@ -62,7 +62,7 @@ export default async function TopAssistsPage({ params }: Props) {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("*")
+    .select("id,name,slug")
     .eq("slug", slug)
     .single();
 

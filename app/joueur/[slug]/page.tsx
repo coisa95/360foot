@@ -21,9 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: player } = await supabase
     .from("players")
-    .select("*, team:teams!team_id(*, league:leagues!league_id(*))")
+    .select("name,slug,team:teams!team_id(name,slug)")
     .eq("slug", slug)
-    .single();
+    .single() as { data: any };
 
   if (!player) return { title: "Joueur introuvable - 360 Foot" };
 
@@ -53,9 +53,9 @@ export default async function PlayerPage({ params }: Props) {
 
   const { data: player } = await supabase
     .from("players")
-    .select("*, team:teams!team_id(*, league:leagues!league_id(*))")
+    .select("id,name,slug,position,nationality,birth_date,number,photo_url,stats_json,team_id,team:teams!team_id(name,slug,league:leagues!league_id(name,slug))")
     .eq("slug", slug)
-    .single();
+    .single() as { data: any };
 
   if (!player) notFound();
 
@@ -73,7 +73,7 @@ export default async function PlayerPage({ params }: Props) {
 
   const { data: relatedArticles } = await supabase
     .from("articles")
-    .select("*")
+    .select("id,title,slug,excerpt,type,published_at,og_image_url")
     .ilike("content", `%${player.name}%`)
     .not("published_at", "is", null)
     .order("published_at", { ascending: false })

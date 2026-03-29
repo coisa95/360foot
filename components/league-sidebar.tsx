@@ -68,7 +68,7 @@ export async function LeagueSidebar({ activeSlug }: LeagueSidebarProps) {
   const supabase = createClient();
   const { data: leagues } = await supabase
     .from("leagues")
-    .select("*")
+    .select("id,name,slug,country,country_code,logo_url")
     .order("name", { ascending: true });
 
   if (!leagues || leagues.length === 0) return null;

@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: article } = await supabase
     .from("articles")
-    .select("*")
+    .select("title,slug,seo_title,seo_description,excerpt,og_image_url,image,published_at")
     .eq("slug", slug)
     .single();
 
@@ -64,7 +64,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const { data: article } = await supabase
     .from("articles")
-    .select("*")
+    .select("id,title,slug,content,excerpt,type,tags,published_at,updated_at,og_image_url,image,seo_title,seo_description,league_id,match_id")
     .eq("slug", slug)
     .single();
 
@@ -72,7 +72,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const { data: relatedArticles } = await supabase
     .from("articles")
-    .select("*")
+    .select("id,title,slug,excerpt,type,published_at,og_image_url")
     .neq("id", article.id)
     .not("published_at", "is", null)
     .order("published_at", { ascending: false })

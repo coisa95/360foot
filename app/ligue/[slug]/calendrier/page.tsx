@@ -72,7 +72,7 @@ export default async function LeagueFixturesPage({ params, searchParams }: Props
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("*")
+    .select("id,name,slug")
     .eq("slug", slug)
     .single();
 
@@ -81,7 +81,7 @@ export default async function LeagueFixturesPage({ params, searchParams }: Props
   // Fetch ALL matches for this league (results + upcoming)
   const { data: allMatches } = await supabase
     .from("matches")
-    .select("*, home_team:teams!home_team_id(*), away_team:teams!away_team_id(*)")
+    .select("id,slug,date,score_home,score_away,status,stats_json,home_team:teams!home_team_id(name,slug),away_team:teams!away_team_id(name,slug)")
     .eq("league_id", league.id)
     .order("date", { ascending: true })
     .limit(500);

@@ -120,7 +120,7 @@ export default async function ActuPage({ searchParams }: Props) {
 
   let query = supabase
     .from("articles")
-    .select("*, league:leagues!league_id(name, slug)", { count: "exact" })
+    .select("id,title,slug,excerpt,type,og_image_url,created_at,published_at,league:leagues!league_id(name,slug)", { count: "exact" })
     .not("published_at", "is", null)
     .order("created_at", { ascending: false });
 
@@ -140,7 +140,7 @@ export default async function ActuPage({ searchParams }: Props) {
   }
 
   const { data: articles, count } = await query
-    .range(offset, offset + perPage - 1);
+    .range(offset, offset + perPage - 1) as { data: any[] | null; count: number | null };
 
   const totalPages = Math.ceil((count || 0) / perPage);
 

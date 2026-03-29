@@ -26,9 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: team } = await supabase
     .from("teams")
-    .select("*, league:leagues!league_id(*)")
+    .select("name,slug,league:leagues!league_id(name,slug)")
     .eq("slug", slug)
-    .single();
+    .single() as { data: any };
 
   if (!team) return { title: "Équipe introuvable - 360 Foot" };
 
@@ -58,9 +58,9 @@ export default async function TeamPage({ params }: Props) {
 
   const { data: team } = await supabase
     .from("teams")
-    .select("*, league:leagues!league_id(*)")
+    .select("id,name,slug,logo_url,country,coach,coach_nationality,venue,league_id,api_football_id,team_stats_json,league:leagues!league_id(name,slug)")
     .eq("slug", slug)
-    .single();
+    .single() as { data: any };
 
   if (!team) notFound();
 
@@ -68,7 +68,7 @@ export default async function TeamPage({ params }: Props) {
 
   const { data: recentMatches } = await supabase
     .from("matches")
-    .select("*, home_team:teams!home_team_id(*), away_team:teams!away_team_id(*), league:leagues!league_id(*)")
+    .select("id,slug,date,score_home,score_away,status,home_team:teams!home_team_id(name,slug),away_team:teams!away_team_id(name,slug),league:leagues!league_id(name)")
     .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
     .lte("date", now)
     .order("date", { ascending: false })
@@ -76,7 +76,7 @@ export default async function TeamPage({ params }: Props) {
 
   const { data: upcomingMatches } = await supabase
     .from("matches")
-    .select("*, home_team:teams!home_team_id(*), away_team:teams!away_team_id(*), league:leagues!league_id(*)")
+    .select("id,slug,date,score_home,score_away,status,home_team:teams!home_team_id(name,slug),away_team:teams!away_team_id(name,slug),league:leagues!league_id(name)")
     .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
     .gt("date", now)
     .order("date", { ascending: true })
@@ -116,13 +116,13 @@ export default async function TeamPage({ params }: Props) {
 
   const { data: players } = await supabase
     .from("players")
-    .select("*")
+    .select("id,slug,name,position,nationality,age,number,photo_url,api_football_id")
     .eq("team_id", team.id)
     .order("position", { ascending: true });
 
   const { data: teamArticles } = await supabase
     .from("articles")
-    .select("*, league:leagues!league_id(name)")
+    .select("id,slug,title,excerpt,type,created_at,og_image_url,league:leagues!league_id(name)")
     .not("published_at", "is", null)
     .or(`title.ilike.%${team.name}%,content.ilike.%${team.name}%`)
     .order("created_at", { ascending: false })

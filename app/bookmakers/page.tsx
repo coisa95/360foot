@@ -29,7 +29,7 @@ export default async function BookmakersPage() {
 
   const { data: bookmakers } = await supabase
     .from("bookmakers")
-    .select("*")
+    .select("id,name,slug,priority,bonus_json,countries,affiliate_url")
     .eq("active", true)
     .order("priority", { ascending: true });
 

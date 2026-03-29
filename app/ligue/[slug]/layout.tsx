@@ -19,7 +19,7 @@ export default async function LeagueLayout({ params, children }: Props) {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("*")
+    .select("id,name,slug,country,country_code,logo_url")
     .eq("slug", slug)
     .single();
 

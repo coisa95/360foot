@@ -63,7 +63,7 @@ export default async function NationalTeamPage({ params }: Props) {
   // Chercher l'equipe nationale par pays
   const { data: team } = await supabase
     .from("teams")
-    .select("*")
+    .select("id,name,slug,coach,venue,fifa_ranking,country_code,is_national")
     .eq("country_code", countryCode)
     .eq("is_national", true)
     .single();
@@ -72,7 +72,7 @@ export default async function NationalTeamPage({ params }: Props) {
   if (team) {
     const { data: matches } = await supabase
       .from("matches")
-      .select("*, home_team:teams!home_team_id(*), away_team:teams!away_team_id(*), league:leagues!league_id(*)")
+      .select("id,slug,date,score_home,score_away,status,home_team:teams!home_team_id(name,slug),away_team:teams!away_team_id(name,slug),league:leagues!league_id(name)")
       .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
       .order("date", { ascending: false })
       .limit(10);

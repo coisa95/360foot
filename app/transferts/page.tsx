@@ -55,7 +55,7 @@ export default async function TransfersPage() {
 
   const { data: transfers } = await supabase
     .from("transfers")
-    .select("*")
+    .select("id,player_name,player_photo,player_nationality,from_team,from_team_logo,to_team,to_team_logo,transfer_type,fee,market_value,date")
     .order("date", { ascending: false })
     .limit(60);
 

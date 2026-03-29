@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: bookmaker } = await supabase
     .from("bookmakers")
-    .select("*")
+    .select("name,slug,affiliate_url,rating")
     .eq("slug", slug)
     .single();
 
@@ -55,7 +55,7 @@ export default async function BookmakerPage({ params }: Props) {
 
   const { data: bookmaker } = await supabase
     .from("bookmakers")
-    .select("*")
+    .select("id,name,slug,rating,bonus,bonus_conditions,bonus_json,description,affiliate_url,supported_countries,payment_methods,min_deposit,license,pros,cons,countries")
     .eq("slug", slug)
     .single();
 

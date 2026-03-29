@@ -47,7 +47,7 @@ export default async function LeagueNewsPage({ params }: Props) {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("*")
+    .select("id,name,slug")
     .eq("slug", slug)
     .single();
 
@@ -55,7 +55,7 @@ export default async function LeagueNewsPage({ params }: Props) {
 
   const { data: articles } = await supabase
     .from("articles")
-    .select("*")
+    .select("id,title,slug,excerpt,type,published_at,og_image_url")
     .eq("league_id", league.id)
     .not("published_at", "is", null)
     .order("published_at", { ascending: false })

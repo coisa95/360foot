@@ -24,9 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: match } = await supabase
     .from("matches")
-    .select("*, home_team:teams!home_team_id(*), away_team:teams!away_team_id(*), league:leagues!league_id(*)")
+    .select("id,slug,date,status,score_home,score_away,home_team:teams!home_team_id(name,slug,logo_url),away_team:teams!away_team_id(name,slug,logo_url),league:leagues!league_id(name,slug)")
     .eq("slug", slug)
-    .single();
+    .single() as { data: any };
 
   if (!match) return { title: "Match introuvable - 360 Foot" };
 
@@ -103,15 +103,15 @@ export default async function MatchPage({ params }: Props) {
 
   const { data: match } = await supabase
     .from("matches")
-    .select("*, home_team:teams!home_team_id(*), away_team:teams!away_team_id(*), league:leagues!league_id(*)")
+    .select("id,slug,date,status,score_home,score_away,stats_json,events_json,lineups_json,players_json,predictions_json,h2h_json,injuries_json,home_team:teams!home_team_id(name,slug,logo_url),away_team:teams!away_team_id(name,slug,logo_url),league:leagues!league_id(name,slug)")
     .eq("slug", slug)
-    .single();
+    .single() as { data: any };
 
   if (!match) notFound();
 
   const { data: relatedArticle } = await supabase
     .from("articles")
-    .select("*")
+    .select("id,title,slug,excerpt,type,published_at,og_image_url")
     .eq("match_id", match.id)
     .limit(1)
     .single();
