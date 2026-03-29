@@ -6,6 +6,7 @@ import {
   systemPrompt as PREVIEW_SYSTEM_PROMPT,
   buildUserPrompt as buildPreviewUserPrompt,
 } from "@/lib/prompts/preview-article";
+import { publishToTelegram } from "@/lib/telegram";
 
 function generateSlug(title: string): string {
   return title
@@ -153,6 +154,14 @@ export async function GET(request: Request) {
           console.error("Error inserting preview:", insertError);
         } else {
           previewsGenerated++;
+          await publishToTelegram({
+            title: parsed.title,
+            slug,
+            excerpt: parsed.excerpt,
+            type: "preview",
+            imageUrl: ogImageUrl,
+            tags: parsed.tags || [],
+          });
         }
       } catch (err) {
         console.error(`Error generating preview for match ${match.id}:`, err);

@@ -7,6 +7,7 @@ import {
   systemPrompt as RESULT_SYSTEM_PROMPT,
   buildUserPrompt as buildResultUserPrompt,
 } from "@/lib/prompts/result-article";
+import { publishToTelegram } from "@/lib/telegram";
 
 function generateSlug(title: string): string {
   return title
@@ -242,6 +243,14 @@ export async function GET(request: Request) {
           console.error("Error inserting article:", insertError);
         } else {
           articlesGenerated++;
+          await publishToTelegram({
+            title: parsed.title,
+            slug,
+            excerpt: parsed.excerpt,
+            type: "result",
+            imageUrl: ogImageUrl,
+            tags: parsed.tags || [],
+          });
         }
       } catch (err) {
         const errMsg = `Match ${match.id}: ${String(err)}`;
