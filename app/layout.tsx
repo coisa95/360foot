@@ -119,26 +119,19 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="360 Foot" />
         <link rel="preconnect" href="https://media.api-sports.io" />
         <link rel="dns-prefetch" href="https://media.api-sports.io" />
-        {/* Google Analytics 4 */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-            />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
-                    page_path: window.location.pathname,
-                  });
-                `,
-              }}
-            />
-          </>
+        {/* Google Tag Manager */}
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
+              `,
+            }}
+          />
         )}
         <script
           type="application/ld+json"
@@ -146,6 +139,17 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-background text-foreground overflow-x-hidden">
+        {/* GTM noscript fallback */}
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
         <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-lime-400 focus:px-4 focus:py-2 focus:text-black focus:font-bold">
           Aller au contenu principal
         </a>
