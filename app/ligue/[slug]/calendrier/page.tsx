@@ -156,7 +156,7 @@ export default async function LeagueFixturesPage({ params, searchParams }: Props
       {/* Round navigation — horizontal scroll */}
       {sortedRounds.length > 1 && (
         <div className="mb-4 -mx-4 px-4">
-          <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide">
+          <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide" style={{scrollbarWidth: 'none'}}>
             {sortedRounds.map((round) => {
               const roundNum = extractRoundNumber(round);
               const isActive = round === activeRound;
@@ -183,15 +183,16 @@ export default async function LeagueFixturesPage({ params, searchParams }: Props
 
       {/* Active round title */}
       {activeRound && (
-        <h2 className="text-lg font-bold text-white mb-3">
+        <h2 className="text-sm font-bold text-white mb-3">
           {cleanRoundName(activeRound)}
         </h2>
       )}
 
       {grouped.size > 0 ? (
         <div className="space-y-3">
-          {Array.from(grouped.entries()).map(([dateLabel, dateMatches], idx) => (
-            <CollapsibleSection key={dateLabel} title={dateLabel} defaultOpen={idx === 0}>
+          {Array.from(grouped.entries()).map(([dateLabel, dateMatches]) => (
+            <div key={dateLabel}>
+              <p className="text-xs text-gray-500 mb-2 font-medium">{dateLabel}</p>
               <div className="space-y-2">
                 {dateMatches.map((match: any) => (
                   <MatchCard
@@ -209,7 +210,7 @@ export default async function LeagueFixturesPage({ params, searchParams }: Props
                   />
                 ))}
               </div>
-            </CollapsibleSection>
+            </div>
           ))}
         </div>
       ) : (
