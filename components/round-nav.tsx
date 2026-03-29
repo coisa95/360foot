@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 
 interface RoundNavProps {
@@ -14,14 +14,21 @@ export function RoundNav({ rounds, activeRound, slug, basePath = "calendrier" }:
   const containerRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLAnchorElement>(null);
 
-  useEffect(() => {
+  const scrollToActive = useCallback(() => {
     if (activeRef.current && containerRef.current) {
       const container = containerRef.current;
       const el = activeRef.current;
       const scrollLeft = el.offsetLeft - container.offsetWidth / 2 + el.offsetWidth / 2;
       container.scrollTo({ left: scrollLeft, behavior: "smooth" });
     }
-  }, [activeRound]);
+  }, []);
+
+  // Scroll on mount and whenever activeRound changes
+  useEffect(() => {
+    // Small delay to ensure DOM is rendered
+    const timer = setTimeout(scrollToActive, 100);
+    return () => clearTimeout(timer);
+  }, [activeRound, scrollToActive]);
 
   return (
     <div className="mb-4 -mx-4 px-4">
@@ -37,6 +44,20 @@ export function RoundNav({ rounds, activeRound, slug, basePath = "calendrier" }:
               key={round.raw}
               ref={isActive ? activeRef : null}
               href={`/ligue/${slug}/${basePath}?journee=${encodeURIComponent(round.param)}`}
+              onClick={() => {
+                // Scroll to clicked element after navigation
+                setTimeout(() => {
+                  if (containerRef.current) {
+                    const target = containerRef.current.querySelector(`[data-round="${round.raw}"]`) as HTMLElement;
+                    if (target) {
+                      const container = containerRef.current!;
+                      const scrollLeft = target.offsetLeft - container.offsetWidth / 2 + target.offsetWidth / 2;
+                      container.scrollTo({ left: scrollLeft, behavior: "smooth" });
+                    }
+                  }
+                }, 200);
+              }}
+              data-round={round.raw}
               className={`inline-flex items-center justify-center min-w-[2.5rem] px-3 py-2 rounded-full text-xs font-semibold transition-all shrink-0 ${
                 isActive
                   ? "bg-lime-400 text-black shadow-md shadow-lime-500/20"
