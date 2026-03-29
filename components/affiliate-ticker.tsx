@@ -1,31 +1,35 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const SLIDES = [
   {
-    text: "Bonus de bienvenue jusqu'à 200 000 FCFA",
     name: "1xBet",
+    logo: "/images/bookmakers/1xbet.png",
+    text: "200 000 FCFA de bonus offerts",
+    shortText: "200 000 FCFA offerts",
     url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
     bg: "from-blue-600 to-blue-800",
-    glow: "shadow-blue-500/30",
-    icon: "🔥",
+    cta: "Récupérer",
   },
   {
-    text: "Bonus 100% sur ton 1er dépôt",
     name: "Melbet",
+    logo: "/images/bookmakers/melbet.png",
+    text: "Double ton 1er dépôt — Bonus 100%",
+    shortText: "Bonus 100% 1er dépôt",
     url: "https://refpa3665.com/L?tag=d_4814359m_45415c_&site=4814359&ad=45415&r=registration",
     bg: "from-amber-500 to-orange-700",
-    glow: "shadow-amber-500/30",
-    icon: "⚡",
+    cta: "Profiter",
   },
   {
-    text: "Bonus de bienvenue jusqu'à 500%",
     name: "1win",
+    logo: "/images/bookmakers/1win.png",
+    text: "Le plus gros bonus : jusqu'à 500%",
+    shortText: "Bonus jusqu'à 500%",
     url: "https://1win.com/betting?p=1nye&sharebet=360foot&sub1=Foot360",
     bg: "from-cyan-500 to-teal-700",
-    glow: "shadow-cyan-500/30",
-    icon: "🎯",
+    cta: "Foncer",
   },
 ];
 
@@ -42,7 +46,6 @@ export function AffiliateTicker() {
   return (
     <div className="py-2 px-4 mx-auto max-w-7xl">
       <div className="relative h-[72px] sm:h-[56px] rounded-xl overflow-hidden shadow-lg">
-        {/* All slides stacked, opacity controls visibility */}
         {SLIDES.map((slide, i) => (
           <a
             key={i}
@@ -59,15 +62,29 @@ export function AffiliateTicker() {
           >
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-3">
-                <span className="text-lg">{slide.icon}</span>
+                {/* Logo */}
+                <Image
+                  src={slide.logo}
+                  alt={`Logo ${slide.name}`}
+                  width={80}
+                  height={32}
+                  className="h-7 sm:h-8 w-auto object-contain shrink-0"
+                  unoptimized
+                />
+
+                {/* Separator */}
+                <div className="w-px h-6 bg-white/20 shrink-0" />
+
+                {/* Text */}
                 <div>
-                  <span className="text-white font-bold text-sm">{slide.name}</span>
-                  <span className="text-white/80 text-sm ml-2 hidden sm:inline">— {slide.text}</span>
-                  <p className="text-white/80 text-[11px] leading-tight sm:hidden mt-0.5">{slide.text}</p>
+                  <span className="text-white/90 text-sm font-semibold hidden sm:inline">{slide.text}</span>
+                  <p className="text-white/90 text-[12px] font-semibold leading-tight sm:hidden">{slide.shortText}</p>
                 </div>
               </div>
-              <span className="flex items-center gap-1 rounded-lg bg-white/20 backdrop-blur-sm px-3 py-1.5 text-xs font-bold text-white">
-                Profiter
+
+              {/* CTA */}
+              <span className="flex items-center gap-1 rounded-lg bg-white/20 backdrop-blur-sm px-3 py-1.5 text-xs font-bold text-white shrink-0">
+                {slide.cta}
                 <svg className="w-3.5 h-3.5 animate-bounce-x" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -76,7 +93,7 @@ export function AffiliateTicker() {
           </a>
         ))}
 
-        {/* Dots indicator - on top of everything */}
+        {/* Dots */}
         <div className="absolute bottom-1.5 left-0 right-0 flex justify-center gap-1.5 z-20">
           {SLIDES.map((_, i) => (
             <button
