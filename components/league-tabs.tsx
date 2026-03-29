@@ -11,6 +11,8 @@ const TABS = [
   { key: "classement", label: "Classement", path: "" },
   { key: "resultats", label: "Résultats", path: "/resultats" },
   { key: "calendrier", label: "Calendrier", path: "/calendrier" },
+  { key: "buteurs", label: "Buteurs", path: "/buteurs" },
+  { key: "passeurs", label: "Passeurs", path: "/passeurs" },
   { key: "actualites", label: "Actualités", path: "/actualites" },
 ];
 

@@ -33,10 +33,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!team) return { title: "Équipe introuvable - 360 Foot" };
 
   const leagueName = team.league?.name || "";
-  const title = `${team.name} - Effectif, résultats et classement - 360 Foot`;
+  const title = `Effectif ${team.name} - Joueurs et compositions - 360 Foot`;
   const fullDesc = leagueName
-    ? `Toutes les infos sur ${team.name} : effectif, résultats, stats, classement en ${leagueName} et actualités.`
-    : `Toutes les infos sur ${team.name} : effectif, résultats, stats et actualités.`;
+    ? `Effectif complet de ${team.name} : photos des joueurs, compositions, résultats, stats et classement en ${leagueName}.`
+    : `Effectif complet de ${team.name} : photos des joueurs, compositions, résultats, stats et actualités.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
@@ -145,6 +145,13 @@ export default async function TeamPage({ params }: Props) {
     memberOf: team.league ? { "@type": "SportsOrganization", name: team.league.name } : undefined,
     coach: team.coach ? { "@type": "Person", name: team.coach } : undefined,
     location: team.venue ? { "@type": "Place", name: team.venue } : undefined,
+    athlete: players && players.length > 0
+      ? players.slice(0, 30).map((p: any) => ({
+          "@type": "Person",
+          name: p.name,
+          nationality: p.nationality || undefined,
+        }))
+      : undefined,
   };
 
   function renderMatchList(matches: any[]) {
@@ -397,24 +404,79 @@ export default async function TeamPage({ params }: Props) {
         )}
 
         {/* Effectif */}
-        {players && players.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-lg font-bold text-lime-400 mb-4">Effectif</h2>
-            <Separator className="bg-gray-800 mb-4" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {players.map((player: any) => (
-                <PlayerCard
-                  key={player.id}
-                  slug={player.slug}
-                  name={player.name}
-                  position={player.position || ""}
-                  nationality={player.nationality || ""}
-                  age={player.age}
-                />
+        {players && players.length > 0 && (() => {
+          const positionOrder = ["Goalkeeper", "Defender", "Midfielder", "Attacker"];
+          const positionLabels: Record<string, string> = {
+            Goalkeeper: "Gardiens",
+            Defender: "Défenseurs",
+            Midfielder: "Milieux",
+            Attacker: "Attaquants",
+          };
+          const grouped = positionOrder
+            .map((pos) => ({
+              position: pos,
+              label: positionLabels[pos],
+              items: players.filter((p: any) => p.position === pos),
+            }))
+            .filter((g) => g.items.length > 0);
+
+          // Players with unknown/other positions
+          const knownPositions = new Set(positionOrder);
+          const others = players.filter((p: any) => !knownPositions.has(p.position));
+
+          return (
+            <div className="mt-8">
+              <h2 className="text-lg font-bold text-lime-400 mb-4">
+                Effectif ({players.length} joueurs)
+              </h2>
+              <Separator className="bg-gray-800 mb-6" />
+
+              {grouped.map((group) => (
+                <div key={group.position} className="mb-6">
+                  <h3 className="text-md font-semibold text-gray-300 mb-3">
+                    {group.label} ({group.items.length})
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {group.items.map((player: any) => (
+                      <PlayerCard
+                        key={player.id}
+                        slug={player.slug}
+                        name={player.name}
+                        position={player.position || ""}
+                        nationality={player.nationality || ""}
+                        age={player.age}
+                        number={player.number}
+                        photoUrl={player.photo_url || (player.api_football_id ? `https://media.api-sports.io/football/players/${player.api_football_id}.png` : null)}
+                      />
+                    ))}
+                  </div>
+                </div>
               ))}
+
+              {others.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-md font-semibold text-gray-300 mb-3">
+                    Autres ({others.length})
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {others.map((player: any) => (
+                      <PlayerCard
+                        key={player.id}
+                        slug={player.slug}
+                        name={player.name}
+                        position={player.position || ""}
+                        nationality={player.nationality || ""}
+                        age={player.age}
+                        number={player.number}
+                        photoUrl={player.photo_url || (player.api_football_id ? `https://media.api-sports.io/football/players/${player.api_football_id}.png` : null)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         <div className="mt-12">
           <AffiliateTrio />
