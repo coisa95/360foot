@@ -8,6 +8,11 @@ export interface ArticleImageInput {
   venuePhotoUrl?: string;
   venueName?: string;
   venueCity?: string;
+  // API-Football images
+  homeTeamLogo?: string;
+  awayTeamLogo?: string;
+  leagueLogo?: string;
+  goalScorerPhotos?: { name: string; photo: string; team: string }[];
 }
 
 export interface ArticleContext {

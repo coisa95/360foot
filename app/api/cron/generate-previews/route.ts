@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { generateArticle } from "@/lib/claude";
-import { getArticleImages, injectImagesIntoHTML } from "@/lib/images";
+import { getArticleImages, injectImagesIntoHTML, buildArticleOgUrl } from "@/lib/images";
 import {
   systemPrompt as PREVIEW_SYSTEM_PROMPT,
   buildUserPrompt as buildPreviewUserPrompt,
@@ -91,24 +91,47 @@ export async function GET(request: Request) {
         const parsed = JSON.parse(cleanData);
         const slug = generateSlug(parsed.title || "preview");
 
-        // Fetch and inject images
+        // Extract team logos from stats_json if available
+        const statsJson = match.stats_json as Record<string, unknown> | null;
+        const teamsData = statsJson?.teams as Record<string, Record<string, unknown>> | null;
+        const homeTeamLogo = (teamsData?.home?.logo as string) || undefined;
+        const awayTeamLogo = (teamsData?.away?.logo as string) || undefined;
+        const leagueLogo = ((statsJson?.league as Record<string, unknown>)?.logo as string) || undefined;
+
+        const leagueName = (league?.name as string) || "";
+        const homeTeamName = (homeTeam?.name as string) || "";
+        const awayTeamName = (awayTeam?.name as string) || "";
+
+        // Fetch and inject images (using API-Football team logos)
         let contentWithImages = parsed.content;
         let ogImageUrl: string | null = null;
         try {
           const images = await getArticleImages({
             title: parsed.title,
-            teams: [
-              (homeTeam?.name as string) || "",
-              (awayTeam?.name as string) || "",
-            ],
-            league: (league?.name as string) || "",
+            teams: [homeTeamName, awayTeamName],
+            league: leagueName,
             type: "preview",
             tags: parsed.tags || [],
+            homeTeamLogo,
+            awayTeamLogo,
+            leagueLogo,
           });
           contentWithImages = injectImagesIntoHTML(parsed.content, images);
-          ogImageUrl = images[0]?.url || null;
+          ogImageUrl = buildArticleOgUrl({
+            title: parsed.title,
+            type: "preview",
+            league: leagueName,
+            homeTeamLogo,
+            awayTeamLogo,
+            leagueLogo,
+          });
         } catch (imgErr) {
           console.error("Image injection failed:", imgErr);
+          ogImageUrl = buildArticleOgUrl({
+            title: parsed.title,
+            type: "preview",
+            league: leagueName,
+          });
         }
 
         const { error: insertError } = await supabase.from("articles").insert({

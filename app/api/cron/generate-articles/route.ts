@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { getMatchDetails, getVenue } from "@/lib/api-football";
 import { generateArticle } from "@/lib/claude";
-import { getArticleImages, injectImagesIntoHTML } from "@/lib/images";
+import { getArticleImages, injectImagesIntoHTML, buildArticleOgUrl } from "@/lib/images";
 import {
   systemPrompt as RESULT_SYSTEM_PROMPT,
   buildUserPrompt as buildResultUserPrompt,
@@ -126,6 +126,41 @@ export async function GET(request: Request) {
         const parsed = JSON.parse(cleanData);
         const slug = generateSlug(parsed.title || "article");
 
+        // Extract team logos and league logo from API-Football fixture data
+        const homeTeamLogo = fixture?.teams?.home?.logo;
+        const awayTeamLogo = fixture?.teams?.away?.logo;
+        const leagueLogo = fixture?.league?.logo;
+
+        // Extract goal scorer photos from events
+        const goalScorerPhotos: { name: string; photo: string; team: string }[] = [];
+        if (fixture?.events) {
+          for (const evt of fixture.events) {
+            if (evt.type === "Goal" && evt.player?.name) {
+              // Get player photo from lineups if available
+              let playerPhoto = "";
+              for (const lineup of fixture.lineups || []) {
+                const allPlayers = [...(lineup.startXI || []), ...(lineup.substitutes || [])];
+                const found = allPlayers.find(p => p.player?.id === evt.player?.id);
+                if (found) {
+                  // API-Football player photos follow this pattern
+                  playerPhoto = `https://media.api-sports.io/football/players/${evt.player.id}.png`;
+                  break;
+                }
+              }
+              if (!playerPhoto && evt.player?.id) {
+                playerPhoto = `https://media.api-sports.io/football/players/${evt.player.id}.png`;
+              }
+              if (playerPhoto) {
+                goalScorerPhotos.push({
+                  name: evt.player.name,
+                  photo: playerPhoto,
+                  team: evt.team?.name || "",
+                });
+              }
+            }
+          }
+        }
+
         // Fetch venue photo from API-Football if venue ID available
         let venuePhotoUrl: string | undefined;
         let venueName: string | undefined;
@@ -145,27 +180,47 @@ export async function GET(request: Request) {
           console.warn("Venue photo fetch failed (non-blocking):", venueErr);
         }
 
-        // Fetch and inject images (venue photo used as featured when available)
+        const leagueName = (league?.name as string) || "";
+        const homeTeamName = (homeTeam?.name as string) || "";
+        const awayTeamName = (awayTeam?.name as string) || "";
+
+        // Fetch and inject images (API-Football data: venue photo, team logos, player photos)
         let contentWithImages = parsed.content;
         let ogImageUrl: string | null = null;
         try {
           const images = await getArticleImages({
             title: parsed.title,
-            teams: [
-              (homeTeam?.name as string) || "",
-              (awayTeam?.name as string) || "",
-            ],
-            league: (league?.name as string) || "",
+            teams: [homeTeamName, awayTeamName],
+            league: leagueName,
             type: "result",
             tags: parsed.tags || [],
             venuePhotoUrl,
             venueName,
             venueCity,
+            homeTeamLogo,
+            awayTeamLogo,
+            leagueLogo,
+            goalScorerPhotos: goalScorerPhotos.length > 0 ? goalScorerPhotos : undefined,
           });
           contentWithImages = injectImagesIntoHTML(parsed.content, images);
-          ogImageUrl = images[0]?.url || null;
+          // Use dedicated OG URL builder for og_image_url
+          ogImageUrl = buildArticleOgUrl({
+            title: parsed.title,
+            type: "result",
+            league: leagueName,
+            homeTeamLogo,
+            awayTeamLogo,
+            leagueLogo,
+            venuePhotoUrl,
+          });
         } catch (imgErr) {
           console.error("Image injection failed:", imgErr);
+          // Fallback OG URL
+          ogImageUrl = buildArticleOgUrl({
+            title: parsed.title,
+            type: "result",
+            league: leagueName,
+          });
         }
 
         const { error: insertError } = await supabase.from("articles").insert({

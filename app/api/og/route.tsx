@@ -9,15 +9,20 @@ export async function GET(request: NextRequest) {
     const title = searchParams.get("title") || "360 Foot";
     const type = searchParams.get("type") || "result";
     const league = searchParams.get("league") || "";
+    const homeLogo = searchParams.get("homeLogo") || "";
+    const awayLogo = searchParams.get("awayLogo") || "";
 
     const typeLabel =
       type === "preview"
         ? "Avant-Match"
         : type === "transfer"
           ? "Transfert"
-          : "Resultat";
+          : type === "trending"
+            ? "Actualité"
+            : "Résultat";
 
     const accentColor = "#84cc16"; // lime-500
+    const hasLogos = homeLogo && awayLogo;
 
     return new ImageResponse(
       (
@@ -30,15 +35,41 @@ export async function GET(request: NextRequest) {
             backgroundColor: "#0f172a",
             padding: "60px",
             fontFamily: "sans-serif",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
+          {/* Background gradient effects */}
+          <div
+            style={{
+              position: "absolute",
+              top: "-80px",
+              right: "-80px",
+              width: "300px",
+              height: "300px",
+              background: "radial-gradient(circle, rgba(132,204,22,0.15), transparent)",
+              borderRadius: "50%",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              bottom: "-60px",
+              left: "-60px",
+              width: "250px",
+              height: "250px",
+              background: "radial-gradient(circle, rgba(16,185,129,0.1), transparent)",
+              borderRadius: "50%",
+            }}
+          />
+
           {/* Top bar */}
           <div
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              marginBottom: "40px",
+              marginBottom: "30px",
             }}
           >
             <div
@@ -57,7 +88,7 @@ export async function GET(request: NextRequest) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "24px",
+                  fontSize: "20px",
                   fontWeight: "bold",
                   color: "#0f172a",
                 }}
@@ -89,28 +120,79 @@ export async function GET(request: NextRequest) {
             </div>
           </div>
 
-          {/* Title */}
+          {/* Main content area */}
           <div
             style={{
               display: "flex",
               flex: 1,
               alignItems: "center",
+              gap: "40px",
             }}
           >
-            <h1
+            {/* Title */}
+            <div
               style={{
-                fontSize: title.length > 60 ? "42px" : "56px",
-                fontWeight: "bold",
-                color: "#ffffff",
-                lineHeight: 1.2,
-                margin: 0,
-                maxWidth: "100%",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                display: "flex",
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "center",
               }}
             >
-              {title}
-            </h1>
+              <h1
+                style={{
+                  fontSize: hasLogos
+                    ? title.length > 60 ? "36px" : "44px"
+                    : title.length > 60 ? "42px" : "56px",
+                  fontWeight: "bold",
+                  color: "#ffffff",
+                  lineHeight: 1.2,
+                  margin: 0,
+                  maxWidth: "100%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {title}
+              </h1>
+            </div>
+
+            {/* Team logos — VS layout */}
+            {hasLogos && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
+                  flexShrink: 0,
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={homeLogo}
+                  alt="Home"
+                  width={80}
+                  height={80}
+                  style={{ width: "80px", height: "80px", objectFit: "contain" }}
+                />
+                <span
+                  style={{
+                    fontSize: "28px",
+                    fontWeight: "bold",
+                    color: "#64748b",
+                  }}
+                >
+                  VS
+                </span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={awayLogo}
+                  alt="Away"
+                  width={80}
+                  height={80}
+                  style={{ width: "80px", height: "80px", objectFit: "contain" }}
+                />
+              </div>
+            )}
           </div>
 
           {/* Bottom bar */}
@@ -139,7 +221,7 @@ export async function GET(request: NextRequest) {
                 color: "#64748b",
               }}
             >
-              360foot.com
+              360-foot.com
             </span>
           </div>
         </div>
