@@ -66,6 +66,9 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
+  verification: {
+    google: "GiHc3yxKs_kBQ_Ejsrcc5yme6wCt-q3gMfItxRn7tL0",
+  },
 };
 
 // JSON-LD Organization + WebSite schema for Google Knowledge Panel
