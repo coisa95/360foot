@@ -7,6 +7,13 @@ const parser = new Parser({
   headers: {
     "User-Agent": "360FootBot/1.0 (+https://360-foot.com)",
   },
+  customFields: {
+    item: [
+      ["media:content", "mediaContent", { keepArray: false }],
+      ["media:thumbnail", "mediaThumbnail", { keepArray: false }],
+      ["enclosure", "enclosure", { keepArray: false }],
+    ],
+  },
 });
 
 export async function fetchRSSFeed(
@@ -16,18 +23,71 @@ export async function fetchRSSFeed(
   try {
     const feed = await parser.parseURL(feedUrl);
 
-    return (feed.items || []).map((item) => ({
-      title: item.title || "",
-      summary: (item.contentSnippet || "").slice(0, 500),
-      link: item.link || "",
-      date: item.isoDate || item.pubDate || new Date().toISOString(),
-      source,
-      details: item.categories?.join(", ") || undefined,
-    }));
+    return (feed.items || []).map((item) => {
+      // Extract image from various RSS fields
+      const feedItem = item as unknown as Record<string, unknown>;
+      const imageUrl =
+        extractImageUrl(feedItem.mediaContent) ||
+        extractImageUrl(feedItem.mediaThumbnail) ||
+        extractEnclosureImage(feedItem.enclosure) ||
+        extractImageFromContent(item.content || "") ||
+        undefined;
+
+      return {
+        title: item.title || "",
+        summary: (item.contentSnippet || "").slice(0, 500),
+        link: item.link || "",
+        date: item.isoDate || item.pubDate || new Date().toISOString(),
+        source,
+        details: item.categories?.join(", ") || undefined,
+        imageUrl,
+      };
+    });
   } catch (error) {
     console.error(`Erreur RSS ${source}: ${error}`);
     return [];
   }
+}
+
+// ============================================
+// IMAGE EXTRACTION from RSS fields
+// ============================================
+
+function extractImageUrl(field: unknown): string | null {
+  if (!field) return null;
+  // media:content or media:thumbnail can be { $: { url: "..." } } or { url: "..." }
+  if (typeof field === "object") {
+    const obj = field as Record<string, unknown>;
+    if (typeof obj.url === "string" && isValidImageUrl(obj.url)) return obj.url;
+    const attrs = obj.$ as Record<string, string> | undefined;
+    if (attrs?.url && isValidImageUrl(attrs.url)) return attrs.url;
+  }
+  if (typeof field === "string" && isValidImageUrl(field)) return field;
+  return null;
+}
+
+function extractEnclosureImage(enclosure: unknown): string | null {
+  if (!enclosure) return null;
+  const obj = enclosure as Record<string, unknown>;
+  const url = (obj.url as string) || ((obj.$ as Record<string, string>)?.url);
+  const type = (obj.type as string) || ((obj.$ as Record<string, string>)?.type) || "";
+  if (url && (type.startsWith("image/") || isValidImageUrl(url))) return url;
+  return null;
+}
+
+function extractImageFromContent(html: string): string | null {
+  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  if (match?.[1] && isValidImageUrl(match[1])) return match[1];
+  return null;
+}
+
+function isValidImageUrl(url: string): boolean {
+  return (
+    url.startsWith("http") &&
+    (url.includes(".jpg") || url.includes(".jpeg") || url.includes(".png") ||
+     url.includes(".webp") || url.includes("/images/") || url.includes("/photo/") ||
+     url.includes("/img/") || url.includes("wp-content/uploads"))
+  );
 }
 
 // ============================================

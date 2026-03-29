@@ -13,6 +13,8 @@ export interface ArticleImageInput {
   awayTeamLogo?: string;
   leagueLogo?: string;
   goalScorerPhotos?: { name: string; photo: string; team: string }[];
+  // RSS source image
+  rssImageUrl?: string;
 }
 
 export interface ArticleContext {

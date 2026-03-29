@@ -73,12 +73,17 @@ export async function generateArticleFromRSS(
       ...(article.ligues || []),
       ...(article.competitions || []),
     ]);
+
+    // Use RSS source image if available
+    const rssImageUrl = item.imageUrl || undefined;
+
     const images = await getArticleImages({
       title: article.title,
       teams: detectedTeams,
       league: detectedLeague,
       type: "trending",
       tags: article.tags || [],
+      rssImageUrl,
     });
     content = injectImagesIntoHTML(content, images);
 
@@ -109,7 +114,7 @@ export async function generateArticleFromRSS(
         type: "trending",
         seo_title: article.seo_title,
         seo_description: article.excerpt,
-        og_image_url: buildArticleOgUrl({
+        og_image_url: rssImageUrl || buildArticleOgUrl({
           title: article.title,
           type: "trending",
           league: detectedLeague,
