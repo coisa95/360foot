@@ -141,7 +141,7 @@ export function AffiliateTrio() {
         ))}
       </div>
 
-      <p className="text-center text-[10px] text-gray-600">
+      <p className="text-center text-[10px] text-gray-500">
         18+ | Jouer comporte des risques. Conditions sur le site du bookmaker.
       </p>
     </div>

@@ -18,7 +18,7 @@ const INFOS = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-dark-border/50 bg-dark-bg">
+    <footer aria-label="Pied de page" className="border-t border-dark-border/50 bg-dark-bg">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-12">
           {/* Brand */}
@@ -80,7 +80,7 @@ export function Footer() {
             <span className="text-[10px] font-semibold text-yellow-400">18+ | Jeu responsable</span>
             <span className="text-[9px] text-yellow-400/70">— 0 974 75 13 13</span>
           </div>
-          <p className="text-[10px] text-gray-600">
+          <p className="text-[10px] text-gray-500">
             &copy; {new Date().getFullYear()} 360 Foot. Tous droits réservés.
           </p>
         </div>

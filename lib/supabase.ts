@@ -15,12 +15,3 @@ export function createClient() {
     },
   });
 }
-
-/**
- * Client-side Supabase client using the anonymous key.
- * Use this in client components and browser-side code.
- */
-export function createBrowserClient() {
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  return supabaseCreateClient(supabaseUrl, anonKey);
-}

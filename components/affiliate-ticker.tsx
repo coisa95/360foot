@@ -35,16 +35,24 @@ const SLIDES = [
 
 export function AffiliateTicker() {
   const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
+    if (paused) return;
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % SLIDES.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [paused]);
 
   return (
-    <div className="py-2 px-4 mx-auto max-w-7xl">
+    <div
+      className="py-2 px-4 mx-auto max-w-7xl"
+      aria-label="Offres partenaires"
+      role="region"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       <div className="relative h-[72px] sm:h-[56px] rounded-xl overflow-hidden shadow-lg">
         {SLIDES.map((slide, i) => (
           <a
@@ -99,10 +107,13 @@ export function AffiliateTicker() {
             <button
               key={i}
               onClick={(e) => { e.preventDefault(); setCurrent(i); }}
-              className={`h-1 rounded-full transition-all duration-500 ${
+              aria-label={`Offre ${i + 1}`}
+              className={`p-2 inline-flex items-center justify-center`}
+            >
+              <span className={`block h-1 rounded-full transition-all duration-500 ${
                 i === current ? "w-4 bg-white" : "w-1.5 bg-white/40"
-              }`}
-            />
+              }`} />
+            </button>
           ))}
         </div>
       </div>

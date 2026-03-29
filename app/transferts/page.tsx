@@ -127,7 +127,7 @@ export default async function TransfersPage() {
                     {article.excerpt && (
                       <p className="text-gray-500 text-xs mt-2 line-clamp-2">{article.excerpt}</p>
                     )}
-                    <time className="block text-[11px] text-gray-600 mt-2">
+                    <time className="block text-[11px] text-gray-500 mt-2">
                       {new Date(article.created_at).toLocaleDateString("fr-FR", {
                         day: "numeric",
                         month: "long",
