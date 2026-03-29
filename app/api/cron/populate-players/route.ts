@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { getTeamSquad } from "@/lib/api-football";
 
+export const maxDuration = 300;
+
 const TEAMS_PER_RUN = 15;
 
 function generateSlug(name: string): string {

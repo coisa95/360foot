@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { generateArticle } from "@/lib/claude";
+
+export const maxDuration = 300;
 import {
   systemPrompt as TRANSFER_SYSTEM_PROMPT,
   buildUserPrompt as buildTransferUserPrompt,

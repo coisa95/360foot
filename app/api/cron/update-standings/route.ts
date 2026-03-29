@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { getStandings as fetchStandings, getCurrentSeason } from "@/lib/api-football";
 
+export const maxDuration = 300;
+
 const LEAGUE_IDS = [
   // Ligues africaines
   386, // Ligue 1 Côte d'Ivoire

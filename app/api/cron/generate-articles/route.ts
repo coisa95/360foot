@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { getMatchDetails, getVenue } from "@/lib/api-football";
+
+export const maxDuration = 300;
 import { generateArticle } from "@/lib/claude";
 import { getArticleImages, injectImagesIntoHTML, buildArticleOgUrl } from "@/lib/images";
 import {

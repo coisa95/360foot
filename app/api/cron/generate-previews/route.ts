@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { generateArticle } from "@/lib/claude";
+
+export const maxDuration = 300;
 import { getArticleImages, injectImagesIntoHTML, buildArticleOgUrl } from "@/lib/images";
 import {
   systemPrompt as PREVIEW_SYSTEM_PROMPT,
