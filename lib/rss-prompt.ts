@@ -57,6 +57,7 @@ export interface RSSItem {
   date: string;
   source: string;
   details?: string;
+  imageUrl?: string;
 }
 
 export function buildRSSUserPrompt(item: RSSItem): string {

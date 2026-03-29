@@ -49,8 +49,20 @@ export async function getArticleImages(
 ): Promise<ArticleImage[]> {
   const images: ArticleImage[] = [];
 
+  // ═══ PRIORITÉ 0 : Image du flux RSS source ═══
+  if (input.rssImageUrl) {
+    images.push({
+      url: input.rssImageUrl,
+      alt: generateContextualAlt(input, "featured"),
+      credit: "Source",
+      width: 1200,
+      height: 675,
+      position: "featured",
+    });
+  }
+
   // ═══ PRIORITÉ 1 : Photo du stade (venue) depuis API-Football ═══
-  if (input.venuePhotoUrl) {
+  if (images.length === 0 && input.venuePhotoUrl) {
     const venueLabel = input.venueName
       ? `${input.venueName}${input.venueCity ? `, ${input.venueCity}` : ""}`
       : "Stade";
