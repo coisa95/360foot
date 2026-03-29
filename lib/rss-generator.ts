@@ -5,6 +5,7 @@ import { createClient } from "./supabase";
 import { addInternalLinks } from "./internal-links";
 import { getArticleImages, injectImagesIntoHTML, buildArticleOgUrl } from "./images";
 import { markAsProcessed } from "./rss-fetcher";
+import { publishToTelegram } from "./telegram";
 
 const anthropic = new Anthropic();
 
@@ -130,6 +131,17 @@ export async function generateArticleFromRSS(
 
     // 10. Marquer comme traité
     await markAsProcessed(item.link, data.id);
+
+    // 11. Publier sur Telegram
+    await publishToTelegram({
+      title: article.title,
+      slug,
+      excerpt: article.excerpt,
+      type: "trending",
+      imageUrl: rssImageUrl,
+      tags: enrichedTags,
+      league: detectedLeague,
+    });
 
     console.log(
       `✅ Article RSS généré : ${article.title} | Joueurs: ${(article.joueurs || []).length} | Clubs: ${(article.clubs || []).length} | Ligue: ${detectedLeague}`
