@@ -184,13 +184,13 @@ export default async function ActuPage({ searchParams }: Props) {
         {featuredArticle ? (
           <>
             {/* Featured article - compact on mobile, large on desktop */}
-            <Link href={`/actu/${featuredArticle.slug}`} className="group mt-4 block sm:mt-6">
+            <Link href={`/actu/${featuredArticle.slug as string}`} className="group mt-4 block sm:mt-6">
               <Card className="overflow-hidden border-dark-border bg-dark-card transition-all hover:border-lime-500/30">
                 <div className="grid md:grid-cols-2">
                   <div className="relative aspect-[2/1] sm:aspect-video md:aspect-auto md:min-h-[280px]">
                     <Image
-                      src={featuredArticle.og_image_url || `/api/og?title=${encodeURIComponent(featuredArticle.title)}&type=${featuredArticle.type || "result"}&league=${encodeURIComponent((featuredArticle.league as Record<string, unknown>)?.name as string || "")}`}
-                      alt={featuredArticle.title}
+                      src={(featuredArticle.og_image_url as string) || `/api/og?title=${encodeURIComponent(featuredArticle.title as string)}&type=${(featuredArticle.type as string) || "result"}&league=${encodeURIComponent((featuredArticle.league as Record<string, unknown>)?.name as string || "")}`}
+                      alt={featuredArticle.title as string}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
@@ -198,15 +198,15 @@ export default async function ActuPage({ searchParams }: Props) {
                     />
                     {/* Badge overlay on mobile */}
                     <div className="absolute left-2 top-2 md:hidden">
-                      <Badge className={`text-[10px] ${TYPE_COLORS[featuredArticle.type] || "bg-lime-500/10 text-lime-400"}`}>
-                        {TYPE_LABELS[featuredArticle.type] || featuredArticle.type}
+                      <Badge className={`text-[10px] ${TYPE_COLORS[featuredArticle.type as string] || "bg-lime-500/10 text-lime-400"}`}>
+                        {TYPE_LABELS[featuredArticle.type as string] || (featuredArticle.type as string)}
                       </Badge>
                     </div>
                   </div>
                   <div className="flex flex-col justify-center p-3 sm:p-4 md:p-6">
                     <div className="mb-2 hidden flex-wrap items-center gap-2 md:flex">
-                      <Badge className={TYPE_COLORS[featuredArticle.type] || "bg-lime-500/10 text-lime-400"}>
-                        {TYPE_LABELS[featuredArticle.type] || featuredArticle.type}
+                      <Badge className={TYPE_COLORS[featuredArticle.type as string] || "bg-lime-500/10 text-lime-400"}>
+                        {TYPE_LABELS[featuredArticle.type as string] || (featuredArticle.type as string)}
                       </Badge>
                       {String((featuredArticle.league as Record<string, unknown>)?.name || "") !== "" && (
                         <span className="text-xs text-gray-500">
@@ -215,15 +215,15 @@ export default async function ActuPage({ searchParams }: Props) {
                       )}
                     </div>
                     <h2 className="mb-1 text-base font-bold leading-tight text-white transition-colors group-hover:text-lime-400 sm:mb-2 sm:text-lg md:mb-3 md:text-2xl">
-                      {featuredArticle.title}
+                      {featuredArticle.title as string}
                     </h2>
                     {featuredArticle.excerpt && (
                       <p className="mb-2 line-clamp-2 text-xs text-gray-400 sm:line-clamp-3 sm:text-sm md:mb-4">
-                        {featuredArticle.excerpt}
+                        {featuredArticle.excerpt as string}
                       </p>
                     )}
-                    <time className="text-[10px] text-gray-500 sm:text-xs" dateTime={featuredArticle.created_at}>
-                      {new Date(featuredArticle.created_at).toLocaleDateString("fr-FR", {
+                    <time className="text-[10px] text-gray-500 sm:text-xs" dateTime={featuredArticle.created_at as string}>
+                      {new Date(featuredArticle.created_at as string).toLocaleDateString("fr-FR", {
                         day: "numeric",
                         month: "long",
                         year: "numeric",
