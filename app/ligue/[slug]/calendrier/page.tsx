@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase";
 import { MatchCard } from "@/components/match-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
-import { CollapsibleSection } from "@/components/collapsible-section";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
