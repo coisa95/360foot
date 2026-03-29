@@ -1,9 +1,9 @@
 import { createClient } from "@/lib/supabase";
 import { MatchCard } from "@/components/match-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
+import { RoundNav } from "@/components/round-nav";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 
 export const revalidate = 900;
 
@@ -152,32 +152,18 @@ export default async function LeagueFixturesPage({ params, searchParams }: Props
         }}
       />
 
-      {/* Round navigation — horizontal scroll */}
+      {/* Round navigation — horizontal scroll with auto-center */}
       {sortedRounds.length > 1 && (
-        <div className="mb-4 -mx-4 px-4">
-          <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide" style={{scrollbarWidth: 'none'}}>
-            {sortedRounds.map((round) => {
-              const roundNum = extractRoundNumber(round);
-              const isActive = round === activeRound;
-              const roundLabel = cleanRoundName(round);
-              const linkParam = roundNum > 0 ? String(roundNum) : round;
-
-              return (
-                <Link
-                  key={round}
-                  href={`/ligue/${slug}/calendrier?journee=${encodeURIComponent(linkParam)}`}
-                  className={`inline-flex items-center justify-center min-w-[2.5rem] px-3 py-2 rounded-full text-xs font-semibold transition-all shrink-0 ${
-                    isActive
-                      ? "bg-lime-400 text-black shadow-md shadow-lime-500/20"
-                      : "bg-dark-card border border-dark-border/50 text-gray-400 hover:text-white hover:border-lime-500/30"
-                  }`}
-                >
-                  {roundNum > 0 ? `J${roundNum}` : roundLabel}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
+        <RoundNav
+          rounds={sortedRounds.map((round) => ({
+            raw: round,
+            label: cleanRoundName(round),
+            num: extractRoundNumber(round),
+            param: extractRoundNumber(round) > 0 ? String(extractRoundNumber(round)) : round,
+          }))}
+          activeRound={activeRound || ""}
+          slug={slug}
+        />
       )}
 
       {/* Active round title */}
