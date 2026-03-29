@@ -7,6 +7,8 @@ import { Footer } from "@/components/footer";
 import { AffiliateTicker } from "@/components/affiliate-ticker";
 import { LeagueSidebar } from "@/components/league-sidebar";
 import { SwRegister } from "@/components/sw-register";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geist = localFont({
   src: "./fonts/GeistVF.woff",
@@ -115,8 +117,29 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="360 Foot" />
-        <link rel="preconnect" href="https://images.pexels.com" />
-        <link rel="dns-prefetch" href="https://images.pexels.com" />
+        <link rel="preconnect" href="https://media.api-sports.io" />
+        <link rel="dns-prefetch" href="https://media.api-sports.io" />
+        {/* Google Analytics 4 */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                    page_path: window.location.pathname,
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -134,6 +157,8 @@ export default function RootLayout({
           <Footer />
         </div>
         <SwRegister />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
