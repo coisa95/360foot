@@ -217,11 +217,11 @@ export default async function ActuPage({ searchParams }: Props) {
                     <h2 className="mb-1 text-base font-bold leading-tight text-white transition-colors group-hover:text-lime-400 sm:mb-2 sm:text-lg md:mb-3 md:text-2xl">
                       {featuredArticle.title as string}
                     </h2>
-                    {featuredArticle.excerpt && (
+                    {(featuredArticle.excerpt as string) ? (
                       <p className="mb-2 line-clamp-2 text-xs text-gray-400 sm:line-clamp-3 sm:text-sm md:mb-4">
                         {featuredArticle.excerpt as string}
                       </p>
-                    )}
+                    ) : null}
                     <time className="text-[10px] text-gray-500 sm:text-xs" dateTime={featuredArticle.created_at as string}>
                       {new Date(featuredArticle.created_at as string).toLocaleDateString("fr-FR", {
                         day: "numeric",
