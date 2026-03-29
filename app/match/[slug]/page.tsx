@@ -103,7 +103,7 @@ export default async function MatchPage({ params }: Props) {
 
   const { data: match } = await supabase
     .from("matches")
-    .select("id,slug,date,status,score_home,score_away,stats_json,events_json,lineups_json,players_json,predictions_json,h2h_json,injuries_json,home_team:teams!home_team_id(name,slug,logo_url),away_team:teams!away_team_id(name,slug,logo_url),league:leagues!league_id(name,slug)")
+    .select("id,slug,date,status,score_home,score_away,stats_json,events_json,lineups_json,predictions_json,h2h_json,injuries_json,home_team:teams!home_team_id(name,slug,logo_url),away_team:teams!away_team_id(name,slug,logo_url),league:leagues!league_id(name,slug)")
     .eq("slug", slug)
     .single() as { data: any };
 
@@ -127,7 +127,6 @@ export default async function MatchPage({ params }: Props) {
   const statsJson = match.stats_json as any;
   const eventsJson = match.events_json as any[] | null;
   const lineupsJson = match.lineups_json as any[] | null;
-  const playersJson = match.players_json as any[] | null;
   const predictionsJson = match.predictions_json as any | null;
   const h2hJson = match.h2h_json as any[] | null;
   const injuriesJson = match.injuries_json as any[] | null;
@@ -161,13 +160,7 @@ export default async function MatchPage({ params }: Props) {
       if (inj.player) playerNames.add(inj.player);
     }
   }
-  if (playersJson) {
-    for (const team of playersJson) {
-      for (const p of team.players || []) {
-        if (p.name) playerNames.add(p.name);
-      }
-    }
-  }
+
 
   const playerSlugMap: Record<string, string> = {};
   if (playerNames.size > 0) {
@@ -648,72 +641,6 @@ export default async function MatchPage({ params }: Props) {
           )
         )}
 
-        {/* ── Player Ratings ── */}
-        {isFinished && playersJson && playersJson.length > 0 && (
-          <Card className="mt-4 border-gray-800 bg-dark-card p-4 sm:p-6">
-            <h3 className="mb-4 text-lg font-bold text-lime-400">⭐ Notes des joueurs</h3>
-            <div className="grid gap-6 sm:grid-cols-2">
-              {playersJson.map((team: any, idx: number) => {
-                const sortedPlayers = [...(team.players || [])]
-                  .filter((p: any) => p.rating)
-                  .sort((a: any, b: any) => parseFloat(b.rating) - parseFloat(a.rating));
-
-                if (sortedPlayers.length === 0) return null;
-
-                const posLabel = (pos: string) => {
-                  const map: Record<string, string> = { G: "G", D: "D", M: "M", F: "A" };
-                  return map[pos] || pos;
-                };
-
-                const ratingColor = (rating: string) => {
-                  const val = parseFloat(rating);
-                  if (val >= 7.0) return "bg-green-500/20 text-green-400 border-green-500/30";
-                  if (val >= 6.0) return "bg-gray-500/20 text-gray-400 border-gray-500/30";
-                  return "bg-red-500/20 text-red-400 border-red-500/30";
-                };
-
-                return (
-                  <div key={idx}>
-                    <h4 className="mb-3 font-bold text-white"><TeamLink name={team.team} /></h4>
-                    <div className="space-y-1.5">
-                      {sortedPlayers.map((p: any, i: number) => (
-                        <div key={i} className="flex items-center gap-2 rounded-lg bg-dark-bg px-3 py-1.5 text-sm">
-                          <span className="w-6 text-center text-xs font-mono text-gray-500">
-                            {p.number || "-"}
-                          </span>
-                          <span className="flex-1 truncate">
-                            <PlayerLink name={p.name} />
-                          </span>
-                          {p.stats?.goals > 0 && (
-                            <span className="text-xs" title={`${p.stats.goals} but(s)`}>
-                              {"⚽".repeat(Math.min(p.stats.goals, 3))}
-                            </span>
-                          )}
-                          {p.stats?.assists > 0 && (
-                            <span className="text-xs" title={`${p.stats.assists} passe(s) dé.`}>
-                              {"🅰️".repeat(Math.min(p.stats.assists, 3))}
-                            </span>
-                          )}
-                          <Badge className={`text-[10px] px-1.5 py-0 border ${
-                            p.position === "G" ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" :
-                            p.position === "D" ? "bg-blue-500/20 text-blue-400 border-blue-500/30" :
-                            p.position === "M" ? "bg-purple-500/20 text-purple-400 border-purple-500/30" :
-                            "bg-red-500/20 text-red-400 border-red-500/30"
-                          }`}>
-                            {posLabel(p.position)}
-                          </Badge>
-                          <Badge className={`text-xs font-bold px-2 py-0 border ${ratingColor(p.rating)}`}>
-                            {parseFloat(p.rating).toFixed(1)}
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-        )}
 
         {/* ── Related article ── */}
         {relatedArticle && (
