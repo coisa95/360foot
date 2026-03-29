@@ -212,11 +212,8 @@ export function injectImagesIntoHTML(
 
   let result = "";
 
-  // Featured image: BEFORE the first paragraph
-  const featured = images.find((img) => img.position === "featured");
-  if (featured) {
-    result += generateImgTag(featured);
-  }
+  // Featured image: SKIP injection — displayed by the page template via og_image_url
+  // Only mid/end images are injected into the HTML content
 
   paragraphs.forEach((para, index) => {
     if (index === paragraphs.length - 1 && para.trim() === "") return;
