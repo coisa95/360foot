@@ -1,16 +1,6 @@
 import {
   ArticleImageInput,
-  generateContextualQueries,
-  selectBestImage,
-  isImageContextual,
-  detectContext,
 } from "./image-queries";
-import {
-  PexelsPhoto,
-  getCachedImages,
-  setCachedImages,
-  canMakeApiCall,
-} from "./image-cache";
 
 export interface ArticleImage {
   url: string;
@@ -19,48 +9,6 @@ export interface ArticleImage {
   width: number;
   height: number;
   position: "featured" | "mid" | "end";
-}
-
-// ----- Pexels API -----
-
-async function searchPexels(query: string): Promise<PexelsPhoto[]> {
-  const cached = await getCachedImages(query);
-  if (cached) return cached;
-
-  if (!(await canMakeApiCall())) {
-    console.warn("Pexels rate limit approaching, skipping API call");
-    return [];
-  }
-
-  const apiKey = process.env.PEXELS_API_KEY;
-  if (!apiKey) {
-    console.error("PEXELS_API_KEY not set");
-    return [];
-  }
-
-  try {
-    const res = await fetch(
-      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=10&orientation=landscape`,
-      { headers: { Authorization: apiKey } }
-    );
-
-    if (!res.ok) {
-      console.error(`Pexels API error: ${res.status}`);
-      return [];
-    }
-
-    const data = await res.json();
-    const photos: PexelsPhoto[] = data.photos || [];
-
-    if (photos.length > 0) {
-      await setCachedImages(query, photos);
-    }
-
-    return photos;
-  } catch (err) {
-    console.error("Pexels fetch error:", err);
-    return [];
-  }
 }
 
 // ----- ALT text contextuel en français -----
@@ -81,6 +29,19 @@ function generateContextualAlt(
   return `Ambiance football ${input.league} | 360 Foot`;
 }
 
+// ----- Build OG image URL with team logos -----
+
+function buildOgImageUrl(input: ArticleImageInput): string {
+  const params = new URLSearchParams();
+  params.set("title", input.title);
+  params.set("type", input.type || "result");
+  if (input.league) params.set("league", input.league);
+  if (input.homeTeamLogo) params.set("homeLogo", input.homeTeamLogo);
+  if (input.awayTeamLogo) params.set("awayLogo", input.awayTeamLogo);
+  if (input.leagueLogo) params.set("leagueLogo", input.leagueLogo);
+  return `https://360-foot.com/api/og?${params.toString()}`;
+}
+
 // ----- Main function -----
 
 export async function getArticleImages(
@@ -88,7 +49,7 @@ export async function getArticleImages(
 ): Promise<ArticleImage[]> {
   const images: ArticleImage[] = [];
 
-  // ── Use venue photo from API-Football as featured image if available ──
+  // ═══ PRIORITÉ 1 : Photo du stade (venue) depuis API-Football ═══
   if (input.venuePhotoUrl) {
     const venueLabel = input.venueName
       ? `${input.venueName}${input.venueCity ? `, ${input.venueCity}` : ""}`
@@ -108,64 +69,103 @@ export async function getArticleImages(
     });
   }
 
-  // ── Pexels fallback / mid-article image ──
-  const articleCtx = {
-    title: input.title,
-    content: "",
-    teams: input.teams,
-    league: input.league,
-    tags: input.tags,
-    type: input.type,
-  };
-
-  const queries = generateContextualQueries(articleCtx);
-  const ctx = detectContext(articleCtx);
-
-  for (const query of queries) {
-    if (images.length >= 2) break; // Max 2 images par article
-
-    const photos = await searchPexels(query);
-
-    // Sélectionner la meilleure image avec scoring
-    const best = selectBestImage(photos, ctx);
-    if (!best) continue;
-
-    // Vérification contextuelle — rejeter les images hors sport
-    if (!isImageContextual(best, articleCtx)) {
-      continue;
-    }
-
-    const position = images.length === 0 ? "featured" : "mid";
-
+  // ═══ PRIORITÉ 2 : Logos des équipes comme image header ═══
+  if (images.length === 0 && input.homeTeamLogo && input.awayTeamLogo) {
+    // Use the dynamic OG image which will render team logos
+    const ogUrl = buildOgImageUrl(input);
     images.push({
-      url: (best.src.large2x || best.src.large).split("?")[0] + "?auto=compress&cs=tinysrgb&w=1200",
-      alt: generateContextualAlt(input, position),
-      credit: `Photo by ${best.photographer} on Pexels`,
-      width: 1200,
-      height: Math.round(1200 * (best.height / best.width)),
-      position: position as "featured" | "mid",
-    });
-  }
-
-  // Fallback si aucune image trouvée
-  if (images.length === 0) {
-    images.push({
-      url: "/images/default-football.jpg",
-      alt: `Football — ${input.league} | 360 Foot`,
+      url: ogUrl,
+      alt: generateContextualAlt(input, "featured"),
       credit: "360 Foot",
       width: 1200,
-      height: 675,
+      height: 630,
       position: "featured",
     });
   }
 
+  // ═══ PRIORITÉ 3 : Image OG dynamique (toujours unique par article) ═══
+  if (images.length === 0) {
+    const ogUrl = buildOgImageUrl(input);
+    images.push({
+      url: ogUrl,
+      alt: generateContextualAlt(input, "featured"),
+      credit: "360 Foot",
+      width: 1200,
+      height: 630,
+      position: "featured",
+    });
+  }
+
+  // ═══ IMAGE MID-ARTICLE : Photo du buteur depuis API-Football ═══
+  if (input.goalScorerPhotos && input.goalScorerPhotos.length > 0) {
+    const scorer = input.goalScorerPhotos[0];
+    // API-Football player photos are small (50x50), use them only if valid
+    if (scorer.photo && !scorer.photo.includes("placeholder")) {
+      images.push({
+        url: scorer.photo,
+        alt: `${scorer.name} (${scorer.team}) — Buteur du match | 360 Foot`,
+        credit: `Photo : API-Football`,
+        width: 200,
+        height: 200,
+        position: "mid",
+      });
+    }
+  }
+
   return images;
+}
+
+// ----- Build OG URL for og_image_url field -----
+
+export function buildArticleOgUrl(input: {
+  title: string;
+  type: string;
+  league: string;
+  homeTeamLogo?: string;
+  awayTeamLogo?: string;
+  leagueLogo?: string;
+  venuePhotoUrl?: string;
+}): string {
+  // If we have a venue photo, use it directly as OG image
+  if (input.venuePhotoUrl) {
+    return input.venuePhotoUrl;
+  }
+  // Otherwise use dynamic OG generator
+  const params = new URLSearchParams();
+  params.set("title", input.title);
+  params.set("type", input.type || "result");
+  if (input.league) params.set("league", input.league);
+  if (input.homeTeamLogo) params.set("homeLogo", input.homeTeamLogo);
+  if (input.awayTeamLogo) params.set("awayLogo", input.awayTeamLogo);
+  if (input.leagueLogo) params.set("leagueLogo", input.leagueLogo);
+  return `https://360-foot.com/api/og?${params.toString()}`;
 }
 
 // ----- HTML injection -----
 
 function generateImgTag(image: ArticleImage): string {
   const loading = image.position === "featured" ? "eager" : "lazy";
+
+  // For player photos (small), use a centered card style
+  if (image.width <= 200) {
+    return `
+    <figure class="article-image" style="text-align: center; margin: 1.5em auto;">
+      <img
+        src="${image.url}"
+        alt="${image.alt}"
+        width="${image.width}"
+        height="${image.height}"
+        loading="${loading}"
+        decoding="async"
+        style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #84cc16; margin: 0 auto;"
+      />
+      <figcaption style="font-size: 12px; color: #6B7280; margin-top: 8px; text-align: center;">
+        ${image.credit}
+      </figcaption>
+    </figure>
+  `;
+  }
+
   return `
     <figure class="article-image">
       <img

@@ -3,7 +3,7 @@ import { RSS_ARTICLE_SYSTEM_PROMPT, buildRSSUserPrompt } from "./rss-prompt";
 import type { RSSItem } from "./rss-prompt";
 import { createClient } from "./supabase";
 import { addInternalLinks } from "./internal-links";
-import { getArticleImages, injectImagesIntoHTML } from "./images";
+import { getArticleImages, injectImagesIntoHTML, buildArticleOgUrl } from "./images";
 import { markAsProcessed } from "./rss-fetcher";
 
 const anthropic = new Anthropic();
@@ -109,7 +109,11 @@ export async function generateArticleFromRSS(
         type: "trending",
         seo_title: article.seo_title,
         seo_description: article.excerpt,
-        og_image_url: images[0]?.url || null,
+        og_image_url: buildArticleOgUrl({
+          title: article.title,
+          type: "trending",
+          league: detectedLeague,
+        }),
         tags: enrichedTags,
         league_id: leagueId,
         published_at: new Date().toISOString(),
