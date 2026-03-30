@@ -22,13 +22,15 @@ export const metadata: Metadata = {
       "Suivez tous les transferts du football africain et européen : arrivées, départs, prêts et montants.",
     type: "website",
     url: "https://360-foot.com/transferts",
-    images: ["/api/og?title=Transferts%20-%20Mercato%20football"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/api/og?title=Transferts%20-%20Mercato%20football"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Transferts — Mercato football africain et européen",
     description:
       "Suivez tous les transferts du football africain et européen.",
+    images: ["https://360-foot.com/api/og?title=Transferts%20-%20Mercato%20football"],
   },
 };
 
@@ -168,7 +170,6 @@ export default async function TransfersPage() {
                         width={40}
                         height={40}
                         className="h-10 w-10 shrink-0 rounded-full object-cover border border-dark-border"
-                        unoptimized
                       />
                     ) : (
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dark-surface border border-dark-border">
@@ -199,7 +200,7 @@ export default async function TransfersPage() {
                       </div>
                       <div className="flex items-center gap-1.5 mt-0.5 text-xs">
                         {t.from_team_logo && (
-                          <Image src={t.from_team_logo} alt={`Logo ${t.from_team}`} width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
+                          <Image src={t.from_team_logo} alt={`Logo ${t.from_team}`} width={16} height={16} className="h-4 w-4 rounded-sm object-contain" />
                         )}
                         {teamSlugMap[t.from_team] ? (
                           <Link href={`/equipe/${teamSlugMap[t.from_team]}`} className="text-gray-400 truncate hover:text-lime-400 transition-colors">{t.from_team}</Link>
@@ -208,7 +209,7 @@ export default async function TransfersPage() {
                         )}
                         <span className="text-lime-400 font-bold shrink-0">→</span>
                         {t.to_team_logo && (
-                          <Image src={t.to_team_logo} alt={`Logo ${t.to_team}`} width={16} height={16} className="h-4 w-4 rounded-sm object-contain" unoptimized />
+                          <Image src={t.to_team_logo} alt={`Logo ${t.to_team}`} width={16} height={16} className="h-4 w-4 rounded-sm object-contain" />
                         )}
                         {teamSlugMap[t.to_team] ? (
                           <Link href={`/equipe/${teamSlugMap[t.to_team]}`} className="text-white truncate hover:text-lime-400 transition-colors">{t.to_team}</Link>

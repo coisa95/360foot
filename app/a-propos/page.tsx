@@ -18,7 +18,8 @@ export const metadata: Metadata = {
       "Découvrez 360 Foot, le média innovant dédié au football africain et européen propulsé par l'intelligence artificielle.",
     type: "website",
     url: "https://360-foot.com/a-propos",
-    images: ["/api/og?title=%C3%80%20propos%20de%20360%20Foot"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/api/og?title=%C3%80%20propos%20de%20360%20Foot"],
   },
 };
 

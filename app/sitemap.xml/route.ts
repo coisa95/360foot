@@ -106,14 +106,6 @@ export async function GET() {
     <priority>0.8</priority>
   </url>`;
 
-      // Classement de chaque ligue
-      xml += `
-  <url>
-    <loc>${baseUrl}/classement/${league.slug}</loc>
-    ${league.updated_at ? `<lastmod>${new Date(league.updated_at).toISOString()}</lastmod>` : ""}
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>`;
     }
   }
 

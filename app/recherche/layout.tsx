@@ -10,12 +10,14 @@ export const metadata: Metadata = {
     description: "Recherchez joueurs, équipes, ligues et articles sur 360 Foot.",
     type: "website",
     url: "https://360-foot.com/recherche",
-    images: ["/api/og?title=Recherche"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/api/og?title=Recherche"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Recherche — 360 Foot",
     description: "Recherchez joueurs, équipes, ligues et articles sur 360 Foot.",
+    images: ["https://360-foot.com/api/og?title=Recherche"],
   },
 };
 

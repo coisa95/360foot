@@ -61,7 +61,7 @@ export function StandingsTable({
             >
               <span className="w-4 text-[10px] text-gray-500 text-center shrink-0">{row.rank}</span>
               {row.teamLogo && (
-                <Image src={row.teamLogo} alt={`Logo ${row.teamName}`} width={14} height={14} className="w-3.5 h-3.5 object-contain shrink-0" unoptimized />
+                <Image src={row.teamLogo} alt={`Logo ${row.teamName}`} width={14} height={14} className="w-3.5 h-3.5 object-contain shrink-0" />
               )}
               <span className="text-[11px] text-gray-200 truncate flex-1">{row.teamName}</span>
               <span className="text-[10px] text-gray-500 w-5 text-center shrink-0">{row.played}</span>
@@ -108,7 +108,7 @@ export function StandingsTable({
                   className="flex items-center gap-1.5 text-sm text-white hover:text-lime-400"
                 >
                   {row.teamLogo && (
-                    <Image src={row.teamLogo} alt={`Logo ${row.teamName}`} width={16} height={16} className="w-4 h-4 object-contain shrink-0" unoptimized />
+                    <Image src={row.teamLogo} alt={`Logo ${row.teamName}`} width={16} height={16} className="w-4 h-4 object-contain shrink-0" />
                   )}
                   <span className="truncate">{row.teamName}</span>
                 </Link>

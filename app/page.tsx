@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/supabase";
-import { ArticleCard } from "@/components/article-card";
 import { ArticleCarousel } from "@/components/article-carousel";
 import { MatchCard } from "@/components/match-card";
-import { StandingsTable } from "@/components/standings-table";
-import { AffiliateTrio } from "@/components/affiliate-trio";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const ArticleCard = dynamic(() => import("@/components/article-card").then((m) => m.ArticleCard));
+const StandingsTable = dynamic(() => import("@/components/standings-table").then((m) => m.StandingsTable));
+const AffiliateTrio = dynamic(() => import("@/components/affiliate-trio").then((m) => m.AffiliateTrio));
 
 export const revalidate = 600;
 
@@ -19,12 +21,14 @@ export const metadata = {
     description: "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
     type: "website" as const,
     url: "https://360-foot.com",
-    images: ["/og-home.png"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/og-home.png"],
   },
   twitter: {
     card: "summary_large_image" as const,
     title: "360 Foot — Actu Football Afrique & Europe en Direct",
     description: "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
+    images: ["https://360-foot.com/og-home.png"],
   },
 };
 

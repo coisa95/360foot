@@ -1,5 +1,16 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
+import { Redis } from "@upstash/redis";
+
+let redis: Redis | null = null;
+try {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+  }
+} catch { /* Redis optional */ }
 
 const RATE_LIMIT_WINDOW = 60; // seconds
 const RATE_LIMIT_MAX = 30; // requests per window
@@ -18,6 +29,28 @@ export async function GET(request: Request) {
       { error: "Query too long" },
       { status: 400 }
     );
+  }
+
+  // Rate limiting: max 30 requests per IP per minute
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  let rateLimitRemaining = RATE_LIMIT_MAX;
+  if (redis) {
+    try {
+      const key = `ratelimit:search:${ip}`;
+      const count = await redis.incr(key);
+      if (count === 1) await redis.expire(key, RATE_LIMIT_WINDOW);
+      rateLimitRemaining = Math.max(0, RATE_LIMIT_MAX - count);
+      if (count > RATE_LIMIT_MAX) {
+        const ttl = await redis.ttl(key);
+        const res = NextResponse.json({ error: "Too many requests" }, { status: 429 });
+        res.headers.set("X-RateLimit-Limit", String(RATE_LIMIT_MAX));
+        res.headers.set("X-RateLimit-Remaining", "0");
+        res.headers.set("X-RateLimit-Reset", String(ttl > 0 ? ttl : RATE_LIMIT_WINDOW));
+        return res;
+      }
+    } catch {
+      /* Redis failure: allow request through */
+    }
   }
 
   const supabase = createClient();
@@ -78,9 +111,10 @@ export async function GET(request: Request) {
     })),
   });
 
-  // Rate limiting headers (informational; enforce via middleware or edge for strict limiting)
+  // Rate limiting headers
   response.headers.set("X-RateLimit-Limit", String(RATE_LIMIT_MAX));
-  response.headers.set("X-RateLimit-Window", `${RATE_LIMIT_WINDOW}s`);
+  response.headers.set("X-RateLimit-Remaining", String(rateLimitRemaining));
+  response.headers.set("X-RateLimit-Reset", String(RATE_LIMIT_WINDOW));
   response.headers.set("Cache-Control", "public, s-maxage=10, stale-while-revalidate=30");
 
   return response;

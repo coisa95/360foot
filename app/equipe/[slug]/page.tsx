@@ -43,11 +43,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/equipe/${slug}` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/equipe/${slug}`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/equipe/${slug}`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {
       card: "summary_large_image" as const,
       title,
       description,
+      images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`],
     },
   };
 }

@@ -49,8 +49,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
-    twitter: { card: "summary_large_image" as const, title, description },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
+    twitter: { card: "summary_large_image" as const, title, description, images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
   };
 }
 
@@ -104,6 +104,14 @@ export default async function LeagueStandingsPage({ params }: Props) {
     if (t.api_football_id && t.slug) teamSlugMap.set(t.api_football_id, t.slug);
   }
 
+  const jsonLdOrg = {
+    "@context": "https://schema.org",
+    "@type": "SportsOrganization",
+    name: league.name,
+    sport: "Football",
+    url: `https://360-foot.com/ligue/${slug}`,
+  };
+
   return (
     <>
       <script
@@ -119,6 +127,10 @@ export default async function LeagueStandingsPage({ params }: Props) {
             ],
           }),
         }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
       />
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-gray-500">

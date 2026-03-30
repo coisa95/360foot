@@ -18,7 +18,8 @@ export const metadata: Metadata = {
       "Decouvrez notre methodologie : comment 360 Foot utilise l'intelligence artificielle pour generer des articles de qualite.",
     type: "website",
     url: "https://360-foot.com/methodologie",
-    images: ["/api/og?title=Methodologie%20-%20Comment%20360%20Foot%20produit%20ses%20contenus"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/api/og?title=Methodologie%20-%20Comment%20360%20Foot%20produit%20ses%20contenus"],
   },
 };
 

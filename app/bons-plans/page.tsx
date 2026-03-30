@@ -21,12 +21,14 @@ export const metadata: Metadata = {
       "Guides complets sur les paris sportifs et comparateur des meilleurs bookmakers en Afrique.",
     type: "website",
     url: "https://360-foot.com/bons-plans",
-    images: ["/api/og?title=Bons%20Plans%20-%20Guides%20%26%20Comparateur%20de%20bookmakers"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/api/og?title=Bons%20Plans%20-%20Guides%20%26%20Comparateur%20de%20bookmakers"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Bons Plans - Guides & Comparateur de bookmakers - 360 Foot",
     description: "Guides et comparateur des meilleurs bookmakers en Afrique.",
+    images: ["https://360-foot.com/api/og?title=Bons%20Plans%20-%20Guides%20%26%20Comparateur%20de%20bookmakers"],
   },
 };
 

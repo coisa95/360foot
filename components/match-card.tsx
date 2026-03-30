@@ -66,7 +66,7 @@ export function MatchCard({
               <div className="flex items-center gap-2 min-w-0">
                 <div className="w-5 h-5 shrink-0 flex items-center justify-center">
                   {homeLogoUrl ? (
-                    <Image src={homeLogoUrl} alt={`Logo ${homeTeam}`} width={20} height={20} className="w-5 h-5 object-contain" unoptimized />
+                    <Image src={homeLogoUrl} alt={`Logo ${homeTeam}`} width={20} height={20} className="w-5 h-5 object-contain" />
                   ) : (
                     <div className="w-5 h-5 rounded-full bg-dark-surface" />
                   )}
@@ -83,7 +83,7 @@ export function MatchCard({
               <div className="flex items-center gap-2 min-w-0">
                 <div className="w-5 h-5 shrink-0 flex items-center justify-center">
                   {awayLogoUrl ? (
-                    <Image src={awayLogoUrl} alt={`Logo ${awayTeam}`} width={20} height={20} className="w-5 h-5 object-contain" unoptimized />
+                    <Image src={awayLogoUrl} alt={`Logo ${awayTeam}`} width={20} height={20} className="w-5 h-5 object-contain" />
                   ) : (
                     <div className="w-5 h-5 rounded-full bg-dark-surface" />
                   )}

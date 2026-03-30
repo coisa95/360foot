@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
+import { verifyCronAuth } from "@/lib/auth";
 
 export const maxDuration = 300;
 
@@ -7,8 +8,7 @@ const BASE_URL = "https://360-foot.com";
 
 export async function GET(request: Request) {
   try {
-    const authHeader = request.headers.get("authorization");
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!verifyCronAuth(request)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -115,7 +115,7 @@ ${urls
   } catch (error) {
     console.error("Error in generate-sitemap cron:", error);
     return NextResponse.json(
-      { error: "Internal server error", details: String(error) },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

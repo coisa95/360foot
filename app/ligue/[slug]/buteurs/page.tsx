@@ -50,9 +50,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       type: "website",
       url: `https://360-foot.com/ligue/${slug}/buteurs`,
-      images: [`/api/og?title=${encodeURIComponent(title)}`],
+      locale: "fr_FR",
+      images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`],
     },
-    twitter: { card: "summary_large_image" as const, title, description },
+    twitter: { card: "summary_large_image" as const, title, description, images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
   };
 }
 
@@ -154,7 +155,6 @@ export default async function TopScorersPage({ params }: Props) {
                           width={28}
                           height={28}
                           className="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover shrink-0"
-                          unoptimized
                         />
                       )}
                       <div>
@@ -174,7 +174,6 @@ export default async function TopScorersPage({ params }: Props) {
                           width={18}
                           height={18}
                           className="w-4 h-4 sm:w-[18px] sm:h-[18px] object-contain shrink-0"
-                          unoptimized
                         />
                       )}
                       <span className="text-gray-300 truncate">{player.team}</span>

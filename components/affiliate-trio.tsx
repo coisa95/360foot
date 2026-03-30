@@ -83,7 +83,7 @@ export function AffiliateTrio() {
                 width={120}
                 height={48}
                 className="h-10 w-auto object-contain"
-                unoptimized
+
               />
             </div>
 
@@ -121,7 +121,6 @@ export function AffiliateTrio() {
               width={80}
               height={32}
               className="h-8 w-auto object-contain shrink-0"
-              unoptimized
             />
 
             {/* Info */}
@@ -164,7 +163,6 @@ export function AffiliateInline({ index = 0 }: { index?: number }) {
         width={80}
         height={32}
         className="h-8 w-auto object-contain shrink-0"
-        unoptimized
       />
       <div className="flex-1">
         <span className="font-black text-white">{bk.bonus}</span>

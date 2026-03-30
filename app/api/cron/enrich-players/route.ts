@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { getPlayerStats, getCurrentSeason } from "@/lib/api-football";
+import { verifyCronAuth } from "@/lib/auth";
 
 export const maxDuration = 300;
 
@@ -10,8 +11,7 @@ export const maxDuration = 300;
  */
 export async function GET(request: Request) {
   try {
-    const authHeader = request.headers.get("authorization");
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!verifyCronAuth(request)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -132,7 +132,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("Error in enrich-players cron:", error);
     return NextResponse.json(
-      { error: "Internal server error", details: String(error) },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

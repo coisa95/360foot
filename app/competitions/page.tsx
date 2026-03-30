@@ -19,12 +19,14 @@ export const metadata: Metadata = {
     description: "Ligues africaines, championnats européens, coupes continentales et internationales.",
     type: "website",
     url: "https://360-foot.com/competitions",
-    images: ["/api/og?title=Comp%C3%A9titions"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/api/og?title=Comp%C3%A9titions"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Compétitions football — 360 Foot",
     description: "Ligues africaines, championnats européens, coupes continentales et internationales.",
+    images: ["https://360-foot.com/api/og?title=Comp%C3%A9titions"],
   },
 };
 

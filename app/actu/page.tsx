@@ -22,12 +22,14 @@ export const metadata: Metadata = {
       "Toutes les actualités du football africain et européen sur 360 Foot.",
     type: "website",
     url: "https://360-foot.com/actu",
-    images: ["/api/og?title=Actualit%C3%A9s%20football"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/api/og?title=Actualit%C3%A9s%20football"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Actualités football africain et européen - 360 Foot",
     description: "Toutes les actualités du football africain et européen sur 360 Foot.",
+    images: ["https://360-foot.com/api/og?title=Actualit%C3%A9s%20football"],
   },
 };
 
@@ -194,7 +196,6 @@ export default async function ActuPage({ searchParams }: Props) {
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      unoptimized={!!featuredArticle.og_image_url}
                     />
                     {/* Badge overlay on mobile */}
                     <div className="absolute left-2 top-2 md:hidden">
@@ -250,7 +251,6 @@ export default async function ActuPage({ searchParams }: Props) {
                             fill
                             className="object-cover"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            unoptimized={!!(article.og_image_url)}
                           />
                           <div className="absolute left-2 top-2">
                             <Badge className={`text-[10px] ${TYPE_COLORS[articleType] || "bg-lime-500/10 text-lime-400"}`}>

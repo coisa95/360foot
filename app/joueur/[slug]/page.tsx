@@ -43,7 +43,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       type: "profile",
       url: `https://360-foot.com/joueur/${slug}`,
-      images: [`/api/og?title=${encodeURIComponent(title)}`],
+      locale: "fr_FR",
+      images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`],
     },
   };
 }

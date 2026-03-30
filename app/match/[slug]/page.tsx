@@ -49,8 +49,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/match/${slug}` },
-    openGraph: { title, description, type: "website", url: `https://360-foot.com/match/${slug}`, images: [`/api/og?title=${encodeURIComponent(title)}`] },
-    twitter: { card: "summary_large_image", title, description },
+    openGraph: { title, description, type: "website", url: `https://360-foot.com/match/${slug}`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
+    twitter: { card: "summary_large_image", title, description, images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
   };
 }
 
@@ -177,19 +177,28 @@ export default async function MatchPage({ params }: Props) {
       }
     }
 
-    // Try partial matching for unmatched names (last name match)
+    // Try partial matching for unmatched names (last name match) — single batch query
     const unmatched = nameArray.filter((n) => !playerSlugMap[n]);
     if (unmatched.length > 0 && unmatched.length <= 50) {
-      for (const name of unmatched) {
-        const lastName = name.split(" ").pop() || name;
-        if (lastName.length < 3) continue;
+      const lastNames = unmatched
+        .map((name) => name.split(" ").pop() || name)
+        .filter((ln) => ln.length >= 3);
+
+      if (lastNames.length > 0) {
+        const orFilter = lastNames.map((ln) => `name.ilike.%${ln}%`).join(",");
         const { data: found } = await supabase
           .from("players")
           .select("name, slug")
-          .ilike("name", `%${lastName}%`)
-          .limit(1)
-          .maybeSingle();
-        if (found) playerSlugMap[name] = found.slug;
+          .or(orFilter);
+
+        if (found) {
+          for (const name of unmatched) {
+            const lastName = (name.split(" ").pop() || name).toLowerCase();
+            if (lastName.length < 3) continue;
+            const match = found.find((p) => p.name.toLowerCase().includes(lastName));
+            if (match) playerSlugMap[name] = match.slug;
+          }
+        }
       }
     }
   }

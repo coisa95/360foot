@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { fetchRSSFeed, isAlreadyProcessed } from "@/lib/rss-fetcher";
 import { generateArticleFromRSS } from "@/lib/rss-generator";
 import type { RSSItem } from "@/lib/rss-prompt";
+import { verifyCronAuth } from "@/lib/auth";
 
 export const maxDuration = 300;
 
@@ -133,8 +134,7 @@ const RSS_FEEDS = [
 const MAX_ARTICLES_PER_RUN = 10;
 
 export async function GET(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!verifyCronAuth(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

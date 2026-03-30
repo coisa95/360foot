@@ -18,12 +18,14 @@ export const metadata: Metadata = {
     description: "Scores en direct, résultats et matchs à venir du football africain et européen.",
     type: "website",
     url: "https://360-foot.com/matchs",
-    images: ["/api/og?title=Matchs%20en%20direct"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/api/og?title=Matchs%20en%20direct"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Matchs en direct et résultats — 360 Foot",
     description: "Scores en direct, résultats et matchs à venir du football africain et européen.",
+    images: ["https://360-foot.com/api/og?title=Matchs%20en%20direct"],
   },
 };
 

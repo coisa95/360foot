@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: articleDescription,
       type: "article",
       url: articleUrl,
+      locale: "fr_FR",
       images: [{ url: articleImage }],
       publishedTime: article.published_at,
       section: "Football",
@@ -78,11 +79,11 @@ export default async function ArticlePage({ params }: Props) {
     .order("published_at", { ascending: false })
     .limit(5);
 
-  // Fetch entities for internal linking
+  // Fetch entities for internal linking (limited to avoid massive payloads)
   const [{ data: teams }, { data: players }, { data: leagues }] = await Promise.all([
-    supabase.from("teams").select("name, slug"),
-    supabase.from("players").select("name, slug"),
-    supabase.from("leagues").select("name, slug"),
+    supabase.from("teams").select("name, slug").order("name").limit(500),
+    supabase.from("players").select("name, slug").order("name").limit(1000),
+    supabase.from("leagues").select("name, slug").order("name").limit(500),
   ]);
 
   // Apply internal links to article content + sanitize HTML
@@ -90,14 +91,14 @@ export default async function ArticlePage({ params }: Props) {
   try {
     const sanitizeHtml = (await import("sanitize-html")).default;
     enrichedContent = sanitizeHtml(enrichedContent, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img", "figure", "figcaption", "iframe"]),
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img", "figure", "figcaption"]),
       allowedAttributes: {
         ...sanitizeHtml.defaults.allowedAttributes,
-        img: ["src", "alt", "width", "height", "loading", "class", "style"],
-        a: ["href", "target", "rel", "class", "style"],
-        div: ["class", "style"],
-        p: ["class", "style"],
-        span: ["class", "style"],
+        img: ["src", "alt", "width", "height", "loading", "class"],
+        a: ["href", "target", "rel", "class"],
+        div: ["class"],
+        p: ["class"],
+        span: ["class"],
         h2: ["class", "id"],
         h3: ["class", "id"],
         figure: ["class"],
@@ -121,13 +122,19 @@ export default async function ArticlePage({ params }: Props) {
     { label: article.title },
   ];
 
+  // Escape string fields to prevent script injection in JSON-LD
+  const escapeJsonLd = (str: string | null | undefined): string => {
+    if (!str) return "";
+    return str.replace(/<\/script/gi, "<\\/script").replace(/<!--/g, "<\\!--");
+  };
+
   const articleImageUrl = article.og_image_url || article.image || "https://360-foot.com/icon-512.png";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     "@id": `https://360-foot.com/actu/${slug}#article`,
-    headline: article.title,
-    description: article.seo_description || article.excerpt,
+    headline: escapeJsonLd(article.title),
+    description: escapeJsonLd(article.seo_description || article.excerpt),
     image: articleImageUrl,
     datePublished: article.published_at,
     dateModified: article.updated_at || article.published_at,
@@ -224,7 +231,6 @@ export default async function ArticlePage({ params }: Props) {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 768px"
                 priority
-                unoptimized={!!(article.og_image_url || article.image)?.includes("/api/og")}
               />
             </div>
           )}

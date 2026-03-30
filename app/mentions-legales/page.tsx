@@ -18,13 +18,15 @@ export const metadata: Metadata = {
       "Mentions légales du site 360 Foot. Informations sur l'éditeur, l'hébergeur et les conditions d'utilisation.",
     type: "website",
     url: "https://360-foot.com/mentions-legales",
-    images: ["/api/og?title=Mentions%20l%C3%A9gales"],
+    locale: "fr_FR",
+    images: ["https://360-foot.com/api/og?title=Mentions%20l%C3%A9gales"],
   },
   twitter: {
     card: "summary_large_image" as const,
     title: "Mentions légales — 360 Foot",
     description:
       "Mentions légales du site 360 Foot. Informations sur l'éditeur, l'hébergeur et les conditions d'utilisation.",
+    images: ["https://360-foot.com/api/og?title=Mentions%20l%C3%A9gales"],
   },
 };
 
