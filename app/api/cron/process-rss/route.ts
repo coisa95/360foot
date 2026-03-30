@@ -61,6 +61,13 @@ const RSS_FEEDS = [
     priority: 1,
   },
 
+  // ===== PRIORITÉ 1 : Data & Analytics =====
+  {
+    url: "https://theanalyst.com/feed/",
+    source: "The Analyst (Opta)",
+    priority: 1,
+  },
+
   // ===== PRIORITÉ 2 : Médias anglais =====
   {
     url: "http://feeds.bbci.co.uk/sport/football/rss.xml",
