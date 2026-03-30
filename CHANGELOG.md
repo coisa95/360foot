@@ -388,7 +388,7 @@ media.api-sports.io, upload.wikimedia.org, images.pexels.com, flagcdn.com, crest
 
 ---
 
-## 16. Historique des modifications (43 au total)
+## 16. Historique des modifications (45 au total)
 
 ### Audit & corrections (30/03/2026)
 32. **Audit complet site** — SEO (87→93), Sécurité (55→75), Performance (65→80), Accessibilité (70→85)
@@ -409,6 +409,8 @@ media.api-sports.io, upload.wikimedia.org, images.pexels.com, flagcdn.com, crest
 47. **Sécurité : Rate limiting /api/search** — 30 req/min/IP avec Upstash Redis, headers X-RateLimit-*, fallback gracieux
 48. **Sécurité : timingSafeEqual CRON** — Helper `lib/auth.ts` + 15 routes CRON migrées vers crypto.timingSafeEqual()
 49. **Sécurité : Vérification git history** — Confirmé : aucun fichier .env dans l'historique git
+50. **Fix critique : Articles 404** — Colonnes `updated_at` et `image` n'existent pas dans table `articles` → supprimées des select Supabase (causait 404 sur TOUS les articles)
+51. **Fix : @vercel/analytics et @vercel/speed-insights** — Packages manquants ajoutés aux dependencies
 
 ### Corrections précédentes
 1. **maxDuration CRON** — Ajout `maxDuration = 300` sur 7 routes qui timeoutaient à 60s

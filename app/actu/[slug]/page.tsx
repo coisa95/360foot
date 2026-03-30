@@ -27,10 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!article) {
-    console.error("[generateMetadata] Article not found for slug:", JSON.stringify(slug), "supabaseUrl:", process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 30));
-    return { title: "Article introuvable - 360 Foot" };
-  }
+  if (!article) return { title: "Article introuvable - 360 Foot" };
 
   const articleUrl = `https://360-foot.com/actu/${slug}`;
   const articleTitle = article.seo_title || article.title;
@@ -74,7 +71,7 @@ export default async function ArticlePage({ params }: Props) {
     .single();
 
   if (articleError) {
-    console.error("[ArticlePage] Supabase error for slug:", slug, "Error:", articleError.message, articleError.code, articleError.details);
+    console.error("[ArticlePage] Supabase error for slug:", slug, "Error:", articleError.message);
   }
 
   if (!article) notFound();
