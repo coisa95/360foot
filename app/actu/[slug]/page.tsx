@@ -69,7 +69,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const { data: article, error: articleError } = await supabase
     .from("articles")
-    .select("id,title,slug,content,excerpt,type,tags,published_at,updated_at,og_image_url,image,seo_title,seo_description,league_id,match_id")
+    .select("id,title,slug,content,excerpt,type,tags,published_at,og_image_url,image,seo_title,seo_description,league_id,match_id")
     .eq("slug", slug)
     .single();
 
@@ -151,7 +151,7 @@ export default async function ArticlePage({ params }: Props) {
     description: escapeJsonLd(article.seo_description || article.excerpt),
     image: articleImageUrl,
     datePublished: article.published_at,
-    dateModified: article.updated_at || article.published_at,
+    dateModified: article.published_at,
     author: {
       "@type": "Person",
       name: "Rédaction 360 Foot",

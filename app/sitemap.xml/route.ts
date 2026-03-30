@@ -14,7 +14,7 @@ export async function GET() {
   ] = await Promise.all([
     supabase
       .from("articles")
-      .select("slug, updated_at, published_at")
+      .select("slug, published_at")
       .not("published_at", "is", null)
       .order("published_at", { ascending: false }),
     supabase
@@ -62,7 +62,7 @@ export async function GET() {
       xml += `
   <url>
     <loc>${baseUrl}/actu/${article.slug}</loc>
-    <lastmod>${new Date(article.updated_at || article.published_at).toISOString()}</lastmod>
+    <lastmod>${new Date(article.published_at).toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;

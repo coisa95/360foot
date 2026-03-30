@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     // Fetch all published articles
     const { data: articles } = await supabase
       .from("articles")
-      .select("slug, published_at, updated_at, type")
+      .select("slug, published_at, type")
       .not("published_at", "is", null)
       .order("published_at", { ascending: false });
 
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
     for (const article of articles || []) {
       urls.push({
         loc: `${BASE_URL}/actu/${article.slug}`,
-        lastmod: article.updated_at || article.published_at,
+        lastmod: article.published_at,
         priority: "0.8",
         changefreq: "weekly",
       });

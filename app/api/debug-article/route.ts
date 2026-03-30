@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     // Exact same query as article page
     const { data: article, error } = await supabase
       .from("articles")
-      .select("id,title,slug,content,excerpt,type,tags,published_at,updated_at,og_image_url,image,seo_title,seo_description,league_id,match_id")
+      .select("id,title,slug,content,excerpt,type,tags,published_at,og_image_url,image,seo_title,seo_description,league_id,match_id")
       .eq("slug", slug)
       .single();
 
