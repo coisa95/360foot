@@ -11,6 +11,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export const revalidate = 1800;
+export const maxDuration = 60;
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -75,20 +76,26 @@ export default async function ArticlePage({ params }: Props) {
 
   if (!article) notFound();
 
-  const { data: relatedArticles } = await supabase
-    .from("articles")
-    .select("id,title,slug,excerpt,type,published_at,og_image_url")
-    .neq("id", article.id)
-    .not("published_at", "is", null)
-    .order("published_at", { ascending: false })
-    .limit(5);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let relatedArticles: any[] | null = null;
+  let teams: Record<string, unknown>[] | null = null;
+  let players: Record<string, unknown>[] | null = null;
+  let leagues: Record<string, unknown>[] | null = null;
 
-  // Fetch entities for internal linking (limited to avoid massive payloads)
-  const [{ data: teams }, { data: players }, { data: leagues }] = await Promise.all([
-    supabase.from("teams").select("name, slug").order("name").limit(500),
-    supabase.from("players").select("name, slug").order("name").limit(1000),
-    supabase.from("leagues").select("name, slug").order("name").limit(500),
-  ]);
+  try {
+    const results = await Promise.all([
+      supabase.from("articles").select("id,title,slug,excerpt,type,published_at,og_image_url").neq("id", article.id).not("published_at", "is", null).order("published_at", { ascending: false }).limit(5),
+      supabase.from("teams").select("name, slug").order("name").limit(500),
+      supabase.from("players").select("name, slug").order("name").limit(1000),
+      supabase.from("leagues").select("name, slug").order("name").limit(500),
+    ]);
+    relatedArticles = results[0].data;
+    teams = results[1].data;
+    players = results[2].data;
+    leagues = results[3].data;
+  } catch (e) {
+    console.error("[ArticlePage] Error fetching related data:", e);
+  }
 
   // Apply internal links to article content + sanitize HTML
   let enrichedContent = article.content || "";
