@@ -23,6 +23,13 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     images: ["https://360-foot.com/api/og?title=Paris%20sportifs%20-%20Comparateur%20de%20bookmakers"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Paris sportifs - Comparateur de bookmakers - 360 Foot",
+    description:
+      "Comparez les meilleurs bookmakers pour parier sur le football africain. Bonus de bienvenue, cotes et avis.",
+    images: ["https://360-foot.com/api/og?title=Paris%20sportifs%20-%20Comparateur%20de%20bookmakers"],
+  },
 };
 
 export default async function BookmakersPage() {

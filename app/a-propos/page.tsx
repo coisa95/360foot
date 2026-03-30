@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     images: ["https://360-foot.com/api/og?title=%C3%80%20propos%20de%20360%20Foot"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "À propos de 360 Foot",
+    description:
+      "Découvrez 360 Foot, le média innovant dédié au football africain et européen propulsé par l'intelligence artificielle.",
+    images: ["https://360-foot.com/api/og?title=%C3%80%20propos%20de%20360%20Foot"],
+  },
 };
 
 export default function AboutPage() {

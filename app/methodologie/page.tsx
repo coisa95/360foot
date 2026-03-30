@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     images: ["https://360-foot.com/api/og?title=Methodologie%20-%20Comment%20360%20Foot%20produit%20ses%20contenus"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Méthodologie - Comment 360 Foot produit ses contenus",
+    description:
+      "Découvrez notre méthodologie : comment 360 Foot utilise l'intelligence artificielle pour générer des articles de qualité.",
+    images: ["https://360-foot.com/api/og?title=Methodologie%20-%20Comment%20360%20Foot%20produit%20ses%20contenus"],
+  },
 };
 
 export default function MethodologyPage() {
