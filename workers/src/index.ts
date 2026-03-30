@@ -86,13 +86,16 @@ cron.schedule("0 4,12,20 * * *", () => triggerJob("/api/cron/populate-players"))
 // 3x daily — Enrich players with career stats
 cron.schedule("0 5,13,21 * * *", () => triggerJob("/api/cron/enrich-players"));
 
+// Daily at 02:00 — Collect trending football keywords from Google Trends
+cron.schedule("0 2 * * *", () => triggerJob("/api/cron/collect-trends"));
+
 // ============================================
 // STARTUP
 // ============================================
 
 log("INFO", "=== 360 Foot CRON Worker started ===");
 log("INFO", `Target: ${SITE_URL}`);
-log("INFO", "12 CRON jobs scheduled:");
+log("INFO", "13 CRON jobs scheduled:");
 log("INFO", "  - collect-matches     → 0 * * * *");
 log("INFO", "  - generate-articles   → 10 * * * *");
 log("INFO", "  - generate-previews   → 20 * * * *");
@@ -105,6 +108,7 @@ log("INFO", "  - generate-sitemap    → 0 3 * * *");
 log("INFO", "  - process-rss         → 50 * * * *");
 log("INFO", "  - populate-players    → 0 4,12,20 * * *");
 log("INFO", "  - enrich-players      → 0 5,13,21 * * *");
+log("INFO", "  - collect-trends      → 0 2 * * *");
 log("INFO", "Worker running... Press Ctrl+C to stop.");
 
 // Keep process alive

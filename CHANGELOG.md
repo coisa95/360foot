@@ -446,6 +446,10 @@ media.api-sports.io, upload.wikimedia.org, images.pexels.com, flagcdn.com, crest
 29. **Liens affiliés** — 1xBet, Melbet, 1win (vrais liens) + carousel slider
 30. **Parsing Claude AI** — Strip markdown blocks avant JSON.parse
 31. **Setup initial** — Création projet Next.js 14 + Supabase + API-Football + Claude AI
+32. **SEO meta tags fix** — Ajout openGraph + twitter manquants sur /classements, /resultats, /a-propos, /bookmakers, /methodologie + correction canonical /classements
+33. **timingSafeEqual migration complète** — setup-rss + generate-trending migrés vers verifyCronAuth()
+34. **Rotation CRON_SECRET** — Nouveau secret base64 32 octets déployé sur .env.production + Vercel + Render
+35. **Rapport SEO Afrique Francophone** — PDF 30 pages : mots-clés football 16 pays, volumes, fiches pays, stratégie acquisition, plan 90 jours
 
 ---
 
@@ -456,9 +460,9 @@ media.api-sports.io, upload.wikimedia.org, images.pexels.com, flagcdn.com, crest
 3. **Optimisation fréquence CRON** — Réduire `enrich-matches` */10 → */30, `collect-matches` → 2x/jour
 4. **PWA complète** — Service worker et manifest pour mode hors-ligne
 5. **Dev local** — Configurer `.env.local` avec les vars Supabase pour permettre le dev local
-6. **Rotation CRON_SECRET** — ⚠️ Action manuelle : `openssl rand -base64 32` puis MAJ Vercel + Render + .env.production
+6. ~~**Rotation CRON_SECRET**~~ — ✅ Fait (openssl rand -base64 32, MAJ .env.production + Vercel + Render)
 7. ~~**Rate limiting /api/search**~~ — ✅ Fait (30 req/min/IP, Upstash Redis)
-8. ~~**timingSafeEqual pour CRON auth**~~ — ✅ Fait (lib/auth.ts + 15 routes)
+8. ~~**timingSafeEqual pour CRON auth**~~ — ✅ Fait (lib/auth.ts + 15/15 routes migrées, setup-rss + generate-trending corrigés)
 
 ---
 

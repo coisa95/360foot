@@ -95,17 +95,27 @@ export async function GET() {
     }
   }
 
-  // Ligues
+  // Ligues + sous-pages
   if (leagues) {
+    const leagueSubPages = ["resultats", "calendrier", "actualites", "buteurs", "passeurs"];
     for (const league of leagues) {
+      const lastmod = league.updated_at ? `<lastmod>${new Date(league.updated_at).toISOString()}</lastmod>` : "";
       xml += `
   <url>
     <loc>${baseUrl}/ligue/${league.slug}</loc>
-    ${league.updated_at ? `<lastmod>${new Date(league.updated_at).toISOString()}</lastmod>` : ""}
+    ${lastmod}
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>`;
-
+      for (const sub of leagueSubPages) {
+        xml += `
+  <url>
+    <loc>${baseUrl}/ligue/${league.slug}/${sub}</loc>
+    ${lastmod}
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+      }
     }
   }
 

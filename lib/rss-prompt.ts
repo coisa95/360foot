@@ -60,7 +60,11 @@ export interface RSSItem {
   imageUrl?: string;
 }
 
-export function buildRSSUserPrompt(item: RSSItem): string {
+export function buildRSSUserPrompt(item: RSSItem, trendingKeywords?: string[]): string {
+  const trendingSection = trendingKeywords && trendingKeywords.length > 0
+    ? `\nMOTS-CLÉS TENDANCE DU JOUR (à intégrer naturellement si pertinent) :\n${trendingKeywords.join(", ")}\n`
+    : "";
+
   return `Voici les informations brutes issues d'un flux RSS. Transforme-les en article original 360 Foot.
 
 Titre original : ${item.title}
@@ -68,13 +72,14 @@ Résumé : ${item.summary}
 Source : ${item.source}
 Date : ${item.date}
 ${item.details ? `Catégories/Tags : ${item.details}` : ""}
-
+${trendingSection}
 RAPPELS :
 - Longueur cible : 800 à 1300 mots
 - NE COPIE AUCUNE phrase de la source — crée un contenu 100% original en français
 - Si la source est en anglais/espagnol/allemand, traduis et reformule entièrement
 - Ajoute de la valeur 360° (analyse, contexte africain, stats, tactique)
 - Intègre les noms d'équipes et joueurs pour le maillage interne
+- Si des mots-clés tendance sont fournis, intègre-les naturellement dans le texte (titres, sous-titres, paragraphes) sans forcer
 - Extrais les entités : joueurs, clubs, ligues, compétitions, insight
 - Réponds UNIQUEMENT en JSON valide, sans backticks ni markdown`;
 }

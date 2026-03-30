@@ -208,22 +208,39 @@ export async function GET(request: Request) {
 
 function isFootballRelated(item: RSSItem): boolean {
   const text = `${item.title} ${item.summary}`.toLowerCase();
+
+  // Exclure les autres sports en premier
+  const excludeKeywords = [
+    "nba", "basketball", "basket",
+    "nfl", "american football", "touchdown", "quarterback",
+    "nhl", "hockey", "ice hockey",
+    "mlb", "baseball",
+    "tennis", "roland garros", "wimbledon", "atp", "wta",
+    "rugby", "top 14 rugby", "six nations rugby",
+    "f1", "formula 1", "formule 1", "grand prix auto",
+    "golf", "masters golf", "pga", "augusta",
+    "boxe", "boxing", "ufc", "mma",
+    "cyclisme", "tour de france vélo", "giro",
+    "natation", "swimming", "athletics", "athlétisme",
+    "cricket", "nascar", "handball",
+    "esport", "league of legends", "valorant",
+  ];
+  if (excludeKeywords.some((kw) => text.includes(kw))) return false;
+
   const footballKeywords = [
     "football", "foot", "soccer", "fútbol", "fußball",
-    "match", "but", "goal", "gol", "tor",
     "transfert", "mercato", "transfer", "fichaje", "traspaso",
-    "ligue", "league", "liga", "serie a", "bundesliga",
-    "champion", "coupe", "cup", "copa", "pokal",
+    "ligue 1", "premier league", "la liga", "serie a", "bundesliga",
+    "champions league", "ligue des champions", "europa league",
+    "coupe du monde", "world cup", "copa america",
     "can", "afcon", "caf",
-    "sélection", "entraîneur", "joueur", "club",
-    "premier league", "la liga", "mls", "saudi",
+    "entraîneur", "joueur",
     "stade", "stadium", "estadio",
-    "arbitre", "penalty", "carton",
-    "ballon", "gardien", "attaquant", "défenseur", "milieu",
-    "fifa", "uefa", "fussball",
-    // Termes spécifiques pour les sources non-francophones
+    "arbitre", "penalty", "carton rouge", "carton jaune",
+    "gardien", "attaquant", "défenseur", "milieu de terrain",
+    "fifa", "uefa",
     "striker", "midfielder", "defender", "goalkeeper",
-    "relegation", "promotion", "playoff",
+    "ballon d'or",
   ];
   return footballKeywords.some((keyword) => text.includes(keyword));
 }

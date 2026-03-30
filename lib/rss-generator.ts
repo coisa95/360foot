@@ -25,12 +25,24 @@ export async function generateArticleFromRSS(
   item: RSSItem
 ): Promise<string | null> {
   try {
+    // 0. Récupérer les mots-clés tendance du jour
+    const supabaseForTrends = createClient();
+    const today = new Date().toISOString().split("T")[0];
+    const { data: trendingData } = await supabaseForTrends
+      .from("trending_keywords")
+      .select("keyword")
+      .gte("fetched_at", today)
+      .order("volume_score", { ascending: false })
+      .limit(15);
+
+    const trendingKeywords = trendingData?.map((t: { keyword: string }) => t.keyword) || [];
+
     // 1. Appel Claude pour générer l'article
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 4000,
       system: RSS_ARTICLE_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: buildRSSUserPrompt(item) }],
+      messages: [{ role: "user", content: buildRSSUserPrompt(item, trendingKeywords) }],
     });
 
     // 2. Parser la réponse JSON

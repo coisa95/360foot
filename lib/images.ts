@@ -81,21 +81,37 @@ export async function getArticleImages(
     });
   }
 
-  // ═══ PRIORITÉ 2 : Logos des équipes comme image header ═══
-  if (images.length === 0 && input.homeTeamLogo && input.awayTeamLogo) {
-    // Use the dynamic OG image which will render team logos
-    const ogUrl = buildOgImageUrl(input);
-    images.push({
-      url: ogUrl,
-      alt: generateContextualAlt(input, "featured"),
-      credit: "360 Foot",
-      width: 1200,
-      height: 630,
-      position: "featured",
-    });
+  // ═══ PRIORITÉ 2 : Image par défaut de la ligue ═══
+  if (images.length === 0) {
+    const leagueImage = getLeagueDefaultImage(input.league);
+    if (leagueImage) {
+      images.push({
+        url: leagueImage,
+        alt: generateContextualAlt(input, "featured"),
+        credit: "Photo : Unsplash",
+        width: 1200,
+        height: 675,
+        position: "featured",
+      });
+    }
   }
 
-  // ═══ PRIORITÉ 3 : Image OG dynamique (toujours unique par article) ═══
+  // ═══ PRIORITÉ 4 : Image Unsplash (recherche dynamique) ═══
+  if (images.length === 0) {
+    const unsplashImage = await searchUnsplashImage(input);
+    if (unsplashImage) {
+      images.push({
+        url: unsplashImage.url,
+        alt: generateContextualAlt(input, "featured"),
+        credit: `Photo : ${unsplashImage.credit} / Unsplash`,
+        width: 1200,
+        height: 675,
+        position: "featured",
+      });
+    }
+  }
+
+  // ═══ PRIORITÉ 5 : Image OG dynamique (dernier fallback) ═══
   if (images.length === 0) {
     const ogUrl = buildOgImageUrl(input);
     images.push({
@@ -125,6 +141,97 @@ export async function getArticleImages(
   }
 
   return images;
+}
+
+// ----- League default images -----
+
+const LEAGUE_IMAGES: Record<string, string> = {
+  "Ligue 1": "/images/leagues/ligue-1-france.jpg",
+  "Ligue 1 Côte d'Ivoire": "/images/leagues/ligue-1-cote-divoire.jpg",
+  "Ligue Pro Sénégal": "/images/leagues/ligue-pro-senegal.jpg",
+  "Elite One Cameroun": "/images/leagues/elite-one-cameroun.jpg",
+  "CAN": "/images/leagues/can.jpg",
+  "CAF Champions League": "/images/leagues/caf-champions-league.jpg",
+  "Primus Ligue Mali": "/images/leagues/primus-ligue-mali.jpg",
+  "Fasofoot": "/images/leagues/fasofoot-burkina-faso.jpg",
+  "Championnat National Bénin": "/images/leagues/championnat-benin.jpg",
+  "Premier League": "/images/leagues/premier-league.jpg",
+  "La Liga": "/images/leagues/la-liga.jpg",
+  "Serie A": "/images/leagues/serie-a.jpg",
+  "Bundesliga": "/images/leagues/bundesliga.jpg",
+  "Champions League": "/images/leagues/champions-league.jpg",
+  "Europa League": "/images/leagues/europa-league.jpg",
+  "Conference League": "/images/leagues/conference-league.jpg",
+  "MLS": "/images/leagues/mls.jpg",
+  "Saudi Pro League": "/images/leagues/saudi-pro-league.jpg",
+  "Coupe du Monde": "/images/leagues/coupe-du-monde.jpg",
+  "Qualifs CdM Afrique": "/images/leagues/qualifs-cdm.jpg",
+  "Qualifs CdM Europe": "/images/leagues/qualifs-cdm.jpg",
+  "Qualifs CdM Amérique Sud": "/images/leagues/qualifs-cdm.jpg",
+  "Matchs Amicaux": "/images/leagues/matchs-amicaux.jpg",
+  "AFC Champions League": "/images/leagues/afc-champions-league.jpg",
+  "AFC Cup": "/images/leagues/afc-cup.jpg",
+  "CONCACAF Champions League": "/images/leagues/concacaf-champions-league.jpg",
+  "CONCACAF Gold Cup": "/images/leagues/concacaf-gold-cup.jpg",
+  "CONCACAF League": "/images/leagues/concacaf-league.jpg",
+  "Copa America": "/images/leagues/copa-america.jpg",
+  "Copa Libertadores": "/images/leagues/copa-libertadores.jpg",
+  "Copa Sudamericana": "/images/leagues/copa-sudamericana.jpg",
+  "Coupe d'Asie": "/images/leagues/coupe-asie.jpg",
+  "Coupe de la Confédération CAF": "/images/leagues/coupe-confederation-caf.jpg",
+  "Euro": "/images/leagues/euro.jpg",
+  "Linafoot Ligue 1": "/images/leagues/linafoot-ligue-1.jpg",
+  "Mercato": "/images/leagues/generic.jpg",
+  "Football Africain": "/images/leagues/can.jpg",
+  "Football": "/images/leagues/generic.jpg",
+};
+
+function getLeagueDefaultImage(league: string): string | null {
+  return LEAGUE_IMAGES[league] || LEAGUE_IMAGES["Football"] || null;
+}
+
+// ----- Unsplash fallback -----
+
+async function searchUnsplashImage(
+  input: ArticleImageInput
+): Promise<{ url: string; credit: string } | null> {
+  const accessKey = process.env.UNSPLASH_ACCESS_KEY;
+  if (!accessKey) return null;
+
+  // Build search query from article context
+  const queries: string[] = [];
+  if (input.teams.length > 0) queries.push(input.teams[0] + " football");
+  if (input.league && input.league !== "Football") queries.push(input.league);
+  queries.push("football stadium");
+
+  for (const query of queries) {
+    try {
+      const res = await fetch(
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=3&orientation=landscape`,
+        {
+          headers: { Authorization: `Client-ID ${accessKey}` },
+        }
+      );
+
+      if (!res.ok) continue;
+
+      const data = await res.json();
+      const results = data.results || [];
+
+      if (results.length > 0) {
+        // Pick a random one from top 3 for variety
+        const photo = results[Math.floor(Math.random() * results.length)];
+        return {
+          url: photo.urls?.regular || photo.urls?.small,
+          credit: photo.user?.name || "Unsplash",
+        };
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  return null;
 }
 
 // ----- Build OG URL for og_image_url field -----

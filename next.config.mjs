@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       {
@@ -45,6 +46,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "img.rmcsport.bfmtv.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
     formats: ["image/avif", "image/webp"],

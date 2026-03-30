@@ -134,7 +134,7 @@ export function Header() {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="border-t border-dark-border bg-dark-bg px-4 pb-4 lg:hidden">
-          <nav className="flex flex-col gap-1 pt-2">
+          <nav aria-label="Navigation mobile" className="flex flex-col gap-1 pt-2">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
