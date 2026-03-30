@@ -185,16 +185,26 @@ function extractTeamNames(html: string): string[] {
 
 function detectLeague(tags: string[]): string {
   const tagStr = tags.join(" ").toLowerCase();
-  if (tagStr.includes("ligue 1 côte") || tagStr.includes("ligue 1 cote")) return "Ligue 1 Côte d'Ivoire";
-  if (tagStr.includes("ligue-1") || tagStr.includes("ligue 1") || tagStr.includes("ligue1")) return "Ligue 1";
-  if (tagStr.includes("premier league") || tagStr.includes("premier-league")) return "Premier League";
-  if (tagStr.includes("la liga") || tagStr.includes("liga")) return "La Liga";
+
+  // 1. Compétitions internationales (avant les ligues domestiques)
   if (tagStr.includes("champions league") || tagStr.includes("ligue des champions")) return "Champions League";
-  if (tagStr.includes("europa league")) return "Europa League";
+  if (tagStr.includes("europa league") || tagStr.includes("ligue europa")) return "Europa League";
   if (tagStr.includes("conference league")) return "Conference League";
   if (tagStr.includes("can") || tagStr.includes("afcon") || tagStr.includes("coupe d'afrique")) return "CAN";
-  if (tagStr.includes("serie a")) return "Serie A";
+
+  // 2. Ligues africaines (avant Ligue 1 France pour éviter les faux positifs)
+  if (tagStr.includes("ligue 1 côte") || tagStr.includes("ligue 1 cote") || tagStr.includes("ligue 1 ivoirienne") || tagStr.includes("côte d'ivoire") || tagStr.includes("cote d'ivoire")) return "Ligue 1 Côte d'Ivoire";
+  if (tagStr.includes("ligue pro sénégal") || tagStr.includes("ligue sénégalaise") || tagStr.includes("ligue pro senegal")) return "Ligue Pro Sénégal";
+  if (tagStr.includes("elite one") || tagStr.includes("elite one cameroun")) return "Elite One Cameroun";
+
+  // 3. Ligues européennes (ordre spécifique pour éviter les conflits)
   if (tagStr.includes("bundesliga")) return "Bundesliga";
+  if (tagStr.includes("serie a") || tagStr.includes("calcio")) return "Serie A";
+  if (tagStr.includes("premier league") || tagStr.includes("premier-league") || tagStr.includes("epl")) return "Premier League";
+  if (tagStr.includes("la liga") || tagStr.includes("liga española") || tagStr.includes("liga espagnole")) return "La Liga";
+  if (tagStr.includes("ligue-1") || tagStr.includes("ligue 1") || tagStr.includes("ligue1")) return "Ligue 1";
+
+  // 4. Autres
   if (tagStr.includes("mls")) return "MLS";
   if (tagStr.includes("saudi") || tagStr.includes("saoudien")) return "Saudi Pro League";
   if (tagStr.includes("mercato") || tagStr.includes("transfert")) return "Mercato";
