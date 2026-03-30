@@ -8,10 +8,17 @@ export async function GET(request: Request) {
   try {
     const supabase = createClient();
 
+    // First: get all columns by selecting *
+    const { data: articleStar, error: starError } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
     // Exact same query as article page
     const { data: article, error } = await supabase
       .from("articles")
-      .select("id,title,slug,content,excerpt,type,tags,published_at,og_image_url,image,seo_title,seo_description,league_id,match_id")
+      .select("id,title,slug,content,excerpt,type,tags,published_at,og_image_url,seo_title,seo_description,league_id,match_id")
       .eq("slug", slug)
       .single();
 
@@ -39,6 +46,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       searched_slug: slug,
+      actual_columns: articleStar ? Object.keys(articleStar) : [],
+      star_error: starError ? starError.message : null,
       article_found: !!article,
       article_title: article?.title || null,
       article_content_length: article?.content?.length || 0,

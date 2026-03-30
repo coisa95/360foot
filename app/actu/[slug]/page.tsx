@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: article } = await supabase
     .from("articles")
-    .select("title,slug,seo_title,seo_description,excerpt,og_image_url,image,published_at")
+    .select("title,slug,seo_title,seo_description,excerpt,og_image_url,published_at")
     .eq("slug", slug)
     .single();
 
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const articleTitle = article.seo_title || article.title;
   const rawDescription = article.seo_description || article.excerpt || "";
   const articleDescription = rawDescription.length > 155 ? rawDescription.slice(0, 152) + "..." : rawDescription;
-  const articleImage = article.og_image_url || article.image || "https://360-foot.com/icon-512.png";
+  const articleImage = article.og_image_url || article.og_image_url || "https://360-foot.com/icon-512.png";
 
   return {
     title: articleTitle,
@@ -69,7 +69,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const { data: article, error: articleError } = await supabase
     .from("articles")
-    .select("id,title,slug,content,excerpt,type,tags,published_at,og_image_url,image,seo_title,seo_description,league_id,match_id")
+    .select("id,title,slug,content,excerpt,type,tags,published_at,og_image_url,seo_title,seo_description,league_id,match_id")
     .eq("slug", slug)
     .single();
 
@@ -142,7 +142,7 @@ export default async function ArticlePage({ params }: Props) {
     return str.replace(/<\/script/gi, "<\\/script").replace(/<!--/g, "<\\!--");
   };
 
-  const articleImageUrl = article.og_image_url || article.image || "https://360-foot.com/icon-512.png";
+  const articleImageUrl = article.og_image_url || article.og_image_url || "https://360-foot.com/icon-512.png";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -236,10 +236,10 @@ export default async function ArticlePage({ params }: Props) {
           </header>
 
           {/* Image */}
-          {(article.og_image_url || article.image) && (
+          {(article.og_image_url || article.og_image_url) && (
             <div className="relative mb-8 rounded-xl overflow-hidden aspect-video">
               <Image
-                src={article.og_image_url || article.image}
+                src={article.og_image_url || article.og_image_url}
                 alt={article.title}
                 fill
                 className="object-cover"
