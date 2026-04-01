@@ -47,10 +47,6 @@ const nextConfig = {
         protocol: "https",
         hostname: "img.rmcsport.bfmtv.com",
       },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
     ],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 7, // 7 days

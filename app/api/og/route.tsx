@@ -11,7 +11,197 @@ export async function GET(request: NextRequest) {
     const league = searchParams.get("league") || "";
     const homeLogo = searchParams.get("homeLogo") || "";
     const awayLogo = searchParams.get("awayLogo") || "";
+    const leagueLogo = searchParams.get("leagueLogo") || "";
 
+    const hasLogos = !!(homeLogo && awayLogo);
+
+    // Match articles with team logos → diagonal VS layout
+    if (hasLogos) {
+      return new ImageResponse(
+        (
+          <div
+            style={{
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              position: "relative",
+              overflow: "hidden",
+              fontFamily: "sans-serif",
+              backgroundColor: "#0891b2",
+            }}
+          >
+            {/* Right triangle (light) — large rotated box */}
+            <div
+              style={{
+                position: "absolute",
+                top: "-300px",
+                right: "-200px",
+                width: "1200px",
+                height: "1200px",
+                backgroundColor: "#f0f9ff",
+                transform: "rotate(30deg)",
+                transformOrigin: "center center",
+                display: "flex",
+              }}
+            />
+
+            {/* Home team logo — left side */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "500px",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={homeLogo}
+                alt="Home"
+                width={220}
+                height={220}
+                style={{ width: "220px", height: "220px", objectFit: "contain" }}
+              />
+            </div>
+
+            {/* Away team logo — right side */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "500px",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={awayLogo}
+                alt="Away"
+                width={220}
+                height={220}
+                style={{ width: "220px", height: "220px", objectFit: "contain" }}
+              />
+            </div>
+
+            {/* VS badge — center */}
+            <div
+              style={{
+                position: "absolute",
+                top: "250px",
+                left: "555px",
+                width: "90px",
+                height: "90px",
+                borderRadius: "50%",
+                backgroundColor: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.25)",
+                border: "3px solid #e2e8f0",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "36px",
+                  fontWeight: "bold",
+                  color: "#0f172a",
+                }}
+              >
+                VS
+              </span>
+            </div>
+
+            {/* League name — bottom center */}
+            {league && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "24px",
+                  left: "400px",
+                  width: "400px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px",
+                  backgroundColor: "rgba(15,23,42,0.85)",
+                  padding: "10px 28px",
+                  borderRadius: "30px",
+                }}
+              >
+                {leagueLogo && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={leagueLogo}
+                    alt=""
+                    width={24}
+                    height={24}
+                    style={{ width: "24px", height: "24px", objectFit: "contain" }}
+                  />
+                )}
+                <span
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: 600,
+                    color: "#ffffff",
+                  }}
+                >
+                  {league}
+                </span>
+              </div>
+            )}
+
+            {/* 360 Foot branding — top left */}
+            <div
+              style={{
+                position: "absolute",
+                top: "20px",
+                left: "24px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <div
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  backgroundColor: "#84cc16",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "13px",
+                  fontWeight: "bold",
+                  color: "#0f172a",
+                }}
+              >
+                360
+              </div>
+              <span
+                style={{
+                  fontSize: "22px",
+                  fontWeight: "bold",
+                  color: "#ffffff",
+                }}
+              >
+                360 Foot
+              </span>
+            </div>
+          </div>
+        ),
+        { width: 1200, height: 630 }
+      );
+    }
+
+    // Non-match articles (transfers, news, etc.) → title-based layout
     const typeLabel =
       type === "preview"
         ? "Avant-Match"
@@ -21,8 +211,7 @@ export async function GET(request: NextRequest) {
             ? "Actualité"
             : "Résultat";
 
-    const accentColor = "#84cc16"; // lime-500
-    const hasLogos = homeLogo && awayLogo;
+    const accentColor = "#84cc16";
 
     return new ImageResponse(
       (
@@ -47,8 +236,10 @@ export async function GET(request: NextRequest) {
               right: "-80px",
               width: "300px",
               height: "300px",
-              background: "radial-gradient(circle, rgba(132,204,22,0.15), transparent)",
+              background:
+                "radial-gradient(circle, rgba(132,204,22,0.15), transparent)",
               borderRadius: "50%",
+              display: "flex",
             }}
           />
           <div
@@ -58,8 +249,10 @@ export async function GET(request: NextRequest) {
               left: "-60px",
               width: "250px",
               height: "250px",
-              background: "radial-gradient(circle, rgba(16,185,129,0.1), transparent)",
+              background:
+                "radial-gradient(circle, rgba(8,145,178,0.15), transparent)",
               borderRadius: "50%",
+              display: "flex",
             }}
           />
 
@@ -114,85 +307,32 @@ export async function GET(request: NextRequest) {
                 fontSize: "18px",
                 fontWeight: "bold",
                 textTransform: "uppercase",
+                display: "flex",
               }}
             >
               {typeLabel}
             </div>
           </div>
 
-          {/* Main content area */}
+          {/* Title */}
           <div
             style={{
               display: "flex",
               flex: 1,
               alignItems: "center",
-              gap: "40px",
             }}
           >
-            {/* Title */}
             <div
               style={{
+                fontSize: title.length > 60 ? "42px" : "56px",
+                fontWeight: "bold",
+                color: "#ffffff",
+                lineHeight: 1.2,
                 display: "flex",
-                flex: 1,
-                flexDirection: "column",
-                justifyContent: "center",
               }}
             >
-              <h1
-                style={{
-                  fontSize: hasLogos
-                    ? title.length > 60 ? "36px" : "44px"
-                    : title.length > 60 ? "42px" : "56px",
-                  fontWeight: "bold",
-                  color: "#ffffff",
-                  lineHeight: 1.2,
-                  margin: 0,
-                  maxWidth: "100%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {title}
-              </h1>
+              {title}
             </div>
-
-            {/* Team logos — VS layout */}
-            {hasLogos && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "20px",
-                  flexShrink: 0,
-                }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={homeLogo}
-                  alt="Home"
-                  width={80}
-                  height={80}
-                  style={{ width: "80px", height: "80px", objectFit: "contain" }}
-                />
-                <span
-                  style={{
-                    fontSize: "28px",
-                    fontWeight: "bold",
-                    color: "#64748b",
-                  }}
-                >
-                  VS
-                </span>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={awayLogo}
-                  alt="Away"
-                  width={80}
-                  height={80}
-                  style={{ width: "80px", height: "80px", objectFit: "contain" }}
-                />
-              </div>
-            )}
           </div>
 
           {/* Bottom bar */}
@@ -206,30 +346,17 @@ export async function GET(request: NextRequest) {
             }}
           >
             {league && (
-              <span
-                style={{
-                  fontSize: "22px",
-                  color: "#94a3b8",
-                }}
-              >
+              <span style={{ fontSize: "22px", color: "#94a3b8", display: "flex" }}>
                 {league}
               </span>
             )}
-            <span
-              style={{
-                fontSize: "18px",
-                color: "#64748b",
-              }}
-            >
+            <span style={{ fontSize: "18px", color: "#64748b", display: "flex" }}>
               360-foot.com
             </span>
           </div>
         </div>
       ),
-      {
-        width: 1200,
-        height: 630,
-      }
+      { width: 1200, height: 630 }
     );
   } catch (error) {
     console.error("Error generating OG image:", error);

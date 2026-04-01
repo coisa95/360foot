@@ -31,7 +31,7 @@ export function MatchLeagueGroup({
         className="flex w-full items-center gap-2 px-4 py-2.5 bg-dark-bg/50 border-b border-gray-800 hover:bg-gray-800/50 transition-colors"
       >
         {leagueLogo && (
-          <Image src={leagueLogo} alt="" width={16} height={16} className="h-4 w-4 object-contain" />
+          <Image src={leagueLogo} alt={`Logo ${leagueName}`} width={16} height={16} className="h-4 w-4 object-contain" />
         )}
         <Link
           href={`/ligue/${leagueSlug}`}
@@ -93,7 +93,7 @@ export function MatchLeagueGroup({
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0 flex-1">
                       {homeTeam?.logo_url && (
-                        <Image src={homeTeam.logo_url} alt="" width={18} height={18} className="h-4.5 w-4.5 object-contain shrink-0" />
+                        <Image src={homeTeam.logo_url} alt={`Logo ${homeTeam.name}`} width={18} height={18} className="h-4.5 w-4.5 object-contain shrink-0" />
                       )}
                       <span className={`text-xs sm:text-sm truncate ${isFinished && (match.score_home ?? 0) > (match.score_away ?? 0) ? "font-bold text-white" : "text-gray-300"}`}>
                         {homeTeam?.name || "Équipe A"}
@@ -108,7 +108,7 @@ export function MatchLeagueGroup({
                   <div className="flex items-center justify-between gap-2 mt-0.5">
                     <div className="flex items-center gap-2 min-w-0 flex-1">
                       {awayTeam?.logo_url && (
-                        <Image src={awayTeam.logo_url} alt="" width={18} height={18} className="h-4.5 w-4.5 object-contain shrink-0" />
+                        <Image src={awayTeam.logo_url} alt={`Logo ${awayTeam.name}`} width={18} height={18} className="h-4.5 w-4.5 object-contain shrink-0" />
                       )}
                       <span className={`text-xs sm:text-sm truncate ${isFinished && (match.score_away ?? 0) > (match.score_home ?? 0) ? "font-bold text-white" : "text-gray-300"}`}>
                         {awayTeam?.name || "Équipe B"}

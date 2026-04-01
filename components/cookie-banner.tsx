@@ -37,12 +37,14 @@ export function CookieBanner() {
         <div className="mt-3 flex items-center gap-3">
           <button
             onClick={accept}
+            aria-label="Accepter les cookies"
             className="rounded-lg bg-lime-400 px-4 py-1.5 text-sm font-semibold text-black hover:bg-lime-300 transition-colors"
           >
             Accepter
           </button>
           <button
             onClick={refuse}
+            aria-label="Refuser les cookies"
             className="text-sm text-gray-400 hover:text-white transition-colors"
           >
             Refuser

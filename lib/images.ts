@@ -88,7 +88,7 @@ export async function getArticleImages(
       images.push({
         url: leagueImage,
         alt: generateContextualAlt(input, "featured"),
-        credit: "Photo : Unsplash",
+        credit: "360 Foot",
         width: 1200,
         height: 675,
         position: "featured",
@@ -96,22 +96,7 @@ export async function getArticleImages(
     }
   }
 
-  // ═══ PRIORITÉ 4 : Image Unsplash (recherche dynamique) ═══
-  if (images.length === 0) {
-    const unsplashImage = await searchUnsplashImage(input);
-    if (unsplashImage) {
-      images.push({
-        url: unsplashImage.url,
-        alt: generateContextualAlt(input, "featured"),
-        credit: `Photo : ${unsplashImage.credit} / Unsplash`,
-        width: 1200,
-        height: 675,
-        position: "featured",
-      });
-    }
-  }
-
-  // ═══ PRIORITÉ 5 : Image OG dynamique (dernier fallback) ═══
+  // ═══ PRIORITÉ 3 : Image OG dynamique (dernier fallback) ═══
   if (images.length === 0) {
     const ogUrl = buildOgImageUrl(input);
     images.push({
@@ -145,7 +130,7 @@ export async function getArticleImages(
 
 // ----- League default images -----
 
-const LEAGUE_IMAGES: Record<string, string> = {
+export const LEAGUE_IMAGES: Record<string, string> = {
   "Ligue 1": "/images/leagues/ligue-1-france.jpg",
   "Ligue 1 Côte d'Ivoire": "/images/leagues/ligue-1-cote-divoire.jpg",
   "Ligue Pro Sénégal": "/images/leagues/ligue-pro-senegal.jpg",
@@ -188,50 +173,6 @@ const LEAGUE_IMAGES: Record<string, string> = {
 
 function getLeagueDefaultImage(league: string): string | null {
   return LEAGUE_IMAGES[league] || LEAGUE_IMAGES["Football"] || null;
-}
-
-// ----- Unsplash fallback -----
-
-async function searchUnsplashImage(
-  input: ArticleImageInput
-): Promise<{ url: string; credit: string } | null> {
-  const accessKey = process.env.UNSPLASH_ACCESS_KEY;
-  if (!accessKey) return null;
-
-  // Build search query from article context
-  const queries: string[] = [];
-  if (input.teams.length > 0) queries.push(input.teams[0] + " football");
-  if (input.league && input.league !== "Football") queries.push(input.league);
-  queries.push("football stadium");
-
-  for (const query of queries) {
-    try {
-      const res = await fetch(
-        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=3&orientation=landscape`,
-        {
-          headers: { Authorization: `Client-ID ${accessKey}` },
-        }
-      );
-
-      if (!res.ok) continue;
-
-      const data = await res.json();
-      const results = data.results || [];
-
-      if (results.length > 0) {
-        // Pick a random one from top 3 for variety
-        const photo = results[Math.floor(Math.random() * results.length)];
-        return {
-          url: photo.urls?.regular || photo.urls?.small,
-          credit: photo.user?.name || "Unsplash",
-        };
-      }
-    } catch {
-      continue;
-    }
-  }
-
-  return null;
 }
 
 // ----- Build OG URL for og_image_url field -----

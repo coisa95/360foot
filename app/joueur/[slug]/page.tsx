@@ -83,7 +83,7 @@ export default async function PlayerPage({ params }: Props) {
   const { data: relatedArticles } = await supabase
     .from("articles")
     .select("id,title,slug,excerpt,type,published_at,og_image_url")
-    .ilike("content", `%${player.name}%`)
+    .ilike("title", `%${player.name}%`)
     .not("published_at", "is", null)
     .order("published_at", { ascending: false })
     .limit(5);

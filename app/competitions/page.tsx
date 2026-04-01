@@ -79,7 +79,8 @@ export default async function CompetitionsPage() {
   const { data: leagues } = await supabase
     .from("leagues")
     .select("name, slug, logo_url, country")
-    .order("name");
+    .order("name")
+    .limit(100);
 
   // Group by category
   const categories = new Map<string, any[]>();

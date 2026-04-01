@@ -48,7 +48,7 @@ export function LeagueFilter({
               return (
                 <>
                   {found?.logo_url && (
-                    <Image src={found.logo_url} alt="" width={14} height={14} className="h-3.5 w-3.5 object-contain" />
+                    <Image src={found.logo_url} alt={`Logo ${found.name}`} width={14} height={14} className="h-3.5 w-3.5 object-contain" />
                   )}
                   {found?.name || currentLigue}
                 </>
@@ -92,7 +92,7 @@ export function LeagueFilter({
               }`}
             >
               {l.logo_url ? (
-                <Image src={l.logo_url} alt="" width={20} height={20} className="h-5 w-5 object-contain shrink-0" />
+                <Image src={l.logo_url} alt={`Logo ${l.name}`} width={20} height={20} className="h-5 w-5 object-contain shrink-0" />
               ) : (
                 <div className="h-5 w-5 rounded bg-gray-700 flex items-center justify-center text-[10px] text-gray-500 shrink-0">
                   {l.name?.charAt(0)}

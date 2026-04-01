@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const articleTitle = article.seo_title || article.title;
   const rawDescription = article.seo_description || article.excerpt || "";
   const articleDescription = rawDescription.length > 155 ? rawDescription.slice(0, 152) + "..." : rawDescription;
-  const articleImage = article.og_image_url || article.og_image_url || "https://360-foot.com/icon-512.png";
+  const articleImage = article.og_image_url || "https://360-foot.com/icon-512.png";
 
   return {
     title: articleTitle,
@@ -85,9 +85,9 @@ export default async function ArticlePage({ params }: Props) {
   try {
     const results = await Promise.all([
       supabase.from("articles").select("id,title,slug,excerpt,type,published_at,og_image_url").neq("id", article.id).not("published_at", "is", null).order("published_at", { ascending: false }).limit(5),
-      supabase.from("teams").select("name, slug").order("name").limit(500),
-      supabase.from("players").select("name, slug").order("name").limit(1000),
-      supabase.from("leagues").select("name, slug").order("name").limit(500),
+      supabase.from("teams").select("name, slug").order("name").limit(100),
+      supabase.from("players").select("name, slug").order("name").limit(200),
+      supabase.from("leagues").select("name, slug").order("name").limit(50),
     ]);
     relatedArticles = results[0].data;
     teams = results[1].data;
@@ -139,7 +139,7 @@ export default async function ArticlePage({ params }: Props) {
     return str.replace(/<\/script/gi, "<\\/script").replace(/<!--/g, "<\\!--");
   };
 
-  const articleImageUrl = article.og_image_url || article.og_image_url || "https://360-foot.com/icon-512.png";
+  const articleImageUrl = article.og_image_url || "https://360-foot.com/icon-512.png";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -233,10 +233,10 @@ export default async function ArticlePage({ params }: Props) {
           </header>
 
           {/* Image */}
-          {(article.og_image_url || article.og_image_url) && (
+          {article.og_image_url && (
             <div className="relative mb-8 rounded-xl overflow-hidden aspect-video">
               <Image
-                src={article.og_image_url || article.og_image_url}
+                src={article.og_image_url}
                 alt={article.title}
                 fill
                 className="object-cover"
