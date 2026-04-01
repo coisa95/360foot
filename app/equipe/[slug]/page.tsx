@@ -125,7 +125,7 @@ export default async function TeamPage({ params }: Props) {
     .from("articles")
     .select("id,slug,title,excerpt,type,created_at,og_image_url,league:leagues!league_id(name)")
     .not("published_at", "is", null)
-    .or(`title.ilike.%${team.name}%,content.ilike.%${team.name}%`)
+    .ilike("title", `%${team.name}%`)
     .order("created_at", { ascending: false })
     .limit(6);
 
