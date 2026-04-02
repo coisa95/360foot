@@ -40,3 +40,4 @@ supabase/.temp/
 .claude/
 workers/node_modules/
 workers/dist/
+CHANGELOG.md
