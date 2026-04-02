@@ -2,20 +2,20 @@ export function GET() {
   const robotsTxt = `User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /actu?page=
-Disallow: /actu?categorie=*&page=
+Disallow: /actu?*
+Disallow: /matchs?*
+Disallow: /recherche
+Disallow: /classement/
+Disallow: /resultats
 
 User-agent: Googlebot
 Allow: /
 Disallow: /api/
-Disallow: /actu?page=
-Disallow: /actu?categorie=*&page=
-
-User-agent: Bingbot
-Allow: /
-Disallow: /api/
-Disallow: /actu?page=
-Disallow: /actu?categorie=*&page=
+Disallow: /actu?*
+Disallow: /matchs?*
+Disallow: /recherche
+Disallow: /classement/
+Disallow: /resultats
 
 Sitemap: https://360-foot.com/sitemap.xml
 Sitemap: https://360-foot.com/news-sitemap.xml

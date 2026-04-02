@@ -3,6 +3,14 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const response = NextResponse.next();
+  const { pathname, searchParams } = request.nextUrl;
+
+  // Noindex for parameter-driven pages (prevent duplicate indexing)
+  const hasQueryParams = searchParams.toString().length > 0;
+  const paramPages = ["/matchs", "/actu"];
+  if (hasQueryParams && paramPages.some((p) => pathname === p)) {
+    response.headers.set("X-Robots-Tag", "noindex, follow");
+  }
 
   // Security headers
   response.headers.set("X-Frame-Options", "DENY");

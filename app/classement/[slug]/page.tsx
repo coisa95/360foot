@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -10,5 +10,5 @@ type Props = {
  */
 export default async function StandingsRedirect({ params }: Props) {
   const { slug } = await params;
-  redirect(`/ligue/${slug}/classement`);
+  permanentRedirect(`/ligue/${slug}/classement`);
 }

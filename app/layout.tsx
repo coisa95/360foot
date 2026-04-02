@@ -102,7 +102,7 @@ const jsonLd = {
       inLanguage: "fr-FR",
       potentialAction: {
         "@type": "SearchAction",
-        target: "https://360-foot.com/actu?q={search_term_string}",
+        target: "https://360-foot.com/recherche?q={search_term_string}",
         "query-input": "required name=search_term_string",
       },
     },

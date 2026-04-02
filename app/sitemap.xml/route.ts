@@ -21,7 +21,7 @@ export async function GET() {
       .from("matches")
       .select("slug, date")
       .order("date", { ascending: false })
-      .limit(500),
+      .limit(2000),
     supabase.from("teams").select("slug, updated_at"),
     supabase.from("leagues").select("slug, updated_at"),
     supabase.from("players").select("slug, updated_at"),
@@ -32,7 +32,7 @@ export async function GET() {
   const staticPages = [
     { url: "/", priority: "1.0", changefreq: "hourly" },
     { url: "/actu", priority: "0.9", changefreq: "hourly" },
-    { url: "/resultats", priority: "0.9", changefreq: "hourly" },
+    { url: "/matchs", priority: "0.9", changefreq: "hourly" },
     { url: "/competitions", priority: "0.8", changefreq: "daily" },
     { url: "/transferts", priority: "0.8", changefreq: "daily" },
     { url: "/bons-plans", priority: "0.7", changefreq: "weekly" },
