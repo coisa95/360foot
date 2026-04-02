@@ -39,7 +39,7 @@ Transfermarkt ──→ CRON sync-transfers ──→ Supabase (transfers, playe
 | Service | Usage | Où trouver les credentials |
 |---------|-------|---------------------------|
 | **Vercel** | Hébergement frontend + API | Dashboard Vercel (compte coffijesugnon) |
-| **Render** | CRON jobs backend | Dashboard Render |
+| **Render** | CRON jobs backend + OG image service | Dashboard Render |
 | **Supabase** | Base PostgreSQL | Dashboard Supabase (projet vplejedemagidkqbxfqr) |
 | **API-Football** | Données matchs, stats, joueurs | api-football.com |
 | **Transfermarkt (RapidAPI)** | Transferts, valeurs marchandes | rapidapi.com |
@@ -179,7 +179,7 @@ Plus besoin de `vercel --prod --yes` en CLI.
 
 ---
 
-## 7. Architecture CRON (15 routes)
+## 7. Architecture CRON (17 routes)
 
 Toutes sur Render, appelées via HTTP avec `Authorization: Bearer CRON_SECRET`.
 Toutes ont `export const maxDuration = 300` (5 min).
@@ -208,6 +208,8 @@ Les CRON sont configurés dans le dashboard Render (Cron Jobs), pas dans vercel.
 | `sync-transfers` | Synchro via Transfermarkt (batch 5 clubs/run) | 2x/jour |
 | `sync-transfers-apifb` | Synchro via API-Football | 2x/jour |
 | `update-standings` | Classements | 1x/jour |
+| `collect-trends` | Mots-clés Google Trends (18 pays africains) | 1x/jour |
+| `backfill-images` | Assigne images de ligue aux articles sans image | Manuel |
 
 ### API routes (non-CRON)
 
@@ -217,7 +219,7 @@ Les CRON sont configurés dans le dashboard Render (Cron Jobs), pas dans vercel.
 | `api/setup-rss` | Configuration flux RSS |
 | `api/track-click` | Tracking clics affiliés (rate limit: 20 req/min/IP, allowlist 15 bookmakers) |
 | `api/generate-trending` | Génération contenu trending |
-| `api/og` | Génération dynamique images Open Graph |
+| `api/og` | Génération dynamique images Open Graph (fallback Vercel) |
 
 ---
 
@@ -229,6 +231,13 @@ Les CRON sont configurés dans le dashboard Render (Cron Jobs), pas dans vercel.
 - `Referrer-Policy: strict-origin-when-cross-origin`
 - `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload` — HSTS 2 ans
 - `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+- `Content-Security-Policy` — scripts, styles, images, connect-src restreints
+- `X-Robots-Tag: noindex` — sur `/matchs` et `/actu` avec query params (anti-duplication)
+
+### Row-Level Security (Supabase)
+- RLS activé sur les 12 tables
+- Lecture publique (anon key) autorisée
+- Écriture bloquée via anon key — seul `service_role` peut modifier (CRON jobs)
 
 ### Rate limiting (Upstash Redis)
 - `track-click` : 20 req/min/IP
@@ -322,6 +331,12 @@ Les CRON sont configurés dans le dashboard Render (Cron Jobs), pas dans vercel.
 
 ## 13. Base de données
 
+### Services Render
+| Service | Type | Rôle |
+|---------|------|------|
+| `360foot-cron` | Worker | Scheduler CRON (node-cron) |
+| `360foot-og` | Web | Génération images OG (Express + Sharp + SVG) |
+
 ### Stats (au 30/03/2026)
 matches: 4,651 | players: 2,724 | teams: 641 | articles: 580 | rss_processed: 291 | leagues: 34 | standings: 25
 
@@ -389,6 +404,25 @@ media.api-sports.io, upload.wikimedia.org, images.pexels.com, flagcdn.com, crest
 ---
 
 ## 16. Historique des modifications (45 au total)
+
+### Audit & corrections (01-02/04/2026)
+52. **Unsplash supprimé** — Suppression complète de l'intégration Unsplash (API, config, fallback)
+53. **Service OG Render** — Nouveau service `og-service/` (Express + Sharp + SVG) : image diagonale VS pour matchs, layout titre pour articles. Déployé sur Render (`360foot-og`)
+54. **Backfill images** — Nouveau CRON `backfill-images` pour assigner l'image de ligue aux articles existants sans image (200/batch)
+55. **Fix double og_image_url** — Corrigé `article.og_image_url || article.og_image_url` (3 occurrences) dans `actu/[slug]/page.tsx`
+56. **Performance : réduction over-fetch** — `actu/[slug]` : limits teams 500→100, players 1000→200, leagues 500→50
+57. **Performance : ilike content→title** — `joueur/[slug]` et `equipe/[slug]` : recherche sur `title` au lieu de `content` (beaucoup plus rapide)
+58. **Performance : limit leagues** — `competitions/page.tsx` : ajout `.limit(100)` manquant
+59. **Accessibilité : alt text** — 5 images `alt=""` remplacées par des alt descriptifs (`league-filter.tsx`, `match-league-group.tsx`)
+60. **Accessibilité : aria-labels** — Boutons Accepter/Refuser du cookie banner
+61. **Sécurité : RLS Supabase** — Activation Row-Level Security sur 12 tables (dont 3 nouvelles : `rss_processed`, `player_id_mapping`, `trending_keywords`). Écriture bloquée via clé `anon`, vérifié par tests
+62. **SEO : 1108 pages non indexées** — Fix Google Search Console :
+    - `robots.txt` : syntaxe wildcard corrigée (`/matchs?*`, `/actu?*`), blocage `/classement/`, `/resultats`
+    - Middleware : header `X-Robots-Tag: noindex` sur `/matchs` et `/actu` avec query params
+    - Sitemap : `/resultats` remplacé par `/matchs`, limite matchs 500→2000
+    - SearchAction : `/actu?q=` → `/recherche?q=` (page qui existe)
+    - Redirects 307→308 : `/resultats`, `/classements`, `/classement/[slug]` convertis en `permanentRedirect`
+63. **LEAGUE_IMAGES exporté** — Pour utilisation par le backfill
 
 ### Audit & corrections (30/03/2026)
 32. **Audit complet site** — SEO (87→93), Sécurité (55→75), Performance (65→80), Accessibilité (70→85)
@@ -462,7 +496,12 @@ media.api-sports.io, upload.wikimedia.org, images.pexels.com, flagcdn.com, crest
 5. **Dev local** — Configurer `.env.local` avec les vars Supabase pour permettre le dev local
 6. ~~**Rotation CRON_SECRET**~~ — ✅ Fait (openssl rand -base64 32, MAJ .env.production + Vercel + Render)
 7. ~~**Rate limiting /api/search**~~ — ✅ Fait (30 req/min/IP, Upstash Redis)
-8. ~~**timingSafeEqual pour CRON auth**~~ — ✅ Fait (lib/auth.ts + 15/15 routes migrées, setup-rss + generate-trending corrigés)
+8. ~~**timingSafeEqual pour CRON auth**~~ — ✅ Fait (lib/auth.ts + 17/17 routes migrées)
+9. ~~**RLS Supabase**~~ — ✅ Fait (12 tables sécurisées, écriture anon bloquée)
+10. ~~**Unsplash supprimé**~~ — ✅ Fait
+11. **Déployer og-service sur Render** — Créer le service web `360foot-og` et mettre à jour `buildArticleOgUrl()` pour pointer vers l'URL Render
+12. **Lancer backfill-images** — Exécuter le CRON pour corriger les articles existants sans image
+13. **Ajouter UNSPLASH_ACCESS_KEY à Vercel** — Supprimer de .env.production (plus utilisé)
 
 ---
 
