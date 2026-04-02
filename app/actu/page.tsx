@@ -170,6 +170,7 @@ export default async function ActuPage({ searchParams }: Props) {
             {CATEGORIES.map((cat) => (
               <Link
                 key={cat.value}
+                rel={cat.value === "all" ? undefined : "nofollow"}
                 href={cat.value === "all" ? "/actu" : `/actu?categorie=${cat.value}`}
                 className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium transition-colors sm:px-4 sm:py-1.5 sm:text-sm ${
                   activeCategory === cat.value
@@ -194,6 +195,7 @@ export default async function ActuPage({ searchParams }: Props) {
                       src={(featuredArticle.og_image_url as string) || `/api/og?title=${encodeURIComponent(featuredArticle.title as string)}&type=${(featuredArticle.type as string) || "result"}&league=${encodeURIComponent((featuredArticle.league as Record<string, unknown>)?.name as string || "")}`}
                       alt={featuredArticle.title as string}
                       fill
+                      priority
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
@@ -292,6 +294,7 @@ export default async function ActuPage({ searchParams }: Props) {
               <nav className="mt-10 flex items-center justify-center gap-2" aria-label="Pagination">
                 {currentPage > 1 && (
                   <Link
+                    rel="nofollow"
                     href={`/actu?${activeCategory !== "all" ? `categorie=${activeCategory}&` : ""}page=${currentPage - 1}`}
                     className="rounded-lg bg-dark-card px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-dark-surface hover:text-white"
                   >
@@ -317,6 +320,7 @@ export default async function ActuPage({ searchParams }: Props) {
                     ) : (
                       <Link
                         key={p}
+                        rel="nofollow"
                         href={`/actu?${baseHref}page=${p}`}
                         className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
                           currentPage === p
@@ -332,6 +336,7 @@ export default async function ActuPage({ searchParams }: Props) {
 
                 {currentPage < totalPages && (
                   <Link
+                    rel="nofollow"
                     href={`/actu?${activeCategory !== "all" ? `categorie=${activeCategory}&` : ""}page=${currentPage + 1}`}
                     className="rounded-lg bg-dark-card px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-dark-surface hover:text-white"
                   >

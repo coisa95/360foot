@@ -11,6 +11,7 @@ import { CookieBanner } from "@/components/cookie-banner";
 import { AnalyticsLoader } from "@/components/analytics-loader";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { safeJsonLd } from "@/lib/json-ld";
 
 const geist = localFont({
   src: "./fonts/GeistVF.woff",
@@ -127,7 +128,7 @@ export default function RootLayout({
         {/* GA/GTM scripts moved to AnalyticsLoader (client component, consent-gated) */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
         />
       </head>
       <body className="min-h-screen bg-background text-foreground overflow-x-hidden">

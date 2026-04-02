@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   }
 
   // Fetch all leagues for mapping
-  const leagueIds = [...new Set(articles.map((a) => a.league_id).filter(Boolean))];
+  const leagueIds = Array.from(new Set(articles.map((a) => a.league_id).filter(Boolean)));
   const { data: leagues } = await supabase
     .from("leagues")
     .select("id, name")

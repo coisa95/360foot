@@ -80,19 +80,19 @@ export function StandingsTable({
       <div className="flex items-center justify-between border-b border-dark-border/50 bg-gradient-to-r from-dark-surface/50 to-transparent px-4 py-3">
         <h3 className="text-sm font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{leagueName}</h3>
       </div>
-      <Table>
+      <Table aria-label={`Classement ${leagueName}`}>
         <TableHeader>
           <TableRow className="border-dark-border hover:bg-transparent">
-            <TableHead className="w-8 text-gray-500">#</TableHead>
-            <TableHead className="text-gray-500">Équipe</TableHead>
-            <TableHead className="text-center text-gray-500">MJ</TableHead>
-            <TableHead className="text-center text-gray-500">V</TableHead>
-            <TableHead className="text-center text-gray-500">N</TableHead>
-            <TableHead className="text-center text-gray-500">D</TableHead>
-            <TableHead className="text-center text-gray-500">BP</TableHead>
-            <TableHead className="text-center text-gray-500">BC</TableHead>
-            <TableHead className="text-center text-gray-500">Diff</TableHead>
-            <TableHead className="text-center text-gray-500">Pts</TableHead>
+            <TableHead scope="col" className="w-8 text-gray-500">#</TableHead>
+            <TableHead scope="col" className="text-gray-500">Équipe</TableHead>
+            <TableHead scope="col" className="text-center text-gray-500" abbr="Matchs joués">MJ</TableHead>
+            <TableHead scope="col" className="text-center text-gray-500" abbr="Victoires">V</TableHead>
+            <TableHead scope="col" className="text-center text-gray-500" abbr="Nuls">N</TableHead>
+            <TableHead scope="col" className="text-center text-gray-500" abbr="Défaites">D</TableHead>
+            <TableHead scope="col" className="text-center text-gray-500" abbr="Buts pour">BP</TableHead>
+            <TableHead scope="col" className="text-center text-gray-500" abbr="Buts contre">BC</TableHead>
+            <TableHead scope="col" className="text-center text-gray-500" abbr="Différence de buts">Diff</TableHead>
+            <TableHead scope="col" className="text-center text-gray-500" abbr="Points">Pts</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

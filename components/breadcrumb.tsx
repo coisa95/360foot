@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { safeJsonLd } from "@/lib/json-ld";
 
 interface BreadcrumbItem {
   label: string;
@@ -25,7 +26,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <nav aria-label="Fil d'Ariane" className="mb-4 overflow-hidden">
         <ol className="flex items-center gap-1 text-xs text-gray-500 whitespace-nowrap overflow-hidden">

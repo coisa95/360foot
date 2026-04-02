@@ -41,6 +41,7 @@ export function RoundNav({ rounds, activeRound, slug, basePath = "calendrier" }:
           const isActive = round.raw === activeRound;
           return (
             <Link
+              rel="nofollow"
               key={round.raw}
               ref={isActive ? activeRef : null}
               href={`/ligue/${slug}/${basePath}?journee=${encodeURIComponent(round.param)}`}

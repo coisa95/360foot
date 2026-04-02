@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase";
+import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
 import { Card } from "@/components/ui/card";
@@ -92,7 +93,7 @@ export default async function NationalTeamPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJsonLd({
             "@context": "https://schema.org",
             "@type": "SportsTeam",
             name: country.fullName,

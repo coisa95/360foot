@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { Redis } from "@upstash/redis";
 
 let redis: Redis | null = null;
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
     }
   }
 
-  const supabase = createClient();
+  const supabase = createAnonClient();
   const searchPattern = `%${q}%`;
 
   // Run all searches in parallel

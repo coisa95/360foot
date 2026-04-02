@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase";
+import { safeJsonLd } from "@/lib/json-ld";
 import { ArticleCard } from "@/components/article-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
@@ -67,7 +68,7 @@ export default async function LeagueNewsPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJsonLd({
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             itemListElement: [

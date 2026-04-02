@@ -55,47 +55,45 @@ const TYPE_BADGE: Record<string, string> = {
 export default async function TransfersPage() {
   const supabase = createClient();
 
-  const { data: transfers } = await supabase
-    .from("transfers")
-    .select("id,player_name,player_photo,player_nationality,from_team,from_team_logo,to_team,to_team_logo,transfer_type,fee,market_value,date")
-    .order("date", { ascending: false })
-    .limit(60);
+  // Phase 1: fetch transfers + articles in parallel
+  const [{ data: transfers }, { data: transferArticles }] = await Promise.all([
+    supabase
+      .from("transfers")
+      .select("id,player_name,player_photo,player_nationality,from_team,from_team_logo,to_team,to_team_logo,transfer_type,fee,market_value,date")
+      .order("date", { ascending: false })
+      .limit(60),
+    supabase
+      .from("articles")
+      .select("id, title, slug, excerpt, created_at")
+      .eq("type", "transfer")
+      .order("created_at", { ascending: false })
+      .limit(6),
+  ]);
 
-  const { data: transferArticles } = await supabase
-    .from("articles")
-    .select("id, title, slug, excerpt, created_at")
-    .eq("type", "transfer")
-    .order("created_at", { ascending: false })
-    .limit(6);
-
-  // Lookup player slugs for linking
+  // Phase 2: lookup player + team slugs in parallel
   const playerNames = transfers?.map((t) => t.player_name).filter(Boolean) || [];
-  const playerSlugMap: Record<string, string> = {};
-  if (playerNames.length > 0) {
-    const { data: matchedPlayers } = await supabase
-      .from("players")
-      .select("name, slug")
-      .in("name", playerNames);
-    if (matchedPlayers) {
-      for (const p of matchedPlayers) playerSlugMap[p.name] = p.slug;
-    }
-  }
-
-  // Lookup team slugs for linking
   const teamNames = new Set<string>();
   transfers?.forEach((t) => {
     if (t.from_team) teamNames.add(t.from_team);
     if (t.to_team) teamNames.add(t.to_team);
   });
+
+  const [{ data: matchedPlayers }, { data: matchedTeams }] = await Promise.all([
+    playerNames.length > 0
+      ? supabase.from("players").select("name, slug").in("name", playerNames)
+      : Promise.resolve({ data: null }),
+    teamNames.size > 0
+      ? supabase.from("teams").select("name, slug").in("name", Array.from(teamNames))
+      : Promise.resolve({ data: null }),
+  ]);
+
+  const playerSlugMap: Record<string, string> = {};
+  if (matchedPlayers) {
+    for (const p of matchedPlayers) playerSlugMap[p.name] = p.slug;
+  }
   const teamSlugMap: Record<string, string> = {};
-  if (teamNames.size > 0) {
-    const { data: matchedTeams } = await supabase
-      .from("teams")
-      .select("name, slug")
-      .in("name", Array.from(teamNames));
-    if (matchedTeams) {
-      for (const t of matchedTeams) teamSlugMap[t.name] = t.slug;
-    }
+  if (matchedTeams) {
+    for (const t of matchedTeams) teamSlugMap[t.name] = t.slug;
   }
 
   return (

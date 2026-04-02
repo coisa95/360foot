@@ -4,6 +4,8 @@ Allow: /
 Disallow: /api/
 Disallow: /actu?*
 Disallow: /matchs?*
+Disallow: /ligue/*/calendrier?*
+Disallow: /ligue/*/resultats?*
 Disallow: /recherche
 Disallow: /classement/
 Disallow: /resultats
@@ -13,12 +15,13 @@ Allow: /
 Disallow: /api/
 Disallow: /actu?*
 Disallow: /matchs?*
+Disallow: /ligue/*/calendrier?*
+Disallow: /ligue/*/resultats?*
 Disallow: /recherche
 Disallow: /classement/
 Disallow: /resultats
 
 Sitemap: https://360-foot.com/sitemap.xml
-Sitemap: https://360-foot.com/news-sitemap.xml
 `;
 
   return new Response(robotsTxt, {

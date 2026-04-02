@@ -8,7 +8,12 @@ export function middleware(request: NextRequest) {
   // Noindex for parameter-driven pages (prevent duplicate indexing)
   const hasQueryParams = searchParams.toString().length > 0;
   const paramPages = ["/matchs", "/actu"];
-  if (hasQueryParams && paramPages.some((p) => pathname === p)) {
+  const paramPrefixes = ["/ligue/"];
+  if (
+    hasQueryParams &&
+    (paramPages.some((p) => pathname === p) ||
+      paramPrefixes.some((p) => pathname.startsWith(p)))
+  ) {
     response.headers.set("X-Robots-Tag", "noindex, follow");
   }
 
@@ -27,7 +32,7 @@ export function middleware(request: NextRequest) {
   );
   response.headers.set(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; font-src 'self'; connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://vitals.vercel-insights.com; frame-ancestors 'none';"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; font-src 'self'; connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://vitals.vercel-insights.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self'; upgrade-insecure-requests;"
   );
 
   return response;

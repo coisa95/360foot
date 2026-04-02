@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase";
+import { safeJsonLd } from "@/lib/json-ld";
 import { addInternalLinks } from "@/lib/internal-links";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { RelatedArticles } from "@/components/related-articles";
@@ -133,19 +134,13 @@ export default async function ArticlePage({ params }: Props) {
     { label: article.title },
   ];
 
-  // Escape string fields to prevent script injection in JSON-LD
-  const escapeJsonLd = (str: string | null | undefined): string => {
-    if (!str) return "";
-    return str.replace(/<\/script/gi, "<\\/script").replace(/<!--/g, "<\\!--");
-  };
-
   const articleImageUrl = article.og_image_url || "https://360-foot.com/icon-512.png";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     "@id": `https://360-foot.com/actu/${slug}#article`,
-    headline: escapeJsonLd(article.title),
-    description: escapeJsonLd(article.seo_description || article.excerpt),
+    headline: article.title,
+    description: article.seo_description || article.excerpt || "",
     image: articleImageUrl,
     datePublished: article.published_at,
     dateModified: article.published_at,
@@ -197,7 +192,7 @@ export default async function ArticlePage({ params }: Props) {
     <main className="min-h-screen bg-dark-bg text-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <div className="container mx-auto px-4 py-6">

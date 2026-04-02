@@ -28,6 +28,8 @@ export function MatchLeagueGroup({
       {/* League header — clickable to toggle */}
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-label={`${open ? "Masquer" : "Afficher"} les matchs de ${leagueName}`}
         className="flex w-full items-center gap-2 px-4 py-2.5 bg-dark-bg/50 border-b border-gray-800 hover:bg-gray-800/50 transition-colors"
       >
         {leagueLogo && (

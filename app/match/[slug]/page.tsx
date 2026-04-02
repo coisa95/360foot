@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase";
+import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { ArticleCard } from "@/components/article-card";
 import { Badge } from "@/components/ui/badge";
@@ -257,7 +258,7 @@ export default async function MatchPage({ params }: Props) {
     <main className="min-h-screen bg-dark-bg text-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <div className="container mx-auto max-w-4xl px-4 py-6">

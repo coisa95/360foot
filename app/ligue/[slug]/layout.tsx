@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase";
+import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import LeagueTabs from "@/components/league-tabs";
 import Image from "next/image";
@@ -55,7 +56,7 @@ export default async function LeagueLayout({ params, children }: Props) {
     <div className="min-h-screen bg-dark-bg text-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <div className="container mx-auto px-4 py-4">

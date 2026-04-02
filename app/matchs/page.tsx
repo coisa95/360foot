@@ -105,7 +105,8 @@ export default async function MatchsPage({ searchParams }: Props) {
   const { data: leagues } = await supabase
     .from("leagues")
     .select("name, slug, logo_url")
-    .order("name");
+    .order("name")
+    .limit(100);
 
   // Group matches by league
   const matchesByLeague = new Map<string, { leagueName: string; leagueSlug: string; leagueLogo: string | null; matches: any[] }>();
@@ -151,6 +152,7 @@ export default async function MatchsPage({ searchParams }: Props) {
             return (
               <Link
                 key={ds}
+                rel="nofollow"
                 href={buildHref(ds, ligue)}
                 className={`shrink-0 rounded-lg px-3 py-2 text-center text-xs font-medium transition-colors ${
                   isActive

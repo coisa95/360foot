@@ -62,6 +62,7 @@ export function Header() {
             alt="Logo 360 Foot"
             width={40}
             height={40}
+            priority
             className="rounded-lg transition-all group-hover:scale-105"
           />
           <span className="text-xl font-bold">
@@ -119,6 +120,7 @@ export function Header() {
             onClick={() => setMenuOpen(!menuOpen)}
             className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-lime-400"
             aria-label="Menu"
+            aria-expanded={menuOpen}
           >
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {menuOpen ? (

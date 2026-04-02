@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase";
+import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
 import { ArticleCard } from "@/components/article-card";
@@ -66,34 +67,52 @@ export default async function TeamPage({ params }: Props) {
   if (!team) notFound();
 
   const now = new Date().toISOString();
+  const matchSelect = "id,slug,date,score_home,score_away,status,home_team:teams!home_team_id(name,slug),away_team:teams!away_team_id(name,slug),league:leagues!league_id(name)";
 
-  const { data: recentMatches } = await supabase
-    .from("matches")
-    .select("id,slug,date,score_home,score_away,status,home_team:teams!home_team_id(name,slug),away_team:teams!away_team_id(name,slug),league:leagues!league_id(name)")
-    .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
-    .lte("date", now)
-    .order("date", { ascending: false })
-    .limit(5);
-
-  const { data: upcomingMatches } = await supabase
-    .from("matches")
-    .select("id,slug,date,score_home,score_away,status,home_team:teams!home_team_id(name,slug),away_team:teams!away_team_id(name,slug),league:leagues!league_id(name)")
-    .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
-    .gt("date", now)
-    .order("date", { ascending: true })
-    .limit(5);
-
-  // Standings are stored as data_json (array) in a single row per league
-  const { data: standingsRow } = await supabase
-    .from("standings")
-    .select("data_json")
-    .eq("league_id", team.league_id)
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .single();
+  // Parallelize all independent queries
+  const [
+    { data: recentMatches },
+    { data: upcomingMatches },
+    { data: standingsRow },
+    { data: players },
+    { data: teamArticles },
+  ] = await Promise.all([
+    supabase
+      .from("matches")
+      .select(matchSelect)
+      .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
+      .lte("date", now)
+      .order("date", { ascending: false })
+      .limit(5),
+    supabase
+      .from("matches")
+      .select(matchSelect)
+      .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
+      .gt("date", now)
+      .order("date", { ascending: true })
+      .limit(5),
+    supabase
+      .from("standings")
+      .select("data_json")
+      .eq("league_id", team.league_id)
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .single(),
+    supabase
+      .from("players")
+      .select("id,slug,name,position,nationality,age,number,photo_url,api_football_id")
+      .eq("team_id", team.id)
+      .order("position", { ascending: true }),
+    supabase
+      .from("articles")
+      .select("id,slug,title,excerpt,type,created_at,og_image_url,league:leagues!league_id(name)")
+      .not("published_at", "is", null)
+      .ilike("title", `%${team.name}%`)
+      .order("created_at", { ascending: false })
+      .limit(6),
+  ]);
 
   // Find this team's position in the standings data
-  // data_json stores flat objects: { rank, team_name, team_api_id, played, won, drawn, lost, points, goals_for, goals_against, ... }
   let standings: any = null;
   if (standingsRow?.data_json) {
     const allStandings = Array.isArray(standingsRow.data_json) ? standingsRow.data_json : [];
@@ -114,20 +133,6 @@ export default async function TeamPage({ params }: Props) {
       };
     }
   }
-
-  const { data: players } = await supabase
-    .from("players")
-    .select("id,slug,name,position,nationality,age,number,photo_url,api_football_id")
-    .eq("team_id", team.id)
-    .order("position", { ascending: true });
-
-  const { data: teamArticles } = await supabase
-    .from("articles")
-    .select("id,slug,title,excerpt,type,created_at,og_image_url,league:leagues!league_id(name)")
-    .not("published_at", "is", null)
-    .ilike("title", `%${team.name}%`)
-    .order("created_at", { ascending: false })
-    .limit(6);
 
   // Team statistics
   const teamStats = team.team_stats_json as any | null;
@@ -179,7 +184,7 @@ export default async function TeamPage({ params }: Props) {
     <main className="min-h-screen bg-dark-bg text-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <div className="container mx-auto px-4 py-6">

@@ -86,7 +86,8 @@ async function getStandings() {
     const { data } = await supabase
       .from("standings")
       .select("league_id, data_json, leagues(name, slug)")
-      .order("updated_at", { ascending: false });
+      .order("updated_at", { ascending: false })
+      .limit(30);
 
     if (!data) return [];
 

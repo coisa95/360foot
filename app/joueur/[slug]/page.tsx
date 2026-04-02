@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase";
+import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { ArticleCard } from "@/components/article-card";
 import { Badge } from "@/components/ui/badge";
@@ -68,25 +69,27 @@ export default async function PlayerPage({ params }: Props) {
 
   if (!player) notFound();
 
-  // Fetch recent matches where this player's team played
-  const recentMatches = player.team_id
-    ? (await supabase
-        .from("matches")
-        .select("slug, date, score_home, score_away, status, home_team:teams!home_team_id(name, slug), away_team:teams!away_team_id(name, slug)")
-        .or(`home_team_id.eq.${player.team_id},away_team_id.eq.${player.team_id}`)
-        .eq("status", "FT")
-        .order("date", { ascending: false })
-        .limit(5)
-      ).data
-    : null;
-
-  const { data: relatedArticles } = await supabase
-    .from("articles")
-    .select("id,title,slug,excerpt,type,published_at,og_image_url")
-    .ilike("title", `%${player.name}%`)
-    .not("published_at", "is", null)
-    .order("published_at", { ascending: false })
-    .limit(5);
+  // Parallelize independent queries
+  const [matchesRes, articlesRes] = await Promise.all([
+    player.team_id
+      ? supabase
+          .from("matches")
+          .select("slug, date, score_home, score_away, status, home_team:teams!home_team_id(name, slug), away_team:teams!away_team_id(name, slug)")
+          .or(`home_team_id.eq.${player.team_id},away_team_id.eq.${player.team_id}`)
+          .eq("status", "FT")
+          .order("date", { ascending: false })
+          .limit(5)
+      : Promise.resolve({ data: null }),
+    supabase
+      .from("articles")
+      .select("id,title,slug,excerpt,type,published_at,og_image_url")
+      .ilike("title", `%${player.name}%`)
+      .not("published_at", "is", null)
+      .order("published_at", { ascending: false })
+      .limit(5),
+  ]);
+  const recentMatches = matchesRes.data;
+  const relatedArticles = articlesRes.data;
 
   const positionLabels: Record<string, string> = {
     goalkeeper: "Gardien",
@@ -137,7 +140,7 @@ export default async function PlayerPage({ params }: Props) {
     <main className="min-h-screen bg-dark-bg text-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <div className="container mx-auto px-4 py-6">
