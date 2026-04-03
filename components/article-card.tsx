@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getArticleTypeLabel, getArticleTypeColor } from "@/lib/article-types";
 
 interface ArticleCardProps {
   slug: string;
@@ -11,15 +12,7 @@ interface ArticleCardProps {
   imageUrl?: string | null;
 }
 
-const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
-  result: { label: "Résultat", color: "bg-blue-500/15 text-blue-400 border-blue-500/20" },
-  preview: { label: "Avant-match", color: "bg-orange-500/15 text-orange-400 border-orange-500/20" },
-  transfer: { label: "Transfert", color: "bg-purple-500/15 text-purple-400 border-purple-500/20" },
-  player_profile: { label: "Joueur", color: "bg-cyan-500/15 text-cyan-400 border-cyan-500/20" },
-  recap: { label: "Récap", color: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20" },
-  guide: { label: "Guide", color: "bg-yellow-500/15 text-yellow-400 border-yellow-500/20" },
-  trending: { label: "Tendance", color: "bg-pink-500/15 text-pink-400 border-pink-500/20" },
-};
+// Type labels and colors from shared utility (lib/article-types.ts)
 
 export function ArticleCard({
   slug,
@@ -31,7 +24,7 @@ export function ArticleCard({
   imageUrl,
 }: ArticleCardProps) {
   const date = new Date(publishedAt);
-  const typeConf = TYPE_CONFIG[type] || { label: type, color: "bg-lime-500/15 text-lime-400 border-lime-500/20" };
+  const typeConf = { label: getArticleTypeLabel(type), color: getArticleTypeColor(type) };
 
   return (
     <Link href={`/actu/${slug}`} className="group block">

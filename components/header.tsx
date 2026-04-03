@@ -121,6 +121,7 @@ export function Header() {
             className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-lime-400"
             aria-label="Menu"
             aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
           >
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {menuOpen ? (
@@ -135,7 +136,7 @@ export function Header() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="border-t border-dark-border bg-dark-bg px-4 pb-4 lg:hidden">
+        <div id="mobile-menu" className="border-t border-dark-border bg-dark-bg px-4 pb-4 lg:hidden">
           <nav aria-label="Navigation mobile" className="flex flex-col gap-1 pt-2">
             {NAV_LINKS.map((link) => (
               <Link

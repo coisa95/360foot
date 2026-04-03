@@ -138,7 +138,7 @@ const RSS_FEEDS = [
 ];
 
 // Max 10 articles par exécution (Vercel 300s timeout)
-const MAX_ARTICLES_PER_RUN = 10;
+const MAX_ARTICLES_PER_RUN = 15;
 
 export async function GET(request: Request) {
   if (!verifyCronAuth(request)) {

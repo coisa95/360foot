@@ -87,7 +87,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
               {/* Mobile: overlay text on image | Desktop: side by side */}
               <div className="relative h-full md:grid md:grid-cols-2 bg-dark-card/90 border border-dark-border/50 rounded-xl md:rounded-2xl overflow-hidden backdrop-blur-sm">
                 {/* Image */}
-                <div className="relative h-[200px] md:h-auto md:min-h-[320px]">
+                <div className="relative aspect-video">
                   <Image
                     src={article.og_image_url || `/api/og?title=${encodeURIComponent(article.title)}&type=${article.type}`}
                     alt={article.title}

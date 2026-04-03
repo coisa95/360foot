@@ -55,7 +55,7 @@ export async function GET(request: Request) {
 
     // Select batch based on day of month
     const dayOfMonth = new Date().getDate();
-    const batchSize = 6; // 6 teams per run (2 API calls each = 12 calls)
+    const batchSize = 12; // Doubled: VPS calls 2x/day
     const startIdx = ((dayOfMonth - 1) * batchSize) % teams.length;
     const batch = [];
     for (let j = 0; j < batchSize && j < teams.length; j++) {
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
       if (!teamApiId || !leagueApiId) continue;
       if (!LEAGUE_IDS.includes(leagueApiId)) continue;
 
-      if (i > 0) await delay(7000);
+      if (i > 0) await delay(3000);
 
       try {
         const season = getCurrentSeason(leagueApiId);
@@ -83,7 +83,7 @@ export async function GET(request: Request) {
         // 1. Fetch team statistics
         const stats = await getTeamStatistics(teamApiId, leagueApiId, season);
 
-        await delay(7000);
+        await delay(3000);
 
         // 2. Fetch coach
         let coachData = null;

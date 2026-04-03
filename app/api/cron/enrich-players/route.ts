@@ -24,7 +24,7 @@ export async function GET(request: Request) {
       .select("id, name, api_football_id, team_id")
       .not("api_football_id", "is", null)
       .is("stats_json", null)
-      .limit(15);
+      .limit(30); // Doubled: VPS calls 4x/day
 
     if (!players || players.length === 0) {
       return NextResponse.json({
@@ -42,7 +42,7 @@ export async function GET(request: Request) {
       const player = players[i];
       if (!player.api_football_id) continue;
 
-      if (i > 0) await delay(7000);
+      if (i > 0) await delay(3000);
 
       try {
         const stats = await getPlayerStats(player.api_football_id, season);

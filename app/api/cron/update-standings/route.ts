@@ -67,7 +67,7 @@ export async function GET(request: Request) {
       const leagueId = LEAGUE_IDS[i];
 
       // Respect rate limit: 10 requests/min → wait 7s between calls
-      if (i > 0) await delay(7000);
+      if (i > 0) await delay(3000);
       try {
         const leagueSeason = getCurrentSeason(leagueId);
         const standingsResponse = await fetchStandings(leagueId, leagueSeason);

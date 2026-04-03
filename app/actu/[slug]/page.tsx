@@ -6,6 +6,7 @@ import { RelatedArticles } from "@/components/related-articles";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { ShareButtons } from "@/components/share-buttons";
 import { Badge } from "@/components/ui/badge";
+import { getArticleTypeLabel, getArticleTypeColor } from "@/lib/article-types";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -86,9 +87,9 @@ export default async function ArticlePage({ params }: Props) {
   try {
     const results = await Promise.all([
       supabase.from("articles").select("id,title,slug,excerpt,type,published_at,og_image_url").neq("id", article.id).not("published_at", "is", null).order("published_at", { ascending: false }).limit(5),
-      supabase.from("teams").select("name, slug").order("name").limit(100),
-      supabase.from("players").select("name, slug").order("name").limit(200),
-      supabase.from("leagues").select("name, slug").order("name").limit(50),
+      supabase.from("teams").select("name, slug").order("name").limit(30),
+      supabase.from("players").select("name, slug").order("name").limit(50),
+      supabase.from("leagues").select("name, slug").order("name").limit(30),
     ]);
     relatedArticles = results[0].data;
     teams = results[1].data;
@@ -126,6 +127,8 @@ export default async function ArticlePage({ params }: Props) {
     );
   } catch (e) {
     console.error("Error processing article content:", e);
+    // If sanitization failed, strip all HTML to prevent XSS
+    enrichedContent = (article.content || "").replace(/<[^>]*>/g, "");
   }
 
   const breadcrumbItems = [
@@ -172,21 +175,7 @@ export default async function ArticlePage({ params }: Props) {
     },
   };
 
-  const typeBadgeColor: Record<string, string> = {
-    match_report: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-    transfer: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-    preview: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-    analysis: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
-    news: "bg-lime-500/20 text-lime-400 border-lime-500/30",
-  };
-
-  const typeLabels: Record<string, string> = {
-    match_report: "Compte-rendu",
-    transfer: "Transfert",
-    preview: "Avant-match",
-    analysis: "Analyse",
-    news: "Actualite",
-  };
+  // Type labels and colors from shared utility (lib/article-types.ts)
 
   return (
     <main className="min-h-screen bg-dark-bg text-white">
@@ -203,8 +192,8 @@ export default async function ArticlePage({ params }: Props) {
           <header className="mb-8">
             <div className="flex items-center gap-3 mb-4">
               {article.type && (
-                <Badge className={typeBadgeColor[article.type] || typeBadgeColor.news}>
-                  {typeLabels[article.type] || article.type}
+                <Badge className={getArticleTypeColor(article.type)}>
+                  {getArticleTypeLabel(article.type)}
                 </Badge>
               )}
               <time className="text-gray-400 text-sm">

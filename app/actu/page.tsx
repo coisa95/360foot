@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { getArticleTypeLabel, getArticleTypeColor } from "@/lib/article-types";
 
 export const revalidate = 1800;
 
@@ -72,26 +73,6 @@ const INTERNATIONAL_LEAGUE_SLUGS = [
   "mls",
   "saudi-pro-league",
 ];
-
-const TYPE_LABELS: Record<string, string> = {
-  result: "Résultat",
-  preview: "Avant-match",
-  transfer: "Transfert",
-  player_profile: "Joueur",
-  recap: "Récap",
-  guide: "Guide",
-  trending: "Tendance",
-};
-
-const TYPE_COLORS: Record<string, string> = {
-  result: "bg-blue-500/20 text-blue-400",
-  preview: "bg-orange-500/20 text-orange-400",
-  transfer: "bg-purple-500/20 text-purple-400",
-  player_profile: "bg-cyan-500/20 text-cyan-400",
-  recap: "bg-emerald-500/20 text-emerald-400",
-  guide: "bg-yellow-500/20 text-yellow-400",
-  trending: "bg-pink-500/20 text-pink-400",
-};
 
 type Props = {
   searchParams: Promise<{ categorie?: string; page?: string }>;
@@ -175,7 +156,7 @@ export default async function ActuPage({ searchParams }: Props) {
                 className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium transition-colors sm:px-4 sm:py-1.5 sm:text-sm ${
                   activeCategory === cat.value
                     ? "bg-lime-500 text-dark-bg"
-                    : "bg-dark-card text-gray-400 hover:bg-dark-surface hover:text-white"
+                    : "bg-dark-card text-gray-300 hover:bg-dark-surface hover:text-white"
                 }`}
               >
                 {cat.label}
@@ -201,15 +182,15 @@ export default async function ActuPage({ searchParams }: Props) {
                     />
                     {/* Badge overlay on mobile */}
                     <div className="absolute left-2 top-2 md:hidden">
-                      <Badge className={`text-[10px] ${TYPE_COLORS[featuredArticle.type as string] || "bg-lime-500/10 text-lime-400"}`}>
-                        {TYPE_LABELS[featuredArticle.type as string] || (featuredArticle.type as string)}
+                      <Badge className={`text-[10px] ${getArticleTypeColor(featuredArticle.type as string)}`}>
+                        {getArticleTypeLabel(featuredArticle.type as string)}
                       </Badge>
                     </div>
                   </div>
                   <div className="flex flex-col justify-center p-3 sm:p-4 md:p-6">
                     <div className="mb-2 hidden flex-wrap items-center gap-2 md:flex">
-                      <Badge className={TYPE_COLORS[featuredArticle.type as string] || "bg-lime-500/10 text-lime-400"}>
-                        {TYPE_LABELS[featuredArticle.type as string] || (featuredArticle.type as string)}
+                      <Badge className={getArticleTypeColor(featuredArticle.type as string)}>
+                        {getArticleTypeLabel(featuredArticle.type as string)}
                       </Badge>
                       {String((featuredArticle.league as Record<string, unknown>)?.name || "") !== "" && (
                         <span className="text-xs text-gray-500">
@@ -255,8 +236,8 @@ export default async function ActuPage({ searchParams }: Props) {
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                           />
                           <div className="absolute left-2 top-2">
-                            <Badge className={`text-[10px] ${TYPE_COLORS[articleType] || "bg-lime-500/10 text-lime-400"}`}>
-                              {TYPE_LABELS[articleType] || articleType}
+                            <Badge className={`text-[10px] ${getArticleTypeColor(articleType)}`}>
+                              {getArticleTypeLabel(articleType)}
                             </Badge>
                           </div>
                         </div>
@@ -325,7 +306,7 @@ export default async function ActuPage({ searchParams }: Props) {
                         className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
                           currentPage === p
                             ? "bg-lime-500 text-dark-bg"
-                            : "bg-dark-card text-gray-400 hover:bg-dark-surface hover:text-white"
+                            : "bg-dark-card text-gray-300 hover:bg-dark-surface hover:text-white"
                         }`}
                       >
                         {p}

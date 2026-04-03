@@ -29,7 +29,7 @@ export async function GET(request: Request) {
       .or("events_json.is.null,players_json.is.null")
       .gte("date", sevenDaysAgo.toISOString())
       .order("date", { ascending: false })
-      .limit(10); // Max 10 per run to respect API rate limits
+      .limit(20); // Increased: VPS calls every 2 min
 
     if (!matches || matches.length === 0) {
       return NextResponse.json({
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
       if (!match.api_football_id) continue;
 
       // Rate limit: wait between API calls
-      if (i > 0) await delay(7000);
+      if (i > 0) await delay(3000);
 
       try {
         const details = await getMatchDetails(match.api_football_id);
@@ -118,7 +118,7 @@ export async function GET(request: Request) {
         };
 
         // Fetch player ratings with delay
-        await delay(7000);
+        await delay(3000);
         let playersJson = null;
         try {
           const fixturePlayers = await getFixturePlayers(match.api_football_id);

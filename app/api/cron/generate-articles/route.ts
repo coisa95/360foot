@@ -54,7 +54,7 @@ export async function GET(request: Request) {
 
     const matchesWithoutArticles = (finishedMatches || []).filter(
       (m: Record<string, unknown>) => !existingMatchIds.has(m.id)
-    ).slice(0, 3); // Limit to 3 per execution to avoid Vercel timeout
+    ).slice(0, 5); // Increased: VPS triggers 4x/hour
 
     let articlesGenerated = 0;
     const errors: string[] = [];

@@ -5,7 +5,7 @@ import { verifyCronAuth } from "@/lib/auth";
 
 export const maxDuration = 300;
 
-const TEAMS_PER_RUN = 15;
+const TEAMS_PER_RUN = 25; // Increased: VPS calls 4x/day
 
 function generateSlug(name: string): string {
   return name
@@ -68,7 +68,7 @@ export async function GET(request: Request) {
       const team = teamsToProcess[i];
 
       // Respect rate limit: 10 requests/min -> wait 7s between calls
-      if (i > 0) await delay(7000);
+      if (i > 0) await delay(3000);
 
       try {
         const squadData = await getTeamSquad(team.api_football_id);

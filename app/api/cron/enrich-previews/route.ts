@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       .gte("date", now.toISOString())
       .lte("date", threeDaysFromNow.toISOString())
       .order("date", { ascending: true })
-      .limit(8); // Max 8 per run (3 API calls each = 24 calls)
+      .limit(15); // Increased: VPS calls every 15 min
 
     if (!matches || matches.length === 0) {
       return NextResponse.json({
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
       const apiFootballId = match.api_football_id as number | null;
       if (!apiFootballId) continue;
 
-      if (i > 0) await delay(7000);
+      if (i > 0) await delay(3000);
 
       try {
         // 1. Fetch predictions
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
           console.error(`Predictions error for ${match.slug}:`, err);
         }
 
-        await delay(7000);
+        await delay(3000);
 
         // 2. Fetch H2H
         let h2hData = null;
@@ -102,7 +102,7 @@ export async function GET(request: Request) {
           }
         }
 
-        await delay(7000);
+        await delay(3000);
 
         // 3. Fetch injuries
         let injuriesData = null;
