@@ -11,6 +11,15 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+export async function generateStaticParams() {
+  const supabase = createClient();
+  const { data: bookmakers } = await supabase
+    .from("bookmakers")
+    .select("slug")
+    .eq("active", true);
+  return (bookmakers ?? []).map((b) => ({ slug: b.slug }));
+}
+
 const LOGOS: Record<string, string> = {
   "1xbet": "/images/bookmakers/1xbet.png",
   melbet: "/images/bookmakers/melbet.png",
