@@ -8,6 +8,7 @@ const RUBRIQUES = [
   { href: "/transferts", label: "Transferts" },
   { href: "/recherche", label: "Recherche" },
   { href: "/bons-plans", label: "Bons Plans" },
+  { href: "/bookmakers", label: "Bookmakers" },
 ];
 
 const INFOS = [

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const SLIDES = [
   {
@@ -9,7 +10,7 @@ const SLIDES = [
     logo: "/images/bookmakers/1xbet.png",
     text: "200 000 FCFA de bonus offerts",
     shortText: "200 000 FCFA offerts",
-    url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
+    url: "/go/1xbet",
     bg: "from-blue-600 to-blue-800",
     cta: "Récupérer",
   },
@@ -18,7 +19,7 @@ const SLIDES = [
     logo: "/images/bookmakers/melbet.png",
     text: "Double ton 1er dépôt — Bonus 100%",
     shortText: "Bonus 100% 1er dépôt",
-    url: "https://refpa3665.com/L?tag=d_4814359m_45415c_&site=4814359&ad=45415&r=registration",
+    url: "/go/melbet",
     bg: "from-amber-500 to-orange-700",
     cta: "Profiter",
   },
@@ -27,7 +28,7 @@ const SLIDES = [
     logo: "/images/bookmakers/1win.png",
     text: "Le plus gros bonus : jusqu'à 500%",
     shortText: "Bonus jusqu'à 500%",
-    url: "https://1win.com/betting?p=1nye&sharebet=360foot&sub1=Foot360",
+    url: "/go/1win",
     bg: "from-cyan-500 to-teal-700",
     cta: "Foncer",
   },
@@ -55,11 +56,9 @@ export function AffiliateTicker() {
     >
       <div className="relative h-[72px] sm:h-[56px] rounded-xl overflow-hidden shadow-lg">
         {SLIDES.map((slide, i) => (
-          <a
+          <Link
             key={i}
             href={slide.url}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
             className={`
               absolute inset-0 w-full h-full
               bg-gradient-to-r ${slide.bg}
@@ -98,7 +97,7 @@ export function AffiliateTicker() {
                 </svg>
               </span>
             </div>
-          </a>
+          </Link>
         ))}
 
         {/* Dots */}

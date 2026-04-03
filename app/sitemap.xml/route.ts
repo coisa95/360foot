@@ -11,6 +11,7 @@ export async function GET() {
     { data: teams },
     { data: leagues },
     { data: players },
+    { data: bookmakers },
   ] = await Promise.all([
     supabase
       .from("articles")
@@ -25,6 +26,7 @@ export async function GET() {
     supabase.from("teams").select("slug, updated_at"),
     supabase.from("leagues").select("slug, updated_at"),
     supabase.from("players").select("slug, updated_at"),
+    supabase.from("bookmakers").select("slug").eq("active", true),
   ]);
 
   const baseUrl = "https://360-foot.com";
@@ -39,6 +41,8 @@ export async function GET() {
     { url: "/methodologie", priority: "0.3", changefreq: "monthly" },
     { url: "/confidentialite", priority: "0.2", changefreq: "monthly" },
     { url: "/mentions-legales", priority: "0.2", changefreq: "monthly" },
+    { url: "/bookmakers", priority: "0.7", changefreq: "weekly" },
+    { url: "/selection", priority: "0.7", changefreq: "weekly" },
   ];
 
   const nationalTeams = ["CI", "SN", "CM", "ML", "BF"];
@@ -128,6 +132,23 @@ export async function GET() {
     ${player.updated_at ? `<lastmod>${new Date(player.updated_at).toISOString()}</lastmod>` : ""}
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
+  </url>`;
+    }
+  }
+
+  // Bookmakers + go pages
+  if (bookmakers) {
+    for (const bk of bookmakers) {
+      xml += `
+  <url>
+    <loc>${baseUrl}/bookmakers/${bk.slug}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/go/${bk.slug}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>`;
     }
   }

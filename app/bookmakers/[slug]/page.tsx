@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const revalidate = 21600;
@@ -119,16 +120,12 @@ export default async function BookmakerPage({ params }: Props) {
               )}
             </div>
 
-            {bookmaker.affiliate_url && (
-              <a
-                href={bookmaker.affiliate_url}
-                target="_blank"
-                rel="noopener noreferrer sponsored"
-                className="bg-lime-500 hover:bg-lime-400 text-black font-bold py-4 px-10 rounded-lg transition-colors text-center text-lg whitespace-nowrap"
-              >
-                S&apos;inscrire et obtenir le bonus
-              </a>
-            )}
+            <Link
+              href={`/go/${slug}`}
+              className="bg-lime-500 hover:bg-lime-400 text-black font-bold py-4 px-10 rounded-lg transition-colors text-center text-lg whitespace-nowrap"
+            >
+              S&apos;inscrire et obtenir le bonus
+            </Link>
           </div>
         </Card>
 
@@ -237,27 +234,23 @@ export default async function BookmakerPage({ params }: Props) {
         </div>
 
         {/* CTA final */}
-        {bookmaker.affiliate_url && (
-          <Card className="bg-lime-500/10 border-lime-500/30 p-8 mt-8 text-center">
-            <h2 className="text-2xl font-bold mb-4">
-              Pret a parier avec {bookmaker.name} ?
-            </h2>
-            {bookmaker.bonus && (
-              <p className="text-lime-400 text-lg mb-6">{bookmaker.bonus}</p>
-            )}
-            <a
-              href={bookmaker.affiliate_url}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              className="inline-block bg-lime-500 hover:bg-lime-400 text-black font-bold py-4 px-12 rounded-lg transition-colors text-lg"
-            >
-              S&apos;inscrire maintenant
-            </a>
-            <p className="text-gray-500 text-xs mt-4">
-              18+ | Jouez responsablement | Les paris sportifs comportent des risques
-            </p>
-          </Card>
-        )}
+        <Card className="bg-lime-500/10 border-lime-500/30 p-8 mt-8 text-center">
+          <h2 className="text-2xl font-bold mb-4">
+            Pret a parier avec {bookmaker.name} ?
+          </h2>
+          {bookmaker.bonus && (
+            <p className="text-lime-400 text-lg mb-6">{bookmaker.bonus}</p>
+          )}
+          <Link
+            href={`/go/${slug}`}
+            className="inline-block bg-lime-500 hover:bg-lime-400 text-black font-bold py-4 px-12 rounded-lg transition-colors text-lg"
+          >
+            S&apos;inscrire maintenant
+          </Link>
+          <p className="text-gray-500 text-xs mt-4">
+            18+ | Jouez responsablement | Les paris sportifs comportent des risques
+          </p>
+        </Card>
 
         {/* Avertissement */}
         <Card className="bg-yellow-500/10 border-yellow-500/30 p-4 mt-6">

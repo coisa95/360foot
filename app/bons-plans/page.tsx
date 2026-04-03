@@ -189,16 +189,12 @@ export default async function BonsPlansPage() {
                     </div>
 
                     <div className="flex flex-col items-center gap-2">
-                      {bookmaker.affiliate_url && (
-                        <a
-                          href={bookmaker.affiliate_url}
-                          target="_blank"
-                          rel="noopener noreferrer sponsored"
-                          className="bg-lime-500 hover:bg-lime-400 text-black font-bold py-3 px-8 rounded-lg transition-colors text-center whitespace-nowrap"
-                        >
-                          Obtenir le bonus
-                        </a>
-                      )}
+                      <Link
+                        href={`/go/${bookmaker.slug}`}
+                        className="bg-lime-500 hover:bg-lime-400 text-black font-bold py-3 px-8 rounded-lg transition-colors text-center whitespace-nowrap"
+                      >
+                        Obtenir le bonus
+                      </Link>
                       <Link
                         href={`/bookmakers/${bookmaker.slug}`}
                         className="text-gray-400 hover:text-lime-400 text-sm transition-colors"

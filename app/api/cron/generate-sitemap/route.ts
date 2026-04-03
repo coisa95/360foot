@@ -31,10 +31,23 @@ export async function GET(request: Request) {
       .from("leagues")
       .select("slug, updated_at");
 
-    // Fetch all players (if table exists)
+    // Fetch all players
     const { data: players } = await supabase
       .from("players")
       .select("slug, updated_at");
+
+    // Fetch matches
+    const { data: matches } = await supabase
+      .from("matches")
+      .select("slug, date")
+      .order("date", { ascending: false })
+      .limit(2000);
+
+    // Fetch active bookmakers
+    const { data: bookmakers } = await supabase
+      .from("bookmakers")
+      .select("slug")
+      .eq("active", true);
 
     // Build sitemap XML
     const urls: Array<{ loc: string; lastmod: string; priority: string; changefreq: string }> = [];
@@ -48,7 +61,10 @@ export async function GET(request: Request) {
       { loc: `${BASE_URL}/competitions`, lastmod: now, priority: "0.8", changefreq: "daily" },
       { loc: `${BASE_URL}/transferts`, lastmod: now, priority: "0.7", changefreq: "daily" },
       { loc: `${BASE_URL}/bons-plans`, lastmod: now, priority: "0.6", changefreq: "weekly" },
+      { loc: `${BASE_URL}/bookmakers`, lastmod: now, priority: "0.7", changefreq: "weekly" },
+      { loc: `${BASE_URL}/selection`, lastmod: now, priority: "0.7", changefreq: "weekly" },
       { loc: `${BASE_URL}/methodologie`, lastmod: now, priority: "0.3", changefreq: "monthly" },
+      { loc: `${BASE_URL}/confidentialite`, lastmod: now, priority: "0.2", changefreq: "monthly" },
       { loc: `${BASE_URL}/mentions-legales`, lastmod: now, priority: "0.2", changefreq: "monthly" },
     );
 
@@ -72,13 +88,62 @@ export async function GET(request: Request) {
       });
     }
 
-    // Leagues
-    for (const league of leagues || []) {
+    // Matches
+    for (const match of matches || []) {
       urls.push({
-        loc: `${BASE_URL}/ligue/${league.slug}`,
-        lastmod: league.updated_at || new Date().toISOString(),
+        loc: `${BASE_URL}/match/${match.slug}`,
+        lastmod: new Date(match.date).toISOString(),
         priority: "0.7",
         changefreq: "daily",
+      });
+    }
+
+    // Leagues + sub-pages
+    const leagueSubPages = ["resultats", "calendrier", "actualites", "buteurs", "passeurs"];
+    for (const league of leagues || []) {
+      const lastmod = league.updated_at || new Date().toISOString();
+      urls.push({
+        loc: `${BASE_URL}/ligue/${league.slug}`,
+        lastmod,
+        priority: "0.8",
+        changefreq: "daily",
+      });
+      for (const sub of leagueSubPages) {
+        urls.push({
+          loc: `${BASE_URL}/ligue/${league.slug}/${sub}`,
+          lastmod,
+          priority: "0.7",
+          changefreq: "daily",
+        });
+      }
+    }
+
+    // Bookmakers + go pages
+    for (const bk of bookmakers || []) {
+      urls.push(
+        {
+          loc: `${BASE_URL}/bookmakers/${bk.slug}`,
+          lastmod: now,
+          priority: "0.6",
+          changefreq: "weekly",
+        },
+        {
+          loc: `${BASE_URL}/go/${bk.slug}`,
+          lastmod: now,
+          priority: "0.7",
+          changefreq: "weekly",
+        }
+      );
+    }
+
+    // Selections nationales
+    const nationalTeams = ["ci", "sn", "cm", "ml", "bf"];
+    for (const code of nationalTeams) {
+      urls.push({
+        loc: `${BASE_URL}/selection/${code}`,
+        lastmod: now,
+        priority: "0.6",
+        changefreq: "weekly",
       });
     }
 

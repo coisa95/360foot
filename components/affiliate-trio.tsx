@@ -1,11 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const BOOKMAKERS = [
   {
     name: "1xBet",
     slug: "1xbet",
     logo: "/images/bookmakers/1xbet.png",
-    url: "https://reffpa.com/L?tag=d_689933m_1573c_bonus&site=689933&ad=1573",
+    url: "/go/1xbet",
     bonus: "200 000 FCFA",
     bonusLabel: "de bonus offerts",
     highlight: "Le plus populaire en Afrique",
@@ -21,7 +22,7 @@ const BOOKMAKERS = [
     name: "Melbet",
     slug: "melbet",
     logo: "/images/bookmakers/melbet.png",
-    url: "https://refpa3665.com/L?tag=d_4814359m_45415c_&site=4814359&ad=45415&r=registration",
+    url: "/go/melbet",
     bonus: "100%",
     bonusLabel: "sur le 1er dépôt",
     highlight: "Double ton premier dépôt",
@@ -37,7 +38,7 @@ const BOOKMAKERS = [
     name: "1win",
     slug: "1win",
     logo: "/images/bookmakers/1win.png",
-    url: "https://1win.com/betting?p=1nye&sharebet=360foot&sub1=Foot360",
+    url: "/go/1win",
     bonus: "500%",
     bonusLabel: "de bonus de bienvenue",
     highlight: "Le plus gros bonus du marché",
@@ -61,11 +62,9 @@ export function AffiliateTrio() {
       {/* Desktop: full cards */}
       <div className="hidden sm:grid sm:grid-cols-3 gap-3">
         {BOOKMAKERS.map((bk) => (
-          <a
+          <Link
             key={bk.slug}
             href={bk.url}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
             className={`group relative overflow-hidden rounded-xl border ${bk.borderColor} bg-gradient-to-br ${bk.color} p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${bk.glowColor}`}
           >
             {/* Badge */}
@@ -98,18 +97,16 @@ export function AffiliateTrio() {
             <div className={`w-full text-center rounded-lg ${bk.btnColor} px-4 py-2 text-xs font-bold text-dark-bg transition-all group-hover:shadow-md`}>
               {bk.cta} →
             </div>
-          </a>
+          </Link>
         ))}
       </div>
 
       {/* Mobile: cards with logo */}
       <div className="sm:hidden space-y-2">
         {BOOKMAKERS.map((bk) => (
-          <a
+          <Link
             key={bk.slug}
             href={bk.url}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
             className={`group flex items-center gap-3 rounded-xl border ${bk.borderColor} bg-gradient-to-r ${bk.color} px-3 py-2.5 transition-all`}
           >
             {/* Logo */}
@@ -134,7 +131,7 @@ export function AffiliateTrio() {
             <span className={`shrink-0 rounded-lg ${bk.btnColor} px-3 py-1.5 text-[10px] font-bold text-dark-bg`}>
               Profiter
             </span>
-          </a>
+          </Link>
         ))}
       </div>
 
@@ -149,10 +146,8 @@ export function AffiliateTrio() {
 export function AffiliateInline({ index = 0 }: { index?: number }) {
   const bk = BOOKMAKERS[index % BOOKMAKERS.length];
   return (
-    <a
+    <Link
       href={bk.url}
-      target="_blank"
-      rel="noopener noreferrer nofollow"
       className={`group my-4 flex items-center gap-3 rounded-xl border ${bk.borderColor} bg-gradient-to-r ${bk.color} p-3 transition-all hover:shadow-lg ${bk.glowColor}`}
     >
       <Image
@@ -169,6 +164,6 @@ export function AffiliateInline({ index = 0 }: { index?: number }) {
       <span className={`rounded-lg ${bk.btnColor} px-3 py-1.5 text-xs font-bold text-dark-bg transition-all`}>
         {bk.cta} →
       </span>
-    </a>
+    </Link>
   );
 }

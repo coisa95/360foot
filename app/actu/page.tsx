@@ -10,29 +10,41 @@ import { getArticleTypeLabel, getArticleTypeColor } from "@/lib/article-types";
 
 export const revalidate = 1800;
 
-export const metadata: Metadata = {
-  title: "Actualités football africain et européen",
-  description:
-    "Retrouvez toutes les actualités du football africain et européen : résultats, transferts, analyses et avant-matchs.",
-  alternates: {
-    canonical: "https://360-foot.com/actu",
-  },
-  openGraph: {
-    title: "Actualités football africain et européen - 360 Foot",
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const { categorie, page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam || "1", 10));
+  const catParam = categorie && categorie !== "all" ? `categorie=${categorie}&` : "";
+  const baseUrl = "https://360-foot.com/actu";
+  const canonical = currentPage === 1 && !catParam
+    ? baseUrl
+    : `${baseUrl}?${catParam}page=${currentPage}`;
+
+  return {
+    title: currentPage > 1
+      ? `Actualités football africain et européen - Page ${currentPage}`
+      : "Actualités football africain et européen",
     description:
-      "Toutes les actualités du football africain et européen sur 360 Foot.",
-    type: "website",
-    url: "https://360-foot.com/actu",
-    locale: "fr_FR",
-    images: ["https://360-foot.com/api/og?title=Actualit%C3%A9s%20football"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Actualités football africain et européen - 360 Foot",
-    description: "Toutes les actualités du football africain et européen sur 360 Foot.",
-    images: ["https://360-foot.com/api/og?title=Actualit%C3%A9s%20football"],
-  },
-};
+      "Retrouvez toutes les actualités du football africain et européen : résultats, transferts, analyses et avant-matchs.",
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title: "Actualités football africain et européen - 360 Foot",
+      description:
+        "Toutes les actualités du football africain et européen sur 360 Foot.",
+      type: "website",
+      url: canonical,
+      locale: "fr_FR",
+      images: ["https://360-foot.com/api/og?title=Actualit%C3%A9s%20football"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Actualités football africain et européen - 360 Foot",
+      description: "Toutes les actualités du football africain et européen sur 360 Foot.",
+      images: ["https://360-foot.com/api/og?title=Actualit%C3%A9s%20football"],
+    },
+  };
+}
 
 const CATEGORIES = [
   { label: "Tous", value: "all" },
