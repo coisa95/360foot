@@ -182,7 +182,7 @@ export default async function GoPage({ params }: Props) {
         <Breadcrumb items={breadcrumbItems} />
 
         {/* ══════════ HERO CARD ══════════ */}
-        <div className={`relative mt-6 overflow-hidden rounded-2xl bg-gradient-to-br ${brand.gradient} p-6 sm:p-10 text-center shadow-2xl ${brand.glow}`}>
+        <div className={`relative mt-6 overflow-hidden rounded-2xl bg-gradient-to-br ${brand.gradient} p-5 sm:p-10 text-center shadow-2xl ${brand.glow}`}>
           {/* Decorative circles */}
           <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/5" />
           <div className="pointer-events-none absolute -left-6 -bottom-6 h-28 w-28 rounded-full bg-white/5" />
@@ -193,12 +193,12 @@ export default async function GoPage({ params }: Props) {
               alt={bookmaker.name}
               width={160}
               height={64}
-              className="relative mx-auto h-14 sm:h-16 w-auto object-contain mb-5 drop-shadow-lg"
+              className="relative mx-auto h-10 sm:h-16 w-auto object-contain mb-4 drop-shadow-lg"
             />
           )}
 
           {bonusText && (
-            <p className="relative text-4xl sm:text-5xl font-black text-white drop-shadow-md leading-tight">
+            <p className="relative text-2xl sm:text-5xl font-black text-white drop-shadow-md leading-tight">
               {bonusText}
             </p>
           )}
@@ -211,10 +211,10 @@ export default async function GoPage({ params }: Props) {
 
           {/* Promo code inside hero */}
           {promoCode && (
-            <div className="relative mt-6">
+            <div className="relative mt-4 sm:mt-6">
               <p className="text-[10px] uppercase tracking-[0.15em] text-white/50 mb-1.5">Code promo exclusif</p>
-              <div className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-white/30 bg-black/20 backdrop-blur-sm px-6 sm:px-10 py-3">
-                <span className="text-3xl sm:text-4xl font-black tracking-[0.25em] text-white drop-shadow-sm">
+              <div className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-white/30 bg-black/20 backdrop-blur-sm px-5 sm:px-10 py-2 sm:py-3">
+                <span className="text-2xl sm:text-4xl font-black tracking-[0.25em] text-white drop-shadow-sm">
                   {promoCode}
                 </span>
               </div>
@@ -222,12 +222,12 @@ export default async function GoPage({ params }: Props) {
           )}
 
           {/* CTA inside hero */}
-          <div className="relative mt-8">
+          <div className="relative mt-5 sm:mt-8">
             <a
               href={bookmaker.affiliate_url}
               target="_blank"
               rel="noopener noreferrer sponsored"
-              className="inline-block w-full sm:w-auto rounded-xl bg-white px-10 py-4 text-lg font-black text-gray-900 transition-all hover:scale-105 hover:shadow-2xl shadow-lg active:scale-100"
+              className="inline-block w-full sm:w-auto rounded-xl bg-white px-8 sm:px-10 py-3 sm:py-4 text-base sm:text-lg font-black text-gray-900 transition-all hover:scale-105 hover:shadow-2xl shadow-lg active:scale-100"
             >
               Obtenir mon bonus maintenant
             </a>
@@ -235,18 +235,18 @@ export default async function GoPage({ params }: Props) {
         </div>
 
         {/* ══════════ STEPS ══════════ */}
-        <div className="mt-10">
-          <h2 className="text-center text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-6">
+        <div className="mt-8 sm:mt-10">
+          <h2 className="text-center text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-4 sm:mb-6">
             Comment faire ?
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {steps.map((step, i) => (
               <div key={i} className="relative text-center group">
                 {/* Connector line (not on last) */}
                 {i < steps.length - 1 && (
                   <div className="absolute top-4 left-[calc(50%+20px)] right-0 h-px bg-gradient-to-r from-gray-700 to-transparent hidden sm:block" />
                 )}
-                <div className={`relative mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${brand.gradient} text-sm font-black text-white shadow-lg ${brand.glow} mb-3`}>
+                <div className={`relative mx-auto flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-gradient-to-br ${brand.gradient} text-xs sm:text-sm font-black text-white shadow-lg ${brand.glow} mb-2 sm:mb-3`}>
                   {i + 1}
                 </div>
                 <p className="text-xs text-gray-400 leading-relaxed font-medium">{step}</p>
@@ -256,12 +256,12 @@ export default async function GoPage({ params }: Props) {
         </div>
 
         {/* ══════════ CTA 2 — full width, branded ══════════ */}
-        <div className="mt-10">
+        <div className="mt-8 sm:mt-10">
           <a
             href={bookmaker.affiliate_url}
             target="_blank"
             rel="noopener noreferrer sponsored"
-            className={`group flex items-center justify-center gap-3 w-full rounded-xl ${brand.btn} px-8 py-5 text-lg font-black text-dark-bg transition-all hover:scale-[1.02] shadow-lg active:scale-100`}
+            className={`group flex items-center justify-center gap-2 sm:gap-3 w-full rounded-xl ${brand.btn} px-6 sm:px-8 py-3.5 sm:py-5 text-base sm:text-lg font-black text-dark-bg transition-all hover:scale-[1.02] shadow-lg active:scale-100`}
           >
             <span>S&apos;inscrire sur {bookmaker.name}</span>
             <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
