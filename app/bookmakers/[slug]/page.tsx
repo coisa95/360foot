@@ -59,11 +59,16 @@ export default async function BookmakerPage({ params }: Props) {
 
   const { data: bookmaker } = await supabase
     .from("bookmakers")
-    .select("id,name,slug,rating,bonus,bonus_conditions,bonus_json,description,affiliate_url,supported_countries,payment_methods,min_deposit,license,pros,cons,countries")
+    .select("id,name,slug,rating,bonus_json,description,affiliate_url,supported_countries,payment_methods,min_deposit,license,pros,cons,countries")
     .eq("slug", slug)
     .single();
 
   if (!bookmaker) notFound();
+
+  const bonusJson = bookmaker.bonus_json as Record<string, string> | null;
+  const bonusText = bonusJson
+    ? bonusJson["CI"] || bonusJson["default"] || Object.values(bonusJson)[0] || null
+    : null;
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
@@ -130,13 +135,10 @@ export default async function BookmakerPage({ params }: Props) {
         </Card>
 
         {/* Bonus */}
-        {bookmaker.bonus && (
+        {bonusText && (
           <Card className="bg-lime-500/10 border-lime-500/30 p-6 mt-6">
             <h2 className="text-lg font-bold text-lime-400 mb-2">Bonus de bienvenue</h2>
-            <p className="text-2xl font-bold text-white">{bookmaker.bonus}</p>
-            {bookmaker.bonus_conditions && (
-              <p className="text-gray-400 text-sm mt-2">{bookmaker.bonus_conditions}</p>
-            )}
+            <p className="text-2xl font-bold text-white">{bonusText}</p>
           </Card>
         )}
 
@@ -238,8 +240,8 @@ export default async function BookmakerPage({ params }: Props) {
           <h2 className="text-2xl font-bold mb-4">
             Pret a parier avec {bookmaker.name} ?
           </h2>
-          {bookmaker.bonus && (
-            <p className="text-lime-400 text-lg mb-6">{bookmaker.bonus}</p>
+          {bonusText && (
+            <p className="text-lime-400 text-lg mb-6">{bonusText}</p>
           )}
           <Link
             href={`/go/${slug}`}

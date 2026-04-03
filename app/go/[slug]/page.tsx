@@ -105,13 +105,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: bookmaker } = await supabase
     .from("bookmakers")
-    .select("name,slug,bonus")
+    .select("name,slug,bonus_json")
     .eq("slug", slug)
     .single();
 
   if (!bookmaker) return { title: "Bookmaker introuvable - 360 Foot" };
 
-  const title = `${bookmaker.name} — Bonus de bienvenue${bookmaker.bonus ? ` ${bookmaker.bonus}` : ""}`;
+  const bonusMeta = bookmaker.bonus_json as Record<string, string> | null;
+  const bonusLabel = bonusMeta ? bonusMeta["CI"] || bonusMeta["default"] || Object.values(bonusMeta)[0] : null;
+  const title = `${bookmaker.name} — Bonus de bienvenue${bonusLabel ? ` ${bonusLabel}` : ""}`;
   const description = `Obtenez le bonus ${bookmaker.name} en 2 minutes. Inscription rapide et bonus immédiat.`;
 
   return {
@@ -135,7 +137,7 @@ export default async function GoPage({ params }: Props) {
 
   const { data: bookmaker } = await supabase
     .from("bookmakers")
-    .select("id,name,slug,bonus,bonus_json,affiliate_url")
+    .select("id,name,slug,bonus_json,affiliate_url")
     .eq("slug", slug)
     .single();
 
@@ -149,8 +151,8 @@ export default async function GoPage({ params }: Props) {
 
   const bonusJson = bookmaker.bonus_json as Record<string, string> | null;
   const bonusText = bonusJson
-    ? bonusJson["CI"] || bonusJson["default"] || Object.values(bonusJson)[0] || bookmaker.bonus
-    : bookmaker.bonus;
+    ? bonusJson["CI"] || bonusJson["default"] || Object.values(bonusJson)[0] || null
+    : null;
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
