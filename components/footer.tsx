@@ -19,7 +19,7 @@ const INFOS = [
 
 export function Footer() {
   return (
-    <footer aria-label="Pied de page" className="border-t border-dark-border/50 bg-dark-bg">
+    <footer aria-label="Pied de page" className="border-t border-white/[0.06] bg-[#030014]/80 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-12">
           {/* Brand */}
@@ -28,7 +28,7 @@ export function Footer() {
               <Image src="/logo-360.png" alt="360 Foot" width={28} height={28} className="rounded" />
               <span className="text-sm font-bold">
                 <span className="text-white">360</span>{" "}
-                <span className="text-lime-400">Foot</span>
+                <span className="text-glow">Foot</span>
               </span>
             </Link>
             <p className="mt-1.5 text-[10px] text-gray-500 max-w-[220px] leading-relaxed">
@@ -56,7 +56,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-[11px] text-gray-500 transition-colors hover:text-lime-400"
+                      className="text-[11px] text-gray-500 transition-colors hover:text-emerald-400"
                     >
                       {link.label}
                     </Link>
@@ -73,7 +73,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-[11px] text-gray-500 transition-colors hover:text-lime-400"
+                      className="text-[11px] text-gray-500 transition-colors hover:text-emerald-400"
                     >
                       {link.label}
                     </Link>
@@ -85,7 +85,7 @@ export function Footer() {
         </div>
 
         {/* Responsible Gaming + Copyright */}
-        <div className="mt-4 border-t border-dark-border/50 pt-3 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="mt-4 border-t border-white/[0.06] pt-3 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2 rounded border border-yellow-500/20 bg-yellow-500/5 px-2.5 py-1.5">
             <span className="text-[10px] font-semibold text-yellow-400">18+ | Jeu responsable</span>
             <span className="text-[9px] text-yellow-400/70">— 0 974 75 13 13</span>

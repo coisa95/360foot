@@ -38,38 +38,13 @@ const BONUS_TAGLINES: Record<string, string> = {
   "1win": "Bonus 500% sur vos 4 premiers dépôts (+100%, +120%, +130%, +150%)",
 };
 
-// Brand colors per bookmaker
-const BRAND: Record<string, { gradient: string; glow: string; accent: string; btn: string; ring: string }> = {
-  "1xbet": {
-    gradient: "from-blue-600 via-blue-700 to-blue-900",
-    glow: "shadow-blue-500/30",
-    accent: "text-blue-300",
-    btn: "bg-blue-500 hover:bg-blue-400 shadow-blue-500/40",
-    ring: "border-blue-400/50",
-  },
-  melbet: {
-    gradient: "from-amber-500 via-orange-600 to-orange-800",
-    glow: "shadow-amber-500/30",
-    accent: "text-amber-300",
-    btn: "bg-amber-500 hover:bg-amber-400 shadow-amber-500/40",
-    ring: "border-amber-400/50",
-  },
-  "1win": {
-    gradient: "from-cyan-500 via-teal-600 to-teal-800",
-    glow: "shadow-cyan-500/30",
-    accent: "text-cyan-300",
-    btn: "bg-cyan-500 hover:bg-cyan-400 shadow-cyan-500/40",
-    ring: "border-cyan-400/50",
-  },
+const BRAND: Record<string, { from: string; via: string; to: string; shadow: string; text: string }> = {
+  "1xbet": { from: "#2563eb", via: "#1d4ed8", to: "#1e3a8a", shadow: "rgba(37,99,235,0.4)", text: "#93c5fd" },
+  melbet: { from: "#f59e0b", via: "#ea580c", to: "#9a3412", shadow: "rgba(245,158,11,0.4)", text: "#fcd34d" },
+  "1win": { from: "#06b6d4", via: "#0d9488", to: "#115e59", shadow: "rgba(6,182,212,0.4)", text: "#67e8f9" },
 };
 
-const DEFAULT_BRAND = {
-  gradient: "from-lime-500 via-emerald-600 to-emerald-800",
-  glow: "shadow-lime-500/30",
-  accent: "text-lime-300",
-  btn: "bg-lime-500 hover:bg-lime-400 shadow-lime-500/40",
-  ring: "border-lime-400/50",
-};
+const DEFAULT_BRAND = { from: "#10b981", via: "#059669", to: "#064e3b", shadow: "rgba(16,185,129,0.4)", text: "#6ee7b7" };
 
 const BONUS_STEPS: Record<string, string[]> = {
   "1xbet": [
@@ -172,20 +147,33 @@ export default async function GoPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen text-white relative">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
-      <div className="mx-auto max-w-2xl px-4 py-6">
+      <div className="mx-auto max-w-xl px-4 py-5 sm:py-8">
         <Breadcrumb items={breadcrumbItems} />
 
         {/* ══════════ HERO CARD ══════════ */}
-        <div className={`relative mt-6 overflow-hidden rounded-2xl bg-gradient-to-br ${brand.gradient} p-5 sm:p-10 text-center shadow-2xl ${brand.glow}`}>
+        <div
+          className="relative mt-5 sm:mt-8 overflow-hidden rounded-2xl p-5 sm:p-10 text-center card-elevated animate-fadeInUp"
+          style={{
+            background: `linear-gradient(135deg, ${brand.from}, ${brand.via}, ${brand.to})`,
+            boxShadow: `0 20px 60px ${brand.shadow}, 0 0 80px ${brand.shadow}`,
+          }}
+        >
+          {/* Decorative shimmer */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: "linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%)",
+            }}
+          />
           {/* Decorative circles */}
-          <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/5" />
-          <div className="pointer-events-none absolute -left-6 -bottom-6 h-28 w-28 rounded-full bg-white/5" />
+          <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 sm:h-40 sm:w-40 rounded-full bg-white/5" />
+          <div className="pointer-events-none absolute -left-5 -bottom-5 h-24 w-24 sm:h-28 sm:w-28 rounded-full bg-white/5" />
 
           {logo && (
             <Image
@@ -193,41 +181,46 @@ export default async function GoPage({ params }: Props) {
               alt={bookmaker.name}
               width={160}
               height={64}
-              className="relative mx-auto h-10 sm:h-16 w-auto object-contain mb-4 drop-shadow-lg"
+              className="relative mx-auto h-10 sm:h-14 w-auto object-contain mb-3 sm:mb-5 drop-shadow-lg"
             />
           )}
 
           {bonusText && (
-            <p className="relative text-2xl sm:text-5xl font-black text-white drop-shadow-md leading-tight">
+            <p className="relative text-xl sm:text-4xl font-extrabold font-display text-white drop-shadow-md leading-tight">
               {bonusText}
             </p>
           )}
 
           {tagline && (
-            <p className={`relative mt-2 text-sm sm:text-base font-medium ${brand.accent}`}>
+            <p className="relative mt-1.5 sm:mt-2 text-xs sm:text-sm font-medium" style={{ color: brand.text }}>
               {tagline}
             </p>
           )}
 
-          {/* Promo code inside hero */}
+          {/* Promo code */}
           {promoCode && (
-            <div className="relative mt-4 sm:mt-6">
-              <p className="text-[10px] uppercase tracking-[0.15em] text-white/50 mb-1.5">Code promo exclusif</p>
-              <div className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-white/30 bg-black/20 backdrop-blur-sm px-5 sm:px-10 py-2 sm:py-3">
-                <span className="text-2xl sm:text-4xl font-black tracking-[0.25em] text-white drop-shadow-sm">
+            <div className="relative mt-4 sm:mt-6 animate-fadeInUp delay-100">
+              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-white/50 mb-1">Code promo exclusif</p>
+              <div className="inline-flex items-center rounded-xl border-2 border-dashed border-white/30 bg-black/20 backdrop-blur-sm px-4 sm:px-8 py-1.5 sm:py-2.5">
+                <span className="text-xl sm:text-3xl font-extrabold font-display tracking-[0.2em] text-white drop-shadow-sm">
                   {promoCode}
                 </span>
               </div>
             </div>
           )}
 
-          {/* CTA inside hero */}
-          <div className="relative mt-5 sm:mt-8">
+          {/* CTA principal */}
+          <div className="relative mt-4 sm:mt-7 animate-fadeInUp delay-200">
             <a
               href={bookmaker.affiliate_url}
               target="_blank"
               rel="noopener noreferrer sponsored"
-              className="inline-block w-full sm:w-auto rounded-xl bg-white px-8 sm:px-10 py-3 sm:py-4 text-base sm:text-lg font-black text-gray-900 transition-all hover:scale-105 hover:shadow-2xl shadow-lg active:scale-100"
+              className="btn-neon w-full sm:w-auto !rounded-xl !px-8 !py-3 sm:!py-4 !text-sm sm:!text-base"
+              style={{
+                background: "#fff",
+                color: brand.from,
+                boxShadow: `0 0 25px rgba(255,255,255,0.3), 0 8px 30px ${brand.shadow}`,
+              }}
             >
               Obtenir mon bonus maintenant
             </a>
@@ -235,48 +228,58 @@ export default async function GoPage({ params }: Props) {
         </div>
 
         {/* ══════════ STEPS ══════════ */}
-        <div className="mt-8 sm:mt-10">
-          <h2 className="text-center text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-4 sm:mb-6">
+        <div className="mt-7 sm:mt-10 animate-fadeInUp delay-300">
+          <h2 className="text-center text-[10px] sm:text-xs font-extrabold font-display uppercase tracking-[0.2em] text-gray-500 mb-4 sm:mb-6">
             Comment faire ?
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {steps.map((step, i) => (
-              <div key={i} className="relative text-center group">
-                {/* Connector line (not on last) */}
+              <div key={i} className="relative text-center">
+                {/* Connector line (desktop only, not on last) */}
                 {i < steps.length - 1 && (
-                  <div className="absolute top-4 left-[calc(50%+20px)] right-0 h-px bg-gradient-to-r from-gray-700 to-transparent hidden sm:block" />
+                  <div className="absolute top-3.5 sm:top-4 left-[calc(50%+18px)] right-0 h-px bg-gradient-to-r from-gray-700 to-transparent hidden sm:block" />
                 )}
-                <div className={`relative mx-auto flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-gradient-to-br ${brand.gradient} text-xs sm:text-sm font-black text-white shadow-lg ${brand.glow} mb-2 sm:mb-3`}>
+                <div
+                  className="relative mx-auto flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-full text-[10px] sm:text-xs font-extrabold font-display text-white mb-2 sm:mb-3"
+                  style={{
+                    background: `linear-gradient(135deg, ${brand.from}, ${brand.to})`,
+                    boxShadow: `0 4px 15px ${brand.shadow}`,
+                  }}
+                >
                   {i + 1}
                 </div>
-                <p className="text-xs text-gray-400 leading-relaxed font-medium">{step}</p>
+                <p className="text-[11px] sm:text-xs text-gray-400 leading-relaxed font-medium">{step}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* ══════════ CTA 2 — full width, branded ══════════ */}
-        <div className="mt-8 sm:mt-10">
+        {/* ══════════ CTA 2 ══════════ */}
+        <div className="mt-7 sm:mt-10 animate-fadeInUp delay-400">
           <a
             href={bookmaker.affiliate_url}
             target="_blank"
             rel="noopener noreferrer sponsored"
-            className={`group flex items-center justify-center gap-2 sm:gap-3 w-full rounded-xl ${brand.btn} px-6 sm:px-8 py-3.5 sm:py-5 text-base sm:text-lg font-black text-dark-bg transition-all hover:scale-[1.02] shadow-lg active:scale-100`}
+            className="btn-neon w-full !rounded-xl !py-3 sm:!py-4 !text-sm sm:!text-base"
+            style={{
+              background: `linear-gradient(135deg, ${brand.from}, ${brand.via})`,
+              boxShadow: `0 0 30px ${brand.shadow}`,
+            }}
           >
             <span>S&apos;inscrire sur {bookmaker.name}</span>
-            <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </a>
           {promoCode && (
-            <p className="mt-2 text-center text-sm font-bold text-gray-400">
-              Code promo : <span className={`font-black tracking-wider ${brand.accent}`}>{promoCode}</span>
+            <p className="mt-2 text-center text-xs sm:text-sm font-bold text-gray-500">
+              Code promo : <span className="font-extrabold font-display tracking-wider" style={{ color: brand.text }}>{promoCode}</span>
             </p>
           )}
         </div>
 
         {/* ══════════ Disclaimer ══════════ */}
-        <p className="mt-8 text-center text-[10px] text-gray-600">
+        <p className="mt-6 sm:mt-8 text-center text-[9px] sm:text-[10px] text-gray-600">
           18+ | Jeu responsable | Conditions sur le site du bookmaker | Lien d&apos;affiliation
         </p>
       </div>

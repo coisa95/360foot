@@ -53,7 +53,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-dark-border/50 bg-dark-bg/90 backdrop-blur-xl shadow-lg shadow-black/20">
+    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#030014]/80 backdrop-blur-xl shadow-lg shadow-black/30">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
@@ -67,7 +67,7 @@ export function Header() {
           />
           <span className="text-xl font-bold">
             <span className="text-white">360</span>{" "}
-            <span className="bg-gradient-to-r from-lime-400 to-emerald-400 bg-clip-text text-transparent">Foot</span>
+            <span className="text-glow">Foot</span>
           </span>
         </Link>
 
@@ -77,7 +77,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm text-gray-400 transition-colors hover:text-lime-400 ${link.icon ? "flex items-center gap-1" : ""}`}
+              className={`text-sm text-gray-400 transition-colors hover:text-emerald-400 ${link.icon ? "flex items-center gap-1" : ""}`}
             >
               {link.icon && (
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@ export function Header() {
           {installPrompt && (
             <button
               onClick={handleInstall}
-              className="flex items-center gap-1.5 rounded-lg bg-lime-400 px-3 py-1.5 text-xs font-bold text-black transition-colors hover:bg-lime-300"
+              className="flex items-center gap-1.5 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-black transition-colors hover:bg-emerald-400"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -107,7 +107,7 @@ export function Header() {
           {installPrompt && (
             <button
               onClick={handleInstall}
-              className="flex items-center gap-1 rounded-lg bg-lime-400 px-2.5 py-1.5 text-xs font-bold text-black transition-colors hover:bg-lime-300"
+              className="flex items-center gap-1 rounded-lg bg-emerald-500 px-2.5 py-1.5 text-xs font-bold text-black transition-colors hover:bg-emerald-400"
               aria-label="Installer l'application"
             >
               <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +118,7 @@ export function Header() {
           )}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-lime-400"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-emerald-400"
             aria-label="Menu"
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
@@ -136,14 +136,14 @@ export function Header() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div id="mobile-menu" className="border-t border-dark-border bg-dark-bg px-4 pb-4 lg:hidden">
+        <div id="mobile-menu" className="border-t border-white/[0.06] bg-[#030014]/95 backdrop-blur-xl px-4 pb-4 lg:hidden">
           <nav aria-label="Navigation mobile" className="flex flex-col gap-1 pt-2">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className={`rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-lime-400 ${link.icon ? "flex items-center gap-2" : ""}`}
+                className={`rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-emerald-400 ${link.icon ? "flex items-center gap-2" : ""}`}
               >
                 {link.icon && (
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -54,7 +54,7 @@ export function AffiliateTicker() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="relative h-[72px] sm:h-[56px] rounded-xl overflow-hidden shadow-lg">
+      <div className="relative h-[72px] sm:h-[56px] rounded-xl overflow-hidden shadow-lg shadow-black/30 border border-white/[0.06]">
         {SLIDES.map((slide, i) => (
           <Link
             key={i}
