@@ -24,7 +24,7 @@ const LOGOS: Record<string, string> = {
   "1xbet": "/images/bookmakers/1xbet.png",
   melbet: "/images/bookmakers/melbet.png",
   "1win": "/images/bookmakers/1win.png",
-  megapari: "/images/bookmakers/megapari.png",
+  megapari: "/images/bookmakers/megapari.svg",
 };
 
 const PROMO_CODES: Record<string, string> = {

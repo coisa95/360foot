@@ -56,7 +56,7 @@ const BOOKMAKERS = [
   {
     name: "MegaPari",
     slug: "megapari",
-    logo: "/images/bookmakers/megapari.png",
+    logo: "/images/bookmakers/megapari.svg",
     url: "/go/megapari",
     bonus: "100%",
     bonusLabel: "sur le 1er dépôt",

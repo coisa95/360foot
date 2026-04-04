@@ -34,7 +34,7 @@ const SLIDES = [
   },
   {
     name: "MegaPari",
-    logo: "/images/bookmakers/megapari.png",
+    logo: "/images/bookmakers/megapari.svg",
     text: "Bonus 100% sur ton 1er dépôt — Code 1WAFU",
     shortText: "Bonus 100% — Code 1WAFU",
     url: "/go/megapari",
