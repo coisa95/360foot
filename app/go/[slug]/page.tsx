@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 const LOGOS: Record<string, string> = {
   "1xbet": "/images/bookmakers/1xbet.png",
   melbet: "/images/bookmakers/melbet.png",
-  "1win": "/images/bookmakers/1win.png",
+  "1win": "/images/bookmakers/1win.svg",
   megapari: "/images/bookmakers/megapari.svg",
 };
 

@@ -25,7 +25,7 @@ const SLIDES = [
   },
   {
     name: "1win",
-    logo: "/images/bookmakers/1win.png",
+    logo: "/images/bookmakers/1win.svg",
     text: "Le plus gros bonus : jusqu'à 500%",
     shortText: "Bonus jusqu'à 500%",
     url: "/go/1win",

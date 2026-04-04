@@ -39,7 +39,7 @@ const BOOKMAKERS = [
   {
     name: "1win",
     slug: "1win",
-    logo: "/images/bookmakers/1win.png",
+    logo: "/images/bookmakers/1win.svg",
     url: "/go/1win",
     bonus: "500%",
     bonusLabel: "de bonus de bienvenue",
