@@ -8,6 +8,18 @@ import Link from "next/link";
 
 export const revalidate = 21600;
 
+const PROMO_CODES: Record<string, string> = {
+  "1xbet": "1WAFU",
+  melbet: "1WAFU",
+  "1win": "6MAP",
+};
+
+const TRUST_BADGES: Record<string, string[]> = {
+  "1xbet": ["Recommandé", "Dispo Afrique de l'Ouest"],
+  melbet: ["Bonus 200%", "Dispo Afrique de l'Ouest"],
+  "1win": ["Meilleur bonus", "Dispo Afrique de l'Ouest"],
+};
+
 export const metadata: Metadata = {
   title: "Paris sportifs - Comparateur de bookmakers",
   description:
@@ -42,7 +54,6 @@ export default async function BookmakersPage() {
     .eq("active", true)
     .order("priority", { ascending: true });
 
-  // Helper to get bonus text for display
   const getBonusText = (bonusJson: Record<string, string> | null): string => {
     if (!bonusJson) return "";
     return bonusJson["CI"] || bonusJson["default"] || Object.values(bonusJson)[0] || "";
@@ -71,85 +82,119 @@ export default async function BookmakersPage() {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="font-display text-3xl font-bold text-emerald-400">Paris sportifs</h1>
-          <p className="text-gray-400 mt-1">
+          <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-glow">Paris sportifs</h1>
+          <p className="text-gray-400 mt-1 text-sm sm:text-base">
             Comparez les meilleurs bookmakers disponibles dans votre pays et profitez
             des meilleurs bonus de bienvenue.
           </p>
         </div>
 
-        {/* Avertissement */}
-        <Card className="bg-yellow-500/10 border-yellow-500/30 p-4 mt-6">
-          <p className="text-yellow-400 text-sm">
-            Les paris sportifs comportent des risques. Jouez de maniere responsable.
-            Les offres de bonus sont soumises a conditions. 18+ uniquement.
-          </p>
-        </Card>
-
         {/* Liste des bookmakers */}
-        <div className="mt-8 space-y-6">
+        <div className="mt-8 space-y-5">
           {bookmakers && bookmakers.length > 0 ? (
-            bookmakers.map((bookmaker) => (
-              <Card
-                key={bookmaker.id}
-                className="bg-white/[0.02] border-gray-800 p-6 hover:border-emerald-500/30 transition-colors"
-              >
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Link href={`/bookmakers/${bookmaker.slug}`}>
-                        <h2 className="font-display text-xl font-bold hover:text-emerald-400 transition-colors">
-                          {bookmaker.name}
-                        </h2>
-                      </Link>
-                      <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                        #{bookmaker.priority}
-                      </Badge>
+            bookmakers.map((bookmaker, idx) => {
+              const promoCode = PROMO_CODES[bookmaker.slug] || null;
+              const badges = TRUST_BADGES[bookmaker.slug] || [];
+              return (
+                <Card
+                  key={bookmaker.id}
+                  className="card-glow bg-white/[0.02] border-white/[0.06] p-5 sm:p-6 relative overflow-hidden"
+                >
+                  {/* Rang badge */}
+                  {idx === 0 && (
+                    <div className="absolute top-0 right-0 bg-gradient-to-l from-amber-500 to-yellow-500 text-black text-[10px] font-extrabold font-display px-3 py-1 rounded-bl-lg">
+                      TOP 1
+                    </div>
+                  )}
+
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Link href={`/bookmakers/${bookmaker.slug}`}>
+                          <h2 className="font-display text-lg sm:text-xl font-extrabold hover:text-emerald-400 transition-colors">
+                            {bookmaker.name}
+                          </h2>
+                        </Link>
+                        {idx < 3 && (
+                          <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
+                            #{idx + 1}
+                          </Badge>
+                        )}
+                      </div>
+
+                      {bookmaker.bonus_json && (
+                        <p className="text-emerald-400 font-bold text-base sm:text-lg mb-2">
+                          {getBonusText(bookmaker.bonus_json as Record<string, string>)}
+                        </p>
+                      )}
+
+                      {/* Trust badges */}
+                      {badges.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                          {badges.map((badge) => (
+                            <span key={badge} className="inline-flex items-center gap-1 text-[10px] font-medium text-gray-400 bg-white/[0.04] border border-white/[0.06] rounded-full px-2 py-0.5">
+                              <span className="text-emerald-400">&#10003;</span> {badge}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {bookmaker.countries && (
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="text-gray-500 text-[10px]">Pays :</span>
+                          {(bookmaker.countries as string[]).map((country) => (
+                            <Badge
+                              key={country}
+                              className="bg-white/[0.04] text-gray-400 border-white/[0.06] text-[10px] px-1.5 py-0"
+                            >
+                              {country}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
-                    {bookmaker.bonus_json && (
-                      <p className="text-emerald-400 font-semibold text-lg mb-2">
-                        {getBonusText(bookmaker.bonus_json as Record<string, string>)}
-                      </p>
-                    )}
+                    <div className="flex flex-col items-center gap-2 shrink-0">
+                      {/* Promo code */}
+                      {promoCode && (
+                        <div className="text-center mb-1">
+                          <p className="text-[9px] uppercase tracking-widest text-gray-500 mb-0.5">Code promo</p>
+                          <span className="inline-block font-display font-extrabold text-sm tracking-wider text-amber-400 border border-dashed border-amber-400/30 bg-amber-400/5 rounded-lg px-3 py-1">
+                            {promoCode}
+                          </span>
+                        </div>
+                      )}
 
-                    {bookmaker.countries && (
-                      <div className="flex flex-wrap gap-2">
-                        <span className="text-gray-500 text-xs">Disponible :</span>
-                        {(bookmaker.countries as string[]).map((country) => (
-                          <Badge
-                            key={country}
-                            className="bg-gray-700 text-gray-300 border-gray-600 text-xs"
-                          >
-                            {country}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
+                      <Link
+                        href={`/go/${bookmaker.slug}`}
+                        className="btn-neon w-full sm:w-auto !rounded-xl !px-6 !py-2.5 !text-sm"
+                      >
+                        Obtenir le bonus
+                      </Link>
+                      <Link
+                        href={`/bookmakers/${bookmaker.slug}`}
+                        className="text-gray-500 hover:text-emerald-400 text-xs transition-colors"
+                      >
+                        Voir l&apos;avis complet &rarr;
+                      </Link>
+                    </div>
                   </div>
-
-                  <div className="flex flex-col items-center gap-2">
-                    <Link
-                      href={`/go/${bookmaker.slug}`}
-                      className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-3 px-8 rounded-lg transition-colors text-center whitespace-nowrap"
-                    >
-                      Obtenir le bonus
-                    </Link>
-                    <Link
-                      href={`/bookmakers/${bookmaker.slug}`}
-                      className="text-gray-400 hover:text-emerald-400 text-sm transition-colors"
-                    >
-                      Voir l&apos;avis complet
-                    </Link>
-                  </div>
-                </div>
-              </Card>
-            ))
+                </Card>
+              );
+            })
           ) : (
-            <Card className="bg-white/[0.02] border-gray-800 p-8 text-center">
+            <Card className="card-glass p-8 text-center">
               <p className="text-gray-400">Aucun bookmaker disponible pour le moment.</p>
             </Card>
           )}
+        </div>
+
+        {/* Disclaimer en bas */}
+        <div className="mt-10 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 text-center">
+          <p className="text-yellow-400/80 text-xs">
+            18+ | Les paris sportifs comportent des risques. Jouez de manière responsable.
+            Les offres de bonus sont soumises à conditions. Aide : 0 974 75 13 13
+          </p>
         </div>
       </div>
     </main>

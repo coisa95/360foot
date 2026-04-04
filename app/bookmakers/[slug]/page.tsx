@@ -258,7 +258,7 @@ export default async function BookmakerPage({ params }: Props) {
         <Card className="bg-yellow-500/10 border-yellow-500/30 p-4 mt-6">
           <p className="text-yellow-400 text-sm">
             Les paris sportifs comportent des risques de perte financiere. Jouez de
-            maniere responsable. Les offres de bonus sont soumises a des conditions de
+            maniere responsable. Les offres de bonus sont soumises à des conditions de
             mise. 18+ uniquement. Ce contenu contient des liens d&apos;affiliation.
           </p>
         </Card>

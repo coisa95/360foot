@@ -10,12 +10,13 @@ const BOOKMAKERS = [
     bonus: "200 000 FCFA",
     bonusLabel: "de bonus offerts",
     highlight: "Le plus populaire en Afrique",
+    promoCode: "1WAFU",
     cta: "Récupérer mon bonus",
     color: "from-blue-600 to-blue-800",
     borderColor: "border-blue-500/30 hover:border-blue-400/60",
     btnColor: "bg-blue-500 hover:bg-blue-400",
     glowColor: "group-hover:shadow-blue-500/20",
-    badge: "⭐ N°1",
+    badge: "N°1",
     badgeBg: "bg-blue-500/20 text-blue-300",
   },
   {
@@ -23,15 +24,16 @@ const BOOKMAKERS = [
     slug: "melbet",
     logo: "/images/bookmakers/melbet.png",
     url: "/go/melbet",
-    bonus: "100%",
+    bonus: "200%",
     bonusLabel: "sur le 1er dépôt",
-    highlight: "Double ton premier dépôt",
+    highlight: "Double ton premier dépôt automatiquement",
+    promoCode: "1WAFU",
     cta: "Doubler mon dépôt",
     color: "from-amber-600 to-yellow-800",
     borderColor: "border-amber-500/30 hover:border-amber-400/60",
     btnColor: "bg-amber-500 hover:bg-amber-400",
     glowColor: "group-hover:shadow-amber-500/20",
-    badge: "🔥 Populaire",
+    badge: "Populaire",
     badgeBg: "bg-amber-500/20 text-amber-300",
   },
   {
@@ -42,12 +44,13 @@ const BOOKMAKERS = [
     bonus: "500%",
     bonusLabel: "de bonus de bienvenue",
     highlight: "Le plus gros bonus du marché",
+    promoCode: "6MAP",
     cta: "Profiter du 500%",
     color: "from-cyan-600 to-teal-800",
     borderColor: "border-cyan-500/30 hover:border-cyan-400/60",
     btnColor: "bg-cyan-500 hover:bg-cyan-400",
     glowColor: "group-hover:shadow-cyan-500/20",
-    badge: "💰 Meilleur bonus",
+    badge: "Meilleur bonus",
     badgeBg: "bg-cyan-500/20 text-cyan-300",
   },
 ];
@@ -91,10 +94,15 @@ export function AffiliateTrio() {
             </div>
 
             {/* Highlight */}
-            <p className="text-[11px] text-white/60 mb-3">{bk.highlight}</p>
+            <p className="text-[11px] text-white/60 mb-2">{bk.highlight}</p>
+
+            {/* Promo code */}
+            <p className="text-[9px] uppercase tracking-wider text-white/40 mb-2">
+              Code : <span className="font-bold text-white/80 tracking-widest">{bk.promoCode}</span>
+            </p>
 
             {/* CTA */}
-            <div className={`w-full text-center rounded-lg ${bk.btnColor} px-4 py-2 text-xs font-bold text-dark-bg transition-all group-hover:shadow-md`}>
+            <div className={`w-full text-center rounded-lg ${bk.btnColor} px-4 py-2 text-xs font-bold text-black transition-all group-hover:shadow-md`}>
               {bk.cta} →
             </div>
           </Link>
@@ -128,7 +136,7 @@ export function AffiliateTrio() {
             </div>
 
             {/* CTA */}
-            <span className={`shrink-0 rounded-lg ${bk.btnColor} px-3 py-1.5 text-[10px] font-bold text-dark-bg`}>
+            <span className={`shrink-0 rounded-lg ${bk.btnColor} px-3 py-1.5 text-[10px] font-bold text-black`}>
               Profiter
             </span>
           </Link>
@@ -136,7 +144,7 @@ export function AffiliateTrio() {
       </div>
 
       <p className="text-center text-[10px] text-gray-500">
-        18+ | Jouer comporte des risques. Conditions sur le site du bookmaker.
+        18+ | Jouer comporte des risques | Aide : 0 974 75 13 13
       </p>
     </div>
   );
@@ -161,7 +169,7 @@ export function AffiliateInline({ index = 0 }: { index?: number }) {
         <span className="font-black text-white">{bk.bonus}</span>
         <span className="ml-1.5 text-sm text-white/80">{bk.bonusLabel}</span>
       </div>
-      <span className={`rounded-lg ${bk.btnColor} px-3 py-1.5 text-xs font-bold text-dark-bg transition-all`}>
+      <span className={`rounded-lg ${bk.btnColor} px-3 py-1.5 text-xs font-bold text-black transition-all`}>
         {bk.cta} →
       </span>
     </Link>

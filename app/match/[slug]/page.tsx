@@ -442,6 +442,11 @@ export default async function MatchPage({ params }: Props) {
           </Card>
         )}
 
+        {/* ── Affiliate ── */}
+        <div className="mt-6">
+          <AffiliateTrio />
+        </div>
+
         {/* ── Head to Head ── */}
         {h2hJson && h2hJson.length > 0 && (
           <Card className="mt-4 border-gray-800 card-glass p-4 sm:p-6">
@@ -667,9 +672,6 @@ export default async function MatchPage({ params }: Props) {
           </div>
         )}
 
-        <div className="mt-8">
-          <AffiliateTrio />
-        </div>
       </div>
     </main>
   );

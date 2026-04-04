@@ -142,8 +142,8 @@ export default async function BonsPlansPage() {
           {/* Avertissement */}
           <Card className="bg-yellow-500/10 border-yellow-500/30 p-4 mb-6">
             <p className="text-yellow-400 text-sm">
-              Les paris sportifs comportent des risques. Jouez de maniere responsable.
-              Les offres de bonus sont soumises a conditions. 18+ uniquement.
+              Les paris sportifs comportent des risques. Jouez de manière responsable.
+              Les offres de bonus sont soumises à conditions. 18+ uniquement.
             </p>
           </Card>
 

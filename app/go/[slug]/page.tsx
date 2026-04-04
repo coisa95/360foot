@@ -229,9 +229,10 @@ export default async function GoPage({ params }: Props) {
 
         {/* ══════════ STEPS ══════════ */}
         <div className="mt-7 sm:mt-10 animate-fadeInUp delay-300">
-          <h2 className="text-center text-[10px] sm:text-xs font-extrabold font-display uppercase tracking-[0.2em] text-gray-500 mb-4 sm:mb-6">
+          <h2 className="text-center text-[10px] sm:text-xs font-extrabold font-display uppercase tracking-[0.2em] text-gray-500 mb-1 sm:mb-2">
             Comment faire ?
           </h2>
+          <p className="text-center text-[10px] text-gray-600 mb-4 sm:mb-6">Prend moins de 2 minutes</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {steps.map((step, i) => (
               <div key={i} className="relative text-center">
