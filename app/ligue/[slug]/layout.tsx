@@ -53,7 +53,7 @@ export default async function LeagueLayout({ params, children }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-dark-bg text-white">
+    <div className="min-h-screen text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
@@ -64,7 +64,7 @@ export default async function LeagueLayout({ params, children }: Props) {
       </div>
 
       {/* Flashscore-style Hero */}
-      <div className="border-b border-dark-border bg-dark-card/50">
+      <div className="border-b border-white/[0.06] bg-dark-card/50">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-5">
           <div className="flex items-center gap-3">
             {league.logo_url && (
@@ -80,7 +80,7 @@ export default async function LeagueLayout({ params, children }: Props) {
               {league.country_code && (
                 <span className="text-xs sm:text-sm text-gray-500">{league.country}</span>
               )}
-              <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold text-white">
+              <h1 className="font-display text-lg sm:text-2xl lg:text-3xl font-bold text-white">
                 {league.name}
               </h1>
               <span className="text-xs sm:text-sm text-gray-500">{seasonDisplay}</span>

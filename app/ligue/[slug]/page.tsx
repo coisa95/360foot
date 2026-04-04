@@ -156,19 +156,19 @@ export default async function LeagueStandingsPage({ params }: Props) {
           {groups.map(([groupName, groupStandings]) => (
             <div key={groupName}>
               {hasMultipleGroups && (
-                <h2 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                  <span className="w-1 h-5 bg-lime-400 rounded-full" />
+                <h2 className="font-display text-lg font-bold text-white mb-3 flex items-center gap-2">
+                  <span className="w-1 h-5 bg-emerald-500 rounded-full" />
                   {cleanGroupName(groupName)}
                 </h2>
               )}
-              <Card className="bg-dark-bg border-gray-800 overflow-x-auto">
+              <Card className="bg-transparent border-gray-800 overflow-x-auto">
                 <table className="w-full text-xs sm:text-sm min-w-[640px]">
                   <thead>
                     <tr className="border-b border-gray-800 text-gray-400">
-                      <th className="text-left p-1.5 sm:p-3 w-6 sm:w-8 sticky left-0 bg-dark-bg z-10">#</th>
-                      <th className="text-left p-1.5 sm:p-3 sticky left-6 sm:left-8 bg-dark-bg z-10 min-w-[120px]">Équipe</th>
+                      <th className="text-left p-1.5 sm:p-3 w-6 sm:w-8 sticky left-0 bg-transparent z-10">#</th>
+                      <th className="text-left p-1.5 sm:p-3 sticky left-6 sm:left-8 bg-transparent z-10 min-w-[120px]">Équipe</th>
                       <th className="text-center p-1.5 sm:p-3">MJ</th>
-                      <th className="text-center p-1.5 sm:p-3 font-bold text-lime-400">Pts</th>
+                      <th className="text-center p-1.5 sm:p-3 font-bold text-emerald-400">Pts</th>
                       <th className="text-center p-1.5 sm:p-3">Diff</th>
                       <th className="text-center p-1.5 sm:p-3">V</th>
                       <th className="text-center p-1.5 sm:p-3">N</th>
@@ -185,19 +185,19 @@ export default async function LeagueStandingsPage({ params }: Props) {
                         <tr
                           key={`${row.team_api_id}-${row.rank}`}
                           className={`border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors ${
-                            index < 3 ? "border-l-2 border-l-lime-400" : ""
+                            index < 3 ? "border-l-2 border-l-emerald-400" : ""
                           } ${
                             index >= groupStandings.length - 3 ? "border-l-2 border-l-red-500" : ""
                           }`}
                         >
-                          <td className="p-1.5 sm:p-3 text-gray-400 font-mono sticky left-0 bg-dark-bg z-10">{row.rank}</td>
-                          <td className="p-1.5 sm:p-3 sticky left-6 sm:left-8 bg-dark-bg z-10">
+                          <td className="p-1.5 sm:p-3 text-gray-400 font-mono sticky left-0 bg-transparent z-10">{row.rank}</td>
+                          <td className="p-1.5 sm:p-3 sticky left-6 sm:left-8 bg-transparent z-10">
                             <div className="flex items-center gap-1.5">
                               {row.team_logo && (
                                 <Image src={row.team_logo} alt={`Logo ${row.team_name}`} width={20} height={20} className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0" />
                               )}
                               {teamSlug ? (
-                                <Link href={`/equipe/${teamSlug}`} className="font-medium hover:text-lime-400 transition-colors truncate">
+                                <Link href={`/equipe/${teamSlug}`} className="font-medium hover:text-emerald-400 transition-colors truncate">
                                   {row.team_name}
                                 </Link>
                               ) : (
@@ -206,7 +206,7 @@ export default async function LeagueStandingsPage({ params }: Props) {
                             </div>
                           </td>
                           <td className="text-center p-1.5 sm:p-3">{row.played}</td>
-                          <td className="text-center p-1.5 sm:p-3 font-bold text-lime-400">{row.points}</td>
+                          <td className="text-center p-1.5 sm:p-3 font-bold text-emerald-400">{row.points}</td>
                           <td className="text-center p-1.5 sm:p-3">
                             <span className={row.goal_diff > 0 ? "text-green-400" : row.goal_diff < 0 ? "text-red-400" : "text-gray-400"}>
                               {row.goal_diff > 0 ? "+" : ""}{row.goal_diff}
@@ -244,7 +244,7 @@ export default async function LeagueStandingsPage({ params }: Props) {
           ))}
         </div>
       ) : (
-        <Card className="bg-dark-bg border-gray-800 p-8 text-center">
+        <Card className="bg-transparent border-gray-800 p-8 text-center">
           <p className="text-gray-400">Aucun classement disponible pour cette ligue.</p>
         </Card>
       )}

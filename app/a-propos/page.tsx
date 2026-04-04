@@ -37,16 +37,16 @@ export default function AboutPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen text-white">
       <div className="container mx-auto px-4 py-6 max-w-3xl">
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="text-3xl font-bold text-lime-400">À propos de 360 Foot</h1>
+          <h1 className="font-display text-3xl font-bold text-emerald-400">À propos de 360 Foot</h1>
         </div>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Notre mission</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Notre mission</h2>
           <Separator className="bg-gray-800 mb-4" />
           <p className="text-gray-300 leading-relaxed mb-4">
             360 Foot est un média numérique innovant dédié au football
@@ -65,8 +65,8 @@ export default function AboutPage() {
           </p>
         </Card>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Technologie et innovation</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Technologie et innovation</h2>
           <Separator className="bg-gray-800 mb-4" />
           <p className="text-gray-300 leading-relaxed mb-4">
             360 Foot utilise l&apos;intelligence artificielle pour générer du
@@ -83,8 +83,8 @@ export default function AboutPage() {
           </p>
         </Card>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Notre équipe</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Notre équipe</h2>
           <Separator className="bg-gray-800 mb-4" />
           <p className="text-gray-300 leading-relaxed mb-4">
             360 Foot est développé par une équipe passionnée de football et de
@@ -94,8 +94,8 @@ export default function AboutPage() {
           </p>
         </Card>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Nous contacter</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Nous contacter</h2>
           <Separator className="bg-gray-800 mb-4" />
           <p className="text-gray-300 leading-relaxed">
             Pour toute question, suggestion ou partenariat, n&apos;hésitez pas

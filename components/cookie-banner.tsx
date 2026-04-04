@@ -30,7 +30,7 @@ export function CookieBanner() {
       <div className="mx-auto max-w-xl rounded-xl border border-gray-700 bg-dark-card p-4 shadow-2xl">
         <p className="text-sm text-gray-300 leading-relaxed">
           Ce site utilise des cookies pour am&eacute;liorer votre exp&eacute;rience et analyser le trafic.{" "}
-          <Link href="/confidentialite" className="underline text-lime-400 hover:text-lime-300">
+          <Link href="/confidentialite" className="underline text-emerald-400 hover:text-emerald-400">
             En savoir plus
           </Link>
         </p>
@@ -38,7 +38,7 @@ export function CookieBanner() {
           <button
             onClick={accept}
             aria-label="Accepter les cookies"
-            className="rounded-lg bg-lime-400 px-4 py-1.5 text-sm font-semibold text-black hover:bg-lime-300 transition-colors"
+            className="rounded-lg bg-emerald-500 px-4 py-1.5 text-sm font-semibold text-black hover:bg-emerald-400 transition-colors"
           >
             Accepter
           </button>

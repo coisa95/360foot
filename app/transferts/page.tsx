@@ -44,10 +44,10 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const TYPE_BADGE: Record<string, string> = {
-  "N/A": "bg-lime-500/15 text-lime-400 border-lime-500/20",
+  "N/A": "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
   Free: "bg-gray-500/15 text-gray-400 border-gray-500/20",
   Loan: "bg-blue-500/15 text-blue-400 border-blue-500/20",
-  transfer: "bg-lime-500/15 text-lime-400 border-lime-500/20",
+  transfer: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
   loan: "bg-blue-500/15 text-blue-400 border-blue-500/20",
   free: "bg-gray-500/15 text-gray-400 border-gray-500/20",
 };
@@ -97,14 +97,14 @@ export default async function TransfersPage() {
   }
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={[{ label: "Accueil", href: "/" }, { label: "Transferts" }]} />
 
         <div className="mt-6 mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-white">
+          <h1 className="font-display text-2xl md:text-3xl font-bold text-white">
             Transferts{" "}
-            <span className="bg-gradient-to-r from-lime-400 to-emerald-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-400 to-emerald-400 bg-clip-text text-transparent">
               Mercato
             </span>
           </h1>
@@ -116,12 +116,12 @@ export default async function TransfersPage() {
         {/* Articles transferts */}
         {transferArticles && transferArticles.length > 0 && (
           <section className="mb-6">
-            <h2 className="section-title mb-3">Analyses transferts</h2>
+            <h2 className="font-display section-title mb-3">Analyses transferts</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {transferArticles.map((article) => (
                 <Link key={article.id} href={`/actu/${article.slug}`} className="group block">
-                  <Card className="h-full border-dark-border/50 bg-dark-card/80 p-4 transition-all hover:border-lime-500/20 hover:-translate-y-0.5">
-                    <h3 className="font-semibold text-sm text-gray-100 line-clamp-2 group-hover:text-lime-400 transition-colors">
+                  <Card className="h-full border-white/[0.06]/50 card-glass/80 p-4 transition-all hover:border-emerald-500/20 hover:-translate-y-0.5">
+                    <h3 className="font-display font-semibold text-sm text-gray-100 line-clamp-2 group-hover:text-emerald-400 transition-colors">
                       {article.title}
                     </h3>
                     {article.excerpt && (
@@ -144,7 +144,7 @@ export default async function TransfersPage() {
 
         {/* Tableau des transferts */}
         <section className="mt-6">
-          <h2 className="section-title mb-4">Tableau des transferts</h2>
+          <h2 className="font-display section-title mb-4">Tableau des transferts</h2>
 
           {transfers && transfers.length > 0 ? (
             <div className="space-y-2">
@@ -158,7 +158,7 @@ export default async function TransfersPage() {
                 return (
                   <div
                     key={t.id}
-                    className="flex items-center gap-3 rounded-lg border border-dark-border/50 bg-dark-card/80 px-3 py-3 transition-colors hover:border-lime-500/15"
+                    className="flex items-center gap-3 rounded-lg border border-white/[0.06]/50 card-glass/80 px-3 py-3 transition-colors hover:border-emerald-500/15"
                   >
                     {/* Player photo */}
                     {hasPhoto ? (
@@ -167,10 +167,10 @@ export default async function TransfersPage() {
                         alt={t.player_name}
                         width={40}
                         height={40}
-                        className="h-10 w-10 shrink-0 rounded-full object-cover border border-dark-border"
+                        className="h-10 w-10 shrink-0 rounded-full object-cover border border-white/[0.06]"
                       />
                     ) : (
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dark-surface border border-dark-border">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.02] border border-white/[0.06]">
                         <span className="text-xs text-gray-500">
                           {t.player_name?.charAt(0) || "?"}
                         </span>
@@ -181,7 +181,7 @@ export default async function TransfersPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         {playerSlugMap[t.player_name] ? (
-                          <Link href={`/joueur/${playerSlugMap[t.player_name]}`} className="text-sm font-bold text-white truncate hover:text-lime-400 transition-colors">
+                          <Link href={`/joueur/${playerSlugMap[t.player_name]}`} className="text-sm font-bold text-white truncate hover:text-emerald-400 transition-colors">
                             {t.player_name}
                           </Link>
                         ) : (
@@ -201,16 +201,16 @@ export default async function TransfersPage() {
                           <Image src={t.from_team_logo} alt={`Logo ${t.from_team}`} width={16} height={16} className="h-4 w-4 rounded-sm object-contain" />
                         )}
                         {teamSlugMap[t.from_team] ? (
-                          <Link href={`/equipe/${teamSlugMap[t.from_team]}`} className="text-gray-400 truncate hover:text-lime-400 transition-colors">{t.from_team}</Link>
+                          <Link href={`/equipe/${teamSlugMap[t.from_team]}`} className="text-gray-400 truncate hover:text-emerald-400 transition-colors">{t.from_team}</Link>
                         ) : (
                           <span className="text-gray-400 truncate">{t.from_team || "?"}</span>
                         )}
-                        <span className="text-lime-400 font-bold shrink-0">→</span>
+                        <span className="text-emerald-400 font-bold shrink-0">→</span>
                         {t.to_team_logo && (
                           <Image src={t.to_team_logo} alt={`Logo ${t.to_team}`} width={16} height={16} className="h-4 w-4 rounded-sm object-contain" />
                         )}
                         {teamSlugMap[t.to_team] ? (
-                          <Link href={`/equipe/${teamSlugMap[t.to_team]}`} className="text-white truncate hover:text-lime-400 transition-colors">{t.to_team}</Link>
+                          <Link href={`/equipe/${teamSlugMap[t.to_team]}`} className="text-white truncate hover:text-emerald-400 transition-colors">{t.to_team}</Link>
                         ) : (
                           <span className="text-white truncate">{t.to_team || "?"}</span>
                         )}
@@ -220,7 +220,7 @@ export default async function TransfersPage() {
                     {/* Fee + Date */}
                     <div className="shrink-0 text-right">
                       {hasFee && (
-                        <p className="text-sm font-bold text-lime-400">{t.fee}</p>
+                        <p className="text-sm font-bold text-emerald-400">{t.fee}</p>
                       )}
                       {t.market_value && !hasFee && (
                         <p className="text-xs text-gray-500">Valeur: {t.market_value}</p>
@@ -239,7 +239,7 @@ export default async function TransfersPage() {
               })}
             </div>
           ) : (
-            <div className="rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+            <div className="rounded-lg border border-white/[0.06]/50 card-glass/50 p-8 text-center">
               <p className="text-sm text-gray-500">Aucun transfert disponible pour le moment.</p>
             </div>
           )}

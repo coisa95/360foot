@@ -28,10 +28,10 @@ export function ArticleCard({
 
   return (
     <Link href={`/actu/${slug}`} className="group block">
-      <div className="h-full rounded-xl border border-dark-border/50 bg-dark-card/80 shadow-lg shadow-black/10 backdrop-blur-sm transition-all duration-300 hover:border-lime-500/20 hover:shadow-xl hover:shadow-lime-500/5 hover:-translate-y-0.5 overflow-hidden">
+      <div className="h-full rounded-xl border border-white/[0.06] bg-dark-card/80 shadow-lg shadow-black/10 backdrop-blur-sm transition-all duration-300 hover:border-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-0.5 overflow-hidden">
         {/* Image */}
         {imageUrl && (
-          <div className="relative w-full aspect-[16/9] overflow-hidden bg-dark-surface">
+          <div className="relative w-full aspect-[16/9] overflow-hidden bg-white/[0.02]">
             <Image
               src={imageUrl}
               alt={title}
@@ -53,7 +53,7 @@ export function ArticleCard({
             )}
           </div>
 
-          <h3 className="mb-2 text-base font-semibold leading-tight text-gray-100 transition-colors group-hover:bg-gradient-to-r group-hover:from-lime-400 group-hover:to-emerald-400 group-hover:bg-clip-text group-hover:text-transparent">
+          <h3 className="font-display mb-2 text-base font-semibold leading-tight text-gray-100 transition-colors group-hover:bg-gradient-to-r group-hover:from-emerald-400 group-hover:to-emerald-400 group-hover:bg-clip-text group-hover:text-transparent">
             {title}
           </h3>
 
@@ -67,7 +67,7 @@ export function ArticleCard({
                 year: "numeric",
               })}
             </time>
-            <span className="text-[11px] text-lime-500/0 transition-all group-hover:text-lime-500/80">
+            <span className="text-[11px] text-emerald-500/0 transition-all group-hover:text-emerald-500/80">
               Lire →
             </span>
           </div>

@@ -95,7 +95,7 @@ export async function LeagueSidebar({ activeSlug }: LeagueSidebarProps) {
                       href={`/ligue/${league.slug}`}
                       className={`flex items-center gap-2.5 px-4 py-1.5 text-sm transition-colors ${
                         isActive
-                          ? "bg-dark-card text-lime-400"
+                          ? "bg-dark-card text-emerald-400"
                           : "text-gray-400 hover:bg-dark-card hover:text-gray-200"
                       }`}
                     >

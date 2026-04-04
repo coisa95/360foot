@@ -170,7 +170,7 @@ export default async function LeagueFixturesPage({ params, searchParams }: Props
 
       {/* Active round title */}
       {activeRound && (
-        <h2 className="text-sm font-bold text-white mb-3">
+        <h2 className="font-display text-sm font-bold text-white mb-3">
           {cleanRoundName(activeRound)}
         </h2>
       )}
@@ -201,7 +201,7 @@ export default async function LeagueFixturesPage({ params, searchParams }: Props
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+        <div className="rounded-lg border border-white/[0.06] bg-dark-card/50 p-8 text-center">
           <p className="text-sm text-gray-500">Aucun match disponible pour cette journée.</p>
         </div>
       )}

@@ -42,22 +42,22 @@ export function StandingsTable({
   // ── Mode compact : mini-classement épuré pour la homepage ──
   if (compact) {
     return (
-      <div className="rounded-lg border border-dark-border/40 bg-dark-card/60 overflow-hidden">
-        <div className="flex items-center justify-between px-3 py-1.5 border-b border-dark-border/30 bg-dark-surface/30">
-          <h3 className="text-[11px] font-semibold text-gray-300 truncate">{leagueName}</h3>
+      <div className="rounded-lg border border-white/[0.06] bg-dark-card/60 overflow-hidden">
+        <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/[0.06] bg-white/[0.02]">
+          <h3 className="font-display text-[11px] font-semibold text-gray-300 truncate">{leagueName}</h3>
           <Link
             href={`/ligue/${leagueSlug}/classement`}
-            className="text-[10px] text-lime-400 hover:underline shrink-0 ml-2"
+            className="text-[10px] text-emerald-400 hover:underline shrink-0 ml-2"
           >
             Voir tout →
           </Link>
         </div>
-        <div className="divide-y divide-dark-border/20">
+        <div className="divide-y divide-white/[0.06]">
           {rows.map((row) => (
             <Link
               key={row.rank}
               href={`/equipe/${row.teamSlug}`}
-              className="flex items-center gap-2 px-3 py-1.5 hover:bg-dark-surface/40 transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 hover:bg-white/[0.02] transition-colors"
             >
               <span className="w-4 text-[10px] text-gray-500 text-center shrink-0">{row.rank}</span>
               {row.teamLogo && (
@@ -66,7 +66,7 @@ export function StandingsTable({
               <span className="text-[11px] text-gray-200 truncate flex-1">{row.teamName}</span>
               <span className="text-[10px] text-gray-500 w-5 text-center shrink-0">{row.played}</span>
               <span className="text-[10px] text-gray-400 w-5 text-center shrink-0">{row.goalDiff > 0 ? `+${row.goalDiff}` : row.goalDiff}</span>
-              <span className="text-[11px] font-bold text-lime-400 w-5 text-center shrink-0">{row.points}</span>
+              <span className="text-[11px] font-bold text-emerald-400 w-5 text-center shrink-0">{row.points}</span>
             </Link>
           ))}
         </div>
@@ -76,13 +76,13 @@ export function StandingsTable({
 
   // ── Mode complet : tableau détaillé ──
   return (
-    <div className="rounded-xl border border-dark-border/50 bg-dark-card/80 shadow-lg shadow-black/10 backdrop-blur-sm overflow-hidden">
-      <div className="flex items-center justify-between border-b border-dark-border/50 bg-gradient-to-r from-dark-surface/50 to-transparent px-4 py-3">
-        <h3 className="text-sm font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{leagueName}</h3>
+    <div className="rounded-xl border border-white/[0.06] bg-dark-card/80 shadow-lg shadow-black/10 backdrop-blur-sm overflow-hidden">
+      <div className="flex items-center justify-between border-b border-white/[0.06] bg-gradient-to-r from-white/[0.02] to-transparent px-4 py-3">
+        <h3 className="font-display text-sm font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{leagueName}</h3>
       </div>
       <Table aria-label={`Classement ${leagueName}`}>
         <TableHeader>
-          <TableRow className="border-dark-border hover:bg-transparent">
+          <TableRow className="border-white/[0.06] hover:bg-transparent">
             <TableHead scope="col" className="w-8 text-gray-500">#</TableHead>
             <TableHead scope="col" className="text-gray-500">Équipe</TableHead>
             <TableHead scope="col" className="text-center text-gray-500" abbr="Matchs joués">MJ</TableHead>
@@ -99,13 +99,13 @@ export function StandingsTable({
           {rows.map((row) => (
             <TableRow
               key={row.rank}
-              className="border-dark-border hover:bg-dark-surface"
+              className="border-white/[0.06] hover:bg-white/[0.02]"
             >
               <TableCell className="text-xs text-gray-400">{row.rank}</TableCell>
               <TableCell>
                 <Link
                   href={`/equipe/${row.teamSlug}`}
-                  className="flex items-center gap-1.5 text-sm text-white hover:text-lime-400"
+                  className="flex items-center gap-1.5 text-sm text-white hover:text-emerald-400"
                 >
                   {row.teamLogo && (
                     <Image src={row.teamLogo} alt={`Logo ${row.teamName}`} width={16} height={16} className="w-4 h-4 object-contain shrink-0" />
@@ -122,7 +122,7 @@ export function StandingsTable({
               <TableCell className="text-center text-sm text-gray-400">
                 {row.goalDiff > 0 ? `+${row.goalDiff}` : row.goalDiff}
               </TableCell>
-              <TableCell className="text-center text-sm font-bold text-lime-400">{row.points}</TableCell>
+              <TableCell className="text-center text-sm font-bold text-emerald-400">{row.points}</TableCell>
             </TableRow>
           ))}
         </TableBody>

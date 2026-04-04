@@ -138,11 +138,11 @@ export default async function MatchsPage({ searchParams }: Props) {
   };
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen text-white">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
-        <h1 className="sr-only">Matchs de football du jour</h1>
+        <h1 className="font-display sr-only">Matchs de football du jour</h1>
 
         {/* Date navigation */}
         <div className="mt-4 flex gap-1 overflow-x-auto pb-2 scrollbar-hide">
@@ -156,7 +156,7 @@ export default async function MatchsPage({ searchParams }: Props) {
                 href={buildHref(ds, ligue)}
                 className={`shrink-0 rounded-lg px-3 py-2 text-center text-xs font-medium transition-colors ${
                   isActive
-                    ? "bg-lime-400 text-black"
+                    ? "bg-emerald-500 text-black"
                     : "bg-dark-card text-gray-400 hover:bg-gray-700 hover:text-white"
                 }`}
               >
@@ -191,7 +191,7 @@ export default async function MatchsPage({ searchParams }: Props) {
             ))}
           </div>
         ) : (
-          <div className="mt-8 rounded-lg border border-dark-border/50 bg-dark-card/50 p-8 text-center">
+          <div className="mt-8 rounded-lg border border-white/[0.06] bg-dark-card/50 p-8 text-center">
             <p className="text-sm text-gray-500">Aucun match pour cette date.</p>
           </div>
         )}

@@ -45,10 +45,10 @@ export default function RecherchePage() {
   const hasResults = results.players.length > 0 || results.teams.length > 0 || results.articles.length > 0 || results.leagues.length > 0;
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen text-white">
       <div className="mx-auto max-w-3xl px-4 py-6">
-        <h1 className="text-3xl font-bold">
-          <span className="text-lime-400">Recherche</span>
+        <h1 className="font-display text-3xl font-bold">
+          <span className="text-emerald-400">Recherche</span>
         </h1>
         <p className="mt-2 text-sm text-gray-400">
           Joueurs, équipes, ligues, articles
@@ -68,12 +68,12 @@ export default function RecherchePage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher un joueur, une équipe, un article..."
-            className="w-full rounded-xl border border-gray-700 bg-dark-card px-10 py-3 text-white placeholder-gray-500 focus:border-lime-400 focus:outline-none focus:ring-1 focus:ring-lime-400 text-sm"
+            className="w-full rounded-xl border border-gray-700 bg-dark-card px-10 py-3 text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400 text-sm"
             autoFocus
           />
           {loading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-lime-400 border-t-transparent" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-400 border-t-transparent" />
             </div>
           )}
         </div>
@@ -84,7 +84,7 @@ export default function RecherchePage() {
             {/* Leagues */}
             {results.leagues.length > 0 && (
               <div>
-                <h2 className="text-sm font-bold text-gray-400 mb-2">Ligues</h2>
+                <h2 className="font-display text-sm font-bold text-gray-400 mb-2">Ligues</h2>
                 <div className="space-y-1">
                   {results.leagues.map((l: any) => (
                     <Link key={l.slug} href={`/ligue/${l.slug}`} className="flex items-center gap-3 rounded-lg bg-dark-card px-4 py-3 hover:bg-gray-800/50 transition-colors">
@@ -100,7 +100,7 @@ export default function RecherchePage() {
             {/* Teams */}
             {results.teams.length > 0 && (
               <div>
-                <h2 className="text-sm font-bold text-gray-400 mb-2">Équipes</h2>
+                <h2 className="font-display text-sm font-bold text-gray-400 mb-2">Équipes</h2>
                 <div className="space-y-1">
                   {results.teams.map((t: any) => (
                     <Link key={t.slug} href={`/equipe/${t.slug}`} className="flex items-center gap-3 rounded-lg bg-dark-card px-4 py-3 hover:bg-gray-800/50 transition-colors">
@@ -118,7 +118,7 @@ export default function RecherchePage() {
             {/* Players */}
             {results.players.length > 0 && (
               <div>
-                <h2 className="text-sm font-bold text-gray-400 mb-2">Joueurs</h2>
+                <h2 className="font-display text-sm font-bold text-gray-400 mb-2">Joueurs</h2>
                 <div className="space-y-1">
                   {results.players.map((p: any) => (
                     <Link key={p.slug} href={`/joueur/${p.slug}`} className="flex items-center gap-3 rounded-lg bg-dark-card px-4 py-3 hover:bg-gray-800/50 transition-colors">
@@ -149,14 +149,14 @@ export default function RecherchePage() {
             {/* Articles */}
             {results.articles.length > 0 && (
               <div>
-                <h2 className="text-sm font-bold text-gray-400 mb-2">Articles</h2>
+                <h2 className="font-display text-sm font-bold text-gray-400 mb-2">Articles</h2>
                 <div className="space-y-1">
                   {results.articles.map((a: any) => (
                     <Link key={a.slug} href={`/actu/${a.slug}`} className="block rounded-lg bg-dark-card px-4 py-3 hover:bg-gray-800/50 transition-colors">
                       <span className="text-sm font-medium text-white block truncate">{a.title}</span>
                       <div className="flex gap-2 mt-1">
                         {a.type && (
-                          <Badge className="bg-lime-500/10 text-lime-400 border-lime-500/20 text-[10px] px-1 py-0">
+                          <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px] px-1 py-0">
                             {a.type}
                           </Badge>
                         )}

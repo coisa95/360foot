@@ -48,10 +48,10 @@ export function MatchCard({
   const isLive = status === "1H" || status === "2H";
 
   return (
-    <Link href={`/match/${slug}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-400 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg rounded-xl">
-      <div className={`relative rounded-xl border bg-dark-card/60 backdrop-blur-sm px-3.5 py-3 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 overflow-hidden ${isLive ? "border-red-500/40 hover:border-red-500/60" : "border-dark-border/40 hover:border-lime-500/25"}`}>
+    <Link href={`/match/${slug}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg rounded-xl">
+      <div className={`relative rounded-xl border bg-dark-card/60 backdrop-blur-sm px-3.5 py-3 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 overflow-hidden ${isLive ? "border-red-500/40 hover:border-red-500/60" : "border-white/[0.06] hover:border-emerald-500/25"}`}>
         {/* Gradient accent top */}
-        <div className={`absolute top-0 left-0 right-0 h-[2px] ${isLive ? "bg-gradient-to-r from-red-500 via-orange-500 to-red-500" : "bg-gradient-to-r from-lime-500/0 via-lime-500/30 to-lime-500/0 opacity-0 group-hover:opacity-100 transition-opacity"}`} />
+        <div className={`absolute top-0 left-0 right-0 h-[2px] ${isLive ? "bg-gradient-to-r from-red-500 via-orange-500 to-red-500" : "bg-gradient-to-r from-emerald-500/0 via-emerald-500/30 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity"}`} />
 
         {/* League name */}
         {leagueName && (
@@ -68,7 +68,7 @@ export function MatchCard({
                   {homeLogoUrl ? (
                     <Image src={homeLogoUrl} alt={`Logo ${homeTeam}`} width={20} height={20} className="w-5 h-5 object-contain" />
                   ) : (
-                    <div className="w-5 h-5 rounded-full bg-dark-surface" />
+                    <div className="w-5 h-5 rounded-full bg-white/[0.02]" />
                   )}
                 </div>
                 <span className={`text-sm font-medium truncate ${status !== "NS" && (homeScore ?? 0) > (awayScore ?? 0) ? "text-white" : "text-gray-300"} group-hover:text-white transition-colors`}>{homeTeam}</span>
@@ -85,7 +85,7 @@ export function MatchCard({
                   {awayLogoUrl ? (
                     <Image src={awayLogoUrl} alt={`Logo ${awayTeam}`} width={20} height={20} className="w-5 h-5 object-contain" />
                   ) : (
-                    <div className="w-5 h-5 rounded-full bg-dark-surface" />
+                    <div className="w-5 h-5 rounded-full bg-white/[0.02]" />
                   )}
                 </div>
                 <span className={`text-sm font-medium truncate ${status !== "NS" && (awayScore ?? 0) > (homeScore ?? 0) ? "text-white" : "text-gray-300"} group-hover:text-white transition-colors`}>{awayTeam}</span>

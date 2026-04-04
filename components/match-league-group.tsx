@@ -30,7 +30,7 @@ export function MatchLeagueGroup({
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-label={`${open ? "Masquer" : "Afficher"} les matchs de ${leagueName}`}
-        className="flex w-full items-center gap-2 px-4 py-2.5 bg-dark-bg/50 border-b border-gray-800 hover:bg-gray-800/50 transition-colors"
+        className="flex w-full items-center gap-2 px-4 py-2.5 bg-transparent/50 border-b border-gray-800 hover:bg-gray-800/50 transition-colors"
       >
         {leagueLogo && (
           <Image src={leagueLogo} alt={`Logo ${leagueName}`} width={16} height={16} className="h-4 w-4 object-contain" />
@@ -38,7 +38,7 @@ export function MatchLeagueGroup({
         <Link
           href={`/ligue/${leagueSlug}`}
           onClick={(e) => e.stopPropagation()}
-          className="text-xs font-semibold text-gray-300 hover:text-lime-400 transition-colors"
+          className="text-xs font-semibold text-gray-300 hover:text-emerald-400 transition-colors"
         >
           {leagueName}
         </Link>

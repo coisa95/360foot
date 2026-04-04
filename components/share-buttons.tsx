@@ -77,7 +77,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
           className="w-10 h-10 rounded-full bg-gray-500/15 border border-gray-500/30 flex items-center justify-center text-gray-400 hover:bg-gray-500/25 hover:text-gray-300 transition-colors relative"
         >
           {copied ? (
-            <svg className="w-5 h-5 text-lime-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           ) : (
@@ -86,7 +86,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
             </svg>
           )}
           {copied && (
-            <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs text-lime-400 bg-dark-card border border-dark-border rounded px-2 py-0.5 whitespace-nowrap">
+            <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs text-emerald-400 bg-dark-card border border-white/[0.06] rounded px-2 py-0.5 whitespace-nowrap">
               Copié !
             </span>
           )}
@@ -94,7 +94,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
       </div>
 
       {/* Mobile: sticky bottom bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-dark-card/95 backdrop-blur-sm border-t border-dark-border">
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-dark-card/95 backdrop-blur-sm border-t border-white/[0.06]">
         <div className="flex items-center justify-center gap-4 px-4 py-3">
           <span className="text-xs font-medium text-gray-400">Partager</span>
           <a
@@ -136,7 +136,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
             className="w-10 h-10 rounded-full bg-gray-500/15 border border-gray-500/30 flex items-center justify-center text-gray-400 active:bg-gray-500/25 transition-colors relative"
           >
             {copied ? (
-              <svg className="w-5 h-5 text-lime-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             ) : (
@@ -145,7 +145,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
               </svg>
             )}
             {copied && (
-              <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs text-lime-400 bg-dark-card border border-dark-border rounded px-2 py-0.5 whitespace-nowrap">
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs text-emerald-400 bg-dark-card border border-white/[0.06] rounded px-2 py-0.5 whitespace-nowrap">
                 Copié !
               </span>
             )}

@@ -54,7 +54,7 @@ export default async function BookmakersPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -71,7 +71,7 @@ export default async function BookmakersPage() {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="text-3xl font-bold text-lime-400">Paris sportifs</h1>
+          <h1 className="font-display text-3xl font-bold text-emerald-400">Paris sportifs</h1>
           <p className="text-gray-400 mt-1">
             Comparez les meilleurs bookmakers disponibles dans votre pays et profitez
             des meilleurs bonus de bienvenue.
@@ -92,23 +92,23 @@ export default async function BookmakersPage() {
             bookmakers.map((bookmaker) => (
               <Card
                 key={bookmaker.id}
-                className="bg-dark-bg border-gray-800 p-6 hover:border-lime-500/30 transition-colors"
+                className="bg-white/[0.02] border-gray-800 p-6 hover:border-emerald-500/30 transition-colors"
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <Link href={`/bookmakers/${bookmaker.slug}`}>
-                        <h2 className="text-xl font-bold hover:text-lime-400 transition-colors">
+                        <h2 className="font-display text-xl font-bold hover:text-emerald-400 transition-colors">
                           {bookmaker.name}
                         </h2>
                       </Link>
-                      <Badge className="bg-lime-500/20 text-lime-400 border-lime-500/30">
+                      <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
                         #{bookmaker.priority}
                       </Badge>
                     </div>
 
                     {bookmaker.bonus_json && (
-                      <p className="text-lime-400 font-semibold text-lg mb-2">
+                      <p className="text-emerald-400 font-semibold text-lg mb-2">
                         {getBonusText(bookmaker.bonus_json as Record<string, string>)}
                       </p>
                     )}
@@ -131,13 +131,13 @@ export default async function BookmakersPage() {
                   <div className="flex flex-col items-center gap-2">
                     <Link
                       href={`/go/${bookmaker.slug}`}
-                      className="bg-lime-500 hover:bg-lime-400 text-black font-bold py-3 px-8 rounded-lg transition-colors text-center whitespace-nowrap"
+                      className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-3 px-8 rounded-lg transition-colors text-center whitespace-nowrap"
                     >
                       Obtenir le bonus
                     </Link>
                     <Link
                       href={`/bookmakers/${bookmaker.slug}`}
-                      className="text-gray-400 hover:text-lime-400 text-sm transition-colors"
+                      className="text-gray-400 hover:text-emerald-400 text-sm transition-colors"
                     >
                       Voir l&apos;avis complet
                     </Link>
@@ -146,7 +146,7 @@ export default async function BookmakersPage() {
               </Card>
             ))
           ) : (
-            <Card className="bg-dark-bg border-gray-800 p-8 text-center">
+            <Card className="bg-white/[0.02] border-gray-800 p-8 text-center">
               <p className="text-gray-400">Aucun bookmaker disponible pour le moment.</p>
             </Card>
           )}

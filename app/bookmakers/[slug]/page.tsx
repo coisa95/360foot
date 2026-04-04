@@ -77,7 +77,7 @@ export default async function BookmakerPage({ params }: Props) {
   ];
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -111,14 +111,14 @@ export default async function BookmakerPage({ params }: Props) {
         <Breadcrumb items={breadcrumbItems} />
 
         {/* En-tete */}
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
+        <Card className="bg-white/[0.02] border-gray-800 p-6 mt-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <h1 className="text-3xl font-bold text-lime-400">{bookmaker.name}</h1>
+              <h1 className="font-display text-3xl font-bold text-emerald-400">{bookmaker.name}</h1>
               {bookmaker.rating && (
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-gray-400">Note :</span>
-                  <Badge className="bg-lime-500/20 text-lime-400 border-lime-500/30 text-lg px-3">
+                  <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-lg px-3">
                     {bookmaker.rating}/5
                   </Badge>
                 </div>
@@ -127,7 +127,7 @@ export default async function BookmakerPage({ params }: Props) {
 
             <Link
               href={`/go/${slug}`}
-              className="bg-lime-500 hover:bg-lime-400 text-black font-bold py-4 px-10 rounded-lg transition-colors text-center text-lg whitespace-nowrap"
+              className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-4 px-10 rounded-lg transition-colors text-center text-lg whitespace-nowrap"
             >
               S&apos;inscrire et obtenir le bonus
             </Link>
@@ -136,24 +136,24 @@ export default async function BookmakerPage({ params }: Props) {
 
         {/* Bonus */}
         {bonusText && (
-          <Card className="bg-lime-500/10 border-lime-500/30 p-6 mt-6">
-            <h2 className="text-lg font-bold text-lime-400 mb-2">Bonus de bienvenue</h2>
+          <Card className="bg-emerald-500/10 border-emerald-500/30 p-6 mt-6">
+            <h2 className="font-display text-lg font-bold text-emerald-400 mb-2">Bonus de bienvenue</h2>
             <p className="text-2xl font-bold text-white">{bonusText}</p>
           </Card>
         )}
 
         {/* Description detaillee */}
         {bookmaker.description && (
-          <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-            <h2 className="text-lg font-bold text-lime-400 mb-4">A propos de {bookmaker.name}</h2>
+          <Card className="bg-white/[0.02] border-gray-800 p-6 mt-6">
+            <h2 className="font-display text-lg font-bold text-emerald-400 mb-4">A propos de {bookmaker.name}</h2>
             <Separator className="bg-gray-800 mb-4" />
             <p className="text-gray-300 leading-relaxed">{bookmaker.description}</p>
           </Card>
         )}
 
         {/* Informations detaillees */}
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-lg font-bold text-lime-400 mb-4">Informations</h2>
+        <Card className="bg-white/[0.02] border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-lg font-bold text-emerald-400 mb-4">Informations</h2>
           <Separator className="bg-gray-800 mb-4" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {bookmaker.supported_countries && (
@@ -207,8 +207,8 @@ export default async function BookmakerPage({ params }: Props) {
         {/* Avantages et inconvenients */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           {bookmaker.pros && (
-            <Card className="bg-dark-bg border-gray-800 p-6">
-              <h3 className="text-lg font-bold text-green-400 mb-4">Avantages</h3>
+            <Card className="bg-white/[0.02] border-gray-800 p-6">
+              <h3 className="font-display text-lg font-bold text-green-400 mb-4">Avantages</h3>
               <ul className="space-y-2">
                 {(bookmaker.pros as string[]).map((pro, index) => (
                   <li key={index} className="flex items-start gap-2 text-gray-300">
@@ -221,8 +221,8 @@ export default async function BookmakerPage({ params }: Props) {
           )}
 
           {bookmaker.cons && (
-            <Card className="bg-dark-bg border-gray-800 p-6">
-              <h3 className="text-lg font-bold text-red-400 mb-4">Inconvenients</h3>
+            <Card className="bg-white/[0.02] border-gray-800 p-6">
+              <h3 className="font-display text-lg font-bold text-red-400 mb-4">Inconvenients</h3>
               <ul className="space-y-2">
                 {(bookmaker.cons as string[]).map((con, index) => (
                   <li key={index} className="flex items-start gap-2 text-gray-300">
@@ -236,16 +236,16 @@ export default async function BookmakerPage({ params }: Props) {
         </div>
 
         {/* CTA final */}
-        <Card className="bg-lime-500/10 border-lime-500/30 p-8 mt-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">
+        <Card className="bg-emerald-500/10 border-emerald-500/30 p-8 mt-8 text-center">
+          <h2 className="font-display text-2xl font-bold mb-4">
             Pret a parier avec {bookmaker.name} ?
           </h2>
           {bonusText && (
-            <p className="text-lime-400 text-lg mb-6">{bonusText}</p>
+            <p className="text-emerald-400 text-lg mb-6">{bonusText}</p>
           )}
           <Link
             href={`/go/${slug}`}
-            className="inline-block bg-lime-500 hover:bg-lime-400 text-black font-bold py-4 px-12 rounded-lg transition-colors text-lg"
+            className="inline-block bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-4 px-12 rounded-lg transition-colors text-lg"
           >
             S&apos;inscrire maintenant
           </Link>

@@ -137,7 +137,7 @@ export default async function PlayerPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
@@ -147,7 +147,7 @@ export default async function PlayerPage({ params }: Props) {
         <Breadcrumb items={breadcrumbItems} />
 
         {/* Fiche joueur */}
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
+        <Card className="bg-white/[0.02] border-gray-800 p-6 mt-6">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div className="flex items-start gap-4">
               {player.photo_url && (
@@ -156,14 +156,14 @@ export default async function PlayerPage({ params }: Props) {
                   alt={`Photo ${player.name}`}
                   width={80}
                   height={80}
-                  className="h-20 w-20 rounded-full object-cover border-2 border-lime-400/30"
+                  className="h-20 w-20 rounded-full object-cover border-2 border-emerald-400/30"
                 />
               )}
               <div>
-              <h1 className="text-3xl font-bold text-lime-400">{player.name}</h1>
+              <h1 className="font-display text-3xl font-bold text-emerald-400">{player.name}</h1>
               <div className="flex flex-wrap gap-3 mt-3">
                 {player.position && (
-                  <Badge className="bg-lime-500/20 text-lime-400 border-lime-500/30">
+                  <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
                     {positionLabels[player.position] || player.position}
                   </Badge>
                 )}
@@ -182,7 +182,7 @@ export default async function PlayerPage({ params }: Props) {
             </div>
             {player.team && (
               <Link href={`/equipe/${player.team.slug}`}>
-                <Badge className="bg-lime-500/20 text-lime-400 border-lime-500/30 text-base px-4 py-1">
+                <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-base px-4 py-1">
                   {player.team.name}
                 </Badge>
               </Link>
@@ -220,7 +220,7 @@ export default async function PlayerPage({ params }: Props) {
             {player.number && (
               <div>
                 <p className="text-gray-400 text-sm">Numero</p>
-                <p className="font-medium text-lime-400 text-xl">{player.number}</p>
+                <p className="font-medium text-emerald-400 text-xl">{player.number}</p>
               </div>
             )}
           </div>
@@ -228,8 +228,8 @@ export default async function PlayerPage({ params }: Props) {
 
         {/* Statistiques */}
         {player.stats_json && (
-          <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-            <h2 className="text-lg font-bold text-lime-400 mb-4">Statistiques</h2>
+          <Card className="bg-white/[0.02] border-gray-800 p-6 mt-6">
+            <h2 className="font-display text-lg font-bold text-emerald-400 mb-4">Statistiques</h2>
             <Separator className="bg-gray-800 mb-4" />
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
               {Object.entries(player.stats_json as Record<string, number>).map(
@@ -249,7 +249,7 @@ export default async function PlayerPage({ params }: Props) {
                       <p className="text-gray-400 text-sm">
                         {statLabels[key] || key.replace(/_/g, " ")}
                       </p>
-                      <p className="text-2xl font-bold text-lime-400">{value}</p>
+                      <p className="text-2xl font-bold text-emerald-400">{value}</p>
                     </div>
                   );
                 }
@@ -260,17 +260,17 @@ export default async function PlayerPage({ params }: Props) {
 
         {/* Derniers matchs de l'équipe */}
         {recentMatches && recentMatches.length > 0 && (
-          <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-            <h2 className="text-lg font-bold text-lime-400 mb-4">Derniers matchs</h2>
+          <Card className="bg-white/[0.02] border-gray-800 p-6 mt-6">
+            <h2 className="font-display text-lg font-bold text-emerald-400 mb-4">Derniers matchs</h2>
             <div className="space-y-2">
               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {recentMatches.map((m: any) => (
-                <Link key={m.slug} href={`/match/${m.slug}`} className="flex items-center justify-between rounded-lg bg-dark-card px-3 py-2 text-sm hover:bg-gray-800/50 transition-colors">
+                <Link key={m.slug} href={`/match/${m.slug}`} className="flex items-center justify-between rounded-lg card-glass px-3 py-2 text-sm hover:bg-gray-800/50 transition-colors">
                   <span className="text-xs text-gray-500 w-20">
                     {new Date(m.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
                   </span>
                   <span className="flex-1 text-right text-white">{m.home_team?.name}</span>
-                  <span className="mx-3 font-bold text-lime-400">{m.score_home} - {m.score_away}</span>
+                  <span className="mx-3 font-bold text-emerald-400">{m.score_home} - {m.score_away}</span>
                   <span className="flex-1 text-white">{m.away_team?.name}</span>
                 </Link>
               ))}
@@ -281,7 +281,7 @@ export default async function PlayerPage({ params }: Props) {
         {/* Articles mentionnant le joueur */}
         {relatedArticles && relatedArticles.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-xl font-bold text-lime-400 mb-4">
+            <h2 className="font-display text-xl font-bold text-emerald-400 mb-4">
               Articles mentionnant {player.name}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

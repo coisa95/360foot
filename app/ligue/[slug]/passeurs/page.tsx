@@ -118,14 +118,14 @@ export default async function TopAssistsPage({ params }: Props) {
       </div>
 
       {assisters.length > 0 ? (
-        <Card className="bg-dark-bg border-gray-800 overflow-x-auto">
+        <Card className="bg-transparent border-gray-800 overflow-x-auto">
           <table className="w-full text-xs sm:text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-gray-800 text-gray-400">
                 <th className="text-left p-1.5 sm:p-3 w-6 sm:w-8">#</th>
                 <th className="text-left p-1.5 sm:p-3 min-w-[180px]">Joueur</th>
                 <th className="text-left p-1.5 sm:p-3 min-w-[120px]">\u00c9quipe</th>
-                <th className="text-center p-1.5 sm:p-3 font-bold text-lime-400">PD</th>
+                <th className="text-center p-1.5 sm:p-3 font-bold text-emerald-400">PD</th>
                 <th className="text-center p-1.5 sm:p-3">Buts</th>
                 <th className="text-center p-1.5 sm:p-3">MJ</th>
               </tr>
@@ -135,12 +135,12 @@ export default async function TopAssistsPage({ params }: Props) {
                 <tr
                   key={`${player.name}-${index}`}
                   className={`border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors ${
-                    index === 0 ? "bg-lime-400/5" : ""
+                    index === 0 ? "bg-emerald-500/5" : ""
                   }`}
                 >
                   <td className="p-1.5 sm:p-3 text-gray-400 font-mono">
                     {index === 0 ? (
-                      <span className="inline-flex w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-lime-400 text-black text-[10px] sm:text-xs font-bold items-center justify-center">
+                      <span className="inline-flex w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-500 text-black text-[10px] sm:text-xs font-bold items-center justify-center">
                         1
                       </span>
                     ) : (
@@ -180,7 +180,7 @@ export default async function TopAssistsPage({ params }: Props) {
                       <span className="text-gray-300 truncate">{player.team}</span>
                     </div>
                   </td>
-                  <td className="text-center p-1.5 sm:p-3 font-bold text-lime-400 text-base sm:text-lg">
+                  <td className="text-center p-1.5 sm:p-3 font-bold text-emerald-400 text-base sm:text-lg">
                     {player.assists}
                   </td>
                   <td className="text-center p-1.5 sm:p-3 text-gray-400">
@@ -195,7 +195,7 @@ export default async function TopAssistsPage({ params }: Props) {
           </table>
         </Card>
       ) : (
-        <Card className="bg-dark-bg border-gray-800 p-8 text-center">
+        <Card className="bg-transparent border-gray-800 p-8 text-center">
           <p className="text-gray-400">Aucune donn\u00e9e de passeurs disponible pour cette ligue.</p>
         </Card>
       )}

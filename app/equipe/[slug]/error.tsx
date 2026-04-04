@@ -9,7 +9,7 @@ export default function Error({ reset }: { error: Error; reset: () => void }) {
       </p>
       <button
         onClick={() => reset()}
-        className="rounded-lg bg-lime-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-lime-500 transition-colors"
+        className="rounded-lg bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-500 transition-colors"
       >
         Réessayer
       </button>

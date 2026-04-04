@@ -37,17 +37,17 @@ export default function LegalPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen text-white">
       <div className="container mx-auto px-4 py-6 max-w-3xl">
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="text-3xl font-bold text-lime-400">Mentions légales</h1>
+          <h1 className="font-display text-3xl font-bold text-emerald-400">Mentions légales</h1>
           <p className="text-gray-400 mt-2">Dernière mise à jour : mars 2026</p>
         </div>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Éditeur du site</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Éditeur du site</h2>
           <Separator className="bg-gray-800 mb-4" />
           <div className="space-y-2 text-gray-300">
             <p><span className="text-gray-400">Nom du site :</span> 360 Foot</p>
@@ -57,8 +57,8 @@ export default function LegalPage() {
           </div>
         </Card>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Hébergement</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Hébergement</h2>
           <Separator className="bg-gray-800 mb-4" />
           <div className="space-y-2 text-gray-300">
             <p><span className="text-gray-400">Hébergeur :</span> Vercel Inc.</p>
@@ -67,8 +67,8 @@ export default function LegalPage() {
           </div>
         </Card>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Propriété intellectuelle</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Propriété intellectuelle</h2>
           <Separator className="bg-gray-800 mb-4" />
           <p className="text-gray-300 leading-relaxed mb-4">
             L&apos;ensemble du contenu du site 360 Foot (textes, images,
@@ -83,8 +83,8 @@ export default function LegalPage() {
           </p>
         </Card>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Contenu généré par intelligence artificielle</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Contenu généré par intelligence artificielle</h2>
           <Separator className="bg-gray-800 mb-4" />
           <p className="text-gray-300 leading-relaxed mb-4">
             Une partie du contenu éditorial de ce site est générée par des
@@ -96,8 +96,8 @@ export default function LegalPage() {
           </p>
         </Card>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Liens d&apos;affiliation et paris sportifs</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Liens d&apos;affiliation et paris sportifs</h2>
           <Separator className="bg-gray-800 mb-4" />
           <p className="text-gray-300 leading-relaxed mb-4">
             Ce site contient des liens d&apos;affiliation vers des sites de
@@ -114,8 +114,8 @@ export default function LegalPage() {
           </p>
         </Card>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Limitation de responsabilité</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Limitation de responsabilité</h2>
           <Separator className="bg-gray-800 mb-4" />
           <p className="text-gray-300 leading-relaxed mb-4">
             360 Foot s&apos;efforce de fournir des informations aussi précises
@@ -131,8 +131,8 @@ export default function LegalPage() {
           </p>
         </Card>
 
-        <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
-          <h2 className="text-xl font-bold mb-4">Droit applicable</h2>
+        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <h2 className="font-display text-xl font-bold mb-4">Droit applicable</h2>
           <Separator className="bg-gray-800 mb-4" />
           <p className="text-gray-300 leading-relaxed">
             Les présentes mentions légales sont régies par le droit français. En

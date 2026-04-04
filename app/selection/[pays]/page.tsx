@@ -89,7 +89,7 @@ export default async function NationalTeamPage({ params }: Props) {
   ];
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -110,7 +110,7 @@ export default async function NationalTeamPage({ params }: Props) {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="text-3xl font-bold text-lime-400">
+          <h1 className="font-display text-3xl font-bold text-emerald-400">
             {country.flag} {country.fullName}
           </h1>
           <p className="text-gray-400 mt-1">
@@ -120,7 +120,7 @@ export default async function NationalTeamPage({ params }: Props) {
 
         {/* Informations equipe */}
         {team && (
-          <Card className="bg-dark-bg border-gray-800 p-6 mt-6">
+          <Card className="bg-transparent border-gray-800 p-6 mt-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <p className="text-gray-400 text-sm">Pays</p>
@@ -141,7 +141,7 @@ export default async function NationalTeamPage({ params }: Props) {
               {team.fifa_ranking && (
                 <div>
                   <p className="text-gray-400 text-sm">Classement FIFA</p>
-                  <p className="font-medium text-lime-400 text-xl">{team.fifa_ranking}</p>
+                  <p className="font-medium text-emerald-400 text-xl">{team.fifa_ranking}</p>
                 </div>
               )}
             </div>
@@ -153,7 +153,7 @@ export default async function NationalTeamPage({ params }: Props) {
         {/* Derniers matchs */}
         {recentMatches && recentMatches.length > 0 ? (
           <div className="mt-8">
-            <h2 className="text-xl font-bold mb-4">Derniers matchs</h2>
+            <h2 className="font-display text-xl font-bold mb-4">Derniers matchs</h2>
             <div className="space-y-3">
               {recentMatches.map((match: Record<string, unknown>) => {
                 const homeTeam = match.home_team as Record<string, unknown> | null;
@@ -176,7 +176,7 @@ export default async function NationalTeamPage({ params }: Props) {
             </div>
           </div>
         ) : (
-          <Card className="bg-dark-bg border-gray-800 p-8 mt-6 text-center">
+          <Card className="bg-transparent border-gray-800 p-8 mt-6 text-center">
             <p className="text-gray-400">
               Aucun match recent disponible pour la selection {country.name.toLowerCase()}.
             </p>

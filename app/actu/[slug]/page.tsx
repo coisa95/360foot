@@ -178,7 +178,7 @@ export default async function ArticlePage({ params }: Props) {
   // Type labels and colors from shared utility (lib/article-types.ts)
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
@@ -205,7 +205,7 @@ export default async function ArticlePage({ params }: Props) {
               </time>
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold leading-tight">
+            <h1 className="font-display text-3xl md:text-4xl font-bold leading-tight">
               {article.title}
             </h1>
 
@@ -234,10 +234,10 @@ export default async function ArticlePage({ params }: Props) {
 
           {/* Contenu de l'article */}
           <div
-            className="prose prose-invert prose-lime max-w-none text-justify
+            className="prose prose-invert prose-emerald max-w-none text-justify
               prose-headings:text-white prose-headings:font-bold prose-headings:text-left
               prose-p:text-gray-300 prose-p:leading-relaxed
-              prose-a:text-lime-400 prose-a:no-underline hover:prose-a:underline
+              prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline
               prose-strong:text-white
               prose-li:text-gray-300
               prose-figcaption:text-xs prose-figcaption:text-gray-500 prose-figcaption:italic prose-figcaption:text-center prose-figcaption:mt-2
@@ -258,7 +258,7 @@ export default async function ArticlePage({ params }: Props) {
           {/* Articles lies */}
           {relatedArticles && relatedArticles.length > 0 && (
             <div className="mt-8">
-              <h2 className="text-xl font-bold text-lime-400 mb-4">
+              <h2 className="font-display text-xl font-bold text-emerald-400 mb-4">
                 Articles similaires
               </h2>
               <RelatedArticles

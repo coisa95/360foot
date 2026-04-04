@@ -149,13 +149,13 @@ export default async function ActuPage({ searchParams }: Props) {
   const gridArticles = articles && articles.length > 1 ? articles.slice(1) : [];
 
   return (
-    <main className="min-h-screen bg-dark-bg text-white">
+    <main className="min-h-screen bg-transparent text-white">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">
-            <span className="text-lime-400">Actu</span> Football
+          <h1 className="font-display text-xl font-bold sm:text-2xl md:text-3xl">
+            <span className="text-emerald-400">Actu</span> Football
           </h1>
 
           {/* Category tabs — compact, scrollable on mobile */}
@@ -167,8 +167,8 @@ export default async function ActuPage({ searchParams }: Props) {
                 href={cat.value === "all" ? "/actu" : `/actu?categorie=${cat.value}`}
                 className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium transition-colors sm:px-4 sm:py-1.5 sm:text-sm ${
                   activeCategory === cat.value
-                    ? "bg-lime-500 text-dark-bg"
-                    : "bg-dark-card text-gray-300 hover:bg-dark-surface hover:text-white"
+                    ? "bg-emerald-500 text-black"
+                    : "card-glass text-gray-300 hover:bg-white/[0.02] hover:text-white"
                 }`}
               >
                 {cat.label}
@@ -181,7 +181,7 @@ export default async function ActuPage({ searchParams }: Props) {
           <>
             {/* Featured article - compact on mobile, large on desktop */}
             <Link href={`/actu/${featuredArticle.slug as string}`} className="group mt-4 block sm:mt-6">
-              <Card className="overflow-hidden border-dark-border bg-dark-card transition-all hover:border-lime-500/30">
+              <Card className="overflow-hidden border-white/[0.06] card-glass transition-all hover:border-emerald-500/30">
                 <div className="grid md:grid-cols-2">
                   <div className="relative aspect-[2/1] sm:aspect-video md:aspect-auto md:min-h-[280px]">
                     <Image
@@ -210,7 +210,7 @@ export default async function ActuPage({ searchParams }: Props) {
                         </span>
                       )}
                     </div>
-                    <h2 className="mb-1 text-base font-bold leading-tight text-white transition-colors group-hover:text-lime-400 sm:mb-2 sm:text-lg md:mb-3 md:text-2xl">
+                    <h2 className="font-display mb-1 text-base font-bold leading-tight text-white transition-colors group-hover:text-emerald-400 sm:mb-2 sm:text-lg md:mb-3 md:text-2xl">
                       {featuredArticle.title as string}
                     </h2>
                     {(featuredArticle.excerpt as string) ? (
@@ -238,7 +238,7 @@ export default async function ActuPage({ searchParams }: Props) {
                   const articleType = (article.type as string) || "result";
                   return (
                     <Link key={article.id as string} href={`/actu/${article.slug}`} className="group">
-                      <Card className="h-full overflow-hidden border-dark-border bg-dark-card transition-all hover:border-lime-500/30 hover:bg-dark-surface">
+                      <Card className="h-full overflow-hidden border-white/[0.06] card-glass transition-all hover:border-emerald-500/30 hover:bg-white/[0.02]">
                         <div className="relative aspect-video">
                           <Image
                             src={(article.og_image_url as string) || `/api/og?title=${encodeURIComponent(article.title as string)}&type=${articleType}&league=${encodeURIComponent((league?.name as string) || "")}`}
@@ -259,7 +259,7 @@ export default async function ActuPage({ searchParams }: Props) {
                               <span className="text-xs text-gray-500">{String(league?.name)}</span>
                             )}
                           </div>
-                          <h3 className="mb-2 line-clamp-2 text-sm font-semibold leading-tight text-white transition-colors group-hover:text-lime-400">
+                          <h3 className="font-display mb-2 line-clamp-2 text-sm font-semibold leading-tight text-white transition-colors group-hover:text-emerald-400">
                             {article.title as string}
                           </h3>
                           {String(article.excerpt || "") !== "" && (
@@ -289,7 +289,7 @@ export default async function ActuPage({ searchParams }: Props) {
                   <Link
                     rel="nofollow"
                     href={`/actu?${activeCategory !== "all" ? `categorie=${activeCategory}&` : ""}page=${currentPage - 1}`}
-                    className="rounded-lg bg-dark-card px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-dark-surface hover:text-white"
+                    className="rounded-lg card-glass px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-white/[0.02] hover:text-white"
                   >
                     Précédent
                   </Link>
@@ -317,8 +317,8 @@ export default async function ActuPage({ searchParams }: Props) {
                         href={`/actu?${baseHref}page=${p}`}
                         className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
                           currentPage === p
-                            ? "bg-lime-500 text-dark-bg"
-                            : "bg-dark-card text-gray-300 hover:bg-dark-surface hover:text-white"
+                            ? "bg-emerald-500 text-black"
+                            : "card-glass text-gray-300 hover:bg-white/[0.02] hover:text-white"
                         }`}
                       >
                         {p}
@@ -331,7 +331,7 @@ export default async function ActuPage({ searchParams }: Props) {
                   <Link
                     rel="nofollow"
                     href={`/actu?${activeCategory !== "all" ? `categorie=${activeCategory}&` : ""}page=${currentPage + 1}`}
-                    className="rounded-lg bg-dark-card px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-dark-surface hover:text-white"
+                    className="rounded-lg card-glass px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-white/[0.02] hover:text-white"
                   >
                     Suivant
                   </Link>

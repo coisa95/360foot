@@ -40,10 +40,10 @@ export function PlayerCard({
 }: PlayerCardProps) {
   return (
     <Link href={`/joueur/${slug}`}>
-      <Card className="border-dark-border bg-dark-card p-4 transition-colors hover:border-lime-500/30 hover:bg-dark-surface">
+      <Card className="border-white/[0.06] bg-dark-card p-4 transition-colors hover:border-emerald-500/30 hover:bg-white/[0.02]">
         <div className="flex items-center gap-3">
           {/* Player photo */}
-          <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full bg-dark-surface">
+          <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full bg-white/[0.02]">
             {photoUrl ? (
               <Image
                 src={photoUrl}
@@ -63,9 +63,9 @@ export function PlayerCard({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               {number != null && (
-                <span className="text-sm font-bold text-lime-400">#{number}</span>
+                <span className="text-sm font-bold text-emerald-400">#{number}</span>
               )}
-              <h3 className="truncate font-semibold text-white">{name}</h3>
+              <h3 className="font-display truncate font-semibold text-white">{name}</h3>
             </div>
             {teamName && (
               <p className="mt-0.5 truncate text-sm text-gray-400">{teamName}</p>
@@ -79,7 +79,7 @@ export function PlayerCard({
           {/* Position badge */}
           <Badge
             variant="secondary"
-            className={`flex-shrink-0 text-xs ${POSITION_COLORS[position] || "bg-lime-500/10 text-lime-400"}`}
+            className={`flex-shrink-0 text-xs ${POSITION_COLORS[position] || "bg-emerald-500/10 text-emerald-400"}`}
           >
             {POSITION_LABELS[position] || position}
           </Badge>

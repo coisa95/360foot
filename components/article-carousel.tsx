@@ -70,7 +70,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
       {/* Carousel container */}
       <div className="relative overflow-hidden rounded-xl md:rounded-2xl shadow-xl shadow-black/20" style={{ minHeight: "200px" }}>
         {articles.map((article, i) => {
-          const typeColor = TYPE_COLORS[article.type] || "bg-lime-500/20 text-lime-400 border-lime-500/25";
+          const typeColor = TYPE_COLORS[article.type] || "bg-emerald-500/20 text-emerald-400 border-emerald-500/25";
           const typeLabel = TYPE_LABELS[article.type] || "Actu";
           const leagueName = article.league?.name || "";
 
@@ -85,7 +85,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
               `}
             >
               {/* Mobile: overlay text on image | Desktop: side by side */}
-              <div className="relative h-full md:grid md:grid-cols-2 bg-dark-card/90 border border-dark-border/50 rounded-xl md:rounded-2xl overflow-hidden backdrop-blur-sm">
+              <div className="relative h-full md:grid md:grid-cols-2 bg-dark-card/90 border border-white/[0.06] rounded-xl md:rounded-2xl overflow-hidden backdrop-blur-sm">
                 {/* Image */}
                 <div className="relative aspect-video">
                   <Image
@@ -110,7 +110,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
                     )}
                   </div>
 
-                  <h2 className="mb-1 md:mb-3 text-sm md:text-2xl font-bold leading-tight text-white line-clamp-2 md:line-clamp-3">
+                  <h2 className="font-display mb-1 md:mb-3 text-sm md:text-2xl font-bold leading-tight text-white line-clamp-2 md:line-clamp-3">
                     {article.title}
                   </h2>
 
@@ -129,7 +129,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
                         minute: "2-digit",
                       })}
                     </time>
-                    <span className="text-[10px] md:text-xs font-medium text-lime-400">
+                    <span className="text-[10px] md:text-xs font-medium text-emerald-400">
                       Lire →
                     </span>
                   </div>
@@ -145,7 +145,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
         <>
           <button
             onClick={(e) => { e.preventDefault(); prev(); }}
-            className="absolute left-2 md:left-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-1.5 md:p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-400"
+            className="absolute left-2 md:left-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-transparent/60 backdrop-blur-sm p-1.5 md:p-2 text-white/70 transition-all hover:bg-transparent/80 hover:text-white hover:scale-110 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
             aria-label="Précédent"
           >
             <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -154,7 +154,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
           </button>
           <button
             onClick={(e) => { e.preventDefault(); next(); }}
-            className="absolute right-2 md:right-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-dark-bg/60 backdrop-blur-sm p-1.5 md:p-2 text-white/70 transition-all hover:bg-dark-bg/80 hover:text-white hover:scale-110 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-400"
+            className="absolute right-2 md:right-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-transparent/60 backdrop-blur-sm p-1.5 md:p-2 text-white/70 transition-all hover:bg-transparent/80 hover:text-white hover:scale-110 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
             aria-label="Suivant"
           >
             <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -173,7 +173,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
               onClick={() => goTo(i)}
               className={`rounded-full transition-all duration-500 ${
                 i === current
-                  ? "w-5 md:w-8 h-1.5 md:h-2 bg-gradient-to-r from-lime-400 to-emerald-400 shadow-lg shadow-lime-500/30"
+                  ? "w-5 md:w-8 h-1.5 md:h-2 bg-gradient-to-r from-emerald-400 to-emerald-400 shadow-lg shadow-emerald-500/30"
                   : "w-1.5 md:w-2 h-1.5 md:h-2 bg-gray-600 hover:bg-gray-500"
               }`}
               aria-label={`Article ${i + 1}`}

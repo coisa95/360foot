@@ -20,7 +20,7 @@ export default function Loading() {
       {/* Match cards skeleton */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-dark-border/30 bg-dark-card/50 p-4 animate-pulse">
+          <div key={i} className="rounded-xl border border-white/[0.06]">
             <div className="h-4 w-1/3 bg-dark-border/30 rounded mb-3" />
             <div className="flex items-center justify-between">
               <div className="h-5 w-24 bg-dark-border/40 rounded" />
