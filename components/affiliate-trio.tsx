@@ -53,6 +53,23 @@ const BOOKMAKERS = [
     badge: "Meilleur bonus",
     badgeBg: "bg-cyan-500/20 text-cyan-300",
   },
+  {
+    name: "MegaPari",
+    slug: "megapari",
+    logo: "/images/bookmakers/megapari.png",
+    url: "/go/megapari",
+    bonus: "100%",
+    bonusLabel: "sur le 1er dépôt",
+    highlight: "Nouveau bookmaker fiable",
+    promoCode: "1WAFU",
+    cta: "Obtenir le bonus",
+    color: "from-purple-600 to-violet-800",
+    borderColor: "border-purple-500/30 hover:border-purple-400/60",
+    btnColor: "bg-purple-500 hover:bg-purple-400",
+    glowColor: "group-hover:shadow-purple-500/20",
+    badge: "Nouveau",
+    badgeBg: "bg-purple-500/20 text-purple-300",
+  },
 ];
 
 export function AffiliateTrio() {
@@ -63,7 +80,7 @@ export function AffiliateTrio() {
       </p>
 
       {/* Desktop: full cards */}
-      <div className="hidden sm:grid sm:grid-cols-3 gap-3">
+      <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {BOOKMAKERS.map((bk) => (
           <Link
             key={bk.slug}

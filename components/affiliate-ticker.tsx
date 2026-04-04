@@ -32,6 +32,15 @@ const SLIDES = [
     bg: "from-cyan-500 to-teal-700",
     cta: "Foncer",
   },
+  {
+    name: "MegaPari",
+    logo: "/images/bookmakers/megapari.png",
+    text: "Bonus 100% sur ton 1er dépôt — Code 1WAFU",
+    shortText: "Bonus 100% — Code 1WAFU",
+    url: "/go/megapari",
+    bg: "from-purple-600 to-violet-800",
+    cta: "Obtenir",
+  },
 ];
 
 export function AffiliateTicker() {

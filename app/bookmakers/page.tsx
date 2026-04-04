@@ -12,12 +12,14 @@ const PROMO_CODES: Record<string, string> = {
   "1xbet": "1WAFU",
   melbet: "1WAFU",
   "1win": "6MAP",
+  megapari: "1WAFU",
 };
 
 const TRUST_BADGES: Record<string, string[]> = {
   "1xbet": ["Recommandé", "Dispo Afrique de l'Ouest"],
   melbet: ["Bonus 200%", "Dispo Afrique de l'Ouest"],
   "1win": ["Meilleur bonus", "Dispo Afrique de l'Ouest"],
+  megapari: ["Nouveau", "Dispo Afrique de l'Ouest"],
 };
 
 export const metadata: Metadata = {

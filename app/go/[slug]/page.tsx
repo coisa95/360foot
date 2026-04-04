@@ -24,24 +24,28 @@ const LOGOS: Record<string, string> = {
   "1xbet": "/images/bookmakers/1xbet.png",
   melbet: "/images/bookmakers/melbet.png",
   "1win": "/images/bookmakers/1win.png",
+  megapari: "/images/bookmakers/megapari.png",
 };
 
 const PROMO_CODES: Record<string, string> = {
   "1xbet": "1WAFU",
   melbet: "1WAFU",
   "1win": "6MAP",
+  megapari: "1WAFU",
 };
 
 const BONUS_TAGLINES: Record<string, string> = {
   "1xbet": "Bonus 100% jusqu'à 200 000 FCFA + 150 tours gratuits",
   melbet: "Bonus 200% automatique sur votre 1er dépôt",
   "1win": "Bonus 500% sur vos 4 premiers dépôts (+100%, +120%, +130%, +150%)",
+  megapari: "Bonus 100% automatique sur votre 1er dépôt",
 };
 
 const BRAND: Record<string, { from: string; via: string; to: string; shadow: string; text: string }> = {
   "1xbet": { from: "#2563eb", via: "#1d4ed8", to: "#1e3a8a", shadow: "rgba(37,99,235,0.4)", text: "#93c5fd" },
   melbet: { from: "#f59e0b", via: "#ea580c", to: "#9a3412", shadow: "rgba(245,158,11,0.4)", text: "#fcd34d" },
   "1win": { from: "#06b6d4", via: "#0d9488", to: "#115e59", shadow: "rgba(6,182,212,0.4)", text: "#67e8f9" },
+  megapari: { from: "#a855f7", via: "#7c3aed", to: "#4c1d95", shadow: "rgba(168,85,247,0.4)", text: "#c4b5fd" },
 };
 
 const DEFAULT_BRAND = { from: "#10b981", via: "#059669", to: "#064e3b", shadow: "rgba(16,185,129,0.4)", text: "#6ee7b7" };
@@ -64,6 +68,12 @@ const BONUS_STEPS: Record<string, string[]> = {
     "Inscrivez-vous et entrez le code 6MAP",
     "Faites un premier dépôt",
     "Recevez 500% de bonus sur 4 dépôts",
+  ],
+  megapari: [
+    "Cliquez sur le bouton ci-dessous",
+    "Inscrivez-vous et entrez le code 1WAFU",
+    "Faites un premier dépôt",
+    "Recevez 100% de bonus immédiatement",
   ],
 };
 
