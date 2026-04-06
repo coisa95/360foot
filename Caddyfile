@@ -1,0 +1,80 @@
+# ============================================================================
+# Caddyfile — reverse proxy + SSL automatique pour 360 Foot
+#
+# Caddy obtient et renouvelle les certificats Let's Encrypt automatiquement
+# Ports 80/443 doivent être ouverts dans le firewall
+# ============================================================================
+
+{
+	# Email pour Let's Encrypt (changer si besoin)
+	email admin@360-foot.com
+
+	# Logs JSON pour parsing facile
+	log {
+		output stdout
+		format json
+		level INFO
+	}
+
+	# Servers HTTP/3 activé par défaut
+	servers {
+		protocols h1 h2 h3
+	}
+}
+
+# ───── 360-foot.com (production) ────────────────────────────────────────────
+360-foot.com, www.360-foot.com {
+	# Redirection www → apex (canonical)
+	@www host www.360-foot.com
+	redir @www https://360-foot.com{uri} permanent
+
+	# Reverse proxy vers Next.js
+	reverse_proxy nextjs:3000 {
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+
+	# Headers de sécurité (en plus de ceux du middleware Next.js)
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Frame-Options "DENY"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	# Compression
+	encode gzip zstd
+
+	# Cache statique agressif sur _next/static
+	@static path /_next/static/*
+	header @static Cache-Control "public, max-age=31536000, immutable"
+
+	# Logs d'accès
+	log {
+		output file /data/access.log {
+			roll_size 100mb
+			roll_keep 5
+		}
+		format json
+	}
+}
+
+# ───── og.360-foot.com (service OG image) ───────────────────────────────────
+og.360-foot.com {
+	reverse_proxy og-service:3001
+	encode gzip zstd
+
+	header {
+		Cache-Control "public, max-age=86400"
+		-Server
+	}
+}
+
+# ───── coolify.360-foot.com (panneau admin, optionnel) ──────────────────────
+# Décommenter si tu veux exposer Coolify via Caddy au lieu du port 8000
+# coolify.360-foot.com {
+# 	reverse_proxy localhost:8000
+# }

@@ -1,0 +1,202 @@
+# ============================================================================
+# 360 Foot — Docker Compose pour déploiement self-hosted
+#
+# Utilisation : ce fichier peut être utilisé en alternative à Coolify, ou
+# en complément pour avoir un déploiement reproductible.
+#
+# Lancement :
+#   1. Copier .env.example en .env et renseigner toutes les variables
+#   2. docker compose up -d
+#
+# Services exposés :
+#   - Next.js : port 3000 (interne)
+#   - og-service : port 3001 (interne)
+#   - Postgres : port 5432 (interne uniquement)
+#   - Redis : port 6379 (interne uniquement)
+#   - Caddy : ports 80/443 (publics, reverse proxy + SSL auto)
+# ============================================================================
+
+services:
+  # ───── Reverse proxy + SSL automatique Let's Encrypt ──────────────────────
+  caddy:
+    image: caddy:2-alpine
+    container_name: foot360-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - foot360
+    depends_on:
+      - nextjs
+      - og-service
+
+  # ───── Application Next.js ────────────────────────────────────────────────
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    image: foot360-nextjs:latest
+    container_name: foot360-nextjs
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - API_FOOTBALL_KEY=${API_FOOTBALL_KEY}
+      - CRON_SECRET=${CRON_SECRET}
+      - PEXELS_API_KEY=${PEXELS_API_KEY}
+      - UNSPLASH_ACCESS_KEY=${UNSPLASH_ACCESS_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHANNEL_ID=${TELEGRAM_CHANNEL_ID}
+      - UPSTASH_REDIS_REST_URL=${UPSTASH_REDIS_REST_URL}
+      - UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN}
+    expose:
+      - "3000"
+    networks:
+      - foot360
+    deploy:
+      resources:
+        limits:
+          memory: 1536M
+        reservations:
+          memory: 512M
+
+  # ───── Service de génération d'images OG ──────────────────────────────────
+  og-service:
+    build:
+      context: ./og-service
+      dockerfile: Dockerfile
+    image: foot360-og:latest
+    container_name: foot360-og
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    expose:
+      - "3001"
+    networks:
+      - foot360
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  # ───── Worker CRON ────────────────────────────────────────────────────────
+  worker:
+    build:
+      context: ./workers
+      dockerfile: Dockerfile
+    image: foot360-worker:latest
+    container_name: foot360-worker
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - TZ=Europe/Paris
+      - CRON_SECRET=${CRON_SECRET}
+      - APP_URL=http://nextjs:3000
+      - SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+    networks:
+      - foot360
+    depends_on:
+      - nextjs
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # ───── PostgreSQL (Phase 4 — quand tu sors de Supabase) ───────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: foot360-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=foot360
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --locale=C
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    expose:
+      - "5432"
+    networks:
+      - foot360
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 3072M
+    # Optimisations Postgres pour 8 GB RAM (CX32)
+    command: >
+      postgres
+      -c shared_buffers=1GB
+      -c effective_cache_size=2GB
+      -c maintenance_work_mem=256MB
+      -c work_mem=16MB
+      -c max_connections=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c wal_buffers=16MB
+      -c checkpoint_completion_target=0.9
+      -c default_statistics_target=100
+
+  # ───── Redis (remplace Upstash) ───────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: foot360-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --maxmemory 384mb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+    volumes:
+      - redis_data:/data
+    expose:
+      - "6379"
+    networks:
+      - foot360
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+# ───── Réseaux ──────────────────────────────────────────────────────────────
+networks:
+  foot360:
+    driver: bridge
+
+# ───── Volumes persistants ──────────────────────────────────────────────────
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  caddy_data:
+    driver: local
+  caddy_config:
+    driver: local
