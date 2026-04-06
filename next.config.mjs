@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  // Standalone output : génère un bundle minimal pour Docker (~150MB au lieu de ~1GB)
+  // Cf. https://nextjs.org/docs/pages/api-reference/next-config-js/output
+  output: "standalone",
   images: {
     remotePatterns: [
       {

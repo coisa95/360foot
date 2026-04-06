@@ -1,0 +1,65 @@
+# ============================================================================
+# .dockerignore — exclut tout ce qui n'est pas nécessaire au build Docker
+# Réduit drastiquement la taille du contexte envoyé au daemon Docker
+# ============================================================================
+
+# Dependencies (réinstallées dans le container)
+node_modules
+**/node_modules
+.pnpm-store
+
+# Build artefacts
+.next
+out
+dist
+**/dist
+**/.next
+
+# Sub-projects (chacun a son propre Dockerfile)
+og-service
+workers
+
+# Git
+.git
+.gitignore
+.github
+
+# Env files (injectés via Coolify, JAMAIS dans l'image)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE / OS
+.vscode
+.idea
+.DS_Store
+*.swp
+*.swo
+
+# Tests / docs
+coverage
+.nyc_output
+*.md
+!README.md
+docs
+
+# Vercel
+.vercel
+
+# Misc
+*.pdf
+generate_report.py
+Rapport_*.pdf
+tmp
+temp
+.cache
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts
