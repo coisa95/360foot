@@ -27,19 +27,6 @@ export const metadata: Metadata = {
   },
   description:
     "Résultats, classements, transferts et analyses football. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League et Champions League.",
-  keywords: [
-    "football",
-    "foot",
-    "Afrique",
-    "Côte d'Ivoire",
-    "Sénégal",
-    "Cameroun",
-    "résultats",
-    "classements",
-    "transferts",
-    "Premier League",
-    "Champions League",
-  ],
   // Canonical is set per-page, not globally
   openGraph: {
     type: "website",

@@ -23,9 +23,9 @@ export async function GET() {
       .select("slug, date")
       .order("date", { ascending: false })
       .limit(2000),
-    supabase.from("teams").select("slug, updated_at"),
-    supabase.from("leagues").select("slug, updated_at"),
-    supabase.from("players").select("slug, updated_at"),
+    supabase.from("teams").select("slug, created_at"),
+    supabase.from("leagues").select("slug, created_at"),
+    supabase.from("players").select("slug, created_at"),
     supabase.from("bookmakers").select("slug").eq("active", true),
   ]);
 
@@ -92,7 +92,7 @@ export async function GET() {
       xml += `
   <url>
     <loc>${baseUrl}/equipe/${team.slug}</loc>
-    ${team.updated_at ? `<lastmod>${new Date(team.updated_at).toISOString()}</lastmod>` : ""}
+    ${team.created_at ? `<lastmod>${new Date(team.created_at).toISOString()}</lastmod>` : ""}
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>`;
@@ -103,7 +103,7 @@ export async function GET() {
   if (leagues) {
     const leagueSubPages = ["resultats", "calendrier", "actualites", "buteurs", "passeurs"];
     for (const league of leagues) {
-      const lastmod = league.updated_at ? `<lastmod>${new Date(league.updated_at).toISOString()}</lastmod>` : "";
+      const lastmod = league.created_at ? `<lastmod>${new Date(league.created_at).toISOString()}</lastmod>` : "";
       xml += `
   <url>
     <loc>${baseUrl}/ligue/${league.slug}</loc>
@@ -129,7 +129,7 @@ export async function GET() {
       xml += `
   <url>
     <loc>${baseUrl}/joueur/${player.slug}</loc>
-    ${player.updated_at ? `<lastmod>${new Date(player.updated_at).toISOString()}</lastmod>` : ""}
+    ${player.created_at ? `<lastmod>${new Date(player.created_at).toISOString()}</lastmod>` : ""}
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>`;

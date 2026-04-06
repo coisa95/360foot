@@ -91,8 +91,16 @@ export default async function BookmakersPage() {
           </p>
         </div>
 
+        {/* Disclaimer (avant CTAs pour compliance) */}
+        <div className="mt-5 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-3 text-center">
+          <p className="text-yellow-400/90 text-xs sm:text-sm">
+            <strong>18+</strong> · Les paris sportifs comportent des risques. Jouez de manière responsable.
+            Bonus soumis à conditions. Aide : <a href="tel:0974751313" className="underline hover:text-yellow-300">0 974 75 13 13</a>
+          </p>
+        </div>
+
         {/* Liste des bookmakers */}
-        <div className="mt-8 space-y-5">
+        <div className="mt-6 space-y-5">
           {bookmakers && bookmakers.length > 0 ? (
             bookmakers.map((bookmaker, idx) => {
               const promoCode = PROMO_CODES[bookmaker.slug] || null;
@@ -169,15 +177,16 @@ export default async function BookmakersPage() {
 
                       <Link
                         href={`/go/${bookmaker.slug}`}
-                        className="btn-neon w-full sm:w-auto !rounded-xl !px-6 !py-2.5 !text-sm"
+                        className="btn-neon w-full sm:w-auto !rounded-xl !px-6 !py-3 !text-sm"
+                        aria-label={`Obtenir le bonus ${bookmaker.name}`}
                       >
                         Obtenir le bonus
                       </Link>
                       <Link
                         href={`/bookmakers/${bookmaker.slug}`}
-                        className="text-gray-500 hover:text-emerald-400 text-xs transition-colors"
+                        className="text-gray-500 hover:text-gray-300 text-[11px] transition-colors"
                       >
-                        Voir l&apos;avis complet &rarr;
+                        Avis détaillé {bookmaker.name}
                       </Link>
                     </div>
                   </div>
@@ -191,13 +200,6 @@ export default async function BookmakersPage() {
           )}
         </div>
 
-        {/* Disclaimer en bas */}
-        <div className="mt-10 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4 text-center">
-          <p className="text-yellow-400/80 text-xs">
-            18+ | Les paris sportifs comportent des risques. Jouez de manière responsable.
-            Les offres de bonus sont soumises à conditions. Aide : 0 974 75 13 13
-          </p>
-        </div>
       </div>
     </main>
   );

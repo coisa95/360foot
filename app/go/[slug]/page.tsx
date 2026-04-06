@@ -98,7 +98,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const bonusMeta = bookmaker.bonus_json as Record<string, string> | null;
   const bonusLabel = bonusMeta ? bonusMeta["CI"] || bonusMeta["default"] || Object.values(bonusMeta)[0] : null;
-  const title = `${bookmaker.name} — Bonus de bienvenue${bonusLabel ? ` ${bonusLabel}` : ""}`;
+  const title = `${bookmaker.name}${bonusLabel ? ` — ${bonusLabel}` : " — Bonus de bienvenue"}`;
   const description = `Obtenez le bonus ${bookmaker.name} en 2 minutes. Inscription rapide et bonus immédiat.`;
 
   return {
