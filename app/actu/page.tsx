@@ -287,7 +287,6 @@ export default async function ActuPage({ searchParams }: Props) {
               <nav className="mt-10 flex items-center justify-center gap-2" aria-label="Pagination">
                 {currentPage > 1 && (
                   <Link
-                    rel="nofollow"
                     href={`/actu?${activeCategory !== "all" ? `categorie=${activeCategory}&` : ""}page=${currentPage - 1}`}
                     className="rounded-lg card-glass px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-white/[0.02] hover:text-white"
                   >
@@ -313,7 +312,6 @@ export default async function ActuPage({ searchParams }: Props) {
                     ) : (
                       <Link
                         key={p}
-                        rel="nofollow"
                         href={`/actu?${baseHref}page=${p}`}
                         className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
                           currentPage === p
@@ -329,7 +327,6 @@ export default async function ActuPage({ searchParams }: Props) {
 
                 {currentPage < totalPages && (
                   <Link
-                    rel="nofollow"
                     href={`/actu?${activeCategory !== "all" ? `categorie=${activeCategory}&` : ""}page=${currentPage + 1}`}
                     className="rounded-lg card-glass px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-white/[0.02] hover:text-white"
                   >
