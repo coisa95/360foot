@@ -68,7 +68,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const { data: article, error: articleError } = await supabase
     .from("articles")
-    .select("id,title,slug,content,excerpt,type,tags,published_at,updated_at,og_image_url,seo_title,seo_description,league_id,match_id")
+    .select("id,title,slug,content,excerpt,type,tags,published_at,og_image_url,seo_title,seo_description,league_id,match_id")
     .eq("slug", slug)
     .single();
 
@@ -174,7 +174,10 @@ export default async function ArticlePage({ params }: Props) {
       height: 630,
     },
     datePublished: article.published_at,
-    dateModified: article.updated_at || article.published_at,
+    // Note: la table articles n'a pas de colonne updated_at (cf schéma).
+    // Pour distinguer dateModified, ajouter `updated_at TIMESTAMPTZ` + trigger
+    // dans une migration séparée. Pour l'instant on retombe sur published_at.
+    dateModified: article.published_at,
     author: {
       "@type": "Person",
       name: "Rédaction 360 Foot",

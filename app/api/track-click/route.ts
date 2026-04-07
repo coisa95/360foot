@@ -87,12 +87,32 @@ export async function POST(request: Request) {
     const supabase = createClient();
     const country = getClientCountry(request);
 
+    // Le schéma réel de affiliate_clicks utilise bookmaker_id (FK -> bookmakers)
+    // et non un champ texte. On résout d'abord le slug -> id. Si le bookmaker
+    // n'est pas en base, on log mais on n'échoue pas la requête côté client
+    // (le clic affilié sortant a déjà eu lieu — pas de raison de renvoyer 500).
+    const { data: bookmaker, error: lookupError } = await supabase
+      .from("bookmakers")
+      .select("id")
+      .eq("slug", normalizedName)
+      .maybeSingle();
+
+    if (lookupError) {
+      console.error("Error looking up bookmaker:", lookupError);
+      return NextResponse.json({ success: true, tracked: false });
+    }
+
+    if (!bookmaker) {
+      console.warn(`[track-click] Bookmaker not found in DB: ${normalizedName}`);
+      return NextResponse.json({ success: true, tracked: false });
+    }
+
+    // Note : la colonne `timestamp` a un DEFAULT now(), inutile de la fournir.
     const { error } = await supabase.from("affiliate_clicks").insert({
-      bookmaker_name: normalizedName,
+      bookmaker_id: bookmaker.id,
       article_id: article_id || null,
       page_url: page_url || null,
       country,
-      clicked_at: new Date().toISOString(),
     });
 
     if (error) {
