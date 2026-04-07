@@ -10,9 +10,10 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Installer uniquement les dépendances (cache layer)
+# Installer toutes les dépendances (incluant devDependencies pour le build)
+# --include=dev force l'installation même si NODE_ENV=production est passé en build arg
 COPY package.json package-lock.json* ./
-RUN npm ci --no-audit --no-fund
+RUN npm ci --include=dev --no-audit --no-fund
 
 # ───── Stage 2 : builder ────────────────────────────────────────────────────
 FROM node:20-alpine AS builder
