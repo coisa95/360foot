@@ -2,17 +2,20 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const url = request.nextUrl.clone();
   const host = request.headers.get("host") || "";
+  const { pathname, searchParams } = request.nextUrl;
 
-  // 301 www.360-foot.com -> 360-foot.com (canonical apex)
+  // 301 www.360-foot.com -> 360-foot.com (canonical apex).
+  // On reconstruit une URL absolue propre pour éviter de fuiter le port
+  // interne du container (ex: 3000) quand next.js clone l'URL.
   if (host.startsWith("www.")) {
-    url.host = host.slice(4);
-    return NextResponse.redirect(url, 301);
+    const apexHost = host.slice(4);
+    const qs = searchParams.toString();
+    const target = `https://${apexHost}${pathname}${qs ? `?${qs}` : ""}`;
+    return NextResponse.redirect(target, 301);
   }
 
   const response = NextResponse.next();
-  const { pathname, searchParams } = request.nextUrl;
 
   // Noindex for parameter-driven pages (prevent duplicate indexing)
   const hasQueryParams = searchParams.toString().length > 0;
