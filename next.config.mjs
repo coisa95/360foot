@@ -1,9 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  reactStrictMode: true,
+  compress: true,
   // Standalone output : génère un bundle minimal pour Docker (~150MB au lieu de ~1GB)
   // Cf. https://nextjs.org/docs/pages/api-reference/next-config-js/output
   output: "standalone",
+  experimental: {
+    // Tree-shake agressivement les imports "barrel" des libs courantes.
+    // Gain typique : -30 à -50% sur le JS client des pages qui importent
+    // juste une icône ou un util.
+    optimizePackageImports: [
+      "lucide-react",
+      "date-fns",
+      "@radix-ui/react-icons",
+    ],
+  },
+  // Retire le header "X-Powered-By: Next.js" qui leak la version framework.
+  compiler: {
+    removeConsole:
+      process.env.NODE_ENV === "production"
+        ? { exclude: ["error", "warn"] }
+        : false,
+  },
   images: {
     remotePatterns: [
       {

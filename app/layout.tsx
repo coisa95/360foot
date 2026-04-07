@@ -9,8 +9,6 @@ import { LeagueSidebar } from "@/components/league-sidebar";
 import { SwRegister } from "@/components/sw-register";
 import { CookieBanner } from "@/components/cookie-banner";
 import { AnalyticsLoader } from "@/components/analytics-loader";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { safeJsonLd } from "@/lib/json-ld";
 
 const geist = localFont({
@@ -27,7 +25,20 @@ export const metadata: Metadata = {
   },
   description:
     "Résultats, classements, transferts et analyses football. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League et Champions League.",
-  // Canonical is set per-page, not globally
+  alternates: {
+    canonical: "https://360-foot.com",
+    languages: {
+      "fr-FR": "https://360-foot.com",
+      "fr-CI": "https://360-foot.com",
+      "fr-SN": "https://360-foot.com",
+      "fr-CM": "https://360-foot.com",
+      "fr-BJ": "https://360-foot.com",
+      "fr-TG": "https://360-foot.com",
+      "fr-ML": "https://360-foot.com",
+      "fr-BF": "https://360-foot.com",
+      "x-default": "https://360-foot.com",
+    },
+  },
   openGraph: {
     type: "website",
     locale: "fr_FR",
@@ -79,7 +90,17 @@ const jsonLd = {
       description:
         "Média football spécialisé sur l'actualité du football africain et européen. Résultats, classements, transferts et analyses en direct.",
       foundingDate: "2025",
-      sameAs: [],
+      sameAs: [
+        "https://twitter.com/360foot",
+        "https://www.facebook.com/360foot",
+        "https://www.instagram.com/360foot",
+      ],
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "editorial",
+        email: "redaction@360-foot.com",
+        availableLanguage: ["French"],
+      },
     },
     {
       "@type": "WebSite",
@@ -156,8 +177,6 @@ export default function RootLayout({
         <SwRegister />
         <AnalyticsLoader />
         <CookieBanner />
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

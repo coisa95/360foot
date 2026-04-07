@@ -105,7 +105,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates: { canonical: `https://360-foot.com/go/${slug}` },
-    robots: { index: true, follow: true },
+    // Pages affiliées : noindex + nofollow pour ne pas gaspiller le crawl budget
+    // et ne pas transmettre l'autorité SEO vers les bookmakers.
+    robots: {
+      index: false,
+      follow: false,
+      nocache: true,
+      googleBot: { index: false, follow: false },
+    },
     openGraph: {
       title,
       description,
@@ -224,7 +231,7 @@ export default async function GoPage({ params }: Props) {
             <a
               href={bookmaker.affiliate_url}
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel="noopener noreferrer sponsored nofollow"
               className="btn-neon w-full sm:w-auto !rounded-xl !px-8 !py-3 sm:!py-4 !text-sm sm:!text-base"
               style={{
                 background: "#fff",
@@ -270,7 +277,7 @@ export default async function GoPage({ params }: Props) {
           <a
             href={bookmaker.affiliate_url}
             target="_blank"
-            rel="noopener noreferrer sponsored"
+            rel="noopener noreferrer sponsored nofollow"
             className="btn-neon w-full !rounded-xl !py-3 sm:!py-4 !text-sm sm:!text-base"
             style={{
               background: `linear-gradient(135deg, ${brand.from}, ${brand.via})`,
@@ -290,9 +297,29 @@ export default async function GoPage({ params }: Props) {
         </div>
 
         {/* ══════════ Disclaimer ══════════ */}
-        <p className="mt-6 sm:mt-8 text-center text-[9px] sm:text-[10px] text-gray-600">
-          18+ | Jeu responsable | Conditions sur le site du bookmaker | Lien d&apos;affiliation
-        </p>
+        <div className="mt-6 sm:mt-8 rounded-lg border border-gray-800 bg-gray-900/40 p-3 sm:p-4 text-[11px] sm:text-xs leading-relaxed text-gray-400">
+          <p className="font-bold text-gray-300 mb-1">Avertissement — Jeu responsable</p>
+          <p>
+            Les jeux d&apos;argent comportent des risques : endettement, isolement,
+            dépendance. À consommer avec modération. Interdit aux mineurs (18+).
+            Ce lien est un lien d&apos;affiliation : 360 Foot perçoit une
+            commission si vous ouvrez un compte, sans surcoût pour vous. Notre
+            recommandation éditoriale reste indépendante. Conditions complètes
+            du bonus disponibles sur le site du bookmaker.
+          </p>
+          <p className="mt-2">
+            Besoin d&apos;aide ?{" "}
+            <a
+              href="https://www.joueurs-info-service.fr/"
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              className="text-emerald-400 underline"
+            >
+              Joueurs Info Service
+            </a>{" "}
+            — appel gratuit, confidentiel et anonyme.
+          </p>
+        </div>
       </div>
     </main>
   );

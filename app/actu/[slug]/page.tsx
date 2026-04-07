@@ -68,7 +68,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const { data: article, error: articleError } = await supabase
     .from("articles")
-    .select("id,title,slug,content,excerpt,type,tags,published_at,og_image_url,seo_title,seo_description,league_id,match_id")
+    .select("id,title,slug,content,excerpt,type,tags,published_at,updated_at,og_image_url,seo_title,seo_description,league_id,match_id")
     .eq("slug", slug)
     .single();
 
@@ -87,9 +87,11 @@ export default async function ArticlePage({ params }: Props) {
   try {
     const results = await Promise.all([
       supabase.from("articles").select("id,title,slug,excerpt,type,published_at,og_image_url").neq("id", article.id).not("published_at", "is", null).order("published_at", { ascending: false }).limit(5),
-      supabase.from("teams").select("name, slug").order("name").limit(30),
-      supabase.from("players").select("name, slug").order("name").limit(50),
-      supabase.from("leagues").select("name, slug").order("name").limit(30),
+      // Limites explicites pour éviter les N+1 / row scans ; 300 suffit à couvrir
+      // la totalité des équipes/joueurs/ligues indexés à ce jour.
+      supabase.from("teams").select("name, slug").order("name").limit(300),
+      supabase.from("players").select("name, slug").order("name").limit(500),
+      supabase.from("leagues").select("name, slug").order("name").limit(60),
     ]);
     relatedArticles = results[0].data;
     teams = results[1].data;
@@ -118,6 +120,27 @@ export default async function ArticlePage({ params }: Props) {
         figcaption: ["class"],
       },
       allowedSchemes: ["https", "http"],
+      // Force rel="noopener noreferrer nofollow ugc" sur tous les liens externes
+      // pour : (1) bloquer les attaques tabnabbing, (2) ne pas transmettre
+      // d'autorité SEO à des sites non contrôlés, (3) marquer le contenu comme
+      // user-generated si jamais un article inclut des citations externes.
+      transformTags: {
+        a: (tagName, attribs) => {
+          const href = attribs.href || "";
+          const isExternal = /^https?:\/\//i.test(href) && !/(^|\/\/)([^/]*\.)?360-foot\.com/i.test(href);
+          if (isExternal) {
+            return {
+              tagName: "a",
+              attribs: {
+                ...attribs,
+                target: "_blank",
+                rel: "noopener noreferrer nofollow ugc",
+              },
+            };
+          }
+          return { tagName, attribs };
+        },
+      },
     });
     enrichedContent = addInternalLinks(
       enrichedContent,
@@ -144,9 +167,14 @@ export default async function ArticlePage({ params }: Props) {
     "@id": `https://360-foot.com/actu/${slug}#article`,
     headline: article.title,
     description: article.seo_description || article.excerpt || "",
-    image: articleImageUrl,
+    image: {
+      "@type": "ImageObject",
+      url: articleImageUrl,
+      width: 1200,
+      height: 630,
+    },
     datePublished: article.published_at,
-    dateModified: article.published_at,
+    dateModified: article.updated_at || article.published_at,
     author: {
       "@type": "Person",
       name: "Rédaction 360 Foot",
@@ -175,6 +203,31 @@ export default async function ArticlePage({ params }: Props) {
     },
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Accueil",
+        item: "https://360-foot.com/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Actualités",
+        item: "https://360-foot.com/actu",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: article.title,
+        item: `https://360-foot.com/actu/${slug}`,
+      },
+    ],
+  };
+
   // Type labels and colors from shared utility (lib/article-types.ts)
 
   return (
@@ -182,6 +235,10 @@ export default async function ArticlePage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 
       <div className="container mx-auto px-4 py-6">

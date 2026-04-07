@@ -195,6 +195,11 @@ CREATE POLICY "Public read" ON standings FOR SELECT USING (true);
 CREATE POLICY "Public read" ON transfers FOR SELECT USING (true);
 CREATE POLICY "Public read" ON bookmakers FOR SELECT USING (true);
 
--- Politique : écriture via service_role uniquement (CRON jobs)
-CREATE POLICY "Service insert" ON affiliate_clicks FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public read" ON affiliate_clicks FOR SELECT USING (true);
+-- Politique : affiliate_clicks accessible uniquement via service_role.
+-- Aucune policy anon/authenticated => deny-all pour le monde extérieur.
+-- Les inserts passent par /api/track-click côté serveur (service_role key).
+CREATE POLICY "Deny all anon" ON affiliate_clicks
+  FOR ALL
+  TO anon, authenticated
+  USING (false)
+  WITH CHECK (false);

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { Redis } from "@upstash/redis";
+import { getClientIp, getClientCountry } from "@/lib/client-ip";
 
 let redis: Redis | null = null;
 try {
@@ -46,7 +47,7 @@ export async function POST(request: Request) {
     }
 
     // Rate limiting: max 20 clicks per IP per minute
-    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const ip = getClientIp(request);
     if (redis) {
       const key = `ratelimit:click:${ip}`;
       const count = await redis.incr(key);
@@ -84,7 +85,7 @@ export async function POST(request: Request) {
     }
 
     const supabase = createClient();
-    const country = request.headers.get("x-vercel-ip-country") || "unknown";
+    const country = getClientCountry(request);
 
     const { error } = await supabase.from("affiliate_clicks").insert({
       bookmaker_name: normalizedName,

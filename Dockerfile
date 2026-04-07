@@ -47,10 +47,17 @@ ENV HOSTNAME=0.0.0.0
 RUN addgroup --system --gid 1001 nodejs \
  && adduser --system --uid 1001 nextjs
 
+# libvips runtime requis par sharp (AVIF/WebP optimisation côté serveur).
+# Sans ça, next/image fallback en PNG/JPEG = images 5x plus lourdes.
+RUN apk add --no-cache vips-cpp
+
 # Copier uniquement les artefacts standalone
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+# Sharp n'est pas bundlé par output:standalone — le copier explicitement.
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/sharp ./node_modules/sharp
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@img ./node_modules/@img
 
 USER nextjs
 

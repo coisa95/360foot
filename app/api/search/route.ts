@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAnonClient } from "@/lib/supabase";
 import { Redis } from "@upstash/redis";
+import { getClientIp, escapeLikePattern } from "@/lib/client-ip";
 
 let redis: Redis | null = null;
 try {
@@ -32,7 +33,7 @@ export async function GET(request: Request) {
   }
 
   // Rate limiting: max 30 requests per IP per minute
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const ip = getClientIp(request);
   let rateLimitRemaining = RATE_LIMIT_MAX;
   if (redis) {
     try {
@@ -54,7 +55,8 @@ export async function GET(request: Request) {
   }
 
   const supabase = createAnonClient();
-  const searchPattern = `%${q}%`;
+  // Escape LIKE wildcards so user-provided % and _ are treated literally.
+  const searchPattern = `%${escapeLikePattern(q)}%`;
 
   // Run all searches in parallel
   const [playersRes, teamsRes, articlesRes, leaguesRes] = await Promise.all([
