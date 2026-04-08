@@ -23,6 +23,25 @@ const nextConfig = {
         ? { exclude: ["error", "warn"] }
         : false,
   },
+  async redirects() {
+    return [
+      // Legacy routes → canonical routes. Doit être au niveau router-level
+      // (pas permanentRedirect dans une page) pour renvoyer un vrai 308 et
+      // éviter les "duplicate canonical" signalés par Google Search Console.
+      { source: "/resultats", destination: "/matchs", permanent: true },
+      { source: "/classements", destination: "/competitions", permanent: true },
+      {
+        source: "/classement/:slug",
+        destination: "/ligue/:slug",
+        permanent: true,
+      },
+      {
+        source: "/ligue/:slug/classement",
+        destination: "/ligue/:slug",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

@@ -11,8 +11,6 @@ export function GET() {
 Allow: /
 Disallow: /api/
 Disallow: /recherche
-Disallow: /classement/
-Disallow: /resultats
 Disallow: /go/
 
 # Bots IA — autorisés explicitement pour être cité/indexé par les LLMs

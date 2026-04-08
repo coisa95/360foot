@@ -68,7 +68,7 @@ export function addInternalLinks(
     },
     {
       patterns: ["résultats", "resultats", "scores"],
-      href: "/resultats",
+      href: "/matchs",
     },
   ];
 
@@ -82,7 +82,7 @@ export function addInternalLinks(
     const classementMatch = result.match(classementRegex);
     if (classementMatch && classementMatch.index !== undefined && !linked.has(`classement_${league.slug}`)) {
       const original = classementMatch[1];
-      const link = `<a href="/classement/${league.slug}" class="text-lime-400 hover:underline">${original}</a>`;
+      const link = `<a href="/ligue/${league.slug}" class="text-lime-400 hover:underline">${original}</a>`;
       result =
         result.slice(0, classementMatch.index) +
         link +
@@ -99,7 +99,7 @@ export function addInternalLinks(
       const original = classementMatch[1];
       // Try to find the most relevant league for the context
       const defaultLeague = leagues.length > 0 ? leagues[0] : null;
-      const href = defaultLeague ? `/classement/${defaultLeague.slug}` : "/actu";
+      const href = defaultLeague ? `/ligue/${defaultLeague.slug}` : "/actu";
       const link = `<a href="${href}" class="text-lime-400 hover:underline">${original}</a>`;
       result =
         result.slice(0, classementMatch.index) +
