@@ -9,9 +9,14 @@ export async function GET() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const all: any[] = [];
   for (let offset = 0; offset < 10; offset++) {
+    // Exclut les matchs sans aucune donnée JSON (thin content noindex).
+    // Conserve : FT avec events/lineups/stats, ou NS avec predictions/h2h.
     const { data, error } = await supabase
       .from("matches")
-      .select("slug, date")
+      .select("slug, date, status, events_json, lineups_json, stats_json, predictions_json, h2h_json")
+      .or(
+        "events_json.not.is.null,lineups_json.not.is.null,stats_json.not.is.null,predictions_json.not.is.null,h2h_json.not.is.null"
+      )
       .order("date", { ascending: false })
       .range(offset * 1000, (offset + 1) * 1000 - 1);
     if (error || !data || data.length === 0) break;

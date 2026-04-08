@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: player } = await supabase
     .from("players")
-    .select("name,slug,team:teams!team_id(name,slug)")
+    .select("name,slug,stats_json,team:teams!team_id(name,slug)")
     .eq("slug", slug)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .single() as { data: any };
@@ -33,9 +33,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const fullDesc = `Fiche complete de ${player.name} (${player.team?.name}) : poste, nationalite, statistiques et derniers articles.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
+  // Pages de joueur sans stats_json = thin content (juste nom + équipe).
+  // noindex pour économiser le crawl budget Google et éviter les
+  // signalements "Explorée, actuellement non indexée" dans la Search Console.
+  const hasStats = player.stats_json && Object.keys(player.stats_json).length > 0;
+  const robots = hasStats ? undefined : { index: false, follow: true };
+
   return {
     title,
     description,
+    robots,
     alternates: {
       canonical: `https://360-foot.com/joueur/${slug}`,
     },

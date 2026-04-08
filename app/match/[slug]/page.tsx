@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: match } = await supabase
     .from("matches")
-    .select("id,slug,date,status,score_home,score_away,home_team:teams!home_team_id(name,slug,logo_url),away_team:teams!away_team_id(name,slug,logo_url),league:leagues!league_id(name,slug)")
+    .select("id,slug,date,status,score_home,score_away,stats_json,events_json,lineups_json,predictions_json,h2h_json,home_team:teams!home_team_id(name,slug,logo_url),away_team:teams!away_team_id(name,slug,logo_url),league:leagues!league_id(name,slug)")
     .eq("slug", slug)
     .single() as { data: any };
 
@@ -46,9 +46,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       : `Avant-match ${homeName} vs ${awayName} en ${leagueName}. Pronostics, compositions probables et analyse.`;
   const description = rawDesc.length > 155 ? rawDesc.slice(0, 152) + "..." : rawDesc;
 
+  // Thin content detection : un match sans aucune donnée JSON (pas de stats,
+  // pas d'events, pas de compos, pas de prono, pas de h2h) n'apporte rien de
+  // plus que "Équipe A vs Équipe B" — noindex pour éviter "Explorée non indexée"
+  // dans la Search Console.
+  const isFinished = match.status === "FT";
+  const hasFinishedData = !!(
+    (match.events_json && match.events_json.length > 0) ||
+    (match.lineups_json && match.lineups_json.length > 0) ||
+    (match.stats_json && Object.keys(match.stats_json).length > 0)
+  );
+  const hasUpcomingData = !!(
+    (match.predictions_json && Object.keys(match.predictions_json).length > 0) ||
+    (match.h2h_json && match.h2h_json.length > 0)
+  );
+  const hasRealData = isFinished ? hasFinishedData : hasUpcomingData;
+  const robots = hasRealData ? undefined : { index: false, follow: true };
+
   return {
     title,
     description,
+    robots,
     alternates: { canonical: `https://360-foot.com/match/${slug}` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/match/${slug}`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: { card: "summary_large_image", title, description, images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
@@ -263,6 +281,13 @@ export default async function MatchPage({ params }: Props) {
 
       <div className="container mx-auto max-w-4xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
+
+        {/* H1 pour SEO — masqué visuellement (le titre visible reste le score) */}
+        <h1 className="sr-only">
+          {isFinished
+            ? `${homeName} ${match.score_home}-${match.score_away} ${awayName} — ${leagueName}`
+            : `${homeName} vs ${awayName} — ${leagueName}`}
+        </h1>
 
         {/* ── Score Header ── */}
         <Card className="mt-6 overflow-hidden border-gray-800 bg-gradient-to-b from-white/[0.03] to-transparent">

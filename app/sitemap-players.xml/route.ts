@@ -9,9 +9,11 @@ export async function GET() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const all: any[] = [];
   for (let offset = 0; offset < 10; offset++) {
+    // Exclut les joueurs sans stats_json (thin content noindex).
     const { data, error } = await supabase
       .from("players")
       .select("slug, created_at")
+      .not("stats_json", "is", null)
       .range(offset * 1000, (offset + 1) * 1000 - 1);
     if (error || !data || data.length === 0) break;
     all.push(...data);
