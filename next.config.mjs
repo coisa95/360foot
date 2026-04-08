@@ -23,6 +23,47 @@ const nextConfig = {
         ? { exclude: ["error", "warn"] }
         : false,
   },
+  async headers() {
+    // Next.js 15 marque dynamiques les pages utilisant searchParams et émet
+    // `private, no-cache, no-store`, ce qui empêche le cache edge Cloudflare.
+    // Comme 360-foot.com n'a aucune session ni contenu personnalisé, on
+    // réécrit Cache-Control au niveau HTTP (plus fort que middleware, qui
+    // peut être écrasé par le rendu Next.js).
+    const shortTtl = "public, s-maxage=300, stale-while-revalidate=86400";
+    const longTtl = "public, s-maxage=21600, stale-while-revalidate=604800";
+    return [
+      // Pages très fraîches : actu, matchs, scores, classements
+      {
+        source: "/((?!api|go|_next|favicon.ico|icon-512.png|logo.png|images|sitemap|robots).*)",
+        headers: [{ key: "Cache-Control", value: shortTtl }],
+      },
+      // Pages peu mouvantes : override avec TTL plus long
+      {
+        source: "/bookmakers/:path*",
+        headers: [{ key: "Cache-Control", value: longTtl }],
+      },
+      {
+        source: "/bons-plans/:path*",
+        headers: [{ key: "Cache-Control", value: longTtl }],
+      },
+      {
+        source: "/methodologie",
+        headers: [{ key: "Cache-Control", value: longTtl }],
+      },
+      {
+        source: "/confidentialite",
+        headers: [{ key: "Cache-Control", value: longTtl }],
+      },
+      {
+        source: "/mentions-legales",
+        headers: [{ key: "Cache-Control", value: longTtl }],
+      },
+      {
+        source: "/selection/:path*",
+        headers: [{ key: "Cache-Control", value: longTtl }],
+      },
+    ];
+  },
   async redirects() {
     return [
       // Legacy routes → canonical routes. Doit être au niveau router-level

@@ -29,24 +29,9 @@ export function middleware(request: NextRequest) {
     response.headers.set("X-Robots-Tag", "noindex, follow");
   }
 
-  // Cache-control override for public GET pages.
-  // Certaines pages (/actu, /matchs, ...) utilisent searchParams et Next.js
-  // force alors `private, no-cache, no-store`, ce qui empêche tout cache edge.
-  // Comme ces pages sont 100% publiques (aucune session/cookie utilisateur),
-  // on réécrit le header pour activer le cache partagé Cloudflare.
-  const isPublicGet =
-    request.method === "GET" &&
-    !pathname.startsWith("/api/") &&
-    !pathname.startsWith("/go/"); // /go/ = redirection affiliée, ne pas cacher (tracking)
-  if (isPublicGet) {
-    // Pages à faible fréquence d'update : cache plus long
-    const longTtlPrefixes = ["/bookmakers", "/bons-plans", "/methodologie", "/confidentialite", "/mentions-legales", "/selection"];
-    const isLongTtl = longTtlPrefixes.some((p) => pathname === p || pathname.startsWith(p));
-    // Pages très fraîches : news, scores, classements
-    const shortTtl = "public, s-maxage=300, stale-while-revalidate=86400";
-    const longTtl = "public, s-maxage=21600, stale-while-revalidate=604800";
-    response.headers.set("Cache-Control", isLongTtl ? longTtl : shortTtl);
-  }
+  // Note : le Cache-Control des pages publiques est géré dans next.config.mjs
+  // (async headers()) car le middleware peut être écrasé par Next.js au moment
+  // du rendu dynamique (pages utilisant searchParams).
 
   // Security headers
   response.headers.set("X-Frame-Options", "DENY");
