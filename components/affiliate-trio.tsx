@@ -92,26 +92,21 @@ export function AffiliateTrio() {
               {bk.badge}
             </span>
 
-            {/* Logo */}
-            <div className="mb-3">
+            {/* Logo — fixed container for uniform size */}
+            <div className="relative h-10 w-[100px] mb-3">
               <Image
                 src={bk.logo}
                 alt={`Logo ${bk.name}`}
-                width={120}
-                height={48}
-                className="h-10 w-auto object-contain"
-
+                fill
+                className="object-contain object-left"
               />
             </div>
 
-            {/* Bonus amount */}
-            <div className="mb-1">
-              <span className="text-2xl font-black text-white">{bk.bonus}</span>
-              <p className="text-xs text-white/70">{bk.bonusLabel}</p>
+            {/* Bonus amount — max 2 lines */}
+            <div className="mb-2 h-[3.25rem]">
+              <p className="text-2xl font-black text-white leading-tight">{bk.bonus}</p>
+              <p className="text-xs text-white/70 leading-tight truncate">{bk.bonusLabel}</p>
             </div>
-
-            {/* Highlight */}
-            <p className="text-[11px] text-white/60 mb-2">{bk.highlight}</p>
 
             {/* Promo code */}
             <p className="text-[9px] uppercase tracking-wider text-white/40 mb-2">
@@ -134,14 +129,15 @@ export function AffiliateTrio() {
             href={bk.url}
             className={`group flex items-center gap-3 rounded-xl border ${bk.borderColor} bg-gradient-to-r ${bk.color} px-3 py-2.5 transition-all`}
           >
-            {/* Logo */}
-            <Image
-              src={bk.logo}
-              alt={`Logo ${bk.name}`}
-              width={80}
-              height={32}
-              className="h-8 w-auto object-contain shrink-0"
-            />
+            {/* Logo — fixed container for uniform size */}
+            <div className="relative h-8 w-[70px] shrink-0">
+              <Image
+                src={bk.logo}
+                alt={`Logo ${bk.name}`}
+                fill
+                className="object-contain"
+              />
+            </div>
 
             {/* Info */}
             <div className="flex-1 min-w-0">
@@ -160,7 +156,7 @@ export function AffiliateTrio() {
         ))}
       </div>
 
-      <p className="text-center text-[10px] text-slate-400">
+      <p className="text-center text-[10px] text-slate-400 whitespace-nowrap">
         18+ | Jouer comporte des risques | Aide : 0 974 75 13 13
       </p>
     </div>
@@ -175,13 +171,14 @@ export function AffiliateInline({ index = 0 }: { index?: number }) {
       href={bk.url}
       className={`group my-4 flex items-center gap-3 rounded-xl border ${bk.borderColor} bg-gradient-to-r ${bk.color} p-3 transition-all hover:shadow-lg ${bk.glowColor}`}
     >
-      <Image
-        src={bk.logo}
-        alt={`Logo ${bk.name}`}
-        width={80}
-        height={32}
-        className="h-8 w-auto object-contain shrink-0"
-      />
+      <div className="relative h-8 w-[70px] shrink-0">
+        <Image
+          src={bk.logo}
+          alt={`Logo ${bk.name}`}
+          fill
+          className="object-contain"
+        />
+      </div>
       <div className="flex-1">
         <span className="font-black text-white">{bk.bonus}</span>
         <span className="ml-1.5 text-sm text-white/80">{bk.bonusLabel}</span>

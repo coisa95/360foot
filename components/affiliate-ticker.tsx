@@ -78,15 +78,15 @@ export function AffiliateTicker() {
           >
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-3">
-                {/* Logo */}
-                <Image
-                  src={slide.logo}
-                  alt={`Logo ${slide.name}`}
-                  width={80}
-                  height={32}
-                  className="h-7 sm:h-8 w-auto object-contain shrink-0"
-
-                />
+                {/* Logo — fixed container so all logos are same size */}
+                <div className="relative h-7 sm:h-8 w-[70px] sm:w-[80px] shrink-0">
+                  <Image
+                    src={slide.logo}
+                    alt={`Logo ${slide.name}`}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
 
                 {/* Separator */}
                 <div className="w-px h-6 bg-white/20 shrink-0" />
