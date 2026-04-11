@@ -258,12 +258,45 @@ export default async function MatchPage({ params }: Props) {
     ...(leagueName ? [{ label: leagueName, href: `/ligue/${leagueSlug}` }] : []),
   ];
 
+  // Estimation endDate : un match de football dure ~105 min (90 + pauses).
+  const startDate = new Date(match.date);
+  const endDate = new Date(startDate.getTime() + 105 * 60 * 1000);
+
+  const eventStatus = isFinished
+    ? "https://schema.org/EventCompleted"
+    : isLive
+      ? "https://schema.org/EventInProgress"
+      : "https://schema.org/EventScheduled";
+
+  const matchTitle = isFinished
+    ? `${homeName} ${match.score_home}-${match.score_away} ${awayName}`
+    : `${homeName} vs ${awayName}`;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SportsEvent",
-    name: `${homeName} vs ${awayName}`,
+    name: matchTitle,
+    description: isFinished
+      ? `Score final : ${homeName} ${match.score_home} - ${match.score_away} ${awayName}. ${leagueName}.`
+      : `Match ${homeName} vs ${awayName} en ${leagueName}.`,
     startDate: match.date,
-    location: { "@type": "Place", name: venue || "Stade" },
+    endDate: endDate.toISOString(),
+    eventStatus,
+    image: `https://360-foot.com/api/og?title=${encodeURIComponent(matchTitle)}&league=${encodeURIComponent(leagueName)}${match.home_team?.logo_url ? `&homeLogo=${encodeURIComponent(match.home_team.logo_url)}` : ""}${match.away_team?.logo_url ? `&awayLogo=${encodeURIComponent(match.away_team.logo_url)}` : ""}`,
+    location: {
+      "@type": "Place",
+      name: venue || "Stade",
+      address: city ? { "@type": "PostalAddress", addressLocality: city } : undefined,
+    },
+    organizer: {
+      "@type": "SportsOrganization",
+      name: leagueName,
+      url: `https://360-foot.com/ligue/${leagueSlug}`,
+    },
+    performer: [
+      { "@type": "SportsTeam", name: homeName, url: homeSlug ? `https://360-foot.com/equipe/${homeSlug}` : undefined },
+      { "@type": "SportsTeam", name: awayName, url: awaySlug ? `https://360-foot.com/equipe/${awaySlug}` : undefined },
+    ],
     homeTeam: { "@type": "SportsTeam", name: homeName },
     awayTeam: { "@type": "SportsTeam", name: awayName },
     competitor: [
