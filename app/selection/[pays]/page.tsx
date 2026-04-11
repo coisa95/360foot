@@ -89,7 +89,7 @@ export default async function NationalTeamPage({ params }: Props) {
   ];
 
   return (
-    <main className="min-h-screen text-white">
+    <main className="min-h-screen text-slate-900">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -110,38 +110,38 @@ export default async function NationalTeamPage({ params }: Props) {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="font-display text-3xl font-bold text-emerald-400">
+          <h1 className="font-display text-3xl font-bold text-emerald-600">
             {country.flag} {country.fullName}
           </h1>
-          <p className="text-gray-400 mt-1">
+          <p className="text-slate-500 mt-1">
             Tous les matchs et resultats de la selection {country.name.toLowerCase()}
           </p>
         </div>
 
         {/* Informations equipe */}
         {team && (
-          <Card className="bg-transparent border-gray-800 p-6 mt-6">
+          <Card className="bg-transparent border-slate-200 p-6 mt-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-gray-400 text-sm">Pays</p>
-                <p className="font-medium">{country.name}</p>
+                <p className="text-slate-500 text-sm">Pays</p>
+                <p className="font-medium text-slate-700">{country.name}</p>
               </div>
               {team.coach && (
                 <div>
-                  <p className="text-gray-400 text-sm">Selectionneur</p>
-                  <p className="font-medium">{team.coach}</p>
+                  <p className="text-slate-500 text-sm">Selectionneur</p>
+                  <p className="font-medium text-slate-700">{team.coach}</p>
                 </div>
               )}
               {team.venue && (
                 <div>
-                  <p className="text-gray-400 text-sm">Stade</p>
-                  <p className="font-medium">{team.venue}</p>
+                  <p className="text-slate-500 text-sm">Stade</p>
+                  <p className="font-medium text-slate-700">{team.venue}</p>
                 </div>
               )}
               {team.fifa_ranking && (
                 <div>
-                  <p className="text-gray-400 text-sm">Classement FIFA</p>
-                  <p className="font-medium text-emerald-400 text-xl">{team.fifa_ranking}</p>
+                  <p className="text-slate-500 text-sm">Classement FIFA</p>
+                  <p className="font-medium text-emerald-600 text-xl">{team.fifa_ranking}</p>
                 </div>
               )}
             </div>
@@ -176,8 +176,8 @@ export default async function NationalTeamPage({ params }: Props) {
             </div>
           </div>
         ) : (
-          <Card className="bg-transparent border-gray-800 p-8 mt-6 text-center">
-            <p className="text-gray-400">
+          <Card className="bg-transparent border-slate-200 p-8 mt-6 text-center">
+            <p className="text-slate-500">
               Aucun match recent disponible pour la selection {country.name.toLowerCase()}.
             </p>
           </Card>

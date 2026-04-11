@@ -44,13 +44,13 @@ const config: Config = {
           foreground: "hsl(var(--popover-foreground))",
         },
         cosmic: {
-          bg: "#030014",
+          bg: "#f8fafc",
         },
-        dark: {
-          bg: "#030014",
-          surface: "#0a0520",
-          card: "#0d0825",
-          border: "#1a1040",
+        light: {
+          bg: "#f8fafc",
+          surface: "#ffffff",
+          card: "#ffffff",
+          border: "#e2e8f0",
         },
       },
       borderRadius: {

@@ -100,7 +100,7 @@ export default async function TopScorersPage({ params }: Props) {
       />
 
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-slate-400">
           Saison {season}
           {updatedAt && (
             <span className="ml-2">
@@ -118,14 +118,14 @@ export default async function TopScorersPage({ params }: Props) {
       </div>
 
       {scorers.length > 0 ? (
-        <Card className="bg-transparent border-gray-800 overflow-x-auto">
+        <Card className="bg-transparent border-slate-200 overflow-x-auto">
           <table className="w-full text-xs sm:text-sm min-w-[600px]">
             <thead>
-              <tr className="border-b border-gray-800 text-gray-400">
+              <tr className="border-b border-slate-200 text-slate-500">
                 <th className="text-left p-1.5 sm:p-3 w-6 sm:w-8">#</th>
                 <th className="text-left p-1.5 sm:p-3 min-w-[180px]">Joueur</th>
                 <th className="text-left p-1.5 sm:p-3 min-w-[120px]">\u00c9quipe</th>
-                <th className="text-center p-1.5 sm:p-3 font-bold text-emerald-400">Buts</th>
+                <th className="text-center p-1.5 sm:p-3 font-bold text-emerald-600">Buts</th>
                 <th className="text-center p-1.5 sm:p-3">PD</th>
                 <th className="text-center p-1.5 sm:p-3">MJ</th>
               </tr>
@@ -134,11 +134,11 @@ export default async function TopScorersPage({ params }: Props) {
               {scorers.map((player, index) => (
                 <tr
                   key={`${player.name}-${index}`}
-                  className={`border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors ${
-                    index === 0 ? "bg-emerald-500/5" : ""
+                  className={`border-b border-slate-200 hover:bg-slate-100 transition-colors ${
+                    index === 0 ? "bg-emerald-50" : ""
                   }`}
                 >
-                  <td className="p-1.5 sm:p-3 text-gray-400 font-mono">
+                  <td className="p-1.5 sm:p-3 text-slate-500 font-mono">
                     {index === 0 ? (
                       <span className="inline-flex w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-500 text-black text-[10px] sm:text-xs font-bold items-center justify-center">
                         1
@@ -159,9 +159,9 @@ export default async function TopScorersPage({ params }: Props) {
                         />
                       )}
                       <div>
-                        <span className="font-medium text-white">{player.name}</span>
+                        <span className="font-medium text-slate-900">{player.name}</span>
                         {player.nationality && (
-                          <p className="text-[10px] text-gray-500">{player.nationality}</p>
+                          <p className="text-[10px] text-slate-400">{player.nationality}</p>
                         )}
                       </div>
                     </div>
@@ -177,16 +177,16 @@ export default async function TopScorersPage({ params }: Props) {
                           className="w-4 h-4 sm:w-[18px] sm:h-[18px] object-contain shrink-0"
                         />
                       )}
-                      <span className="text-gray-300 truncate">{player.team}</span>
+                      <span className="text-slate-700 truncate">{player.team}</span>
                     </div>
                   </td>
-                  <td className="text-center p-1.5 sm:p-3 font-bold text-emerald-400 text-base sm:text-lg">
+                  <td className="text-center p-1.5 sm:p-3 font-bold text-emerald-600 text-base sm:text-lg">
                     {player.goals}
                   </td>
-                  <td className="text-center p-1.5 sm:p-3 text-gray-400">
+                  <td className="text-center p-1.5 sm:p-3 text-slate-500">
                     {player.assists}
                   </td>
-                  <td className="text-center p-1.5 sm:p-3 text-gray-400">
+                  <td className="text-center p-1.5 sm:p-3 text-slate-500">
                     {player.appearances}
                   </td>
                 </tr>
@@ -195,8 +195,8 @@ export default async function TopScorersPage({ params }: Props) {
           </table>
         </Card>
       ) : (
-        <Card className="bg-transparent border-gray-800 p-8 text-center">
-          <p className="text-gray-400">Aucune donn\u00e9e de buteurs disponible pour cette ligue.</p>
+        <Card className="bg-transparent border-slate-200 p-8 text-center">
+          <p className="text-slate-500">Aucune donn\u00e9e de buteurs disponible pour cette ligue.</p>
         </Card>
       )}
 

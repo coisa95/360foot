@@ -24,13 +24,13 @@ export function MatchLeagueGroup({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <Card className="border-gray-800 bg-dark-card overflow-hidden">
+    <Card className="border-slate-200 bg-white/80 backdrop-blur-sm overflow-hidden">
       {/* League header — clickable to toggle */}
       <button
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-label={`${open ? "Masquer" : "Afficher"} les matchs de ${leagueName}`}
-        className="flex w-full items-center gap-2 px-4 py-2.5 bg-transparent/50 border-b border-gray-800 hover:bg-gray-800/50 transition-colors"
+        className="flex w-full items-center gap-2 px-4 py-2.5 bg-slate-50/50 border-b border-slate-100 hover:bg-slate-50 transition-colors"
       >
         {leagueLogo && (
           <Image src={leagueLogo} alt={`Logo ${leagueName}`} width={16} height={16} className="h-4 w-4 object-contain" />
@@ -38,13 +38,13 @@ export function MatchLeagueGroup({
         <Link
           href={`/ligue/${leagueSlug}`}
           onClick={(e) => e.stopPropagation()}
-          className="text-xs font-semibold text-gray-300 hover:text-emerald-400 transition-colors"
+          className="text-xs font-semibold text-slate-700 hover:text-emerald-600 transition-colors"
         >
           {leagueName}
         </Link>
-        <span className="ml-auto text-[10px] text-gray-500">{matches.length}</span>
+        <span className="ml-auto text-[10px] text-slate-400">{matches.length}</span>
         <svg
-          className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ export function MatchLeagueGroup({
 
       {/* Match rows */}
       {open && (
-        <div className="divide-y divide-gray-800/50">
+        <div className="divide-y divide-slate-100">
           {matches.map((match: any) => {
             const homeTeam = match.home_team;
             const awayTeam = match.away_team;
@@ -68,25 +68,25 @@ export function MatchLeagueGroup({
               <Link
                 key={match.slug}
                 href={`/match/${match.slug}`}
-                className="flex items-center px-4 py-2.5 hover:bg-gray-800/30 transition-colors"
+                className="flex items-center px-4 py-2.5 hover:bg-slate-50 transition-colors"
               >
                 {/* Time / Status */}
                 <div className="w-14 shrink-0 text-center">
                   {isUpcoming && (
-                    <span className="text-xs font-bold text-blue-400">{matchTime}</span>
+                    <span className="text-xs font-bold text-blue-600">{matchTime}</span>
                   )}
                   {isLive && (
-                    <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-[10px] animate-pulse">
+                    <Badge className="bg-red-50 text-red-600 border-red-200 text-[10px] animate-pulse">
                       EN COURS
                     </Badge>
                   )}
                   {isFinished && (
-                    <span className="text-[10px] font-semibold text-emerald-400">
+                    <span className="text-[10px] font-semibold text-emerald-600">
                       {match.status === "AET" ? "A.P." : match.status === "PEN" ? "T.A.B." : "Terminé"}
                     </span>
                   )}
                   {!isUpcoming && !isLive && !isFinished && (
-                    <span className="text-[10px] text-gray-500">{match.status}</span>
+                    <span className="text-[10px] text-slate-400">{match.status}</span>
                   )}
                 </div>
 
@@ -97,12 +97,12 @@ export function MatchLeagueGroup({
                       {homeTeam?.logo_url && (
                         <Image src={homeTeam.logo_url} alt={`Logo ${homeTeam.name}`} width={18} height={18} className="h-4.5 w-4.5 object-contain shrink-0" />
                       )}
-                      <span className={`text-xs sm:text-sm truncate ${isFinished && (match.score_home ?? 0) > (match.score_away ?? 0) ? "font-bold text-white" : "text-gray-300"}`}>
+                      <span className={`text-xs sm:text-sm truncate ${isFinished && (match.score_home ?? 0) > (match.score_away ?? 0) ? "font-bold text-slate-900" : "text-slate-600"}`}>
                         {homeTeam?.name || "Équipe A"}
                       </span>
                     </div>
                     {!isUpcoming && (
-                      <span className={`text-sm font-bold tabular-nums shrink-0 ${isFinished && (match.score_home ?? 0) > (match.score_away ?? 0) ? "text-white" : "text-gray-400"}`}>
+                      <span className={`text-sm font-bold tabular-nums shrink-0 ${isFinished && (match.score_home ?? 0) > (match.score_away ?? 0) ? "text-slate-900" : "text-slate-400"}`}>
                         {match.score_home ?? 0}
                       </span>
                     )}
@@ -112,12 +112,12 @@ export function MatchLeagueGroup({
                       {awayTeam?.logo_url && (
                         <Image src={awayTeam.logo_url} alt={`Logo ${awayTeam.name}`} width={18} height={18} className="h-4.5 w-4.5 object-contain shrink-0" />
                       )}
-                      <span className={`text-xs sm:text-sm truncate ${isFinished && (match.score_away ?? 0) > (match.score_home ?? 0) ? "font-bold text-white" : "text-gray-300"}`}>
+                      <span className={`text-xs sm:text-sm truncate ${isFinished && (match.score_away ?? 0) > (match.score_home ?? 0) ? "font-bold text-slate-900" : "text-slate-600"}`}>
                         {awayTeam?.name || "Équipe B"}
                       </span>
                     </div>
                     {!isUpcoming && (
-                      <span className={`text-sm font-bold tabular-nums shrink-0 ${isFinished && (match.score_away ?? 0) > (match.score_home ?? 0) ? "text-white" : "text-gray-400"}`}>
+                      <span className={`text-sm font-bold tabular-nums shrink-0 ${isFinished && (match.score_away ?? 0) > (match.score_home ?? 0) ? "text-slate-900" : "text-slate-400"}`}>
                         {match.score_away ?? 0}
                       </span>
                     )}

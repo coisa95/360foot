@@ -124,10 +124,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={cn("dark font-sans antialiased", geist.variable)}>
+    <html lang="fr" className={cn("font-sans antialiased", geist.variable)}>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#a3e635" />
+        <meta name="theme-color" content="#10b981" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="360 Foot" />
@@ -139,27 +139,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-[#030014] text-white overflow-x-hidden">
+      <body className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
         {/* ═══ Living Background ═══ */}
         <div className="bg-aurora" aria-hidden="true" />
-        <div className="bg-hud-grid" aria-hidden="true" />
         <div className="bg-noise" aria-hidden="true">
           <svg width="100%" height="100%"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
         </div>
-
-        {/* ═══ Floating Orbs ═══ */}
-        <div className="orb orb-emerald w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] top-[10%] left-[-5%]" aria-hidden="true" />
-        <div className="orb orb-violet w-[180px] h-[180px] sm:w-[300px] sm:h-[300px] top-[50%] right-[-8%]" aria-hidden="true" />
-        <div className="orb orb-cyan w-[150px] h-[150px] sm:w-[250px] sm:h-[250px] bottom-[15%] left-[20%]" aria-hidden="true" />
-        <div className="orb orb-gold w-[120px] h-[120px] sm:w-[200px] sm:h-[200px] top-[30%] right-[25%]" aria-hidden="true" />
-
-        {/* ═══ Floating Symbols ═══ */}
-        <div className="floating-symbol text-emerald-500/10 text-[40px] sm:text-[80px] top-[8%] left-[5%]" style={{animation: 'float-1 20s ease-in-out infinite'}} aria-hidden="true">$</div>
-        <div className="floating-symbol text-violet-500/10 text-[30px] sm:text-[60px] top-[20%] right-[8%]" style={{animation: 'float-2 25s ease-in-out infinite'}} aria-hidden="true">&#9733;</div>
-        <div className="floating-symbol text-cyan-500/10 text-[50px] sm:text-[100px] top-[45%] left-[3%]" style={{animation: 'float-3 18s ease-in-out infinite'}} aria-hidden="true">&#9917;</div>
-        <div className="floating-symbol text-amber-500/10 text-[35px] sm:text-[70px] top-[65%] right-[5%]" style={{animation: 'float-1 22s ease-in-out infinite'}} aria-hidden="true">&#8364;</div>
-        <div className="floating-symbol text-emerald-500/10 text-[25px] sm:text-[50px] top-[80%] left-[15%]" style={{animation: 'float-2 28s ease-in-out infinite'}} aria-hidden="true">&#9670;</div>
-        <div className="floating-symbol text-violet-500/10 text-[45px] sm:text-[90px] bottom-[10%] right-[20%]" style={{animation: 'float-3 15s ease-in-out infinite'}} aria-hidden="true">FCFA</div>
 
         {/* ═══ Content ═══ */}
         <div className="relative z-10">

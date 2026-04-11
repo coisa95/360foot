@@ -164,7 +164,7 @@ export default async function GoPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen text-white relative">
+    <main className="min-h-screen text-slate-900 relative">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
@@ -246,19 +246,19 @@ export default async function GoPage({ params }: Props) {
 
         {/* ══════════ STEPS ══════════ */}
         <div className="mt-7 sm:mt-10 animate-fadeInUp delay-300">
-          <h2 className="text-center text-[10px] sm:text-xs font-extrabold font-display uppercase tracking-[0.2em] text-gray-500 mb-1 sm:mb-2">
+          <h2 className="text-center text-[10px] sm:text-xs font-extrabold font-display uppercase tracking-[0.2em] text-slate-400 mb-1 sm:mb-2">
             Comment faire ?
           </h2>
-          <p className="text-center text-[10px] text-gray-600 mb-4 sm:mb-6">Prend moins de 2 minutes</p>
+          <p className="text-center text-[10px] text-slate-500 mb-4 sm:mb-6">Prend moins de 2 minutes</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {steps.map((step, i) => (
               <div key={i} className="relative text-center">
                 {/* Connector line (desktop only, not on last) */}
                 {i < steps.length - 1 && (
-                  <div className="absolute top-3.5 sm:top-4 left-[calc(50%+18px)] right-0 h-px bg-gradient-to-r from-gray-700 to-transparent hidden sm:block" />
+                  <div className="absolute top-3.5 sm:top-4 left-[calc(50%+18px)] right-0 h-px bg-gradient-to-r from-slate-200 to-transparent hidden sm:block" />
                 )}
                 <div
-                  className="relative mx-auto flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-full text-[10px] sm:text-xs font-extrabold font-display text-white mb-2 sm:mb-3"
+                  className="relative mx-auto flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-full text-[10px] sm:text-xs font-extrabold font-display text-slate-900 mb-2 sm:mb-3"
                   style={{
                     background: `linear-gradient(135deg, ${brand.from}, ${brand.to})`,
                     boxShadow: `0 4px 15px ${brand.shadow}`,
@@ -266,7 +266,7 @@ export default async function GoPage({ params }: Props) {
                 >
                   {i + 1}
                 </div>
-                <p className="text-[11px] sm:text-xs text-gray-400 leading-relaxed font-medium">{step}</p>
+                <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed font-medium">{step}</p>
               </div>
             ))}
           </div>
@@ -290,15 +290,15 @@ export default async function GoPage({ params }: Props) {
             </svg>
           </a>
           {promoCode && (
-            <p className="mt-2 text-center text-xs sm:text-sm font-bold text-gray-500">
+            <p className="mt-2 text-center text-xs sm:text-sm font-bold text-slate-400">
               Code promo : <span className="font-extrabold font-display tracking-wider" style={{ color: brand.text }}>{promoCode}</span>
             </p>
           )}
         </div>
 
         {/* ══════════ Disclaimer ══════════ */}
-        <div className="mt-6 sm:mt-8 rounded-lg border border-gray-800 bg-gray-900/40 p-3 sm:p-4 text-[11px] sm:text-xs leading-relaxed text-gray-400">
-          <p className="font-bold text-gray-300 mb-1">Avertissement — Jeu responsable</p>
+        <div className="mt-6 sm:mt-8 rounded-lg border border-slate-200 bg-slate-50 p-3 sm:p-4 text-[11px] sm:text-xs leading-relaxed text-slate-500">
+          <p className="font-bold text-slate-700 mb-1">Avertissement — Jeu responsable</p>
           <p>
             Les jeux d&apos;argent comportent des risques : endettement, isolement,
             dépendance. À consommer avec modération. Interdit aux mineurs (18+).
@@ -313,7 +313,7 @@ export default async function GoPage({ params }: Props) {
               href="https://www.joueurs-info-service.fr/"
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="text-emerald-400 underline"
+              className="text-emerald-600 underline"
             >
               Joueurs Info Service
             </a>{" "}

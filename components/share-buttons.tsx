@@ -37,7 +37,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
     <>
       {/* Desktop: inline row */}
       <div className="hidden md:flex items-center gap-3 mt-8">
-        <span className="text-sm font-medium text-gray-400">Partager :</span>
+        <span className="text-sm font-medium text-slate-500">Partager :</span>
         <a
           href={whatsappUrl}
           target="_blank"
@@ -74,7 +74,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
         <button
           onClick={handleCopy}
           title="Copier le lien"
-          className="w-10 h-10 rounded-full bg-gray-500/15 border border-gray-500/30 flex items-center justify-center text-gray-400 hover:bg-gray-500/25 hover:text-gray-300 transition-colors relative"
+          className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-colors relative"
         >
           {copied ? (
             <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -86,7 +86,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
             </svg>
           )}
           {copied && (
-            <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs text-emerald-400 bg-dark-card border border-white/[0.06] rounded px-2 py-0.5 whitespace-nowrap">
+            <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs text-emerald-600 bg-white border border-slate-200 rounded px-2 py-0.5 whitespace-nowrap shadow-sm">
               Copié !
             </span>
           )}
@@ -94,9 +94,9 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
       </div>
 
       {/* Mobile: sticky bottom bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-dark-card/95 backdrop-blur-sm border-t border-white/[0.06]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 backdrop-blur-sm border-t border-slate-200">
         <div className="flex items-center justify-center gap-4 px-4 py-3">
-          <span className="text-xs font-medium text-gray-400">Partager</span>
+          <span className="text-xs font-medium text-slate-500">Partager</span>
           <a
             href={whatsappUrl}
             target="_blank"
@@ -133,7 +133,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
           <button
             onClick={handleCopy}
             title="Copier le lien"
-            className="w-10 h-10 rounded-full bg-gray-500/15 border border-gray-500/30 flex items-center justify-center text-gray-400 active:bg-gray-500/25 transition-colors relative"
+            className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 active:bg-slate-200 transition-colors relative"
           >
             {copied ? (
               <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -145,7 +145,7 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
               </svg>
             )}
             {copied && (
-              <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs text-emerald-400 bg-dark-card border border-white/[0.06] rounded px-2 py-0.5 whitespace-nowrap">
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs text-emerald-600 bg-white border border-slate-200 rounded px-2 py-0.5 whitespace-nowrap shadow-sm">
                 Copié !
               </span>
             )}

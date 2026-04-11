@@ -226,7 +226,7 @@ export default async function MatchPage({ params }: Props) {
   const PlayerLink = ({ name, className }: { name: string; className?: string }) => {
     const slug = playerSlugMap[name];
     if (slug) {
-      return <Link href={`/joueur/${slug}`} className={`hover:text-emerald-400 transition-colors ${className || ""}`}>{name}</Link>;
+      return <Link href={`/joueur/${slug}`} className={`hover:text-emerald-600 transition-colors ${className || ""}`}>{name}</Link>;
     }
     return <span className={className}>{name}</span>;
   };
@@ -237,7 +237,7 @@ export default async function MatchPage({ params }: Props) {
     if (name === homeName) slug = homeSlug;
     else if (name === awayName) slug = awaySlug;
     if (slug) {
-      return <Link href={`/equipe/${slug}`} className={`hover:text-emerald-400 transition-colors ${className || ""}`}>{name}</Link>;
+      return <Link href={`/equipe/${slug}`} className={`hover:text-emerald-600 transition-colors ${className || ""}`}>{name}</Link>;
     }
     return <span className={className}>{name}</span>;
   };
@@ -306,7 +306,7 @@ export default async function MatchPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen bg-transparent text-white">
+    <main className="min-h-screen bg-transparent text-slate-900">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
@@ -323,12 +323,12 @@ export default async function MatchPage({ params }: Props) {
         </h1>
 
         {/* ── Score Header ── */}
-        <Card className="mt-6 overflow-hidden border-gray-800 bg-gradient-to-b from-white/[0.03] to-transparent">
+        <Card className="mt-6 overflow-hidden border-slate-200 bg-white border-slate-200">
           <div className="p-6 text-center">
-            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+            <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200">
               {leagueName}
             </Badge>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-slate-400">
               {new Date(match.date).toLocaleDateString("fr-FR", {
                 weekday: "long", day: "numeric", month: "long", year: "numeric",
               })}
@@ -336,10 +336,10 @@ export default async function MatchPage({ params }: Props) {
               {new Date(match.date).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
             </p>
             {venue && (
-              <p className="mt-1 text-xs text-gray-500">{venue}{city ? `, ${city}` : ""}</p>
+              <p className="mt-1 text-xs text-slate-400">{venue}{city ? `, ${city}` : ""}</p>
             )}
             {referee && (
-              <p className="mt-1 text-xs text-gray-500">Arbitre : {referee}</p>
+              <p className="mt-1 text-xs text-slate-400">Arbitre : {referee}</p>
             )}
           </div>
 
@@ -349,29 +349,29 @@ export default async function MatchPage({ params }: Props) {
               {match.home_team?.logo_url && (
                 <Image src={match.home_team.logo_url} alt={`Logo ${homeName}`} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
-              <h2 className="font-display text-sm font-bold sm:text-lg">{homeSlug ? <Link href={`/equipe/${homeSlug}`} className="hover:text-emerald-400 transition-colors">{homeName}</Link> : homeName}</h2>
+              <h2 className="font-display text-sm font-bold sm:text-lg">{homeSlug ? <Link href={`/equipe/${homeSlug}`} className="hover:text-emerald-600 transition-colors">{homeName}</Link> : homeName}</h2>
             </div>
 
             {/* Score */}
             <div className="text-center">
               {isFinished || isLive ? (
                 <>
-                  <div className="text-4xl font-bold text-emerald-400 sm:text-5xl">
+                  <div className="text-4xl font-bold text-emerald-600 sm:text-5xl">
                     {match.score_home} - {match.score_away}
                   </div>
                   {halftime && halftime.home !== null && (
-                    <p className="mt-1 text-xs text-gray-500">
+                    <p className="mt-1 text-xs text-slate-400">
                       MT : {halftime.home} - {halftime.away}
                     </p>
                   )}
-                  <Badge className={`mt-2 ${isLive ? "bg-green-500/20 text-green-400 border-green-500/30 animate-pulse" : "bg-red-500/20 text-red-400 border-red-500/30"}`}>
+                  <Badge className={`mt-2 ${isLive ? "bg-green-50 text-green-600 border-green-200 animate-pulse" : "bg-red-50 text-red-600 border-red-200"}`}>
                     {isLive ? "En cours" : "Terminé"}
                   </Badge>
                 </>
               ) : (
                 <>
-                  <div className="text-3xl font-bold text-gray-400">VS</div>
-                  <Badge className="mt-2 bg-blue-500/20 text-blue-400 border-blue-500/30">
+                  <div className="text-3xl font-bold text-slate-500">VS</div>
+                  <Badge className="mt-2 bg-blue-50 text-blue-600 border-blue-200">
                     À venir
                   </Badge>
                 </>
@@ -383,20 +383,20 @@ export default async function MatchPage({ params }: Props) {
               {match.away_team?.logo_url && (
                 <Image src={match.away_team.logo_url} alt={`Logo ${awayName}`} width={80} height={80} className="mx-auto mb-2 h-16 w-16 object-contain sm:h-20 sm:w-20" />
               )}
-              <h2 className="font-display text-sm font-bold sm:text-lg">{awaySlug ? <Link href={`/equipe/${awaySlug}`} className="hover:text-emerald-400 transition-colors">{awayName}</Link> : awayName}</h2>
+              <h2 className="font-display text-sm font-bold sm:text-lg">{awaySlug ? <Link href={`/equipe/${awaySlug}`} className="hover:text-emerald-600 transition-colors">{awayName}</Link> : awayName}</h2>
             </div>
           </div>
         </Card>
 
         {/* ── Predictions (Upcoming matches only) ── */}
         {isUpcoming && predictionsJson && (
-          <Card className="mt-4 border-gray-800 card-glass p-4 sm:p-6">
-            <h3 className="font-display mb-4 text-lg font-bold text-emerald-400">🔮 Pronostic</h3>
+          <Card className="mt-4 border-slate-200 card-glass p-4 sm:p-6">
+            <h3 className="font-display mb-4 text-lg font-bold text-emerald-600">🔮 Pronostic</h3>
 
             {/* Advice */}
             {predictionsJson.advice && (
-              <div className="mb-4 rounded-lg bg-white/[0.02] p-3 text-center">
-                <p className="text-sm font-medium text-white">{predictionsJson.advice}</p>
+              <div className="mb-4 rounded-lg bg-slate-50 p-3 text-center">
+                <p className="text-sm font-medium text-slate-900">{predictionsJson.advice}</p>
               </div>
             )}
 
@@ -404,9 +404,9 @@ export default async function MatchPage({ params }: Props) {
             {predictionsJson.percent && (
               <div className="mb-4">
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="font-medium">{homeName}</span>
-                  <span className="text-gray-400">Nul</span>
-                  <span className="font-medium">{awayName}</span>
+                  <span className="font-medium text-slate-700">{homeName}</span>
+                  <span className="text-slate-500">Nul</span>
+                  <span className="font-medium text-slate-700">{awayName}</span>
                 </div>
                 <div className="flex h-3 gap-0.5 overflow-hidden rounded-full">
                   <div
@@ -416,10 +416,10 @@ export default async function MatchPage({ params }: Props) {
                     <span className="text-[10px] font-bold text-black">{predictionsJson.percent.home}</span>
                   </div>
                   <div
-                    className="bg-gray-500 transition-all flex items-center justify-center"
+                    className="bg-slate-300 transition-all flex items-center justify-center"
                     style={{ width: predictionsJson.percent.draw || "33%" }}
                   >
-                    <span className="text-[10px] font-bold text-white">{predictionsJson.percent.draw}</span>
+                    <span className="text-[10px] font-bold text-slate-900">{predictionsJson.percent.draw}</span>
                   </div>
                   <div
                     className="bg-blue-400 rounded-r-full transition-all flex items-center justify-center"
@@ -436,13 +436,13 @@ export default async function MatchPage({ params }: Props) {
               <div className="grid grid-cols-2 gap-4 mt-3">
                 {predictionsJson.home_form && (
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Forme {homeName}</p>
+                    <p className="text-xs text-slate-400 mb-1">Forme {homeName}</p>
                     <div className="flex gap-1">
                       {predictionsJson.home_form.split("").map((r: string, i: number) => (
                         <span key={i} className={`inline-flex h-6 w-6 items-center justify-center rounded text-xs font-bold ${
-                          r === "W" ? "bg-green-500/20 text-green-400" :
-                          r === "D" ? "bg-gray-500/20 text-gray-400" :
-                          "bg-red-500/20 text-red-400"
+                          r === "W" ? "bg-green-50 text-green-600" :
+                          r === "D" ? "bg-slate-100 text-slate-500" :
+                          "bg-red-50 text-red-600"
                         }`}>
                           {r === "W" ? "V" : r === "D" ? "N" : "D"}
                         </span>
@@ -452,13 +452,13 @@ export default async function MatchPage({ params }: Props) {
                 )}
                 {predictionsJson.away_form && (
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Forme {awayName}</p>
+                    <p className="text-xs text-slate-400 mb-1">Forme {awayName}</p>
                     <div className="flex gap-1">
                       {predictionsJson.away_form.split("").map((r: string, i: number) => (
                         <span key={i} className={`inline-flex h-6 w-6 items-center justify-center rounded text-xs font-bold ${
-                          r === "W" ? "bg-green-500/20 text-green-400" :
-                          r === "D" ? "bg-gray-500/20 text-gray-400" :
-                          "bg-red-500/20 text-red-400"
+                          r === "W" ? "bg-green-50 text-green-600" :
+                          r === "D" ? "bg-slate-100 text-slate-500" :
+                          "bg-red-50 text-red-600"
                         }`}>
                           {r === "W" ? "V" : r === "D" ? "N" : "D"}
                         </span>
@@ -472,8 +472,8 @@ export default async function MatchPage({ params }: Props) {
             {/* Comparison */}
             {predictionsJson.comparison && Object.keys(predictionsJson.comparison).length > 0 && (
               <div className="mt-4 space-y-2">
-                <Separator className="bg-gray-800" />
-                <p className="text-xs text-gray-500 font-medium mt-2">Comparaison</p>
+                <Separator className="bg-slate-200" />
+                <p className="text-xs text-slate-400 font-medium mt-2">Comparaison</p>
                 {Object.entries(predictionsJson.comparison).map(([key, val]: [string, any]) => {
                   const homePercent = parseInt(val.home) || 50;
                   const compLabels: Record<string, string> = {
@@ -485,7 +485,7 @@ export default async function MatchPage({ params }: Props) {
                     <div key={key}>
                       <div className="flex justify-between text-xs mb-1">
                         <span>{val.home}</span>
-                        <span className="text-gray-500">{compLabels[key] || key}</span>
+                        <span className="text-slate-400">{compLabels[key] || key}</span>
                         <span>{val.away}</span>
                       </div>
                       <div className="flex h-1.5 gap-0.5 overflow-hidden rounded-full">
@@ -507,21 +507,21 @@ export default async function MatchPage({ params }: Props) {
 
         {/* ── Head to Head ── */}
         {h2hJson && h2hJson.length > 0 && (
-          <Card className="mt-4 border-gray-800 card-glass p-4 sm:p-6">
-            <h3 className="font-display mb-4 text-lg font-bold text-emerald-400">⚔️ Confrontations directes</h3>
+          <Card className="mt-4 border-slate-200 card-glass p-4 sm:p-6">
+            <h3 className="font-display mb-4 text-lg font-bold text-emerald-600">⚔️ Confrontations directes</h3>
             <div className="space-y-2">
               {h2hJson.map((h2h: any, idx: number) => (
-                <div key={idx} className="flex items-center justify-between rounded-lg bg-white/[0.02] px-3 py-2 text-sm">
-                  <span className="text-xs text-gray-500 w-20">
+                <div key={idx} className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 text-sm">
+                  <span className="text-xs text-slate-400 w-20">
                     {new Date(h2h.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
                   </span>
-                  <span className={`flex-1 text-right ${h2h.homeScore > h2h.awayScore ? "text-white font-medium" : "text-gray-400"}`}>
+                  <span className={`flex-1 text-right ${h2h.homeScore > h2h.awayScore ? "text-slate-900 font-medium" : "text-slate-500"}`}>
                     {h2h.homeTeam}
                   </span>
-                  <span className="mx-3 font-bold text-emerald-400">
+                  <span className="mx-3 font-bold text-emerald-600">
                     {h2h.homeScore} - {h2h.awayScore}
                   </span>
-                  <span className={`flex-1 ${h2h.awayScore > h2h.homeScore ? "text-white font-medium" : "text-gray-400"}`}>
+                  <span className={`flex-1 ${h2h.awayScore > h2h.homeScore ? "text-slate-900 font-medium" : "text-slate-500"}`}>
                     {h2h.awayTeam}
                   </span>
                 </div>
@@ -532,42 +532,42 @@ export default async function MatchPage({ params }: Props) {
 
         {/* ── Injuries ── */}
         {injuriesJson && injuriesJson.length > 0 && (
-          <Card className="mt-4 border-gray-800 card-glass p-4 sm:p-6">
-            <h3 className="font-display mb-4 text-lg font-bold text-emerald-400">🏥 Absents et blessés</h3>
+          <Card className="mt-4 border-slate-200 card-glass p-4 sm:p-6">
+            <h3 className="font-display mb-4 text-lg font-bold text-emerald-600">🏥 Absents et blessés</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Home team injuries */}
               <div>
-                <p className="text-sm font-medium text-white mb-2">{homeName}</p>
+                <p className="text-sm font-medium text-slate-900 mb-2">{homeName}</p>
                 <div className="space-y-1">
                   {injuriesJson
                     .filter((inj: any) => inj.team === homeName)
                     .map((inj: any, idx: number) => (
                       <div key={idx} className="flex items-center gap-2 text-sm">
-                        <span className="text-red-400">✕</span>
-                        <span className="flex-1 text-gray-300"><PlayerLink name={inj.player} className="text-gray-300" /></span>
-                        <span className="text-xs text-gray-500">{inj.reason}</span>
+                        <span className="text-red-600">✕</span>
+                        <span className="flex-1 text-slate-700"><PlayerLink name={inj.player} className="text-slate-700" /></span>
+                        <span className="text-xs text-slate-400">{inj.reason}</span>
                       </div>
                     ))}
                   {injuriesJson.filter((inj: any) => inj.team === homeName).length === 0 && (
-                    <p className="text-xs text-gray-500">Aucun absent signalé</p>
+                    <p className="text-xs text-slate-400">Aucun absent signalé</p>
                   )}
                 </div>
               </div>
               {/* Away team injuries */}
               <div>
-                <p className="text-sm font-medium text-white mb-2">{awayName}</p>
+                <p className="text-sm font-medium text-slate-900 mb-2">{awayName}</p>
                 <div className="space-y-1">
                   {injuriesJson
                     .filter((inj: any) => inj.team === awayName)
                     .map((inj: any, idx: number) => (
                       <div key={idx} className="flex items-center gap-2 text-sm">
-                        <span className="text-red-400">✕</span>
-                        <span className="flex-1 text-gray-300"><PlayerLink name={inj.player} className="text-gray-300" /></span>
-                        <span className="text-xs text-gray-500">{inj.reason}</span>
+                        <span className="text-red-600">✕</span>
+                        <span className="flex-1 text-slate-700"><PlayerLink name={inj.player} className="text-slate-700" /></span>
+                        <span className="text-xs text-slate-400">{inj.reason}</span>
                       </div>
                     ))}
                   {injuriesJson.filter((inj: any) => inj.team === awayName).length === 0 && (
-                    <p className="text-xs text-gray-500">Aucun absent signalé</p>
+                    <p className="text-xs text-slate-400">Aucun absent signalé</p>
                   )}
                 </div>
               </div>
@@ -578,8 +578,8 @@ export default async function MatchPage({ params }: Props) {
         {/* ── Events (Goals, Cards, Subs) ── */}
         {isFinished && (
           eventsJson && eventsJson.length > 0 ? (
-            <Card className="mt-4 border-gray-800 card-glass p-4 sm:p-6">
-              <h3 className="font-display mb-4 text-lg font-bold text-emerald-400">Événements du match</h3>
+            <Card className="mt-4 border-slate-200 card-glass p-4 sm:p-6">
+              <h3 className="font-display mb-4 text-lg font-bold text-emerald-600">Événements du match</h3>
               <div className="space-y-2">
                 {eventsJson
                   .filter((e: any) => e.type !== "subst")
@@ -589,28 +589,28 @@ export default async function MatchPage({ params }: Props) {
                       <div
                         key={index}
                         className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
-                          isHome ? "bg-white/[0.02]" : "bg-white/[0.02]"
+                          isHome ? "bg-slate-50" : "bg-slate-50"
                         }`}
                       >
-                        <span className="w-10 text-center font-mono text-xs text-emerald-400">
+                        <span className="w-10 text-center font-mono text-xs text-emerald-600">
                           {event.minute}&apos;{event.extra ? `+${event.extra}` : ""}
                         </span>
                         <span className="text-base">{getEventIcon(event.type, event.detail || "")}</span>
                         <span className="flex-1 font-medium">
                           <PlayerLink name={event.player} />
                           {event.assist && (
-                            <span className="ml-1 text-xs text-gray-500">(pass. <PlayerLink name={event.assist} className="text-gray-500" />)</span>
+                            <span className="ml-1 text-xs text-slate-400">(pass. <PlayerLink name={event.assist} className="text-slate-400" />)</span>
                           )}
                         </span>
-                        <TeamLink name={event.team} className="text-xs text-gray-500" />
+                        <TeamLink name={event.team} className="text-xs text-slate-400" />
                       </div>
                     );
                   })}
               </div>
             </Card>
           ) : (
-            <div className="mt-4 rounded-lg border border-white/[0.06]/50 card-glass/50 p-8 text-center">
-              <p className="text-sm text-gray-500">Données non disponibles pour les événements.</p>
+            <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-8 text-center">
+              <p className="text-sm text-slate-400">Données non disponibles pour les événements.</p>
             </div>
           )
         )}
@@ -618,8 +618,8 @@ export default async function MatchPage({ params }: Props) {
         {/* ── Statistics ── */}
         {isFinished && (
           statistics && Object.keys(statistics).length > 0 ? (
-            <Card className="mt-4 border-gray-800 card-glass p-4 sm:p-6">
-              <h3 className="font-display mb-4 text-lg font-bold text-emerald-400">Statistiques</h3>
+            <Card className="mt-4 border-slate-200 card-glass p-4 sm:p-6">
+              <h3 className="font-display mb-4 text-lg font-bold text-emerald-600">Statistiques</h3>
               <div className="space-y-4">
                 {PRIORITY_STATS.filter((key) => statistics[key]).map((key) => {
                   const stat = statistics[key];
@@ -632,9 +632,9 @@ export default async function MatchPage({ params }: Props) {
                   return (
                     <div key={key}>
                       <div className="mb-1 flex justify-between text-sm">
-                        <span className="font-medium">{isPossession ? `${stat.home}` : homeVal}</span>
-                        <span className="text-gray-400">{getStatLabel(key)}</span>
-                        <span className="font-medium">{isPossession ? `${stat.away}` : awayVal}</span>
+                        <span className="font-medium text-slate-700">{isPossession ? `${stat.home}` : homeVal}</span>
+                        <span className="text-slate-500">{getStatLabel(key)}</span>
+                        <span className="font-medium text-slate-700">{isPossession ? `${stat.away}` : awayVal}</span>
                       </div>
                       <div className="flex h-2 gap-0.5 overflow-hidden rounded-full">
                         <div
@@ -642,7 +642,7 @@ export default async function MatchPage({ params }: Props) {
                           style={{ width: `${homePercent}%` }}
                         />
                         <div
-                          className="rounded-r-full bg-gray-600 transition-all"
+                          className="rounded-r-full bg-slate-200 transition-all"
                           style={{ width: `${100 - homePercent}%` }}
                         />
                       </div>
@@ -652,8 +652,8 @@ export default async function MatchPage({ params }: Props) {
               </div>
             </Card>
           ) : (
-            <div className="mt-4 rounded-lg border border-white/[0.06]/50 card-glass/50 p-8 text-center">
-              <p className="text-sm text-gray-500">Données non disponibles pour les statistiques.</p>
+            <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-8 text-center">
+              <p className="text-sm text-slate-400">Données non disponibles pour les statistiques.</p>
             </div>
           )
         )}
@@ -661,43 +661,43 @@ export default async function MatchPage({ params }: Props) {
         {/* ── Lineups ── */}
         {isFinished && (
           lineupsJson && lineupsJson.length >= 2 ? (
-            <Card className="mt-4 border-gray-800 card-glass p-4 sm:p-6">
-              <h3 className="font-display mb-4 text-lg font-bold text-emerald-400">Compositions</h3>
+            <Card className="mt-4 border-slate-200 card-glass p-4 sm:p-6">
+              <h3 className="font-display mb-4 text-lg font-bold text-emerald-600">Compositions</h3>
               <div className="grid gap-6 sm:grid-cols-2">
                 {lineupsJson.map((lineup: any, idx: number) => (
                   <div key={idx}>
                     <div className="mb-3 flex items-center justify-between">
-                      <h4 className="font-bold text-white"><TeamLink name={lineup.team} /></h4>
+                      <h4 className="font-bold text-slate-900"><TeamLink name={lineup.team} /></h4>
                       {lineup.formation && (
-                        <Badge className="bg-white/[0.02] text-gray-400 border-gray-700">
+                        <Badge className="bg-slate-50 text-slate-500 border-slate-300">
                           {lineup.formation}
                         </Badge>
                       )}
                     </div>
                     {lineup.coach && (
-                      <p className="mb-2 text-xs text-gray-500">Coach : {lineup.coach}</p>
+                      <p className="mb-2 text-xs text-slate-400">Coach : {lineup.coach}</p>
                     )}
                     <div className="space-y-1">
                       {(lineup.startXI || []).map((p: any, i: number) => (
                         <div key={i} className="flex items-center gap-2 text-sm">
-                          <span className="w-6 text-center text-xs font-mono text-gray-500">
+                          <span className="w-6 text-center text-xs font-mono text-slate-400">
                             {p.number || "-"}
                           </span>
                           <span className="flex-1"><PlayerLink name={p.name} /></span>
-                          <span className="text-[10px] text-gray-500 uppercase">{p.pos}</span>
+                          <span className="text-[10px] text-slate-400 uppercase">{p.pos}</span>
                         </div>
                       ))}
                     </div>
                     {(lineup.substitutes || []).length > 0 && (
                       <>
-                        <Separator className="my-2 bg-gray-800" />
-                        <p className="mb-1 text-xs text-gray-500">Remplaçants</p>
+                        <Separator className="my-2 bg-slate-200" />
+                        <p className="mb-1 text-xs text-slate-400">Remplaçants</p>
                         <div className="space-y-1">
                           {(lineup.substitutes || []).slice(0, 7).map((p: any, i: number) => (
-                            <div key={i} className="flex items-center gap-2 text-xs text-gray-400">
+                            <div key={i} className="flex items-center gap-2 text-xs text-slate-500">
                               <span className="w-6 text-center font-mono">{p.number || "-"}</span>
-                              <span className="flex-1"><PlayerLink name={p.name} className="text-gray-400" /></span>
-                              <span className="text-[10px] text-gray-500 uppercase">{p.pos}</span>
+                              <span className="flex-1"><PlayerLink name={p.name} className="text-slate-500" /></span>
+                              <span className="text-[10px] text-slate-400 uppercase">{p.pos}</span>
                             </div>
                           ))}
                         </div>
@@ -708,8 +708,8 @@ export default async function MatchPage({ params }: Props) {
               </div>
             </Card>
           ) : (
-            <div className="mt-4 rounded-lg border border-white/[0.06]/50 card-glass/50 p-8 text-center">
-              <p className="text-sm text-gray-500">Données non disponibles pour les compositions.</p>
+            <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-8 text-center">
+              <p className="text-sm text-slate-400">Données non disponibles pour les compositions.</p>
             </div>
           )
         )}
@@ -718,7 +718,7 @@ export default async function MatchPage({ params }: Props) {
         {/* ── Related article ── */}
         {relatedArticle && (
           <div className="mt-6">
-            <h3 className="font-display mb-3 text-lg font-bold text-emerald-400">Article lié</h3>
+            <h3 className="font-display mb-3 text-lg font-bold text-emerald-600">Article lié</h3>
             <ArticleCard
               slug={relatedArticle.slug}
               title={relatedArticle.title}

@@ -149,13 +149,13 @@ export default async function ActuPage({ searchParams }: Props) {
   const gridArticles = articles && articles.length > 1 ? articles.slice(1) : [];
 
   return (
-    <main className="min-h-screen bg-transparent text-white">
+    <main className="min-h-screen bg-transparent text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="font-display text-xl font-bold sm:text-2xl md:text-3xl">
-            <span className="text-emerald-400">Actu</span> Football
+            <span className="text-emerald-600">Actu</span> Football
           </h1>
 
           {/* Category tabs — compact, scrollable on mobile */}
@@ -168,7 +168,7 @@ export default async function ActuPage({ searchParams }: Props) {
                 className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium transition-colors sm:px-4 sm:py-1.5 sm:text-sm ${
                   activeCategory === cat.value
                     ? "bg-emerald-500 text-black"
-                    : "card-glass text-gray-300 hover:bg-white/[0.02] hover:text-white"
+                    : "card-glass text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
                 {cat.label}
@@ -181,7 +181,7 @@ export default async function ActuPage({ searchParams }: Props) {
           <>
             {/* Featured article - compact on mobile, large on desktop */}
             <Link href={`/actu/${featuredArticle.slug as string}`} className="group mt-4 block sm:mt-6">
-              <Card className="overflow-hidden border-white/[0.06] card-glass transition-all hover:border-emerald-500/30">
+              <Card className="overflow-hidden border-slate-200 card-glass transition-all hover:border-emerald-200">
                 <div className="grid md:grid-cols-2">
                   <div className="relative aspect-[2/1] sm:aspect-video md:aspect-auto md:min-h-[280px]">
                     <Image
@@ -205,20 +205,20 @@ export default async function ActuPage({ searchParams }: Props) {
                         {getArticleTypeLabel(featuredArticle.type as string)}
                       </Badge>
                       {String((featuredArticle.league as Record<string, unknown>)?.name || "") !== "" && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-slate-400">
                           {String((featuredArticle.league as Record<string, unknown>).name)}
                         </span>
                       )}
                     </div>
-                    <h2 className="font-display mb-1 text-base font-bold leading-tight text-white transition-colors group-hover:text-emerald-400 sm:mb-2 sm:text-lg md:mb-3 md:text-2xl">
+                    <h2 className="font-display mb-1 text-base font-bold leading-tight text-slate-900 transition-colors group-hover:text-emerald-600 sm:mb-2 sm:text-lg md:mb-3 md:text-2xl">
                       {featuredArticle.title as string}
                     </h2>
                     {(featuredArticle.excerpt as string) ? (
-                      <p className="mb-2 line-clamp-2 text-xs text-gray-400 sm:line-clamp-3 sm:text-sm md:mb-4">
+                      <p className="mb-2 line-clamp-2 text-xs text-slate-500 sm:line-clamp-3 sm:text-sm md:mb-4">
                         {featuredArticle.excerpt as string}
                       </p>
                     ) : null}
-                    <time className="text-[10px] text-gray-500 sm:text-xs" dateTime={featuredArticle.created_at as string}>
+                    <time className="text-[10px] text-slate-400 sm:text-xs" dateTime={featuredArticle.created_at as string}>
                       {new Date(featuredArticle.created_at as string).toLocaleDateString("fr-FR", {
                         day: "numeric",
                         month: "long",
@@ -238,7 +238,7 @@ export default async function ActuPage({ searchParams }: Props) {
                   const articleType = (article.type as string) || "result";
                   return (
                     <Link key={article.id as string} href={`/actu/${article.slug}`} className="group">
-                      <Card className="h-full overflow-hidden border-white/[0.06] card-glass transition-all hover:border-emerald-500/30 hover:bg-white/[0.02]">
+                      <Card className="h-full overflow-hidden border-slate-200 card-glass transition-all hover:border-emerald-200 hover:bg-slate-50">
                         <div className="relative aspect-video">
                           <Image
                             src={(article.og_image_url as string) || `/api/og?title=${encodeURIComponent(article.title as string)}&type=${articleType}&league=${encodeURIComponent((league?.name as string) || "")}`}
@@ -256,18 +256,18 @@ export default async function ActuPage({ searchParams }: Props) {
                         <div className="p-4">
                           <div className="mb-2 flex items-center gap-2">
                             {String(league?.name || "") !== "" && (
-                              <span className="text-xs text-gray-500">{String(league?.name)}</span>
+                              <span className="text-xs text-slate-400">{String(league?.name)}</span>
                             )}
                           </div>
-                          <h3 className="font-display mb-2 line-clamp-2 text-sm font-semibold leading-tight text-white transition-colors group-hover:text-emerald-400">
+                          <h3 className="font-display mb-2 line-clamp-2 text-sm font-semibold leading-tight text-slate-900 transition-colors group-hover:text-emerald-600">
                             {article.title as string}
                           </h3>
                           {String(article.excerpt || "") !== "" && (
-                            <p className="mb-3 line-clamp-2 text-xs text-gray-400">
+                            <p className="mb-3 line-clamp-2 text-xs text-slate-500">
                               {String(article.excerpt)}
                             </p>
                           )}
-                          <time className="text-[10px] text-gray-500" dateTime={article.created_at as string}>
+                          <time className="text-[10px] text-slate-400" dateTime={article.created_at as string}>
                             {new Date(article.created_at as string).toLocaleDateString("fr-FR", {
                               day: "numeric",
                               month: "long",
@@ -288,7 +288,7 @@ export default async function ActuPage({ searchParams }: Props) {
                 {currentPage > 1 && (
                   <Link
                     href={`/actu?${activeCategory !== "all" ? `categorie=${activeCategory}&` : ""}page=${currentPage - 1}`}
-                    className="rounded-lg card-glass px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-white/[0.02] hover:text-white"
+                    className="rounded-lg card-glass px-4 py-2 text-sm text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
                   >
                     Précédent
                   </Link>
@@ -308,7 +308,7 @@ export default async function ActuPage({ searchParams }: Props) {
                   const baseHref = activeCategory !== "all" ? `categorie=${activeCategory}&` : "";
                   return pages.map((p, idx) =>
                     p === "..." ? (
-                      <span key={`ellipsis-${idx}`} className="flex h-10 w-10 items-center justify-center text-sm text-gray-500">…</span>
+                      <span key={`ellipsis-${idx}`} className="flex h-10 w-10 items-center justify-center text-sm text-slate-400">…</span>
                     ) : (
                       <Link
                         key={p}
@@ -316,7 +316,7 @@ export default async function ActuPage({ searchParams }: Props) {
                         className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
                           currentPage === p
                             ? "bg-emerald-500 text-black"
-                            : "card-glass text-gray-300 hover:bg-white/[0.02] hover:text-white"
+                            : "card-glass text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                         }`}
                       >
                         {p}
@@ -328,7 +328,7 @@ export default async function ActuPage({ searchParams }: Props) {
                 {currentPage < totalPages && (
                   <Link
                     href={`/actu?${activeCategory !== "all" ? `categorie=${activeCategory}&` : ""}page=${currentPage + 1}`}
-                    className="rounded-lg card-glass px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-white/[0.02] hover:text-white"
+                    className="rounded-lg card-glass px-4 py-2 text-sm text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
                   >
                     Suivant
                   </Link>
@@ -337,7 +337,7 @@ export default async function ActuPage({ searchParams }: Props) {
             )}
           </>
         ) : (
-          <p className="mt-8 text-gray-500">
+          <p className="mt-8 text-slate-400">
             Aucun article disponible pour le moment.
           </p>
         )}

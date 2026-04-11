@@ -53,7 +53,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#030014]/80 backdrop-blur-xl shadow-lg shadow-black/30">
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
@@ -66,8 +66,8 @@ export function Header() {
             className="rounded-lg transition-all group-hover:scale-105"
           />
           <span className="text-xl font-bold">
-            <span className="text-white">360</span>{" "}
-            <span className="text-glow">Foot</span>
+            <span className="text-slate-900">360</span>{" "}
+            <span className="text-emerald-600 font-extrabold">Foot</span>
           </span>
         </Link>
 
@@ -77,7 +77,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm text-gray-400 transition-colors hover:text-emerald-400 ${link.icon ? "flex items-center gap-1" : ""}`}
+              className={`text-sm text-slate-500 transition-colors hover:text-emerald-600 ${link.icon ? "flex items-center gap-1" : ""}`}
             >
               {link.icon && (
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +118,7 @@ export function Header() {
           )}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-emerald-400"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:text-emerald-600"
             aria-label="Menu"
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
@@ -136,14 +136,14 @@ export function Header() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div id="mobile-menu" className="border-t border-white/[0.06] bg-[#030014]/95 backdrop-blur-xl px-4 pb-4 lg:hidden">
+        <div id="mobile-menu" className="border-t border-slate-200/80 bg-white/95 backdrop-blur-xl px-4 pb-4 lg:hidden">
           <nav aria-label="Navigation mobile" className="flex flex-col gap-1 pt-2">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className={`rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-dark-card hover:text-emerald-400 ${link.icon ? "flex items-center gap-2" : ""}`}
+                className={`rounded-md px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-600 ${link.icon ? "flex items-center gap-2" : ""}`}
               >
                 {link.icon && (
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

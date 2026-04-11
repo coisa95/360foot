@@ -37,24 +37,24 @@ export default function AboutPage() {
   ];
 
   return (
-    <main className="min-h-screen text-white">
+    <main className="min-h-screen text-slate-900">
       <div className="container mx-auto px-4 py-6 max-w-3xl">
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="font-display text-3xl font-bold text-emerald-400">À propos de 360 Foot</h1>
+          <h1 className="font-display text-3xl font-bold text-emerald-600">À propos de 360 Foot</h1>
         </div>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Notre mission</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <Separator className="bg-slate-200 mb-4" />
+          <p className="text-slate-700 leading-relaxed mb-4">
             360 Foot est un média numérique innovant dédié au football
             africain et européen. Notre objectif est de fournir une couverture
             complète et en temps réel des ligues, équipes et joueurs à travers
             le monde.
           </p>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="text-slate-700 leading-relaxed mb-4">
             Nous couvrons les principales compétitions africaines (Ligue 1
             ivoirienne, Ligue 1 sénégalaise, championnats camerounais, malien,
             burkinabè, béninois, congolais, ghanéen, nigérian…), les grands
@@ -65,17 +65,17 @@ export default function AboutPage() {
           </p>
         </Card>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Technologie et innovation</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <Separator className="bg-slate-200 mb-4" />
+          <p className="text-slate-700 leading-relaxed mb-4">
             360 Foot utilise l&apos;intelligence artificielle pour générer du
             contenu éditorial de haute qualité. Notre système combine des
             données sportives en temps réel avec des modèles de langage avancés
             pour produire des articles informatifs, des analyses tactiques et
             des comptes-rendus de matchs.
           </p>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="text-slate-700 leading-relaxed mb-4">
             Chaque article généré par notre IA est basé sur des données
             factuelles vérifiées provenant de sources fiables. Nous nous
             engageons à fournir une information précise et de qualité à nos
@@ -83,10 +83,10 @@ export default function AboutPage() {
           </p>
         </Card>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Notre équipe</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <Separator className="bg-slate-200 mb-4" />
+          <p className="text-slate-700 leading-relaxed mb-4">
             360 Foot est développé par une équipe passionnée de football et de
             technologie. Nous combinons une expertise dans le journalisme
             sportif, l&apos;intelligence artificielle et le développement web
@@ -94,10 +94,10 @@ export default function AboutPage() {
           </p>
         </Card>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Nous contacter</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <p className="text-gray-300 leading-relaxed">
+          <Separator className="bg-slate-200 mb-4" />
+          <p className="text-slate-700 leading-relaxed">
             Pour toute question, suggestion ou partenariat, n&apos;hésitez pas
             à nous contacter à l&apos;adresse suivante : contact@360-foot.com
           </p>

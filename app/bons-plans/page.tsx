@@ -60,13 +60,13 @@ export default async function BonsPlansPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-transparent text-white">
+    <main className="min-h-screen bg-transparent text-slate-900">
       <div className="container mx-auto px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="font-display text-3xl font-bold text-emerald-400">Bons Plans</h1>
-          <p className="text-gray-400 mt-1">
+          <h1 className="font-display text-3xl font-bold text-emerald-600">Bons Plans</h1>
+          <p className="text-slate-500 mt-1">
             Guides, conseils et comparateur de bookmakers pour parier sur le football en Afrique.
           </p>
         </div>
@@ -82,31 +82,31 @@ export default async function BonsPlansPage() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {guides.map((guide) => (
                 <Link key={guide.id} href={`/actu/${guide.slug}`}>
-                  <Card className="group h-full card-glass/80 border-white/[0.06]/50 p-5 transition-all hover:border-emerald-500/40 hover:card-glass">
+                  <Card className="group h-full bg-white border-slate-200 p-5 transition-all hover:border-emerald-500/40 hover:card-glass">
                     <div className="flex flex-col h-full">
                       <div className="flex flex-wrap gap-1.5 mb-3">
-                        <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
+                        <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 text-[10px]">
                           Guide
                         </Badge>
                         {guide.tags?.slice(0, 2).map((tag: string) => (
                           <Badge
                             key={tag}
-                            className="bg-gray-700/50 text-gray-400 border-gray-600/50 text-[10px]"
+                            className="bg-slate-100 text-slate-500 border-slate-300/50 text-[10px]"
                           >
                             {tag}
                           </Badge>
                         ))}
                       </div>
-                      <h3 className="font-display font-semibold text-white group-hover:text-emerald-400 transition-colors line-clamp-2 mb-2">
+                      <h3 className="font-display font-semibold text-slate-900 group-hover:text-emerald-600 transition-colors line-clamp-2 mb-2">
                         {guide.title}
                       </h3>
                       {guide.excerpt && (
-                        <p className="text-sm text-gray-400 line-clamp-3 flex-1">
+                        <p className="text-sm text-slate-500 line-clamp-3 flex-1">
                           {guide.excerpt}
                         </p>
                       )}
-                      <div className="mt-3 pt-3 border-t border-white/[0.06]/30">
-                        <span className="text-xs text-emerald-400 font-medium group-hover:underline">
+                      <div className="mt-3 pt-3 border-t border-slate-200/30">
+                        <span className="text-xs text-emerald-600 font-medium group-hover:underline">
                           Lire le guide &rarr;
                         </span>
                       </div>
@@ -116,8 +116,8 @@ export default async function BonsPlansPage() {
               ))}
             </div>
           ) : (
-            <Card className="card-glass/80 border-white/[0.06]/50 p-8 text-center">
-              <p className="text-gray-400">Aucun guide disponible pour le moment.</p>
+            <Card className="bg-white border-slate-200 p-8 text-center">
+              <p className="text-slate-500">Aucun guide disponible pour le moment.</p>
             </Card>
           )}
         </section>
@@ -134,14 +134,14 @@ export default async function BonsPlansPage() {
             <h2 className="font-display text-2xl font-bold">Comparateur de bookmakers</h2>
           </div>
 
-          <p className="text-gray-400 mb-6">
+          <p className="text-slate-500 mb-6">
             Comparez les meilleurs bookmakers disponibles dans votre pays et profitez
             des meilleurs bonus de bienvenue.
           </p>
 
           {/* Avertissement */}
-          <Card className="bg-yellow-500/10 border-yellow-500/30 p-4 mb-6">
-            <p className="text-yellow-400 text-sm">
+          <Card className="bg-amber-50 border-amber-200 p-4 mb-6">
+            <p className="text-amber-600 text-sm">
               Les paris sportifs comportent des risques. Jouez de manière responsable.
               Les offres de bonus sont soumises à conditions. 18+ uniquement.
             </p>
@@ -152,34 +152,34 @@ export default async function BonsPlansPage() {
               bookmakers.map((bookmaker) => (
                 <Card
                   key={bookmaker.id}
-                  className="bg-white/[0.02] border-gray-800 p-6 hover:border-emerald-500/30 transition-colors"
+                  className="bg-slate-50 border-slate-200 p-6 hover:border-emerald-200 transition-colors"
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <Link href={`/bookmakers/${bookmaker.slug}`}>
-                          <h3 className="font-display text-xl font-bold hover:text-emerald-400 transition-colors">
+                          <h3 className="font-display text-xl font-bold hover:text-emerald-600 transition-colors">
                             {bookmaker.name}
                           </h3>
                         </Link>
-                        <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                        <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200">
                           #{bookmaker.priority}
                         </Badge>
                       </div>
 
                       {bookmaker.bonus_json && (
-                        <p className="text-emerald-400 font-semibold text-lg mb-2">
+                        <p className="text-emerald-600 font-semibold text-lg mb-2">
                           {getBonusText(bookmaker.bonus_json as Record<string, string>)}
                         </p>
                       )}
 
                       {bookmaker.countries && (
                         <div className="flex flex-wrap gap-2">
-                          <span className="text-gray-500 text-xs">Disponible :</span>
+                          <span className="text-slate-400 text-xs">Disponible :</span>
                           {(bookmaker.countries as string[]).map((country) => (
                             <Badge
                               key={country}
-                              className="bg-gray-700 text-gray-300 border-gray-600 text-xs"
+                              className="bg-slate-100 text-slate-700 border-slate-300 text-xs"
                             >
                               {country}
                             </Badge>
@@ -197,7 +197,7 @@ export default async function BonsPlansPage() {
                       </Link>
                       <Link
                         href={`/bookmakers/${bookmaker.slug}`}
-                        className="text-gray-400 hover:text-emerald-400 text-sm transition-colors"
+                        className="text-slate-500 hover:text-emerald-600 text-sm transition-colors"
                       >
                         Voir l&apos;avis complet
                       </Link>
@@ -206,8 +206,8 @@ export default async function BonsPlansPage() {
                 </Card>
               ))
             ) : (
-              <Card className="bg-white/[0.02] border-gray-800 p-8 text-center">
-                <p className="text-gray-400">Aucun bookmaker disponible pour le moment.</p>
+              <Card className="bg-slate-50 border-slate-200 p-8 text-center">
+                <p className="text-slate-500">Aucun bookmaker disponible pour le moment.</p>
               </Card>
             )}
           </div>

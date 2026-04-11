@@ -36,7 +36,7 @@ export function LeagueFilter({
           className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
             !currentLigue
               ? "bg-emerald-500 text-black"
-              : "bg-dark-card text-gray-400 hover:bg-white/[0.02] hover:text-white"
+              : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700"
           }`}
         >
           Toutes
@@ -62,7 +62,7 @@ export function LeagueFilter({
           onClick={() => setOpen(!open)}
           aria-expanded={open}
           aria-label="Filtrer par ligue"
-          className="flex items-center gap-1 rounded-full bg-dark-card px-3 py-1.5 text-xs font-medium text-gray-400 hover:bg-white/[0.02] hover:text-white transition-colors"
+          className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-colors"
         >
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -80,7 +80,7 @@ export function LeagueFilter({
       </div>
 
       {open && (
-        <div className="mt-2 rounded-lg border border-gray-800 bg-dark-card/50 p-2 max-h-72 overflow-y-auto">
+        <div className="mt-2 rounded-lg border border-slate-200 bg-white/95 backdrop-blur-sm p-2 max-h-72 overflow-y-auto shadow-lg">
           {leagues.map((l: any) => (
             <Link
               key={l.slug}
@@ -89,14 +89,14 @@ export function LeagueFilter({
               onClick={() => setOpen(false)}
               className={`flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors ${
                 currentLigue === l.slug
-                  ? "bg-emerald-500/15 text-emerald-400"
-                  : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                  ? "bg-emerald-50 text-emerald-700"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               }`}
             >
               {l.logo_url ? (
                 <Image src={l.logo_url} alt={`Logo ${l.name}`} width={20} height={20} className="h-5 w-5 object-contain shrink-0" />
               ) : (
-                <div className="h-5 w-5 rounded bg-gray-700 flex items-center justify-center text-[10px] text-gray-500 shrink-0">
+                <div className="h-5 w-5 rounded bg-slate-100 flex items-center justify-center text-[10px] text-slate-400 shrink-0">
                   {l.name?.charAt(0)}
                 </div>
               )}

@@ -18,7 +18,7 @@ export function RelatedArticles({ articles }: RelatedArticlesProps) {
 
   return (
     <section className="mt-10">
-      <h2 className="mb-4 text-lg font-bold text-white">À lire aussi</h2>
+      <h2 className="mb-4 text-lg font-bold text-slate-900">À lire aussi</h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {articles.map((article) => (
           <ArticleCard key={article.slug} {...article} />

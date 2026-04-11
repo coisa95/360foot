@@ -34,14 +34,14 @@ export default function SelectionIndexPage() {
   ];
 
   return (
-    <main className="min-h-screen text-white">
+    <main className="min-h-screen text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
         <h1 className="font-display mt-4 text-xl font-bold sm:text-2xl md:text-3xl">
-          <span className="text-emerald-400">Sélections</span> nationales
+          <span className="text-emerald-600">Sélections</span> nationales
         </h1>
-        <p className="mt-2 text-sm text-gray-400">
+        <p className="mt-2 text-sm text-slate-500">
           Suivez les équipes nationales africaines : matchs, résultats et
           actualités.
         </p>
@@ -51,14 +51,14 @@ export default function SelectionIndexPage() {
             <Link
               key={sel.code}
               href={`/selection/${sel.code}`}
-              className="group flex items-center gap-4 rounded-xl border border-white/[0.06] bg-dark-card/80 p-5 transition-all hover:border-emerald-500/20 hover:shadow-lg hover:-translate-y-0.5"
+              className="group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 transition-all hover:border-emerald-200 hover:shadow-lg hover:-translate-y-0.5"
             >
               <span className="text-4xl">{sel.flag}</span>
               <div>
-                <h2 className="font-display text-lg font-semibold text-white transition-colors group-hover:text-emerald-400">
+                <h2 className="font-display text-lg font-semibold text-slate-900 transition-colors group-hover:text-emerald-600">
                   {sel.name}
                 </h2>
-                <p className="text-xs text-gray-500">Équipe nationale</p>
+                <p className="text-xs text-slate-400">Équipe nationale</p>
               </div>
             </Link>
           ))}

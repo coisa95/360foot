@@ -95,7 +95,7 @@ export default async function LeagueNewsPage({ params }: Props) {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500 py-12">Aucune actualité disponible pour cette ligue.</p>
+        <p className="text-center text-slate-400 py-12">Aucune actualité disponible pour cette ligue.</p>
       )}
 
       <AffiliateTrio />

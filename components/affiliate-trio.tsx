@@ -75,7 +75,7 @@ const BOOKMAKERS = [
 export function AffiliateTrio() {
   return (
     <div className="space-y-3 my-6">
-      <p className="text-xs font-semibold font-display uppercase tracking-wider text-emerald-400 text-center">
+      <p className="text-xs font-semibold font-display uppercase tracking-wider text-emerald-600 text-center">
         🏆 Meilleurs bookmakers du moment
       </p>
 
@@ -160,7 +160,7 @@ export function AffiliateTrio() {
         ))}
       </div>
 
-      <p className="text-center text-[10px] text-gray-500">
+      <p className="text-center text-[10px] text-slate-400">
         18+ | Jouer comporte des risques | Aide : 0 974 75 13 13
       </p>
     </div>

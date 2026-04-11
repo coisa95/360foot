@@ -28,10 +28,10 @@ export function ArticleCard({
 
   return (
     <Link href={`/actu/${slug}`} className="group block">
-      <div className="h-full rounded-xl border border-white/[0.06] bg-dark-card/80 shadow-lg shadow-black/10 backdrop-blur-sm transition-all duration-300 hover:border-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-0.5 overflow-hidden">
+      <div className="h-full rounded-xl border border-slate-200/80 bg-white/80 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-0.5 overflow-hidden">
         {/* Image */}
         {imageUrl && (
-          <div className="relative w-full aspect-[16/9] overflow-hidden bg-white/[0.02]">
+          <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100">
             <Image
               src={imageUrl}
               alt={title}
@@ -49,25 +49,25 @@ export function ArticleCard({
               {typeConf.label}
             </span>
             {leagueName && (
-              <span className="text-[11px] text-gray-500">{leagueName}</span>
+              <span className="text-[11px] text-slate-400">{leagueName}</span>
             )}
           </div>
 
-          <h3 className="font-display mb-2 text-base font-semibold leading-tight text-gray-100 transition-colors group-hover:bg-gradient-to-r group-hover:from-emerald-400 group-hover:to-emerald-400 group-hover:bg-clip-text group-hover:text-transparent">
+          <h3 className="font-display mb-2 text-base font-semibold leading-tight text-slate-900 transition-colors group-hover:bg-gradient-to-r group-hover:from-emerald-600 group-hover:to-emerald-600 group-hover:bg-clip-text group-hover:text-transparent">
             {title}
           </h3>
 
-          <p className="mb-3 line-clamp-2 text-sm text-gray-400/80">{excerpt}</p>
+          <p className="mb-3 line-clamp-2 text-sm text-slate-500">{excerpt}</p>
 
           <div className="flex items-center justify-between">
-            <time className="text-[11px] text-gray-500" dateTime={date.toISOString()}>
+            <time className="text-[11px] text-slate-400" dateTime={date.toISOString()}>
               {date.toLocaleDateString("fr-FR", {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
               })}
             </time>
-            <span className="text-[11px] text-emerald-500/0 transition-all group-hover:text-emerald-500/80">
+            <span className="text-[11px] text-emerald-600/0 transition-all group-hover:text-emerald-600/80">
               Lire →
             </span>
           </div>

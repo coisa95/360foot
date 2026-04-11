@@ -76,12 +76,12 @@ export async function LeagueSidebar({ activeSlug }: LeagueSidebarProps) {
   const groups = categorizeLeagues(leagues as League[]);
 
   return (
-    <aside className="hidden lg:block fixed top-[65px] left-0 z-40 max-h-[calc(100vh-65px)] w-56 overflow-y-auto border-r border-white/[0.06] bg-[#030014]/80 backdrop-blur-sm scrollbar-hide hover:scrollbar-thin hover:scrollbar-track-transparent hover:scrollbar-thumb-dark-border">
+    <aside className="hidden lg:block fixed top-[65px] left-0 z-40 max-h-[calc(100vh-65px)] w-56 overflow-y-auto border-r border-slate-200 bg-white/90 backdrop-blur-sm scrollbar-hide hover:scrollbar-thin hover:scrollbar-track-transparent hover:scrollbar-thumb-slate-300">
       <nav aria-label="Ligues" className="py-3">
         {groups.map((group) => (
           <div key={group.label} className="mb-2">
             {/* Group heading */}
-            <h3 className="px-4 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+            <h3 className="px-4 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-slate-900">
               {group.label}
             </h3>
 
@@ -95,8 +95,8 @@ export async function LeagueSidebar({ activeSlug }: LeagueSidebarProps) {
                       href={`/ligue/${league.slug}`}
                       className={`flex items-center gap-2.5 px-4 py-1.5 text-sm transition-colors ${
                         isActive
-                          ? "bg-dark-card text-emerald-400"
-                          : "text-gray-400 hover:bg-dark-card hover:text-gray-200"
+                          ? "bg-emerald-50 text-emerald-700 font-medium"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-emerald-600"
                       }`}
                     >
                       {league.logo_url ? (
@@ -108,7 +108,7 @@ export async function LeagueSidebar({ activeSlug }: LeagueSidebarProps) {
                           className="h-5 w-5 shrink-0 rounded-sm object-contain"
                         />
                       ) : (
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-sm bg-dark-card text-[10px] text-gray-500">
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-sm bg-slate-100 text-[10px] text-slate-400">
                           {league.country_code}
                         </span>
                       )}

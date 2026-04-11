@@ -138,7 +138,7 @@ export default async function LeagueStandingsPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLdOrg) }}
       />
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-slate-400">
           Saison {season}
           {updatedAt && (
             <span className="ml-2">
@@ -160,19 +160,19 @@ export default async function LeagueStandingsPage({ params }: Props) {
           {groups.map(([groupName, groupStandings]) => (
             <div key={groupName}>
               {hasMultipleGroups && (
-                <h2 className="font-display text-lg font-bold text-white mb-3 flex items-center gap-2">
+                <h2 className="font-display text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
                   <span className="w-1 h-5 bg-emerald-500 rounded-full" />
                   {cleanGroupName(groupName)}
                 </h2>
               )}
-              <Card className="bg-transparent border-gray-800 overflow-x-auto">
+              <Card className="bg-transparent border-slate-200 overflow-x-auto">
                 <table className="w-full text-xs sm:text-sm min-w-[640px]">
                   <thead>
-                    <tr className="border-b border-gray-800 text-gray-400">
+                    <tr className="border-b border-slate-200 text-slate-500">
                       <th className="text-left p-1.5 sm:p-3 w-6 sm:w-8 sticky left-0 bg-transparent z-10">#</th>
                       <th className="text-left p-1.5 sm:p-3 sticky left-6 sm:left-8 bg-transparent z-10 min-w-[120px]">Équipe</th>
                       <th className="text-center p-1.5 sm:p-3">MJ</th>
-                      <th className="text-center p-1.5 sm:p-3 font-bold text-emerald-400">Pts</th>
+                      <th className="text-center p-1.5 sm:p-3 font-bold text-emerald-600">Pts</th>
                       <th className="text-center p-1.5 sm:p-3">Diff</th>
                       <th className="text-center p-1.5 sm:p-3">V</th>
                       <th className="text-center p-1.5 sm:p-3">N</th>
@@ -188,20 +188,20 @@ export default async function LeagueStandingsPage({ params }: Props) {
                       return (
                         <tr
                           key={`${row.team_api_id}-${row.rank}`}
-                          className={`border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors ${
-                            index < 3 ? "border-l-2 border-l-emerald-400" : ""
+                          className={`border-b border-slate-200 hover:bg-slate-100 transition-colors ${
+                            index < 3 ? "border-l-2 border-l-emerald-500" : ""
                           } ${
                             index >= groupStandings.length - 3 ? "border-l-2 border-l-red-500" : ""
                           }`}
                         >
-                          <td className="p-1.5 sm:p-3 text-gray-400 font-mono sticky left-0 bg-transparent z-10">{row.rank}</td>
+                          <td className="p-1.5 sm:p-3 text-slate-500 font-mono sticky left-0 bg-transparent z-10">{row.rank}</td>
                           <td className="p-1.5 sm:p-3 sticky left-6 sm:left-8 bg-transparent z-10">
                             <div className="flex items-center gap-1.5">
                               {row.team_logo && (
                                 <Image src={row.team_logo} alt={`Logo ${row.team_name}`} width={20} height={20} className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0" />
                               )}
                               {teamSlug ? (
-                                <Link href={`/equipe/${teamSlug}`} className="font-medium hover:text-emerald-400 transition-colors truncate">
+                                <Link href={`/equipe/${teamSlug}`} className="font-medium hover:text-emerald-600 transition-colors truncate">
                                   {row.team_name}
                                 </Link>
                               ) : (
@@ -210,15 +210,15 @@ export default async function LeagueStandingsPage({ params }: Props) {
                             </div>
                           </td>
                           <td className="text-center p-1.5 sm:p-3">{row.played}</td>
-                          <td className="text-center p-1.5 sm:p-3 font-bold text-emerald-400">{row.points}</td>
+                          <td className="text-center p-1.5 sm:p-3 font-bold text-emerald-600">{row.points}</td>
                           <td className="text-center p-1.5 sm:p-3">
-                            <span className={row.goal_diff > 0 ? "text-green-400" : row.goal_diff < 0 ? "text-red-400" : "text-gray-400"}>
+                            <span className={row.goal_diff > 0 ? "text-green-600" : row.goal_diff < 0 ? "text-red-600" : "text-slate-500"}>
                               {row.goal_diff > 0 ? "+" : ""}{row.goal_diff}
                             </span>
                           </td>
-                          <td className="text-center p-1.5 sm:p-3 text-green-400">{row.won}</td>
-                          <td className="text-center p-1.5 sm:p-3 text-gray-400">{row.drawn}</td>
-                          <td className="text-center p-1.5 sm:p-3 text-red-400">{row.lost}</td>
+                          <td className="text-center p-1.5 sm:p-3 text-green-600">{row.won}</td>
+                          <td className="text-center p-1.5 sm:p-3 text-slate-500">{row.drawn}</td>
+                          <td className="text-center p-1.5 sm:p-3 text-red-600">{row.lost}</td>
                           <td className="text-center p-1.5 sm:p-3">{row.goals_for}</td>
                           <td className="text-center p-1.5 sm:p-3">{row.goals_against}</td>
                           <td className="text-center p-1.5 sm:p-3">
@@ -228,9 +228,9 @@ export default async function LeagueStandingsPage({ params }: Props) {
                                   key={i}
                                   className={`inline-flex w-4 h-4 sm:w-5 sm:h-5 rounded text-[10px] sm:text-xs font-bold items-center justify-center ${
                                     r === "W" ? "bg-green-600 text-white" :
-                                    r === "D" ? "bg-gray-600 text-white" :
+                                    r === "D" ? "bg-slate-300 text-slate-600" :
                                     r === "L" ? "bg-red-600 text-white" :
-                                    "bg-gray-700 text-gray-400"
+                                    "bg-slate-100 text-slate-500"
                                   }`}
                                 >
                                   {r === "W" ? "V" : r === "D" ? "N" : r === "L" ? "D" : "-"}
@@ -248,8 +248,8 @@ export default async function LeagueStandingsPage({ params }: Props) {
           ))}
         </div>
       ) : (
-        <Card className="bg-transparent border-gray-800 p-8 text-center">
-          <p className="text-gray-400">Aucun classement disponible pour cette ligue.</p>
+        <Card className="bg-transparent border-slate-200 p-8 text-center">
+          <p className="text-slate-500">Aucun classement disponible pour cette ligue.</p>
         </Card>
       )}
 

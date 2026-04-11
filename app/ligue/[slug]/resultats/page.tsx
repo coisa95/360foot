@@ -162,7 +162,7 @@ export default async function LeagueResultsPage({ params, searchParams }: Props)
 
       {/* Active round title */}
       {activeRound && (
-        <h2 className="font-display text-sm font-bold text-white mb-3">
+        <h2 className="font-display text-sm font-bold text-slate-900 mb-3">
           {cleanRoundName(activeRound)}
         </h2>
       )}
@@ -171,7 +171,7 @@ export default async function LeagueResultsPage({ params, searchParams }: Props)
         <div className="space-y-3">
           {Array.from(grouped.entries()).map(([dateLabel, dateMatches]) => (
             <div key={dateLabel}>
-              <p className="text-xs text-gray-500 mb-2 font-medium">{dateLabel}</p>
+              <p className="text-xs text-slate-400 mb-2 font-medium">{dateLabel}</p>
               <div className="space-y-2">
                 {dateMatches.map((match: any) => (
                   <MatchCard
@@ -193,8 +193,8 @@ export default async function LeagueResultsPage({ params, searchParams }: Props)
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-white/[0.06] bg-dark-card/50 p-8 text-center">
-          <p className="text-sm text-gray-500">Aucun résultat disponible pour le moment.</p>
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-8 text-center">
+          <p className="text-sm text-slate-400">Aucun résultat disponible pour le moment.</p>
         </div>
       )}
 

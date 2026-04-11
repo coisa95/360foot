@@ -17,16 +17,16 @@ export const ARTICLE_TYPE_LABELS: Record<string, string> = {
 };
 
 export const ARTICLE_TYPE_COLORS: Record<string, string> = {
-  result: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  match_report: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  preview: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-  transfer: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-  player_profile: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
-  recap: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-  guide: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-  trending: "bg-pink-500/20 text-pink-400 border-pink-500/30",
-  analysis: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
-  news: "bg-lime-500/20 text-lime-400 border-lime-500/30",
+  result: "bg-blue-50 text-blue-700 border-blue-200",
+  match_report: "bg-blue-50 text-blue-700 border-blue-200",
+  preview: "bg-orange-50 text-orange-700 border-orange-200",
+  transfer: "bg-purple-50 text-purple-700 border-purple-200",
+  player_profile: "bg-cyan-50 text-cyan-700 border-cyan-200",
+  recap: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  guide: "bg-yellow-50 text-yellow-700 border-yellow-200",
+  trending: "bg-pink-50 text-pink-700 border-pink-200",
+  analysis: "bg-cyan-50 text-cyan-700 border-cyan-200",
+  news: "bg-lime-50 text-lime-700 border-lime-200",
 };
 
 export function getArticleTypeLabel(type: string): string {

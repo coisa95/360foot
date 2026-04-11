@@ -67,7 +67,7 @@ export default async function BookmakersPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-transparent text-white">
+    <main className="min-h-screen bg-transparent text-slate-900">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -85,17 +85,17 @@ export default async function BookmakersPage() {
 
         <div className="mt-6">
           <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-glow">Paris sportifs</h1>
-          <p className="text-gray-400 mt-1 text-sm sm:text-base">
+          <p className="text-slate-500 mt-1 text-sm sm:text-base">
             Comparez les meilleurs bookmakers disponibles dans votre pays et profitez
             des meilleurs bonus de bienvenue.
           </p>
         </div>
 
         {/* Disclaimer (avant CTAs pour compliance) */}
-        <div className="mt-5 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-3 text-center">
-          <p className="text-yellow-400/90 text-xs sm:text-sm">
+        <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-center">
+          <p className="text-amber-600/90 text-xs sm:text-sm">
             <strong>18+</strong> · Les paris sportifs comportent des risques. Jouez de manière responsable.
-            Bonus soumis à conditions. Aide : <a href="tel:0974751313" className="underline hover:text-yellow-300">0 974 75 13 13</a>
+            Bonus soumis à conditions. Aide : <a href="tel:0974751313" className="underline hover:text-amber-600">0 974 75 13 13</a>
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export default async function BookmakersPage() {
               return (
                 <Card
                   key={bookmaker.id}
-                  className="card-glow bg-white/[0.02] border-white/[0.06] p-5 sm:p-6 relative overflow-hidden"
+                  className="card-glow bg-slate-50 border-slate-200 p-5 sm:p-6 relative overflow-hidden"
                 >
                   {/* Rang badge */}
                   {idx === 0 && (
@@ -121,19 +121,19 @@ export default async function BookmakersPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <Link href={`/bookmakers/${bookmaker.slug}`}>
-                          <h2 className="font-display text-lg sm:text-xl font-extrabold hover:text-emerald-400 transition-colors">
+                          <h2 className="font-display text-lg sm:text-xl font-extrabold hover:text-emerald-600 transition-colors">
                             {bookmaker.name}
                           </h2>
                         </Link>
                         {idx < 3 && (
-                          <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
+                          <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 text-[10px]">
                             #{idx + 1}
                           </Badge>
                         )}
                       </div>
 
                       {bookmaker.bonus_json && (
-                        <p className="text-emerald-400 font-bold text-base sm:text-lg mb-2">
+                        <p className="text-emerald-600 font-bold text-base sm:text-lg mb-2">
                           {getBonusText(bookmaker.bonus_json as Record<string, string>)}
                         </p>
                       )}
@@ -142,8 +142,8 @@ export default async function BookmakersPage() {
                       {badges.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 mb-2">
                           {badges.map((badge) => (
-                            <span key={badge} className="inline-flex items-center gap-1 text-[10px] font-medium text-gray-400 bg-white/[0.04] border border-white/[0.06] rounded-full px-2 py-0.5">
-                              <span className="text-emerald-400">&#10003;</span> {badge}
+                            <span key={badge} className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-500 bg-slate-50 border border-slate-200 rounded-full px-2 py-0.5">
+                              <span className="text-emerald-600">&#10003;</span> {badge}
                             </span>
                           ))}
                         </div>
@@ -151,11 +151,11 @@ export default async function BookmakersPage() {
 
                       {bookmaker.countries && (
                         <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="text-gray-500 text-[10px]">Pays :</span>
+                          <span className="text-slate-400 text-[10px]">Pays :</span>
                           {(bookmaker.countries as string[]).map((country) => (
                             <Badge
                               key={country}
-                              className="bg-white/[0.04] text-gray-400 border-white/[0.06] text-[10px] px-1.5 py-0"
+                              className="bg-slate-50 text-slate-500 border-slate-200 text-[10px] px-1.5 py-0"
                             >
                               {country}
                             </Badge>
@@ -168,8 +168,8 @@ export default async function BookmakersPage() {
                       {/* Promo code */}
                       {promoCode && (
                         <div className="text-center mb-1">
-                          <p className="text-[9px] uppercase tracking-widest text-gray-500 mb-0.5">Code promo</p>
-                          <span className="inline-block font-display font-extrabold text-sm tracking-wider text-amber-400 border border-dashed border-amber-400/30 bg-amber-400/5 rounded-lg px-3 py-1">
+                          <p className="text-[9px] uppercase tracking-widest text-slate-400 mb-0.5">Code promo</p>
+                          <span className="inline-block font-display font-extrabold text-sm tracking-wider text-amber-600 border border-dashed border-amber-400/30 bg-amber-400/5 rounded-lg px-3 py-1">
                             {promoCode}
                           </span>
                         </div>
@@ -184,7 +184,7 @@ export default async function BookmakersPage() {
                       </Link>
                       <Link
                         href={`/bookmakers/${bookmaker.slug}`}
-                        className="text-gray-500 hover:text-gray-300 text-[11px] transition-colors"
+                        className="text-slate-400 hover:text-slate-700 text-[11px] transition-colors"
                       >
                         Avis détaillé {bookmaker.name}
                       </Link>
@@ -195,7 +195,7 @@ export default async function BookmakersPage() {
             })
           ) : (
             <Card className="card-glass p-8 text-center">
-              <p className="text-gray-400">Aucun bookmaker disponible pour le moment.</p>
+              <p className="text-slate-500">Aucun bookmaker disponible pour le moment.</p>
             </Card>
           )}
         </div>

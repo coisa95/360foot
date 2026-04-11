@@ -98,14 +98,14 @@ export default async function CompetitionsPage() {
   ];
 
   return (
-    <main className="min-h-screen text-white">
+    <main className="min-h-screen text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
         <h1 className="font-display mt-6 text-3xl font-bold md:text-4xl">
-          <span className="text-emerald-400">Compétitions</span>
+          <span className="text-emerald-600">Compétitions</span>
         </h1>
-        <p className="mt-2 text-gray-400 text-sm">
+        <p className="mt-2 text-slate-500 text-sm">
           Toutes les compétitions suivies par 360 Foot
         </p>
 
@@ -116,19 +116,19 @@ export default async function CompetitionsPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {categories.get(cat)!.map((league: any) => (
                   <Link key={league.slug} href={`/ligue/${league.slug}`}>
-                    <Card className="border-gray-800 bg-dark-card p-4 hover:border-emerald-500/30 transition-colors">
+                    <Card className="border-slate-200 bg-white p-4 hover:border-emerald-200 transition-colors">
                       <div className="flex items-center gap-3">
                         {league.logo_url ? (
                           <Image src={league.logo_url} alt={`Logo ${league.name}`} width={32} height={32} className="h-8 w-8 object-contain" />
                         ) : (
-                          <div className="h-8 w-8 rounded bg-gray-700 flex items-center justify-center text-xs text-gray-500">
+                          <div className="h-8 w-8 rounded bg-slate-100 flex items-center justify-center text-xs text-slate-400">
                             {league.name?.charAt(0)}
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
-                          <p className="font-medium text-white text-sm truncate">{league.name}</p>
+                          <p className="font-medium text-slate-900 text-sm truncate">{league.name}</p>
                           {league.country && (
-                            <p className="text-xs text-gray-500">{league.country}</p>
+                            <p className="text-xs text-slate-400">{league.country}</p>
                           )}
                         </div>
                       </div>
@@ -148,7 +148,7 @@ export default async function CompetitionsPage() {
 
             return (
               <section key={cat}>
-                <h2 className="font-display text-lg font-bold text-white mb-3 flex items-center gap-2">
+                <h2 className="font-display text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
                   <span className="w-1 h-5 bg-emerald-500 rounded-full" />
                   {cat}
                 </h2>

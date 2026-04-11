@@ -18,15 +18,15 @@ interface MatchCardProps {
 }
 
 const STATUS_LABELS: Record<string, { label: string; full: string; color: string; bg: string }> = {
-  NS: { label: "À venir", full: "À venir", color: "text-blue-400", bg: "bg-blue-500/10" },
-  "1H": { label: "1MT", full: "1ère mi-temps", color: "text-red-400", bg: "bg-red-500/15" },
-  HT: { label: "MT", full: "Mi-temps", color: "text-yellow-400", bg: "bg-yellow-500/10" },
-  "2H": { label: "2MT", full: "2ème mi-temps", color: "text-red-400", bg: "bg-red-500/15" },
-  FT: { label: "Terminé", full: "Terminé", color: "text-emerald-400", bg: "bg-emerald-500/10" },
-  AET: { label: "AP", full: "Après prolongations", color: "text-emerald-400", bg: "bg-emerald-500/10" },
-  PEN: { label: "TAB", full: "Tirs au but", color: "text-emerald-400", bg: "bg-emerald-500/10" },
-  PST: { label: "Reporté", full: "Reporté", color: "text-orange-400", bg: "bg-orange-500/10" },
-  CANC: { label: "Annulé", full: "Annulé", color: "text-red-400", bg: "bg-red-500/10" },
+  NS: { label: "À venir", full: "À venir", color: "text-blue-600", bg: "bg-blue-50" },
+  "1H": { label: "1MT", full: "1ère mi-temps", color: "text-red-600", bg: "bg-red-50" },
+  HT: { label: "MT", full: "Mi-temps", color: "text-yellow-600", bg: "bg-yellow-50" },
+  "2H": { label: "2MT", full: "2ème mi-temps", color: "text-red-600", bg: "bg-red-50" },
+  FT: { label: "Terminé", full: "Terminé", color: "text-emerald-600", bg: "bg-emerald-50" },
+  AET: { label: "AP", full: "Après prolongations", color: "text-emerald-600", bg: "bg-emerald-50" },
+  PEN: { label: "TAB", full: "Tirs au but", color: "text-emerald-600", bg: "bg-emerald-50" },
+  PST: { label: "Reporté", full: "Reporté", color: "text-orange-600", bg: "bg-orange-50" },
+  CANC: { label: "Annulé", full: "Annulé", color: "text-red-600", bg: "bg-red-50" },
 };
 
 export function MatchCard({
@@ -48,14 +48,14 @@ export function MatchCard({
   const isLive = status === "1H" || status === "2H";
 
   return (
-    <Link href={`/match/${slug}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg rounded-xl">
-      <div className={`relative rounded-xl border bg-dark-card/60 backdrop-blur-sm px-3.5 py-3 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 overflow-hidden ${isLive ? "border-red-500/40 hover:border-red-500/60" : "border-white/[0.06] hover:border-emerald-500/25"}`}>
+    <Link href={`/match/${slug}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-xl">
+      <div className={`relative rounded-xl border bg-white/80 backdrop-blur-sm px-3.5 py-3 transition-all duration-300 hover:shadow-lg hover:shadow-slate-200/50 hover:-translate-y-0.5 overflow-hidden ${isLive ? "border-red-300 hover:border-red-400" : "border-slate-200/80 hover:border-emerald-500/30"}`}>
         {/* Gradient accent top */}
         <div className={`absolute top-0 left-0 right-0 h-[2px] ${isLive ? "bg-gradient-to-r from-red-500 via-orange-500 to-red-500" : "bg-gradient-to-r from-emerald-500/0 via-emerald-500/30 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity"}`} />
 
         {/* League name */}
         {leagueName && (
-          <p className="text-[10px] text-gray-500 mb-2 truncate">{leagueName}</p>
+          <p className="text-[10px] text-slate-400 mb-2 truncate">{leagueName}</p>
         )}
 
         {/* Match content */}
@@ -68,13 +68,13 @@ export function MatchCard({
                   {homeLogoUrl ? (
                     <Image src={homeLogoUrl} alt={`Logo ${homeTeam}`} width={20} height={20} className="w-5 h-5 object-contain" />
                   ) : (
-                    <div className="w-5 h-5 rounded-full bg-white/[0.02]" />
+                    <div className="w-5 h-5 rounded-full bg-slate-100" />
                   )}
                 </div>
-                <span className={`text-sm font-medium truncate ${status !== "NS" && (homeScore ?? 0) > (awayScore ?? 0) ? "text-white" : "text-gray-300"} group-hover:text-white transition-colors`}>{homeTeam}</span>
+                <span className={`text-sm font-medium truncate ${status !== "NS" && (homeScore ?? 0) > (awayScore ?? 0) ? "text-slate-900 font-semibold" : "text-slate-600"} group-hover:text-slate-900 transition-colors`}>{homeTeam}</span>
               </div>
               {status !== "NS" && (
-                <span className={`text-sm font-bold tabular-nums shrink-0 ${(homeScore ?? 0) > (awayScore ?? 0) ? "text-white" : "text-gray-500"}`}>
+                <span className={`text-sm font-bold tabular-nums shrink-0 ${(homeScore ?? 0) > (awayScore ?? 0) ? "text-slate-900" : "text-slate-400"}`}>
                   {homeScore ?? 0}
                 </span>
               )}
@@ -85,13 +85,13 @@ export function MatchCard({
                   {awayLogoUrl ? (
                     <Image src={awayLogoUrl} alt={`Logo ${awayTeam}`} width={20} height={20} className="w-5 h-5 object-contain" />
                   ) : (
-                    <div className="w-5 h-5 rounded-full bg-white/[0.02]" />
+                    <div className="w-5 h-5 rounded-full bg-slate-100" />
                   )}
                 </div>
-                <span className={`text-sm font-medium truncate ${status !== "NS" && (awayScore ?? 0) > (homeScore ?? 0) ? "text-white" : "text-gray-300"} group-hover:text-white transition-colors`}>{awayTeam}</span>
+                <span className={`text-sm font-medium truncate ${status !== "NS" && (awayScore ?? 0) > (homeScore ?? 0) ? "text-slate-900 font-semibold" : "text-slate-600"} group-hover:text-slate-900 transition-colors`}>{awayTeam}</span>
               </div>
               {status !== "NS" && (
-                <span className={`text-sm font-bold tabular-nums shrink-0 ${(awayScore ?? 0) > (homeScore ?? 0) ? "text-white" : "text-gray-500"}`}>
+                <span className={`text-sm font-bold tabular-nums shrink-0 ${(awayScore ?? 0) > (homeScore ?? 0) ? "text-slate-900" : "text-slate-400"}`}>
                   {awayScore ?? 0}
                 </span>
               )}
@@ -99,14 +99,14 @@ export function MatchCard({
           </div>
 
           {/* Separator */}
-          <div className="w-px h-8 bg-dark-border/50 shrink-0" />
+          <div className="w-px h-8 bg-slate-200 shrink-0" />
 
           {/* Status / Time */}
           <div className="w-14 shrink-0 text-center">
             {status === "NS" ? (
               <div>
-                <p className="text-sm font-bold text-blue-400">{timeStr}</p>
-                <p className="text-[10px] text-gray-500">{dateStr}</p>
+                <p className="text-sm font-bold text-blue-600">{timeStr}</p>
+                <p className="text-[10px] text-slate-400">{dateStr}</p>
               </div>
             ) : (
               <div className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 ${statusConf.bg}`}>

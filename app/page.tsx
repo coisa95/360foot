@@ -117,17 +117,17 @@ async function getStandings() {
 
 function SectionHeader({ title, href, linkText, accent = "lime" }: { title: string; href?: string; linkText?: string; accent?: "lime" | "blue" | "purple" | "orange" }) {
   const accents = {
-    lime: { bar: "from-emerald-400 to-emerald-500", text: "text-emerald-400", hover: "hover:text-emerald-300" },
-    blue: { bar: "from-blue-400 to-cyan-500", text: "text-blue-400", hover: "hover:text-blue-300" },
-    purple: { bar: "from-purple-400 to-pink-500", text: "text-purple-400", hover: "hover:text-purple-300" },
-    orange: { bar: "from-orange-400 to-amber-500", text: "text-orange-400", hover: "hover:text-orange-300" },
+    lime: { bar: "from-emerald-400 to-emerald-500", text: "text-emerald-600", hover: "hover:text-emerald-500" },
+    blue: { bar: "from-blue-400 to-cyan-500", text: "text-blue-600", hover: "hover:text-blue-500" },
+    purple: { bar: "from-purple-400 to-pink-500", text: "text-purple-600", hover: "hover:text-purple-500" },
+    orange: { bar: "from-orange-400 to-amber-500", text: "text-orange-600", hover: "hover:text-orange-500" },
   };
   const a = accents[accent];
   return (
     <div className="flex items-center justify-between mb-4 md:mb-6">
       <div className="flex items-center gap-3">
         <div className={`w-1 h-6 rounded-full bg-gradient-to-b ${a.bar}`} />
-        <h2 className="font-display text-lg md:text-xl font-bold text-white">{title}</h2>
+        <h2 className="font-display text-lg md:text-xl font-bold text-slate-900">{title}</h2>
       </div>
       {href && (
         <Link
@@ -153,27 +153,27 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-4 md:py-8 space-y-6 md:space-y-10">
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-br from-[#0d1117] via-[#111827] to-[#0d1117] border border-emerald-500/20 p-5 md:p-10">
-        {/* Colored glow effects */}
-        <div className="absolute -top-20 -right-20 w-60 h-60 bg-emerald-500/15 rounded-full blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-10 left-1/2 w-40 h-40 bg-cyan-500/8 rounded-full blur-3xl" />
+      <section className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-br from-white via-emerald-50/50 to-white border border-emerald-200 p-5 md:p-10 shadow-sm">
+        {/* Subtle glow effects */}
+        <div className="absolute -top-20 -right-20 w-60 h-60 bg-emerald-500/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-emerald-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-10 left-1/2 w-40 h-40 bg-cyan-500/5 rounded-full blur-3xl" />
         <div className="relative">
-          <h1 className="font-display text-xl sm:text-3xl md:text-5xl font-extrabold text-white leading-tight whitespace-nowrap">
+          <h1 className="font-display text-xl sm:text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight whitespace-nowrap">
             Football{" "}
-            <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(163,230,53,0.3)]">
+            <span className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">
               Afrique &amp; Europe
             </span>
           </h1>
-          <p className="mt-2 md:mt-4 text-xs md:text-lg text-gray-400 max-w-2xl">
+          <p className="mt-2 md:mt-4 text-xs md:text-lg text-slate-500 max-w-2xl">
             Résultats, analyses et transferts — couverture 24/7.
           </p>
           <div className="mt-3 md:mt-6 flex gap-2 md:gap-3">
-            <Link href="/matchs" className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-500/20 to-emerald-500/20 border border-emerald-500/30 px-3.5 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-semibold text-emerald-300 hover:from-emerald-500/30 hover:to-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/10 transition-all">
+            <Link href="/matchs" className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-3.5 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-semibold text-white hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20 transition-all">
               <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" /></span>
               Matchs en direct
             </Link>
-            <Link href="/actu" className="inline-flex items-center rounded-full bg-blue-500/10 border border-blue-500/20 px-3.5 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-medium text-blue-300 hover:bg-blue-500/20 transition-all">
+            <Link href="/actu" className="inline-flex items-center rounded-full bg-blue-500 px-3.5 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-medium text-white hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/20 transition-all">
               Actualités
             </Link>
           </div>
@@ -290,8 +290,8 @@ export default async function HomePage() {
                 );
               })
             : (
-              <div className="rounded-lg border border-white/[0.06] card-glass p-6 text-center">
-                <p className="text-sm text-gray-500">
+              <div className="rounded-lg border border-slate-200 bg-white p-6 text-center">
+                <p className="text-sm text-slate-500">
                   Classements en cours de chargement...
                 </p>
               </div>

@@ -37,45 +37,45 @@ export default function LegalPage() {
   ];
 
   return (
-    <main className="min-h-screen text-white">
+    <main className="min-h-screen text-slate-900">
       <div className="container mx-auto px-4 py-6 max-w-3xl">
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="font-display text-3xl font-bold text-emerald-400">Mentions légales</h1>
-          <p className="text-gray-400 mt-2">Dernière mise à jour : mars 2026</p>
+          <h1 className="font-display text-3xl font-bold text-emerald-600">Mentions légales</h1>
+          <p className="text-slate-500 mt-2">Dernière mise à jour : mars 2026</p>
         </div>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Éditeur du site</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <div className="space-y-2 text-gray-300">
-            <p><span className="text-gray-400">Nom du site :</span> 360 Foot</p>
-            <p><span className="text-gray-400">URL :</span> https://360-foot.com</p>
-            <p><span className="text-gray-400">Email :</span> contact@360-foot.com</p>
-            <p><span className="text-gray-400">Directeur de la publication :</span> Le responsable de 360 Foot</p>
+          <Separator className="bg-slate-200 mb-4" />
+          <div className="space-y-2 text-slate-700">
+            <p><span className="text-slate-500">Nom du site :</span> 360 Foot</p>
+            <p><span className="text-slate-500">URL :</span> https://360-foot.com</p>
+            <p><span className="text-slate-500">Email :</span> contact@360-foot.com</p>
+            <p><span className="text-slate-500">Directeur de la publication :</span> Le responsable de 360 Foot</p>
           </div>
         </Card>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Hébergement</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <div className="space-y-2 text-gray-300">
-            <p><span className="text-gray-400">Hébergeur :</span> Vercel Inc.</p>
-            <p><span className="text-gray-400">Adresse :</span> 440 N Barranca Ave #4133, Covina, CA 91723, USA</p>
-            <p><span className="text-gray-400">Site web :</span> https://vercel.com</p>
+          <Separator className="bg-slate-200 mb-4" />
+          <div className="space-y-2 text-slate-700">
+            <p><span className="text-slate-500">Hébergeur :</span> Vercel Inc.</p>
+            <p><span className="text-slate-500">Adresse :</span> 440 N Barranca Ave #4133, Covina, CA 91723, USA</p>
+            <p><span className="text-slate-500">Site web :</span> https://vercel.com</p>
           </div>
         </Card>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Propriété intellectuelle</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <Separator className="bg-slate-200 mb-4" />
+          <p className="text-slate-700 leading-relaxed mb-4">
             L&apos;ensemble du contenu du site 360 Foot (textes, images,
             graphismes, logo, icônes, etc.) est protégé par le droit
             d&apos;auteur et le droit de la propriété intellectuelle.
           </p>
-          <p className="text-gray-300 leading-relaxed">
+          <p className="text-slate-700 leading-relaxed">
             Toute reproduction, représentation, modification, publication ou
             adaptation de tout ou partie des éléments du site, quel que soit le
             moyen ou le procédé utilisé, est interdite sauf autorisation écrite
@@ -83,10 +83,10 @@ export default function LegalPage() {
           </p>
         </Card>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Contenu généré par intelligence artificielle</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <Separator className="bg-slate-200 mb-4" />
+          <p className="text-slate-700 leading-relaxed mb-4">
             Une partie du contenu éditorial de ce site est générée par des
             systèmes d&apos;intelligence artificielle. Ces contenus sont basés
             sur des données factuelles provenant de sources fiables. 360 Foot
@@ -96,16 +96,16 @@ export default function LegalPage() {
           </p>
         </Card>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Liens d&apos;affiliation et paris sportifs</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <Separator className="bg-slate-200 mb-4" />
+          <p className="text-slate-700 leading-relaxed mb-4">
             Ce site contient des liens d&apos;affiliation vers des sites de
             paris sportifs. 360 Foot peut percevoir une rémunération
             lorsqu&apos;un utilisateur s&apos;inscrit via ces liens. Cette
             rémunération n&apos;influence pas notre contenu éditorial.
           </p>
-          <p className="text-gray-300 leading-relaxed">
+          <p className="text-slate-700 leading-relaxed">
             Les paris sportifs sont réservés aux personnes majeures (18 ans et
             plus). Les paris sportifs comportent des risques de perte
             financière. Jouez de manière responsable. En cas de difficulté,
@@ -114,27 +114,27 @@ export default function LegalPage() {
           </p>
         </Card>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Limitation de responsabilité</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <Separator className="bg-slate-200 mb-4" />
+          <p className="text-slate-700 leading-relaxed mb-4">
             360 Foot s&apos;efforce de fournir des informations aussi précises
             que possible. Toutefois, il ne pourra être tenu responsable des
             omissions, des inexactitudes et des carences dans la mise à jour,
             qu&apos;elles soient de son fait ou du fait des tiers partenaires
             qui lui fournissent ces informations.
           </p>
-          <p className="text-gray-300 leading-relaxed">
+          <p className="text-slate-700 leading-relaxed">
             Toutes les informations indiquées sur le site sont données à titre
             indicatif et sont susceptibles d&apos;évoluer. Les informations
             contenues sur le site ne sont pas contractuelles.
           </p>
         </Card>
 
-        <Card className="bg-transparent border-gray-800 p-6 mt-6">
+        <Card className="bg-transparent border-slate-200 p-6 mt-6">
           <h2 className="font-display text-xl font-bold mb-4">Droit applicable</h2>
-          <Separator className="bg-gray-800 mb-4" />
-          <p className="text-gray-300 leading-relaxed">
+          <Separator className="bg-slate-200 mb-4" />
+          <p className="text-slate-700 leading-relaxed">
             Les présentes mentions légales sont régies par le droit français. En
             cas de litige, les tribunaux français seront seuls compétents.
           </p>

@@ -234,7 +234,7 @@ export default async function ArticlePage({ params }: Props) {
   // Type labels and colors from shared utility (lib/article-types.ts)
 
   return (
-    <main className="min-h-screen bg-transparent text-white">
+    <main className="min-h-screen bg-transparent text-slate-900">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
@@ -256,7 +256,7 @@ export default async function ArticlePage({ params }: Props) {
                   {getArticleTypeLabel(article.type)}
                 </Badge>
               )}
-              <time className="text-gray-400 text-sm">
+              <time className="text-slate-500 text-sm">
                 {new Date(article.published_at).toLocaleDateString("fr-FR", {
                   year: "numeric",
                   month: "long",
@@ -270,7 +270,7 @@ export default async function ArticlePage({ params }: Props) {
             </h1>
 
             {article.excerpt && (
-              <p className="text-gray-400 text-lg mt-4 leading-relaxed">
+              <p className="text-slate-500 text-lg mt-4 leading-relaxed">
                 {article.excerpt}
               </p>
             )}
@@ -290,17 +290,17 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           )}
 
-          <Separator className="bg-gray-800 mb-8" />
+          <Separator className="bg-slate-200 mb-8" />
 
           {/* Contenu de l'article */}
           <div
-            className="prose prose-invert prose-emerald max-w-none text-justify
-              prose-headings:text-white prose-headings:font-bold prose-headings:text-left
-              prose-p:text-gray-300 prose-p:leading-relaxed
-              prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline
-              prose-strong:text-white
-              prose-li:text-gray-300
-              prose-figcaption:text-xs prose-figcaption:text-gray-500 prose-figcaption:italic prose-figcaption:text-center prose-figcaption:mt-2
+            className="prose prose-emerald max-w-none text-justify
+              prose-headings:text-slate-900 prose-headings:font-bold prose-headings:text-left
+              prose-p:text-slate-600 prose-p:leading-relaxed
+              prose-a:text-emerald-600 prose-a:no-underline hover:prose-a:underline
+              prose-strong:text-slate-900
+              prose-li:text-slate-600
+              prose-figcaption:text-xs prose-figcaption:text-slate-400 prose-figcaption:italic prose-figcaption:text-center prose-figcaption:mt-2
               prose-img:rounded-lg prose-img:mx-auto"
             dangerouslySetInnerHTML={{ __html: enrichedContent }}
           />
@@ -313,12 +313,12 @@ export default async function ArticlePage({ params }: Props) {
             <AffiliateTrio />
           </div>
 
-          <Separator className="bg-gray-800 my-8" />
+          <Separator className="bg-slate-200 my-8" />
 
           {/* Articles lies */}
           {relatedArticles && relatedArticles.length > 0 && (
             <div className="mt-8">
-              <h2 className="font-display text-xl font-bold text-emerald-400 mb-4">
+              <h2 className="font-display text-xl font-bold text-emerald-600 mb-4">
                 Articles similaires
               </h2>
               <RelatedArticles

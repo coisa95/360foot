@@ -62,7 +62,7 @@ export function RoundNav({ rounds, activeRound, slug, basePath = "calendrier" }:
               className={`inline-flex items-center justify-center min-w-[2.5rem] px-3 py-2 rounded-full text-xs font-semibold transition-all shrink-0 ${
                 isActive
                   ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
-                  : "bg-dark-card border border-white/[0.06] text-gray-400 hover:text-white hover:border-emerald-500/30"
+                  : "bg-white border border-slate-200 text-slate-500 hover:text-slate-700 hover:border-emerald-500/30"
               }`}
             >
               {round.num > 0 ? `J${round.num}` : round.label}

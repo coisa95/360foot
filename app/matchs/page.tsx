@@ -138,7 +138,7 @@ export default async function MatchsPage({ searchParams }: Props) {
   };
 
   return (
-    <main className="min-h-screen text-white">
+    <main className="min-h-screen text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
@@ -157,7 +157,7 @@ export default async function MatchsPage({ searchParams }: Props) {
                 className={`shrink-0 rounded-lg px-3 py-2 text-center text-xs font-medium transition-colors ${
                   isActive
                     ? "bg-emerald-500 text-black"
-                    : "bg-dark-card text-gray-400 hover:bg-gray-700 hover:text-white"
+                    : "bg-white text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <div className="font-bold">{formatDateLabel(d)}</div>
@@ -191,8 +191,8 @@ export default async function MatchsPage({ searchParams }: Props) {
             ))}
           </div>
         ) : (
-          <div className="mt-8 rounded-lg border border-white/[0.06] bg-dark-card/50 p-8 text-center">
-            <p className="text-sm text-gray-500">Aucun match pour cette date.</p>
+          <div className="mt-8 rounded-lg border border-slate-200 bg-slate-50 p-8 text-center">
+            <p className="text-sm text-slate-400">Aucun match pour cette date.</p>
           </div>
         )}
 

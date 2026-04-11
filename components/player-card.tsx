@@ -22,10 +22,10 @@ const POSITION_LABELS: Record<string, string> = {
 };
 
 const POSITION_COLORS: Record<string, string> = {
-  Goalkeeper: "bg-yellow-500/10 text-yellow-400",
-  Defender: "bg-blue-500/10 text-blue-400",
-  Midfielder: "bg-emerald-500/10 text-emerald-400",
-  Attacker: "bg-red-500/10 text-red-400",
+  Goalkeeper: "bg-yellow-50 text-yellow-700",
+  Defender: "bg-blue-50 text-blue-700",
+  Midfielder: "bg-emerald-50 text-emerald-700",
+  Attacker: "bg-red-50 text-red-700",
 };
 
 export function PlayerCard({
@@ -40,10 +40,10 @@ export function PlayerCard({
 }: PlayerCardProps) {
   return (
     <Link href={`/joueur/${slug}`}>
-      <Card className="border-white/[0.06] bg-dark-card p-4 transition-colors hover:border-emerald-500/30 hover:bg-white/[0.02]">
+      <Card className="border-slate-200/80 bg-white/80 backdrop-blur-sm p-4 transition-colors hover:border-emerald-500/30 hover:bg-slate-50">
         <div className="flex items-center gap-3">
           {/* Player photo */}
-          <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full bg-white/[0.02]">
+          <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full bg-slate-100">
             {photoUrl ? (
               <Image
                 src={photoUrl}
@@ -53,7 +53,7 @@ export function PlayerCard({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-lg font-bold text-gray-600">
+              <div className="flex h-full w-full items-center justify-center text-lg font-bold text-slate-400">
                 {number ?? "?"}
               </div>
             )}
@@ -63,14 +63,14 @@ export function PlayerCard({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               {number != null && (
-                <span className="text-sm font-bold text-emerald-400">#{number}</span>
+                <span className="text-sm font-bold text-emerald-600">#{number}</span>
               )}
-              <h3 className="font-display truncate font-semibold text-white">{name}</h3>
+              <h3 className="font-display truncate font-semibold text-slate-900">{name}</h3>
             </div>
             {teamName && (
-              <p className="mt-0.5 truncate text-sm text-gray-400">{teamName}</p>
+              <p className="mt-0.5 truncate text-sm text-slate-500">{teamName}</p>
             )}
-            <p className="mt-0.5 text-xs text-gray-500">
+            <p className="mt-0.5 text-xs text-slate-400">
               {nationality}
               {age != null && ` · ${age} ans`}
             </p>
@@ -79,7 +79,7 @@ export function PlayerCard({
           {/* Position badge */}
           <Badge
             variant="secondary"
-            className={`flex-shrink-0 text-xs ${POSITION_COLORS[position] || "bg-emerald-500/10 text-emerald-400"}`}
+            className={`flex-shrink-0 text-xs ${POSITION_COLORS[position] || "bg-emerald-50 text-emerald-700"}`}
           >
             {POSITION_LABELS[position] || position}
           </Badge>
