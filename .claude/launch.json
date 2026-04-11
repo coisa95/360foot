@@ -4,7 +4,7 @@
     {
       "name": "next-dev",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd '/Users/mac/Desktop/mkdir 360foot && cd 360foot/360foot' && npx next dev -p $PORT"],
+      "runtimeArgs": ["-lc", "cd '/Users/mac/Desktop/mkdir 360foot && cd 360foot/360foot' && npx next dev -p $PORT"],
       "port": 3000
     }
   ]
