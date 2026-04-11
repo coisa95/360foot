@@ -105,13 +105,17 @@ export default async function LeagueStandingsPage({ params }: Props) {
     if (t.api_football_id && t.slug) teamSlugMap.set(t.api_football_id, t.slug);
   }
 
-  const jsonLdOrg = {
+  const jsonLdOrg: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "SportsOrganization",
     name: league.name,
     sport: "Football",
     url: `https://360-foot.com/ligue/${slug}`,
+    description: `Classement complet de la ${league.name} : points, victoires, défaites, nuls, buts marqués et encaissés.`,
   };
+  if (league.logo_url) {
+    jsonLdOrg.logo = league.logo_url;
+  }
 
   return (
     <>

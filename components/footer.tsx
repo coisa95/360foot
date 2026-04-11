@@ -31,7 +31,7 @@ export function Footer() {
                 <span className="text-glow">Foot</span>
               </span>
             </Link>
-            <p className="mt-1.5 text-[10px] text-gray-500 max-w-[220px] leading-relaxed">
+            <p className="mt-1.5 text-[10px] text-gray-400 max-w-[220px] leading-relaxed">
               Football africain et européen — résultats, classements, transferts.
             </p>
             {/* Social */}
@@ -56,7 +56,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-[11px] text-gray-500 transition-colors hover:text-emerald-400"
+                      className="text-[11px] text-gray-400 transition-colors hover:text-emerald-400"
                     >
                       {link.label}
                     </Link>
@@ -73,7 +73,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-[11px] text-gray-500 transition-colors hover:text-emerald-400"
+                      className="text-[11px] text-gray-400 transition-colors hover:text-emerald-400"
                     >
                       {link.label}
                     </Link>

@@ -81,7 +81,7 @@ export async function LeagueSidebar({ activeSlug }: LeagueSidebarProps) {
         {groups.map((group) => (
           <div key={group.label} className="mb-2">
             {/* Group heading */}
-            <h3 className="px-4 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+            <h3 className="px-4 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
               {group.label}
             </h3>
 

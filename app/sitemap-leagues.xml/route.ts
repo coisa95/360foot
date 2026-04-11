@@ -18,7 +18,13 @@ export async function GET() {
     if (data.length < 1000) break;
   }
 
-  const subPages = ["resultats", "calendrier", "actualites", "buteurs", "passeurs"];
+  const subPages: { path: string; priority: number; changefreq: string }[] = [
+    { path: "resultats", priority: 0.6, changefreq: "daily" },
+    { path: "calendrier", priority: 0.5, changefreq: "weekly" },
+    { path: "actualites", priority: 0.7, changefreq: "daily" },
+    { path: "buteurs", priority: 0.5, changefreq: "weekly" },
+    { path: "passeurs", priority: 0.5, changefreq: "weekly" },
+  ];
 
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
@@ -37,10 +43,10 @@ export async function GET() {
     for (const sub of subPages) {
       xml += `
   <url>
-    <loc>${baseUrl}/ligue/${league.slug}/${sub}</loc>
+    <loc>${baseUrl}/ligue/${league.slug}/${sub.path}</loc>
     ${lastmod}
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
+    <changefreq>${sub.changefreq}</changefreq>
+    <priority>${sub.priority}</priority>
   </url>`;
     }
   }

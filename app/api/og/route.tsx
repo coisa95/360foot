@@ -6,9 +6,11 @@ export const runtime = "edge";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const title = searchParams.get("title") || "360 Foot";
+    const rawTitle = searchParams.get("title") || "360 Foot";
+    const title = rawTitle.length > 200 ? rawTitle.slice(0, 197) + "..." : rawTitle;
     const type = searchParams.get("type") || "result";
-    const league = searchParams.get("league") || "";
+    const rawLeague = searchParams.get("league") || "";
+    const league = rawLeague.length > 100 ? rawLeague.slice(0, 97) + "..." : rawLeague;
     const homeLogo = searchParams.get("homeLogo") || "";
     const awayLogo = searchParams.get("awayLogo") || "";
     const leagueLogo = searchParams.get("leagueLogo") || "";

@@ -1,14 +1,12 @@
 import { createClient as supabaseCreateClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+import { env } from "./env";
 
 /**
  * Server-side Supabase client using the service role key.
  * Use this in CRON jobs and server actions that need write access.
  */
 export function createClient() {
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  return supabaseCreateClient(supabaseUrl, serviceRoleKey, {
+  return supabaseCreateClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
@@ -21,8 +19,7 @@ export function createClient() {
  * Use this in public API routes and server components for read operations.
  */
 export function createAnonClient() {
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  return supabaseCreateClient(supabaseUrl, anonKey, {
+  return supabaseCreateClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

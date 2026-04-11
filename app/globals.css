@@ -65,9 +65,14 @@
     @apply border-border;
   }
 
-  /* Global focus-visible ring */
+  /* Keyboard focus indicator — WCAG 2.4.7 */
   a:focus-visible,
-  button:focus-visible {
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible,
+  summary:focus-visible {
     @apply outline-none ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#030014] rounded-sm;
   }
 
