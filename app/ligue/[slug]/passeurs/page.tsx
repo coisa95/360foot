@@ -32,19 +32,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("name")
+    .select("id, name")
     .eq("slug", slug)
     .single();
 
   if (!league) return { title: "Passeurs introuvable" };
 
-  const title = `Meilleurs passeurs ${league.name} - Classement des passes d\u00e9cisives`;
-  const fullDesc = `Classement des meilleurs passeurs de ${league.name} : nombre de passes d\u00e9cisives, buts et matchs jou\u00e9s par joueur.`;
+  const { data: rows } = await supabase
+    .from("standings")
+    .select("top_assists_json")
+    .eq("league_id", league.id)
+    .order("updated_at", { ascending: false })
+    .limit(1);
+  const hasData = !!((rows?.[0]?.top_assists_json as unknown[])?.length);
+
+  const title = `Meilleurs passeurs ${league.name} - Classement des passes décisives`;
+  const fullDesc = `Classement des meilleurs passeurs de ${league.name} : nombre de passes décisives, buts et matchs joués par joueur.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
     title,
     description,
+    ...(!hasData && { robots: { index: false, follow: true } }),
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/passeurs` },
     openGraph: {
       title,

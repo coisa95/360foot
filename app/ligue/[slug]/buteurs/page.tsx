@@ -32,11 +32,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("name")
+    .select("id, name")
     .eq("slug", slug)
     .single();
 
   if (!league) return { title: "Buteurs introuvable" };
+
+  // Check if data exists to avoid soft 404
+  const { data: rows } = await supabase
+    .from("standings")
+    .select("top_scorers_json")
+    .eq("league_id", league.id)
+    .order("updated_at", { ascending: false })
+    .limit(1);
+  const hasData = !!((rows?.[0]?.top_scorers_json as unknown[])?.length);
 
   const title = `Meilleurs buteurs ${league.name} - Classement des buteurs`;
   const fullDesc = `Classement des meilleurs buteurs de ${league.name} : nombre de buts, passes d\u00e9cisives et matchs jou\u00e9s par joueur.`;
@@ -45,6 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    ...(!hasData && { robots: { index: false, follow: true } }),
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/buteurs` },
     openGraph: {
       title,

@@ -19,11 +19,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("name")
+    .select("id, name")
     .eq("slug", slug)
     .single();
 
   if (!league) return { title: "Actualités introuvables" };
+
+  const { count } = await supabase
+    .from("articles")
+    .select("id", { count: "exact", head: true })
+    .contains("league_slugs", [slug])
+    .eq("status", "published");
+  const hasData = (count ?? 0) > 0;
 
   const title = `Actualités ${league.name} - Articles et analyses`;
   const fullDesc = `Toutes les actualités, analyses et articles sur ${league.name}.`;
@@ -32,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    ...(!hasData && { robots: { index: false, follow: true } }),
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/actualites` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/actualites`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {

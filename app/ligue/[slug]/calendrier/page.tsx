@@ -21,11 +21,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("name")
+    .select("id, name")
     .eq("slug", slug)
     .single();
 
   if (!league) return { title: "Calendrier introuvable" };
+
+  const { count } = await supabase
+    .from("matches")
+    .select("id", { count: "exact", head: true })
+    .eq("league_id", league.id);
+  const hasData = (count ?? 0) > 0;
 
   const title = `Calendrier ${league.name} - Tous les matchs par journée`;
   const fullDesc = `Calendrier complet de ${league.name} : résultats et matchs à venir, journée par journée.`;
@@ -34,6 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    ...(!hasData && { robots: { index: false, follow: true } }),
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/calendrier` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/calendrier`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {

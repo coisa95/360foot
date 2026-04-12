@@ -21,11 +21,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("name")
+    .select("id, name")
     .eq("slug", slug)
     .single();
 
   if (!league) return { title: "Résultats introuvables" };
+
+  const { count } = await supabase
+    .from("matches")
+    .select("id", { count: "exact", head: true })
+    .eq("league_id", league.id)
+    .not("score_home", "is", null);
+  const hasData = (count ?? 0) > 0;
 
   const title = `Résultats ${league.name} - Tous les scores`;
   const fullDesc = `Tous les résultats et scores des matchs de ${league.name}.`;
@@ -34,6 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    ...(!hasData && { robots: { index: false, follow: true } }),
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/resultats` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/resultats`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {
