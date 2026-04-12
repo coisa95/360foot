@@ -14,6 +14,8 @@ export function GET() {
     "sitemap-leagues.xml",
     "sitemap-teams.xml",
     "sitemap-players.xml",
+    "sitemap-pronostics.xml",
+    "sitemap-confrontations.xml",
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

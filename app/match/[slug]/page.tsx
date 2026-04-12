@@ -388,6 +388,21 @@ export default async function MatchPage({ params }: Props) {
           </div>
         </Card>
 
+        {/* ── CTA Pronostic ── */}
+        {isUpcoming && match.predictions_json && (
+          <Link
+            href={`/pronostic/${match.slug}`}
+            className="flex items-center justify-between rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 mt-4 group hover:bg-emerald-100 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-emerald-600 font-semibold text-sm">Voir notre pronostic pour ce match</span>
+            </div>
+            <svg className="w-5 h-5 text-emerald-500 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </Link>
+        )}
+
         {/* ── Predictions (Upcoming matches only) ── */}
         {isUpcoming && predictionsJson && (
           <Card className="mt-4 border-slate-200 card-glass p-4 sm:p-6">
