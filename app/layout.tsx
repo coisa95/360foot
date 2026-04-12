@@ -58,6 +58,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@360foot",
     title: "360 Foot — Actu Football Afrique & Europe en Direct",
     description: "Résultats, classements, transferts et analyses football. Toute l'actu foot en direct.",
     images: ["https://360-foot.com/og-home.png"],
@@ -65,7 +66,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true },
   },
   verification: {
     google: "GiHc3yxKs_kBQ_Ejsrcc5yme6wCt-q3gMfItxRn7tL0",
@@ -133,6 +133,16 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="360 Foot" />
         <link rel="preconnect" href="https://media.api-sports.io" />
         <link rel="dns-prefetch" href="https://media.api-sports.io" />
+        {/* hreflang — same content for all francophone countries */}
+        <link rel="alternate" hrefLang="fr" href="https://360-foot.com" />
+        <link rel="alternate" hrefLang="fr-CI" href="https://360-foot.com" />
+        <link rel="alternate" hrefLang="fr-SN" href="https://360-foot.com" />
+        <link rel="alternate" hrefLang="fr-CM" href="https://360-foot.com" />
+        <link rel="alternate" hrefLang="fr-BJ" href="https://360-foot.com" />
+        <link rel="alternate" hrefLang="fr-TG" href="https://360-foot.com" />
+        <link rel="alternate" hrefLang="fr-ML" href="https://360-foot.com" />
+        <link rel="alternate" hrefLang="fr-BF" href="https://360-foot.com" />
+        <link rel="alternate" hrefLang="x-default" href="https://360-foot.com" />
         {/* GA/GTM scripts moved to AnalyticsLoader (client component, consent-gated) */}
         <script
           type="application/ld+json"

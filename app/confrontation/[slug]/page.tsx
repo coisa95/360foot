@@ -17,9 +17,9 @@ type Props = {
 // ── Helpers ──
 
 function parseSlug(slug: string): { slugA: string; slugB: string } | null {
-  const parts = slug.split("-vs-");
-  if (parts.length !== 2 || !parts[0] || !parts[1]) return null;
-  return { slugA: parts[0], slugB: parts[1] };
+  const idx = slug.indexOf("-vs-");
+  if (idx <= 0 || idx + 4 >= slug.length) return null;
+  return { slugA: slug.slice(0, idx), slugB: slug.slice(idx + 4) };
 }
 
 function formatDate(dateStr: string): string {

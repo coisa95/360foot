@@ -159,10 +159,12 @@ export default async function HomePage() {
         <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-emerald-500/5 rounded-full blur-3xl" />
         <div className="absolute top-10 left-1/2 w-40 h-40 bg-cyan-500/5 rounded-full blur-3xl" />
         <div className="relative">
-          <h1 className="font-display text-xl sm:text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight whitespace-nowrap">
-            Football{" "}
-            <span className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">
-              Afrique &amp; Europe
+          <h1 className="font-display text-xl sm:text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+            <span className="sr-only">360 Foot — Résultats et Actu Football Afrique et Europe en Direct</span>
+            <span aria-hidden="true">Football{" "}
+              <span className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+                Afrique &amp; Europe
+              </span>
             </span>
           </h1>
           <p className="mt-2 md:mt-4 text-xs md:text-lg text-slate-500 max-w-2xl">

@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const supabase = createClient();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: match } = await supabase
     .from("matches")
     .select(
@@ -113,6 +114,7 @@ export default async function PronosticPage({ params }: Props) {
   const { slug } = await params;
   const supabase = createClient();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: match } = await supabase
     .from("matches")
     .select(
