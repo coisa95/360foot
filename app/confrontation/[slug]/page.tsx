@@ -87,7 +87,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!teamA || !teamB) return { title: "Confrontation introuvable - 360 Foot" };
 
-  const title = `${teamA.name} vs ${teamB.name} - Historique des confrontations | 360 Foot`;
+  const title = `${teamA.name} vs ${teamB.name} - Historique des confrontations`;
   const description = `Bilan complet des confrontations entre ${teamA.name} et ${teamB.name} : victoires, nuls, scores et statistiques.`;
 
   // Check if there are matches to decide noindex

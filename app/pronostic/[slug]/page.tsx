@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     year: "numeric",
   });
 
-  const title = `Pronostic ${homeName} vs ${awayName} - ${dateStr} | 360 Foot`;
+  const title = `Pronostic ${homeName} vs ${awayName} - ${dateStr}`;
   const description =
     `Pronostic et analyse ${homeName} vs ${awayName}. Prediction du vainqueur, statistiques, confrontations directes et absents. Pariez malin.`;
 
