@@ -3,28 +3,17 @@
 import { useState, useEffect } from "react";
 
 const POPUP_DELAY = 3000; // 3 seconds
-const POPUP_COOLDOWN_KEY = "promo_popup_dismissed";
-const POPUP_COOLDOWN_HOURS = 24;
 
 export function PromoPopup() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Don't show if recently dismissed
-    const dismissed = localStorage.getItem(POPUP_COOLDOWN_KEY);
-    if (dismissed) {
-      const dismissedAt = parseInt(dismissed, 10);
-      const hoursElapsed = (Date.now() - dismissedAt) / (1000 * 60 * 60);
-      if (hoursElapsed < POPUP_COOLDOWN_HOURS) return;
-    }
-
     const timer = setTimeout(() => setVisible(true), POPUP_DELAY);
     return () => clearTimeout(timer);
   }, []);
 
   function dismiss() {
     setVisible(false);
-    localStorage.setItem(POPUP_COOLDOWN_KEY, String(Date.now()));
   }
 
   if (!visible) return null;
