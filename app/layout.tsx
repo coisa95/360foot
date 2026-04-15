@@ -8,6 +8,7 @@ import { AffiliateTicker } from "@/components/affiliate-ticker";
 import { LeagueSidebar } from "@/components/league-sidebar";
 import { SwRegister } from "@/components/sw-register";
 import { CookieBanner } from "@/components/cookie-banner";
+import { PromoPopup } from "@/components/promo-popup";
 import { AnalyticsLoader } from "@/components/analytics-loader";
 import { safeJsonLd } from "@/lib/json-ld";
 
@@ -172,6 +173,7 @@ export default function RootLayout({
         <SwRegister />
         <AnalyticsLoader />
         <CookieBanner />
+        <PromoPopup />
       </body>
     </html>
   );
