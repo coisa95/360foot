@@ -20,7 +20,6 @@ export function ArticleCard({
   excerpt,
   type,
   publishedAt,
-  leagueName,
   imageUrl,
 }: ArticleCardProps) {
   const date = new Date(publishedAt);
@@ -48,9 +47,6 @@ export function ArticleCard({
             <span className={`rounded-lg border px-2.5 py-0.5 text-[10px] font-semibold ${typeConf.color}`}>
               {typeConf.label}
             </span>
-            {leagueName && (
-              <span className="text-[11px] text-slate-400">{leagueName}</span>
-            )}
           </div>
 
           <h3 className="font-display mb-2 text-base font-semibold leading-tight text-slate-900 transition-colors group-hover:bg-gradient-to-r group-hover:from-emerald-600 group-hover:to-emerald-600 group-hover:bg-clip-text group-hover:text-transparent">
