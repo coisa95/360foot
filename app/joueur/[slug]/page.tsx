@@ -27,10 +27,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .single() as { data: any };
 
-  if (!player) return { title: "Joueur introuvable - 360 Foot" };
+  if (!player) return { title: "Joueur introuvable" };
 
-  const title = `${player.name} - Fiche joueur, stats et actualites - 360 Foot`;
-  const fullDesc = `Fiche complete de ${player.name} (${player.team?.name}) : poste, nationalite, statistiques et derniers articles.`;
+  const teamName = player.team?.name || "";
+  const title = `${player.name}${teamName ? ` (${teamName})` : ""} — Stats, profil et actu`;
+  const fullDesc = `Tout sur ${player.name}${teamName ? ` de ${teamName}` : ""} : statistiques détaillées, fiche complète, parcours et dernières actualités.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   // Pages de joueur sans stats_json = thin content (juste nom + équipe).

@@ -9,9 +9,9 @@ import Link from "next/link";
 export const revalidate = 21600;
 
 export const metadata: Metadata = {
-  title: "Bons Plans - Guides & Comparateur de bookmakers",
+  title: "Bons Plans — Guides et comparateur bookmakers",
   description:
-    "Guides complets sur les paris sportifs et comparateur des meilleurs bookmakers en Afrique. Bonus, stratégies et conseils pour parier sur le football.",
+    "Comparateur des meilleurs bookmakers en Afrique : bonus, cotes, stratégies et conseils pour parier sur le football.",
   alternates: {
     canonical: "https://360-foot.com/bons-plans",
   },

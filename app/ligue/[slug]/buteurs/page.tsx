@@ -47,8 +47,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .limit(1);
   const hasData = !!((rows?.[0]?.top_scorers_json as unknown[])?.length);
 
-  const title = `Meilleurs buteurs ${league.name} - Classement des buteurs`;
-  const fullDesc = `Classement des meilleurs buteurs de ${league.name} : nombre de buts, passes d\u00e9cisives et matchs jou\u00e9s par joueur.`;
+  const season = `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`;
+  const title = `Meilleurs buteurs ${league.name} ${season}`;
+  const fullDesc = `Top buteurs ${league.name} ${season} : buts, passes décisives et stats par joueur. Classement mis à jour.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {

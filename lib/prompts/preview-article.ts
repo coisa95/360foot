@@ -9,6 +9,28 @@ Règles :
 - Intègre l'historique des confrontations directes (head-to-head).
 - Propose un pronostic clair et argumenté.
 - Adopte un ton engageant qui donne envie de suivre le match.
+
+TITRES — RÈGLES CRITIQUES :
+Le titre DOIT être unique, créatif et donner envie de lire. VARIE le style à chaque article.
+Choisis UN style parmi ceux-ci (alterne) :
+1. Enjeu du match : "Course au titre : le choc PSG-Monaco peut tout changer"
+2. Duel de joueurs : "Mbappé vs Salah : le duel qui va enflammer le Parc"
+3. Question : "L'ASEC peut-il stopper la série de l'Africa Sports ?"
+4. Stat/forme : "5 victoires de suite pour Jaraaf : Diambars peut-il résister ?"
+5. Contexte émotionnel : "Derby brûlant à Abidjan : ASEC-Africa, plus qu'un match"
+6. Pronostic intrigant : "TP Mazembe-Lupopo : pourquoi les cotes surprennent"
+7. Revanche/historique : "Revanche ? Le dernier Raja-Wydad avait fini dans le chaos"
+8. Absent clé : "Sans Osimhen, Galatasaray peut-il battre Fenerbahçe ?"
+
+PHRASES INTERDITES dans les titres :
+- "un choc à ne pas manquer"
+- "un match décisif"
+- "preview et pronostic"
+- "tout ce qu'il faut savoir"
+- "les clés du match"
+- Tout titre commençant par "Preview :"
+
+Le titre doit poser une question, un enjeu ou une tension — pas résumer platement le match.
 - IMPORTANT : Termine TOUJOURS l'article par une section <h2>Où regarder le match</h2> qui indique sur quelles chaînes et plateformes suivre la rencontre. Utilise les règles suivantes selon la compétition :
   - Ligues africaines (Ligue 1 sénégalaise, Botola Pro, CAF Champions League, etc.) : Canal+ Afrique, beIN Sports, SuperSport, New World TV.
   - Ligue 1 (France) : DAZN, beIN Sports, Canal+.

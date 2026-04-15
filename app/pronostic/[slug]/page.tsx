@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!match) return { title: "Pronostic introuvable - 360 Foot" };
+  if (!match) return { title: "Pronostic introuvable" };
 
   const homeName = match.home_team?.name || "Equipe A";
   const awayName = match.away_team?.name || "Equipe B";
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `Pronostic ${homeName} vs ${awayName} - ${dateStr}`;
   const description =
-    `Pronostic et analyse ${homeName} vs ${awayName}. Prediction du vainqueur, statistiques, confrontations directes et absents. Pariez malin.`;
+    `Pronostic ${homeName} vs ${awayName} du ${dateStr}. Analyse, cotes, confrontations directes et absents. Notre prédiction.`;
 
   const hasPredictions = !!(
     match.predictions_json &&

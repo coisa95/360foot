@@ -42,8 +42,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!league) return { title: "Classement introuvable" };
 
-  const title = `Classement ${league.name} - Tableau complet`;
-  const fullDesc = `Classement complet de la ${league.name} : points, victoires, défaites, nuls, buts marqués et encaissés.`;
+  const season = `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`;
+  const title = `Classement ${league.name} ${season}`;
+  const fullDesc = `Classement ${league.name} ${season} : points, victoires, forme et différence de buts. Mis à jour après chaque journée.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {

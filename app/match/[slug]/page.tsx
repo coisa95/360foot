@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!match) return { title: "Match introuvable - 360 Foot" };
+  if (!match) return { title: "Match introuvable" };
 
   const homeName = match.home_team?.name || "Équipe A";
   const awayName = match.away_team?.name || "Équipe B";

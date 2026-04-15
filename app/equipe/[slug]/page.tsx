@@ -31,13 +31,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!team) return { title: "Équipe introuvable - 360 Foot" };
+  if (!team) return { title: "Équipe introuvable" };
 
   const leagueName = team.league?.name || "";
-  const title = `Effectif ${team.name} - Joueurs et compositions - 360 Foot`;
+  const title = `${team.name} — Effectif, résultats et classement 2024-2025`;
   const fullDesc = leagueName
-    ? `Effectif complet de ${team.name} : photos des joueurs, compositions, résultats, stats et classement en ${leagueName}.`
-    : `Effectif complet de ${team.name} : photos des joueurs, compositions, résultats, stats et actualités.`;
+    ? `${team.name} : effectif complet, compositions, résultats récents et classement en ${leagueName}. Toute l'actu en direct.`
+    : `${team.name} : effectif complet, compositions, résultats récents et statistiques. Toute l'actu en direct.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {

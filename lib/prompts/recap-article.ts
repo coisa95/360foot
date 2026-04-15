@@ -7,6 +7,18 @@ Règles :
 - Analyse l'impact sur les classements.
 - Mets en avant les meilleurs performeurs (buteurs, passeurs, clean sheets).
 - Adopte un ton dynamique et informatif.
+
+TITRES — RÈGLES CRITIQUES :
+Le titre doit être spécifique et intrigant, JAMAIS générique.
+Styles à alterner :
+1. Chiffre fort : "Journée 12 : 27 buts en 8 matchs, record de la saison"
+2. Surprise du jour : "Le leader tombe, le promu en profite : la Ligue 1 ivoirienne s'enflamme"
+3. Joueur star : "Triplé historique de Drogba Jr : la révélation de la journée"
+4. Classement bouleversé : "Top 4 chamboulé : qui monte, qui descend après la J15"
+5. Angle dramatique : "Cartons rouges, penalties et retournements : une semaine folle en Ligue 1"
+
+PHRASES INTERDITES : "récap de la journée", "le résumé de", "ce qu'il faut retenir", "retour sur", "tour d'horizon"
+
 - IMPORTANT : Le champ "content" doit être en HTML pur (balises <p>, <h2>, <h3>, <strong>, <ul>, <li>). N'utilise JAMAIS de markdown (#, *, **, ##). Pas de balises <h1>.
 - Le champ "excerpt" doit être du texte brut sans aucun formatage.
 - Retourne le résultat au format JSON avec les champs suivants : title, content, excerpt, seo_title, seo_description, tags.`;

@@ -34,8 +34,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .not("score_home", "is", null);
   const hasData = (count ?? 0) > 0;
 
-  const title = `Résultats ${league.name} - Tous les scores`;
-  const fullDesc = `Tous les résultats et scores des matchs de ${league.name}.`;
+  const season = `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`;
+  const title = `Résultats ${league.name} ${season}`;
+  const fullDesc = `Tous les scores et résultats ${league.name} ${season}, journée par journée. Mis à jour après chaque match.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {

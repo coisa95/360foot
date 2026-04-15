@@ -25,10 +25,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { pays } = await params;
   const country = countryMap[pays.toUpperCase()];
 
-  if (!country) return { title: "Selection introuvable - 360 Foot" };
+  if (!country) return { title: "Sélection introuvable" };
 
-  const title = `${country.fullName} - Matchs et actualites - 360 Foot`;
-  const fullDesc = `Suivez l'${country.fullName} : derniers matchs, resultats, compositions et toute l'actualite de la selection.`;
+  const title = `${country.flag} ${country.name} — Matchs, résultats et actu`;
+  const fullDesc = `Suivez l'${country.fullName} : calendrier, résultats en direct, compositions et toute l'actualité de la sélection nationale.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {

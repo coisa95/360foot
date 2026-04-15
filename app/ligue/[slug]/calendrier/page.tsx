@@ -33,8 +33,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("league_id", league.id);
   const hasData = (count ?? 0) > 0;
 
-  const title = `Calendrier ${league.name} - Tous les matchs par journée`;
-  const fullDesc = `Calendrier complet de ${league.name} : résultats et matchs à venir, journée par journée.`;
+  const season = `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`;
+  const title = `Calendrier ${league.name} ${season}`;
+  const fullDesc = `Calendrier complet ${league.name} ${season} : matchs par journée, dates, résultats et prochaines rencontres.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {

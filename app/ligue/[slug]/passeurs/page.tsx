@@ -46,8 +46,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .limit(1);
   const hasData = !!((rows?.[0]?.top_assists_json as unknown[])?.length);
 
-  const title = `Meilleurs passeurs ${league.name} - Classement des passes décisives`;
-  const fullDesc = `Classement des meilleurs passeurs de ${league.name} : nombre de passes décisives, buts et matchs joués par joueur.`;
+  const season = `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`;
+  const title = `Meilleurs passeurs ${league.name} ${season}`;
+  const fullDesc = `Top passeurs ${league.name} ${season} : passes décisives, buts et stats par joueur. Classement mis à jour.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {

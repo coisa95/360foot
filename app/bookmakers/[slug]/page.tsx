@@ -24,10 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!bookmaker) return { title: "Bookmaker introuvable - 360 Foot" };
+  if (!bookmaker) return { title: "Bookmaker introuvable" };
 
-  const title = `${bookmaker.name} - Avis, bonus et inscription - 360 Foot`;
-  const fullDesc = `Decouvrez notre avis sur ${bookmaker.name} : bonus de bienvenue, cotes, methodes de paiement et pays disponibles.`;
+  const title = `${bookmaker.name} — Avis, bonus et inscription`;
+  const fullDesc = `Notre avis sur ${bookmaker.name} : bonus de bienvenue, meilleures cotes, méthodes de paiement et pays disponibles. Guide complet.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {

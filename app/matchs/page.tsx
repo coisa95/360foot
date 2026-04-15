@@ -9,9 +9,9 @@ import Link from "next/link";
 export const revalidate = 600;
 
 export const metadata: Metadata = {
-  title: "Matchs en direct — Résultats football",
+  title: "Matchs du jour — Scores en direct et résultats",
   description:
-    "Tous les matchs de football en direct, résultats et calendrier. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League, Champions League.",
+    "Scores en direct, résultats et matchs à venir aujourd'hui. Football africain et européen : Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League.",
   alternates: { canonical: "https://360-foot.com/matchs" },
   openGraph: {
     title: "Matchs en direct et résultats — 360 Foot",

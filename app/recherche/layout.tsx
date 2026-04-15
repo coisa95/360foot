@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Recherche — 360 Foot",
+  title: "Recherche",
   description:
     "Recherchez joueurs, équipes, ligues et articles sur 360 Foot. Football africain et européen.",
   alternates: { canonical: "https://360-foot.com/recherche" },

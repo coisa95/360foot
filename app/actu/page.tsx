@@ -24,7 +24,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       ? `Actualités football africain et européen - Page ${currentPage}`
       : "Actualités football africain et européen",
     description:
-      "Retrouvez toutes les actualités du football africain et européen : résultats, transferts, analyses et avant-matchs.",
+      "Actu football Afrique et Europe : transferts, résultats, analyses tactiques et avant-matchs. Toutes les infos en direct.",
     alternates: {
       canonical,
     },

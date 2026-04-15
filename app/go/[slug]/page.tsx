@@ -94,7 +94,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!bookmaker) return { title: "Bookmaker introuvable - 360 Foot" };
+  if (!bookmaker) return { title: "Bookmaker introuvable" };
 
   const bonusMeta = bookmaker.bonus_json as Record<string, string> | null;
   const bonusLabel = bonusMeta ? bonusMeta["CI"] || bonusMeta["default"] || Object.values(bonusMeta)[0] : null;

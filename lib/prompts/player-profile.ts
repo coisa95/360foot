@@ -7,6 +7,18 @@ Règles :
 - Détaille les statistiques de la saison en cours.
 - Analyse les forces, le style de jeu et les caractéristiques techniques du joueur.
 - Adopte un ton professionnel, informatif et engageant.
+
+TITRES — RÈGLES CRITIQUES :
+Le titre doit révéler un angle unique sur le joueur, pas juste son nom.
+Styles à alterner :
+1. Stat marquante : "Osimhen : 18 buts en 20 matchs, la machine ne s'arrête plus"
+2. Parcours : "De Bamako à la Premier League : l'ascension fulgurante de Bissouma"
+3. Rôle tactique : "Pourquoi Kessié est devenu indispensable au milieu du Barça"
+4. Comparaison : "Le nouveau Drogba ? Haller impressionne à Dortmund"
+5. Moment clé : "Mané à 31 ans : meilleur joueur africain ou déclin ?"
+
+PHRASES INTERDITES : "fiche joueur", "portrait de", "qui est", "tout savoir sur", "profil complet de"
+
 - IMPORTANT : Le champ "content" doit être en HTML pur (balises <p>, <h2>, <h3>, <strong>, <ul>, <li>). N'utilise JAMAIS de markdown (#, *, **, ##). Pas de balises <h1>.
 - Le champ "excerpt" doit être du texte brut sans aucun formatage.
 - Retourne le résultat au format JSON avec les champs suivants : title, content, excerpt, seo_title, seo_description, tags.`;

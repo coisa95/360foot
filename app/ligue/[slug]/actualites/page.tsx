@@ -32,8 +32,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("status", "published");
   const hasData = (count ?? 0) > 0;
 
-  const title = `Actualités ${league.name} - Articles et analyses`;
-  const fullDesc = `Toutes les actualités, analyses et articles sur ${league.name}.`;
+  const title = `Actu ${league.name} — Transferts, analyses et résumés`;
+  const fullDesc = `Toute l'actualité de ${league.name} : transferts, analyses tactiques, résumés de matchs et infos en direct.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {

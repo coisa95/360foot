@@ -10,9 +10,9 @@ import Link from "next/link";
 export const revalidate = 900;
 
 export const metadata: Metadata = {
-  title: "Transferts — Mercato football africain",
+  title: "Transferts — Mercato football africain et européen",
   description:
-    "Suivez tous les transferts du football africain et européen : arrivées, départs, prêts et montants.",
+    "Tous les transferts football : arrivées, départs, prêts et montants. Mercato Afrique et Europe en direct.",
   alternates: {
     canonical: "https://360-foot.com/transferts",
   },

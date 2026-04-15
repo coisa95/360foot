@@ -11,7 +11,7 @@ const AffiliateTrio = dynamic(() => import("@/components/affiliate-trio").then((
 export const revalidate = 600;
 
 export const metadata = {
-  title: "360 Foot — Actu Football Afrique & Europe en Direct",
+  title: { absolute: "360 Foot — Actu Football Afrique & Europe en Direct" },
   description: "Résultats, classements, transferts et analyses football. Ligue 1 Côte d'Ivoire, Sénégal, Cameroun, Premier League, Champions League.",
   alternates: {
     canonical: "https://360-foot.com",
