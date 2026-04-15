@@ -62,6 +62,32 @@
 	}
 }
 
+# ───── vip.360-foot.com (landing coupon) ────────────────────────────────────
+# Landing statique servie par Next.js : le middleware détecte le host et
+# réécrit vers /vip/index.html (fichiers dans public/vip/).
+vip.360-foot.com {
+	reverse_proxy nextjs:3000 {
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+
+	encode gzip zstd
+
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Frame-Options "DENY"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Robots-Tag "noindex, nofollow"
+		-Server
+	}
+
+	# Cache long sur les assets (coupons WebP + logos)
+	@vipAssets path /vip/coupons/* /vip/logos/*
+	header @vipAssets Cache-Control "public, max-age=2592000, immutable"
+}
+
 # ───── og.360-foot.com (service OG image) ───────────────────────────────────
 og.360-foot.com {
 	reverse_proxy og-service:3001

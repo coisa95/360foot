@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Télécharger Coupon — 360 Foot VIP</title>
+<meta name="description" content="Télécharge le coupon du jour — WhatsApp & Telegram Dr BET. Pronostics VIP gratuits.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/vip/logos/1xbet.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0A1226;--green:#00E87B;--gold:#FFB800;
+--mauve:#A855F7;--blue:#1E5FFF;
+--text:#FAFAFA;--text-dim:#8B92A8;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+
+/* Orbes fond */
+.orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:.35;pointer-events:none;z-index:0}
+.orb-1{width:300px;height:300px;background:var(--blue);top:10%;left:-10%;animation:drift1 16s ease-in-out infinite alternate}
+.orb-2{width:250px;height:250px;background:var(--mauve);top:30%;right:-8%;animation:drift2 14s ease-in-out infinite alternate}
+.orb-3{width:200px;height:200px;background:var(--green);bottom:15%;left:20%;animation:drift3 18s ease-in-out infinite alternate}
+.orb-4{width:180px;height:180px;background:var(--gold);bottom:5%;right:15%;animation:drift1 15s ease-in-out infinite alternate-reverse}
+@keyframes drift1{0%{transform:translate(0,0)}100%{transform:translate(30px,-20px)}}
+@keyframes drift2{0%{transform:translate(0,0)}100%{transform:translate(-20px,30px)}}
+@keyframes drift3{0%{transform:translate(0,0)}100%{transform:translate(15px,25px)}}
+
+/* Sparkles */
+.sparkle{position:fixed;width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.6);pointer-events:none;z-index:1;animation:sparkle 3.5s ease-in-out infinite}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1)}}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:100;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,18,38,.6);backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem}
+.nav-logo span{color:var(--green)}
+.nav-btn{padding:8px 18px;border-radius:50px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:var(--text);font-weight:600;font-size:.82rem;text-decoration:none;transition:background .2s}
+.nav-btn:hover{background:rgba(255,255,255,.12)}
+
+/* Carrousel */
+.carousel-section{overflow:hidden;position:relative;padding:24px 0;z-index:2}
+.carousel-track{display:flex;gap:12px;animation:slideRight 60s linear infinite;width:max-content}
+.carousel-track:hover{animation-play-state:paused}
+.carousel-tile{width:160px;height:210px;border-radius:14px;overflow:hidden;flex-shrink:0;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03)}
+.carousel-tile img{width:100%;height:100%;object-fit:cover}
+.carousel-fade-l,.carousel-fade-r{position:absolute;top:0;bottom:0;width:40px;z-index:3;pointer-events:none}
+.carousel-fade-l{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.carousel-fade-r{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+@keyframes slideRight{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* Main */
+.main{display:flex;align-items:center;justify-content:center;padding:20px 20px 40px;position:relative;z-index:2}
+
+/* Card principale */
+.card{max-width:400px;width:100%;padding:40px 28px;border-radius:24px;background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);text-align:center}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:50px;background:rgba(0,232,123,.08);border:1px solid rgba(0,232,123,.15);font-size:.72rem;color:var(--green);font-weight:600;margin-bottom:20px;text-transform:uppercase;letter-spacing:.06em}
+
+/* Channel buttons */
+.channels{display:flex;flex-direction:column;gap:14px}
+.ch-btn{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 20px;border-radius:14px;font-weight:700;font-size:.95rem;text-decoration:none;color:#fff;transition:transform .2s,box-shadow .2s;overflow:visible}
+.ch-btn:hover{transform:translateY(-2px)}
+.ch-1xbet{background:linear-gradient(135deg,#1a5276,#10306b);box-shadow:0 4px 20px rgba(26,82,118,.3)}
+.ch-wa{background:linear-gradient(135deg,#25D366,#128C7E);box-shadow:0 4px 20px rgba(37,211,102,.25)}
+.ch-tg{background:linear-gradient(135deg,#2AABEE,#1E88E5);box-shadow:0 4px 20px rgba(42,171,238,.25)}
+.ch-btn svg{width:22px;height:22px;flex-shrink:0}
+
+/* Curseurs clic alternés (WA puis TG) */
+.ch-btn .cur,.ch-btn .cur-ring{opacity:0;pointer-events:none;position:absolute;right:-12px;bottom:-6px}
+.ch-btn .cur{width:26px;height:26px}
+.ch-btn .cur svg{width:100%;height:100%;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+.ch-btn .cur-ring{width:20px;height:20px;border-radius:50%;border:2px solid #fff;right:-8px;bottom:-2px}
+.ch-wa .cur,.ch-wa .cur-ring{animation:curMoveA 6s ease-in-out infinite}
+.ch-tg .cur,.ch-tg .cur-ring{animation:curMoveB 6s ease-in-out infinite}
+@keyframes curMoveA{0%{opacity:0;transform:translate(20px,-20px)}8%{opacity:1;transform:translate(0,0)}16%{transform:translate(1px,2px)}18%{transform:translate(0,0)}30%{opacity:1;transform:translate(0,0)}40%{opacity:0;transform:translate(-20px,20px)}100%{opacity:0;transform:translate(20px,-20px)}}
+@keyframes curMoveB{0%,50%{opacity:0;transform:translate(20px,-20px)}58%{opacity:1;transform:translate(0,0)}66%{transform:translate(1px,2px)}68%{transform:translate(0,0)}80%{opacity:1;transform:translate(0,0)}90%{opacity:0;transform:translate(-20px,20px)}100%{opacity:0;transform:translate(20px,-20px)}}
+@keyframes curRingA{0%,16%{opacity:0;transform:scale(.5)}18%{opacity:.6;transform:scale(1)}24%{opacity:0;transform:scale(1.8)}100%{opacity:0;transform:scale(.5)}}
+@keyframes curRingB{0%,66%{opacity:0;transform:scale(.5)}68%{opacity:.6;transform:scale(1)}74%{opacity:0;transform:scale(1.8)}100%{opacity:0;transform:scale(.5)}}
+.ch-wa .cur-ring{animation:curRingA 6s ease-in-out infinite}
+.ch-tg .cur-ring{animation:curRingB 6s ease-in-out infinite}
+
+.note{margin-top:24px;color:var(--gold);font-size:.72rem;font-weight:600}
+
+/* ========== POPUP MODAL (classes anti-adblock) ========== */
+.modal-wrap{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .5s}
+.modal-wrap.show{opacity:1;pointer-events:auto}
+.modal-box{max-width:370px;width:100%;padding:40px 30px 36px;border-radius:28px;background:linear-gradient(145deg,#E8ECF2,#D0D6E0);border:1px solid rgba(255,255,255,.6);box-shadow:0 20px 60px rgba(0,0,0,.3),0 2px 0 rgba(255,255,255,.8) inset,0 -2px 6px rgba(0,0,0,.08) inset;text-align:center;position:relative;overflow:visible;transform:translateY(40px) scale(.9) rotateX(8deg);transition:transform .5s cubic-bezier(.175,.885,.32,1.275)}
+.modal-wrap.show .modal-box{transform:translateY(0) scale(1) rotateX(0deg)}
+.modal-box::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.3) 50%,transparent 60%);animation:shine 4s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%{transform:translateX(-100%) translateY(-100%)}100%{transform:translateX(100%) translateY(100%)}}
+.modal-box::after{content:'';position:absolute;inset:-2px;border-radius:30px;background:linear-gradient(135deg,rgba(0,232,123,.4),rgba(30,95,255,.3),rgba(168,85,247,.3));z-index:-1;filter:blur(8px);opacity:.6;animation:glowPulse 3s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.8;transform:scale(1.02)}}
+.modal-dismiss{position:absolute;top:14px;right:18px;background:rgba(0,0,0,.06);border:none;color:#666;font-size:1.1rem;cursor:pointer;padding:4px 10px;border-radius:50%;transition:all .2s;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.modal-dismiss:hover{background:rgba(0,0,0,.12);color:#333}
+.modal-icon{margin-bottom:18px;animation:iconFloat 3s ease-in-out infinite;filter:drop-shadow(0 4px 8px rgba(0,232,123,.3))}
+@keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.modal-heading{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;font-weight:700;margin-bottom:10px;letter-spacing:-.02em;color:#0A1226}
+.modal-info{color:#555;font-size:.82rem;margin-bottom:26px;line-height:1.6}
+.modal-action{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 20px;border-radius:16px;overflow:visible;background:linear-gradient(135deg,#0A1226,#152244);color:#fff;font-weight:800;font-size:.95rem;text-decoration:none;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(10,18,38,.35),0 2px 0 rgba(255,255,255,.05) inset;transition:transform .2s,box-shadow .2s}
+.modal-action:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(10,18,38,.5)}
+.modal-action:active{transform:translateY(0);box-shadow:0 4px 12px rgba(10,18,38,.3)}
+.modal-action img{height:22px;object-fit:contain}
+.modal-action .m-cur{position:absolute;pointer-events:none;width:26px;height:26px;right:-14px;bottom:-8px}
+.modal-action .m-cur svg{width:100%;height:100%;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+.modal-action .m-cur-ring{position:absolute;width:20px;height:20px;border-radius:50%;border:2px solid var(--green);right:-10px;bottom:-4px;pointer-events:none;opacity:0}
+.modal-action .m-cur,.modal-action .m-cur-ring{animation:mCurMove 3.4s ease-in-out infinite}
+.modal-action .m-cur-ring{animation:mCurRing 3.4s ease-in-out infinite}
+@keyframes mCurMove{0%{opacity:0;transform:translate(20px,-20px)}25%{opacity:1;transform:translate(0,0)}40%{transform:translate(1px,2px)}45%{transform:translate(0,0)}60%{opacity:1;transform:translate(0,0)}80%{opacity:0;transform:translate(-20px,20px)}100%{opacity:0;transform:translate(20px,-20px)}}
+@keyframes mCurRing{0%,40%{opacity:0;transform:scale(.5)}45%{opacity:.6;transform:scale(1)}55%{opacity:0;transform:scale(1.8)}100%{opacity:0;transform:scale(.5)}}
+
+/* Responsive */
+@media(min-width:600px){.card{padding:50px 36px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important}}
+</style>
+</head>
+<body>
+
+<!-- Fonds animés -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="orb orb-4"></div>
+
+<div class="sparkle" style="top:15%;left:20%;animation-delay:0s"></div>
+<div class="sparkle" style="top:25%;right:15%;animation-delay:.8s"></div>
+<div class="sparkle" style="top:55%;left:30%;animation-delay:1.6s"></div>
+<div class="sparkle" style="top:70%;right:25%;animation-delay:2.2s"></div>
+<div class="sparkle" style="top:40%;left:60%;animation-delay:.4s"></div>
+<div class="sparkle" style="top:85%;left:10%;animation-delay:1.2s"></div>
+
+<!-- Nav -->
+<nav class="nav">
+<div class="nav-logo">360:<span>FOOT</span></div>
+<a href="https://360-foot.com" class="nav-btn">Retour</a>
+</nav>
+
+<!-- Carte principale avec 3 CTA -->
+<main class="main">
+<div class="card">
+<div class="badge">Coupon exclusif</div>
+
+<!-- CTA 1 : Télécharger le coupon (logo 1xBet) -->
+<div class="channels">
+<a href="https://whatsapp.com/channel/0029Vb7C35xL2ATtPwPMiW2C" target="_blank" rel="noopener" class="ch-btn ch-1xbet">
+<img src="/vip/logos/1xbet.png" alt="1xBet" style="height:22px;object-fit:contain;">
+Télécharger le coupon
+<span class="cur"><svg viewBox="0 0 24 24" fill="none"><path d="M5 3l14 9-7 2-4 7L5 3z" fill="#fff" stroke="#0A1226" stroke-width="1.5"/></svg></span>
+<span class="cur-ring"></span>
+</a>
+
+<!-- CTA 2 : Rejoindre WhatsApp -->
+<a href="https://whatsapp.com/channel/0029Vb7C35xL2ATtPwPMiW2C" target="_blank" rel="noopener" class="ch-btn ch-wa">
+<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+Rejoindre le canal
+<span class="cur"><svg viewBox="0 0 24 24" fill="none"><path d="M5 3l14 9-7 2-4 7L5 3z" fill="#fff" stroke="#0A1226" stroke-width="1.5"/></svg></span>
+<span class="cur-ring"></span>
+</a>
+
+<!-- CTA 3 : Rejoindre Telegram -->
+<a href="https://t.me/+bZexxcGOLfhmNDJk" target="_blank" rel="noopener" class="ch-btn ch-tg">
+<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+Rejoindre le canal
+<span class="cur"><svg viewBox="0 0 24 24" fill="none"><path d="M5 3l14 9-7 2-4 7L5 3z" fill="#fff" stroke="#0A1226" stroke-width="1.5"/></svg></span>
+<span class="cur-ring"></span>
+</a>
+</div>
+
+<p class="note">⚠️ 18+ — Jeu responsable</p>
+</div>
+</main>
+
+<!-- Carrousel coupons -->
+<section class="carousel-section">
+<div class="carousel-fade-l"></div>
+<div class="carousel-fade-r"></div>
+<div class="carousel-track" id="carousel"></div>
+</section>
+
+<!-- Popup modal -->
+<div class="modal-wrap" id="dlmodal">
+<div class="modal-box">
+<button class="modal-dismiss" onclick="closePopup()">&times;</button>
+<div class="modal-icon" style="color:#00E87B">
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
+</div>
+<h2 class="modal-heading">Télécharger le coupon maintenant</h2>
+<p class="modal-info">Ne rate pas les pronostics du jour ! Récupère ton coupon exclusif gratuitement.</p>
+<a href="https://whatsapp.com/channel/0029Vb7C35xL2ATtPwPMiW2C" target="_blank" rel="noopener" class="modal-action">
+<img src="/vip/logos/1xbet.png" alt="1xBet">
+Télécharger le coupon
+<span class="m-cur"><svg viewBox="0 0 24 24" fill="none"><path d="M5 3l14 9-7 2-4 7L5 3z" fill="#fff" stroke="#0A1226" stroke-width="1.5"/></svg></span>
+<span class="m-cur-ring"></span>
+</a>
+</div>
+</div>
+
+<script>
+/* Carrousel — N = nombre de coupons dans /vip/coupons/ */
+(function(){
+  var track = document.getElementById('carousel');
+  var tiles = '';
+  var N = 29; // nombre d'images dans /vip/coupons/
+  for (var i = 1; i <= N; i++) {
+    tiles += '<div class="carousel-tile"><img src="/vip/coupons/coupon' + i + '.webp" alt="Coupon ' + i + '" loading="lazy" onerror="this.parentNode.style.display=\'none\'"></div>';
+  }
+  track.innerHTML = tiles + tiles;
+})();
+
+/* Popup après 5s */
+setTimeout(function(){
+  document.getElementById('dlmodal').classList.add('show');
+}, 5000);
+
+function closePopup(){
+  document.getElementById('dlmodal').classList.remove('show');
+}
+
+document.getElementById('dlmodal').addEventListener('click', function(e){
+  if (e.target === this) closePopup();
+});
+</script>
+</body>
+</html>

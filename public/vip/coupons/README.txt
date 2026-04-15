@@ -1,0 +1,3 @@
+Placer ici les captures de coupons, renommées coupon1.jpg, coupon2.jpg, ...
+Le script JS boucle de 1 à N (const N = 15 dans index.html).
+Adapter N si nombre différent.

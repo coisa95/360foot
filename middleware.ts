@@ -15,6 +15,23 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(target, 301);
   }
 
+  // vip.360-foot.com → landing page statique /vip/index.html
+  // Tous les assets (coupons, logos) sont sous /vip/*.
+  const isVipHost = host === "vip.360-foot.com" || host.startsWith("vip.360-foot.com:");
+  if (isVipHost) {
+    const url = request.nextUrl.clone();
+    if (pathname === "/" || pathname === "") {
+      url.pathname = "/vip/index.html";
+    } else if (!pathname.startsWith("/vip/") && !pathname.startsWith("/_next/")) {
+      url.pathname = `/vip${pathname}`;
+    }
+    const vipResponse = NextResponse.rewrite(url);
+    vipResponse.headers.set("X-Robots-Tag", "noindex, nofollow");
+    vipResponse.headers.set("X-Content-Type-Options", "nosniff");
+    vipResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    return vipResponse;
+  }
+
   const response = NextResponse.next();
 
   // Noindex for parameter-driven pages (prevent duplicate indexing)
@@ -54,9 +71,9 @@ export function middleware(request: NextRequest) {
     [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
-      "style-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' https: data:",
-      "font-src 'self' data:",
+      "font-src 'self' data: https://fonts.gstatic.com",
       "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
