@@ -56,6 +56,9 @@ export function PromoPopup() {
         </div>
 
         {/* Heading */}
+        <p className="text-sm font-semibold text-emerald-600 mb-1.5 tracking-wide uppercase">
+          Faites de votre passion pour le football une source de revenu
+        </p>
         <h2 className="text-xl font-bold mb-2.5 tracking-tight" style={{ color: "#0A1226" }}>
           Rejoins Dr BET sur WhatsApp
         </h2>
