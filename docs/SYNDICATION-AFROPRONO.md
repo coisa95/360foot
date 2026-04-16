@@ -407,3 +407,4 @@ Cela évite de passer par Caddy/internet et réduit la latence à ~1ms.
 ## Contact
 
 En cas de problème avec l'API, contacter l'admin 360foot.
+# Syndication API added — see docs/SYNDICATION-AFROPRONO.md
