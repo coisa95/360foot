@@ -59,8 +59,8 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["'Inter'", "var(--font-sans)", "system-ui", "sans-serif"],
-        display: ["'Syne'", "var(--font-sans)", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-sans)", "system-ui", "sans-serif"],
       },
     },
   },

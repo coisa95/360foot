@@ -49,7 +49,19 @@ const ELIGIBLE_COMPETITION_PATTERNS: RegExp[] = [
   /euro championship/i,
 ];
 
+const EXCLUDED_COMPETITION_PATTERNS: RegExp[] = [
+  /f[ée]minin/i,
+  /feminine/i,
+  /dames/i,
+  /women/i,
+  /\bu-?\d{2}\b/i,      // U15, U-17, U20…
+  /moins de \d{2}/i,
+  /cadet|junior|scolaire/i,
+];
+
 function isEligibleCompetition(name: string): boolean {
+  // Exclure féminin, jeunes, scolaire
+  if (EXCLUDED_COMPETITION_PATTERNS.some((rx) => rx.test(name))) return false;
   return ELIGIBLE_COMPETITION_PATTERNS.some((rx) => rx.test(name));
 }
 

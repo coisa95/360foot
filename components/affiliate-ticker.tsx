@@ -62,6 +62,8 @@ export function AffiliateTicker() {
       role="region"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
     >
       <div className="relative h-[72px] sm:h-[56px] rounded-xl overflow-hidden shadow-lg shadow-slate-200/50 border border-slate-200">
         {SLIDES.map((slide, i) => (
@@ -126,15 +128,6 @@ export function AffiliateTicker() {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes bounce-x {
-          0%, 100% { transform: translateX(0); }
-          50% { transform: translateX(4px); }
-        }
-        .animate-bounce-x {
-          animation: bounce-x 1.5s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }

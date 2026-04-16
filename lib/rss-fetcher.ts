@@ -20,33 +20,42 @@ export async function fetchRSSFeed(
   feedUrl: string,
   source: string
 ): Promise<RSSItem[]> {
-  try {
-    const feed = await parser.parseURL(feedUrl);
+  // Retry 1× sur échec transient (503, timeout, réseau)
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const feed = await parser.parseURL(feedUrl);
 
-    return (feed.items || []).map((item) => {
-      // Extract image from various RSS fields
-      const feedItem = item as unknown as Record<string, unknown>;
-      const imageUrl =
-        extractImageUrl(feedItem.mediaContent) ||
-        extractImageUrl(feedItem.mediaThumbnail) ||
-        extractEnclosureImage(feedItem.enclosure) ||
-        extractImageFromContent(item.content || "") ||
-        undefined;
+      return (feed.items || []).map((item) => {
+        // Extract image from various RSS fields
+        const feedItem = item as unknown as Record<string, unknown>;
+        const imageUrl =
+          extractImageUrl(feedItem.mediaContent) ||
+          extractImageUrl(feedItem.mediaThumbnail) ||
+          extractEnclosureImage(feedItem.enclosure) ||
+          extractImageFromContent(item.content || "") ||
+          undefined;
 
-      return {
-        title: item.title || "",
-        summary: (item.contentSnippet || "").slice(0, 500),
-        link: item.link || "",
-        date: item.isoDate || item.pubDate || new Date().toISOString(),
-        source,
-        details: item.categories?.join(", ") || undefined,
-        imageUrl,
-      };
-    });
-  } catch (error) {
-    console.error(`Erreur RSS ${source}: ${error}`);
-    return [];
+        return {
+          title: item.title || "",
+          summary: (item.contentSnippet || "").slice(0, 500),
+          link: normalizeUrl(item.link || ""),
+          date: item.isoDate || item.pubDate || new Date().toISOString(),
+          source,
+          details: item.categories?.join(", ") || undefined,
+          imageUrl,
+        };
+      });
+    } catch (error) {
+      if (attempt === 0) {
+        console.warn(`⚠️ RSS ${source} attempt 1 failed, retrying in 3s...`);
+        await new Promise((r) => setTimeout(r, 3000));
+        continue;
+      }
+      console.error(`❌ RSS ${source}: ${error}`);
+      return [];
+    }
   }
+  return [];
 }
 
 // ============================================
@@ -94,12 +103,24 @@ function isValidImageUrl(url: string): boolean {
 // DÉDUPLICATION — Ne pas traiter 2 fois la même actu
 // ============================================
 
+/** Normalise une URL pour éviter les doublons d'encoding (%C3%A9 vs é, trailing slashes) */
+export function normalizeUrl(url: string): string {
+  try {
+    const decoded = decodeURIComponent(url);
+    return decoded.replace(/\/+$/, "").replace(/\s+/g, "");
+  } catch {
+    // decodeURIComponent peut throw sur des % invalides
+    return url.replace(/\/+$/, "").replace(/\s+/g, "");
+  }
+}
+
 export async function isAlreadyProcessed(link: string): Promise<boolean> {
   const supabase = createClient();
+  const norm = normalizeUrl(link);
   const { data } = await supabase
     .from("rss_processed")
     .select("id")
-    .eq("source_url", link)
+    .eq("source_url", norm)
     .limit(1);
 
   return (data?.length || 0) > 0;
@@ -107,11 +128,11 @@ export async function isAlreadyProcessed(link: string): Promise<boolean> {
 
 export async function markAsProcessed(
   link: string,
-  articleId: string
+  articleId: string | null
 ): Promise<void> {
   const supabase = createClient();
   await supabase.from("rss_processed").insert({
-    source_url: link,
+    source_url: normalizeUrl(link),
     article_id: articleId,
     processed_at: new Date().toISOString(),
   });

@@ -8,7 +8,7 @@ const ArticleCard = dynamic(() => import("@/components/article-card").then((m) =
 const StandingsTable = dynamic(() => import("@/components/standings-table").then((m) => m.StandingsTable));
 const AffiliateTrio = dynamic(() => import("@/components/affiliate-trio").then((m) => m.AffiliateTrio));
 
-export const revalidate = 600;
+export const revalidate = 120;
 
 export const metadata = {
   title: { absolute: "360 Foot — Actu Football Afrique & Europe en Direct" },

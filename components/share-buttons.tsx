@@ -35,6 +35,8 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
 
   return (
     <>
+      {/* Spacer for fixed mobile share bar */}
+      <div className="h-16 md:hidden" aria-hidden="true" />
       {/* Desktop: inline row */}
       <div className="hidden md:flex items-center gap-3 mt-8">
         <span className="text-sm font-medium text-slate-500">Partager :</span>

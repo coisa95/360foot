@@ -33,7 +33,13 @@ export function CollapsibleSection({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {open && <div id={contentId}>{children}</div>}
+      <div
+        id={contentId}
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+        aria-hidden={!open}
+      >
+        <div className="overflow-hidden">{children}</div>
+      </div>
     </section>
   );
 }

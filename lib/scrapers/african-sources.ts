@@ -11,12 +11,15 @@
  * - Réécriture intégrale par Claude (pas de copie) → contenu dérivé, pas duplicate
  */
 
+/** Longueur min d'un nom de club pour le matching (évite faux positifs : "US", "AS") */
+export const MIN_CLUB_NAME_LENGTH = 4;
+
 export interface AfricanSource {
   /** Identifiant unique pour logs/dédup */
   id: string;
   /** Nom affiché dans la mention "Source : ..." */
   source: string;
-  /** URL RSS (catégorie football/sport en priorité). Ignoré si fetchMode=html. */
+  /** URL RSS (catégorie football/sport en priorité). Vide si fetchMode=html. */
   rssUrl: string;
   /** URL officielle publique (pour référence) */
   siteUrl: string;
@@ -28,15 +31,15 @@ export interface AfricanSource {
   championshipName: string;
   /** Fiabilité éditoriale : 1 = excellent, 2 = bon, 3 = variable */
   reliability: 1 | 2 | 3;
-  /** CMS détecté (info seule, pas utilisé par le parser) */
+  /** CMS détecté (info seule — pour audit et notes) */
   cms?: "wordpress" | "custom" | "ghost" | "nuxt" | "arc";
   /** Mode de récupération : RSS (défaut) ou HTML scraping */
   fetchMode?: "rss" | "html";
   /** Config HTML scraping (requis si fetchMode=html) */
   htmlConfig?: {
     listingUrl: string;
-    /** Regex matchant les attributs href vers les articles */
-    articleUrlRegex: RegExp;
+    /** Pattern string (compilé en RegExp à l'usage) ou RegExp pour extraire les URLs d'articles */
+    articleUrlPattern: string;
     baseUrl: string;
     maxArticles?: number;
     parser?: "jsonld" | "opengraph";
@@ -163,8 +166,7 @@ export const AFRICAN_SOURCES: AfricanSource[] = [
     fetchMode: "html",
     htmlConfig: {
       listingUrl: "https://www.sport-ivoire.ci/football-1",
-      // Capture uniquement les articles de la catégorie "football-ligue-1" (L1 CIV)
-      articleUrlRegex: /href="\/football-ligue-1\/[^"]+"/g,
+      articleUrlPattern: 'href="/football-ligue-1/[^"]+"',
       baseUrl: "https://www.sport-ivoire.ci",
       maxArticles: 10,
       parser: "opengraph",
@@ -249,18 +251,7 @@ export const AFRICAN_SOURCES: AfricanSource[] = [
 
   // ─── Maroc — Botola Pro ─────────────────────────────────────────────────
   // Sources FR spécialisées rares — sources arabes non incluses (prompt FR).
-  {
-    id: "marocfoot-main",
-    source: "Maroc Foot",
-    rssUrl: "https://marocfoot.net/feed/",
-    siteUrl: "https://marocfoot.net",
-    country: "MA",
-    leagueSlug: "botola-pro",
-    championshipName: "Botola Pro (Maroc)",
-    reliability: 3,
-    cms: "wordpress",
-    note: "FR spécialisé Botola/Atlas — mais flux stale (dernier post avr 2025). À monitor, phase 2 HTML si mort.",
-  },
+  // NOTE: marocfoot.net retiré — stale depuis avril 2025 (1+ an sans publication).
   {
     id: "aujourdhui-maroc-sports",
     source: "Aujourd'hui le Maroc — Sports",
@@ -286,7 +277,7 @@ export const AFRICAN_SOURCES: AfricanSource[] = [
     fetchMode: "html",
     htmlConfig: {
       listingUrl: "https://sport.le360.ma/football/botola",
-      articleUrlRegex: /href="\/football\/botola\/[a-z0-9-]+_[A-Z0-9]+\/"/g,
+      articleUrlPattern: 'href="/football/botola/[a-z0-9-]+_[A-Z0-9]+/"',
       baseUrl: "https://sport.le360.ma",
       maxArticles: 10,
       parser: "jsonld",
@@ -307,30 +298,8 @@ export const AFRICAN_SOURCES: AfricanSource[] = [
     cms: "wordpress",
     note: "Pure player foot RDC — Linafoot + Léopards.",
   },
-  {
-    id: "linafoot-official",
-    source: "LINAFOOT (officiel)",
-    rssUrl: "https://linafoot.cd/feed/",
-    siteUrl: "https://linafoot.cd",
-    country: "CD",
-    leagueSlug: "linafoot-rdc",
-    championshipName: "LINAFOOT (RDC)",
-    reliability: 2,
-    cms: "wordpress",
-    note: "Site officiel de la ligue — stale (dernier post mai 2025).",
-  },
-  {
-    id: "sportrdc-main",
-    source: "Sport RDC",
-    rssUrl: "https://sportrdc.com/feed/",
-    siteUrl: "https://sportrdc.com",
-    country: "CD",
-    leagueSlug: "linafoot-rdc",
-    championshipName: "LINAFOOT (RDC)",
-    reliability: 3,
-    cms: "wordpress",
-    note: "Sport RDC (foot dominant) — stale (dernier post sept 2025).",
-  },
+  // NOTE: linafoot.cd retiré — stale depuis mai 2025 (11 mois sans publication).
+  // NOTE: sportrdc.com retiré — stale depuis sept 2025 (7 mois sans publication).
 
   // ─── Burkina Faso — Fasofoot ────────────────────────────────────────────
   {
@@ -461,14 +430,22 @@ const EXCLUDE_KEYWORDS = [
   // Futsal / beach / autres disciplines
   "futsal",
   "beach soccer",
-  "basket",
+  "basketball",
+  "basket-ball",
+  "match de basket",
   "handball",
-  "volley",
+  "volleyball",
+  "volley-ball",
+  "match de volley",
   "athlétisme",
   "athletisme",
-  "lutte",
+  "lutte olympique",
+  "lutte libre",
+  "lutte traditionnelle",
+  "de lutte",
   "judo",
-  "tennis",
+  "de tennis",
+  "tournoi de tennis",
   "cyclisme",
 ];
 
@@ -549,8 +526,31 @@ const INCLUDE_KEYWORDS = [
   "entraineur",
 ];
 
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;|&apos;|&#x27;/g, "'")
+    .replace(/&rsquo;|&#8217;/g, "\u2019")
+    .replace(/&lsquo;|&#8216;/g, "\u2018")
+    .replace(/&rdquo;|&#8221;/g, "\u201d")
+    .replace(/&ldquo;|&#8220;/g, "\u201c")
+    .replace(/&ndash;|&#8211;/g, "\u2013")
+    .replace(/&mdash;|&#8212;/g, "\u2014")
+    .replace(/&eacute;/g, "é")
+    .replace(/&egrave;/g, "è")
+    .replace(/&agrave;/g, "à")
+    .replace(/&nbsp;|&#160;/g, " ")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, n) =>
+      String.fromCharCode(parseInt(n, 16))
+    );
+}
+
 function normalize(text: string): string {
-  return text.toLowerCase().replace(/\s+/g, " ");
+  return decodeHtmlEntities(text).toLowerCase().replace(/\s+/g, " ");
 }
 
 /**
@@ -583,8 +583,7 @@ export function isSeniorMenChampionshipArticle(input: {
     for (const club of input.knownClubs) {
       if (!club) continue;
       const clubNorm = normalize(club);
-      // Ignorer les noms < 4 caractères (trop de faux positifs : "asec" OK, "us" pas OK)
-      if (clubNorm.length < 4) continue;
+      if (clubNorm.length < MIN_CLUB_NAME_LENGTH) continue;
       if (blob.includes(clubNorm)) {
         return { keep: true, reason: `club: "${club}"` };
       }
@@ -653,8 +652,6 @@ export const COUNTRY_NATIONAL_MARKER: Record<string, string> = {
   CD: "congolais",
   BF: "burkinab",
   ML: "malien",
-  DZ: "algérien",
-  GA: "gabonais",
-  TG: "togolais",
-  NE: "nigérien",
+  // Pays ci-dessous non encore couverts par des sources, mais prêts pour extension
+  // DZ: "algérien", GA: "gabonais", TG: "togolais", NE: "nigérien",
 };

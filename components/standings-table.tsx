@@ -46,29 +46,40 @@ export function StandingsTable({
         <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-100 bg-slate-50/50">
           <h3 className="font-display text-[11px] font-semibold text-slate-900 truncate">{leagueName}</h3>
           <Link
-            href={`/ligue/${leagueSlug}/classement`}
+            href={`/ligue/${leagueSlug}`}
             className="text-[10px] text-emerald-600 hover:underline shrink-0 ml-2"
           >
             Voir tout →
           </Link>
         </div>
         <div className="divide-y divide-slate-100">
-          {rows.map((row) => (
-            <Link
-              key={row.rank}
-              href={`/equipe/${row.teamSlug}`}
-              className="flex items-center gap-2 px-3 py-1.5 hover:bg-slate-50 transition-colors"
-            >
-              <span className="w-4 text-[10px] text-slate-400 text-center shrink-0">{row.rank}</span>
-              {row.teamLogo && (
-                <Image src={row.teamLogo} alt={`Logo ${row.teamName}`} width={14} height={14} className="w-3.5 h-3.5 object-contain shrink-0" />
-              )}
-              <span className="text-[11px] text-slate-700 truncate flex-1">{row.teamName}</span>
-              <span className="text-[10px] text-slate-400 w-5 text-center shrink-0">{row.played}</span>
-              <span className="text-[10px] text-slate-500 w-5 text-center shrink-0">{row.goalDiff > 0 ? `+${row.goalDiff}` : row.goalDiff}</span>
-              <span className="text-[11px] font-bold text-emerald-600 w-5 text-center shrink-0">{row.points}</span>
-            </Link>
-          ))}
+          {rows.map((row) => {
+            const inner = (
+              <>
+                <span className="w-4 text-[10px] text-slate-400 text-center shrink-0">{row.rank}</span>
+                {row.teamLogo && (
+                  <Image src={row.teamLogo} alt={`Logo ${row.teamName}`} width={14} height={14} className="w-3.5 h-3.5 object-contain shrink-0" />
+                )}
+                <span className="text-[11px] text-slate-700 truncate flex-1">{row.teamName}</span>
+                <span className="text-[10px] text-slate-400 w-5 text-center shrink-0">{row.played}</span>
+                <span className="text-[10px] text-slate-500 w-5 text-center shrink-0">{row.goalDiff > 0 ? `+${row.goalDiff}` : row.goalDiff}</span>
+                <span className="text-[11px] font-bold text-emerald-600 w-5 text-center shrink-0">{row.points}</span>
+              </>
+            );
+            return row.teamSlug ? (
+              <Link
+                key={row.rank}
+                href={`/equipe/${row.teamSlug}`}
+                className="flex items-center gap-2 px-3 py-1.5 hover:bg-slate-50 transition-colors"
+              >
+                {inner}
+              </Link>
+            ) : (
+              <div key={row.rank} className="flex items-center gap-2 px-3 py-1.5">
+                {inner}
+              </div>
+            );
+          })}
         </div>
       </div>
     );

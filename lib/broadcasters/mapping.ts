@@ -29,6 +29,12 @@ export interface CompetitionBroadcasters {
   paid: BroadcasterEntry[];
   /** Note contextuelle libre que le prompt pourra réutiliser telle quelle */
   note?: string;
+  /**
+   * Date limite de validité des droits TV (YYYY-MM-DD).
+   * Au-delà, les infos de diffusion doivent être revérifiées.
+   * Absent = valide pour la saison en cours (convention).
+   */
+  validUntil?: string;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────

@@ -57,6 +57,14 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
     resetAutoplay();
   }, [total, resetAutoplay]);
 
+  // Pause autoplay on focus (WCAG 2.2.2)
+  const handleFocus = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  }, []);
+  const handleBlur = useCallback(() => {
+    resetAutoplay();
+  }, [resetAutoplay]);
+
   useEffect(() => {
     if (total <= 1) return;
     resetAutoplay();
@@ -66,9 +74,9 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
   if (total === 0) return null;
 
   return (
-    <div className="relative">
+    <div className="relative" role="region" aria-label="Articles à la une" aria-roledescription="carousel" onFocus={handleFocus} onBlur={handleBlur}>
       {/* Carousel container */}
-      <div className="relative overflow-hidden rounded-xl md:rounded-2xl shadow-lg shadow-slate-200/50" style={{ minHeight: "200px" }}>
+      <div className="relative overflow-hidden rounded-xl md:rounded-2xl shadow-lg shadow-slate-200/50 aspect-[16/9] md:aspect-[2.5/1]" aria-live="polite">
         {articles.map((article, i) => {
           const typeColor = TYPE_COLORS[article.type] || "bg-emerald-50 text-emerald-700 border-emerald-200";
           const typeLabel = TYPE_LABELS[article.type] || "Actu";
@@ -78,10 +86,12 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
             <Link
               key={article.slug}
               href={`/actu/${article.slug}`}
+              aria-hidden={i !== current}
+              tabIndex={i === current ? 0 : -1}
               className={`
                 absolute inset-0 w-full h-full
                 transition-opacity duration-700 ease-in-out
-                ${i === current ? "opacity-100 z-10" : "opacity-0 z-0"}
+                ${i === current ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"}
               `}
             >
               {/* Mobile: overlay text on image | Desktop: side by side */}
@@ -94,6 +104,7 @@ export function ArticleCarousel({ articles }: { articles: ArticleSlide[] }) {
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
+                    priority={i === 0}
                   />
                   {/* Mobile: dark overlay for text readability */}
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-white/70 to-transparent md:bg-gradient-to-r md:from-transparent md:to-white/30" />

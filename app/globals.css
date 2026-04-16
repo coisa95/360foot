@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* Fonts loaded via next/font/google in layout.tsx — no render-blocking @import */
 
 @tailwind base;
 @tailwind components;
@@ -57,13 +56,13 @@
   body {
     background: var(--cosmic-bg);
     color: hsl(222 47% 11%);
-    font-family: 'Inter', var(--font-sans), system-ui, sans-serif;
+    font-family: var(--font-inter), var(--font-sans), system-ui, sans-serif;
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6, .font-display {
-    font-family: 'Syne', var(--font-sans), system-ui, sans-serif;
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
   }
 }
 
@@ -457,6 +456,11 @@ html {
   100% { left: 200%; }
 }
 
+@keyframes bounce-x {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
 /* ═══════════════════════════════════════
    ANIMATION UTILITIES
    ═══════════════════════════════════════ */
@@ -478,6 +482,10 @@ html {
   .delay-300 { animation-delay: 0.36s; }
   .delay-400 { animation-delay: 0.48s; }
   .delay-500 { animation-delay: 0.60s; }
+
+  .animate-bounce-x {
+    animation: bounce-x 1.5s ease-in-out infinite;
+  }
 
   /* Live dot */
   .live-dot {

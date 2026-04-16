@@ -21,6 +21,7 @@ import {
   AFRICAN_SOURCES,
   COUNTRY_NATIONAL_MARKER,
   isSeniorMenChampionshipArticle,
+  MIN_CLUB_NAME_LENGTH,
 } from "@/lib/scrapers/african-sources";
 import { fetchHTMLArticles } from "@/lib/scrapers/html-fetcher";
 import type { RSSItem } from "@/lib/rss-prompt";
@@ -40,6 +41,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const startTime = Date.now();
   const supabase = createClient();
 
   // Charger le mapping leagueSlug → league_id une seule fois
@@ -68,7 +70,7 @@ export async function GET(request: Request) {
       .eq("league_id", leagueId);
     const names = (teams || [])
       .map((t: Record<string, unknown>) => (t.name as string) || "")
-      .filter((n) => n.length >= 4);
+      .filter((n) => n.length >= MIN_CLUB_NAME_LENGTH);
     clubsByLeagueSlug.set(src.leagueSlug, names);
   }
 
@@ -111,8 +113,8 @@ export async function GET(request: Request) {
         continue;
       }
 
-      // On ne regarde que les 10 items les plus récents par source
-      const recentItems = items.slice(0, 10);
+      // Regarder 30 items pour ne pas rater d'articles seniors après des blocs de contenu filtré
+      const recentItems = items.slice(0, 30);
 
       for (const item of recentItems) {
         if (articlesGenerated >= MAX_ARTICLES_PER_RUN) break;
@@ -183,6 +185,22 @@ export async function GET(request: Request) {
     }
 
     stats.push(stat);
+  }
+
+  // Enregistrer le run pour observabilité (table cron_runs)
+  const endTime = Date.now();
+  try {
+    await supabase.from("cron_runs").insert({
+      cron_name: "scrape-african-local",
+      started_at: new Date(startTime).toISOString(),
+      duration_ms: endTime - startTime,
+      articles_generated: articlesGenerated,
+      sources_processed: stats.length,
+      errors: errors.length > 0 ? errors : null,
+      stats,
+    });
+  } catch (cronRunErr) {
+    console.error("cron_runs insert failed:", cronRunErr);
   }
 
   return NextResponse.json({

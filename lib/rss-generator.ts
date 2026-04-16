@@ -9,6 +9,44 @@ import { publishToTelegram } from "./telegram";
 
 const anthropic = new Anthropic();
 
+// ── Cache module-level pour addInternalLinks (Fix #10: 1 query/run, pas 1/article) ──
+let _linksCache: {
+  teams: { name: string; slug: string }[];
+  players: { name: string; slug: string }[];
+  leagues: { name: string; slug: string }[];
+  fetchedAt: number;
+} | null = null;
+const LINKS_CACHE_TTL_MS = 5 * 60 * 1000; // 5 min
+
+async function getCachedLinksData() {
+  if (_linksCache && Date.now() - _linksCache.fetchedAt < LINKS_CACHE_TTL_MS) {
+    return _linksCache;
+  }
+  const supabase = createClient();
+  const [{ data: teams }, { data: players }, { data: leagues }] =
+    await Promise.all([
+      supabase.from("teams").select("name, slug"),
+      supabase.from("players").select("name, slug"),
+      supabase.from("leagues").select("id, name, slug"),
+    ]);
+  _linksCache = {
+    teams: (teams || []).map((t: Record<string, unknown>) => ({
+      name: t.name as string,
+      slug: t.slug as string,
+    })),
+    players: (players || []).map((p: Record<string, unknown>) => ({
+      name: p.name as string,
+      slug: p.slug as string,
+    })),
+    leagues: (leagues || []).map((l: Record<string, unknown>) => ({
+      name: l.name as string,
+      slug: l.slug as string,
+    })),
+    fetchedAt: Date.now(),
+  };
+  return _linksCache;
+}
+
 function generateSlug(title: string): string {
   return title
     .toLowerCase()
@@ -45,57 +83,63 @@ export async function generateArticleFromRSS(
       messages: [{ role: "user", content: buildRSSUserPrompt(item, trendingKeywords) }],
     });
 
-    // 2. Parser la réponse JSON
+    // 2. Parser la réponse JSON (avec guard contre hallucination Claude)
     const text =
       response.content[0].type === "text" ? response.content[0].text : "";
     const cleaned = text.replace(/```json|```/g, "").trim();
-    const article = JSON.parse(cleaned);
+
+    let article: Record<string, unknown>;
+    try {
+      article = JSON.parse(cleaned);
+    } catch (parseErr) {
+      console.error(
+        `❌ JSON.parse fail pour ${item.link}: ${parseErr}. Réponse Claude (100 premiers chars): ${cleaned.slice(0, 100)}`
+      );
+      // Blacklister l'URL pour ne pas retenter (boucle $$$ sinon)
+      await markAsProcessed(item.link, null);
+      return null;
+    }
 
     // 3. Générer le slug
-    const slug = generateSlug(article.title);
+    const slug = generateSlug(article.title as string);
 
-    // 4. Maillage interne automatique
+    // 4. Maillage interne automatique (cache module-level, 1 query/5min)
     const supabase = createClient();
-    const [{ data: teams }, { data: players }, { data: leagues }] =
-      await Promise.all([
-        supabase.from("teams").select("name, slug"),
-        supabase.from("players").select("name, slug"),
-        supabase.from("leagues").select("id, name, slug"),
-      ]);
+    const linksData = await getCachedLinksData();
 
     let content = addInternalLinks(
-      article.content,
-      (teams || []).map((t: Record<string, unknown>) => ({
-        name: t.name as string,
-        slug: t.slug as string,
-      })),
-      (players || []).map((p: Record<string, unknown>) => ({
-        name: p.name as string,
-        slug: p.slug as string,
-      })),
-      (leagues || []).map((l: Record<string, unknown>) => ({
-        name: l.name as string,
-        slug: l.slug as string,
-      }))
+      article.content as string,
+      linksData.teams,
+      linksData.players,
+      linksData.leagues
     );
 
     // 5. Ajouter les images
-    const detectedTeams = extractTeamNames(article.content);
+    const articleContent = article.content as string;
+    const articleTitle = article.title as string;
+    const articleExcerpt = article.excerpt as string;
+    const articleSeoTitle = article.seo_title as string;
+    const articleTags = (article.tags as string[]) || [];
+    const articleLigues = (article.ligues as string[]) || [];
+    const articleClubs = (article.clubs as string[]) || [];
+    const articleCompetitions = (article.competitions as string[]) || [];
+
+    const detectedTeams = extractTeamNames(articleContent);
     const detectedLeague = detectLeague([
-      ...(article.tags || []),
-      ...(article.ligues || []),
-      ...(article.competitions || []),
+      ...articleTags,
+      ...articleLigues,
+      ...articleCompetitions,
     ]);
 
     // Use RSS source image if available
     const rssImageUrl = item.imageUrl || undefined;
 
     const images = await getArticleImages({
-      title: article.title,
+      title: articleTitle,
       teams: detectedTeams,
       league: detectedLeague,
       type: "trending",
-      tags: article.tags || [],
+      tags: articleTags,
       rssImageUrl,
     });
     content = injectImagesIntoHTML(content, images);
@@ -107,10 +151,10 @@ export async function generateArticleFromRSS(
 
     // 7. Détecter la ligue associée pour le league_id
     const leagueId = findLeagueId(
-      leagues || [],
-      article.ligues || [],
-      article.clubs || [],
-      article.tags || []
+      linksData.leagues as unknown as Record<string, unknown>[],
+      articleLigues,
+      articleClubs,
+      articleTags
     );
 
     // 8. Construire les tags enrichis (fusionner tags + entités)
@@ -120,15 +164,15 @@ export async function generateArticleFromRSS(
     const { data, error } = await supabase
       .from("articles")
       .insert({
-        title: article.title,
+        title: articleTitle,
         slug,
         content,
-        excerpt: article.excerpt,
+        excerpt: articleExcerpt,
         type: "trending",
-        seo_title: article.seo_title,
-        seo_description: article.excerpt,
+        seo_title: articleSeoTitle,
+        seo_description: articleExcerpt,
         og_image_url: rssImageUrl || buildArticleOgUrl({
-          title: article.title,
+          title: articleTitle,
           type: "trending",
           league: detectedLeague,
         }),
@@ -144,19 +188,22 @@ export async function generateArticleFromRSS(
     // 10. Marquer comme traité
     await markAsProcessed(item.link, data.id);
 
-    // 11. Publier sur Telegram
-    await publishToTelegram({
-      title: article.title,
+    // 11. Publier sur Telegram (non-bloquant — un échec Telegram ne doit pas
+    //     empêcher le return de l'articleId ni la suite du cron)
+    publishToTelegram({
+      title: article.title as string,
       slug,
-      excerpt: article.excerpt,
+      excerpt: article.excerpt as string,
       type: "trending",
       imageUrl: rssImageUrl,
       tags: enrichedTags,
       league: detectedLeague,
-    });
+    }).catch((err) =>
+      console.error(`⚠️ Telegram publish failed (non-fatal): ${err}`)
+    );
 
     console.log(
-      `✅ Article RSS généré : ${article.title} | Joueurs: ${(article.joueurs || []).length} | Clubs: ${(article.clubs || []).length} | Ligue: ${detectedLeague}`
+      `✅ Article RSS généré : ${article.title} | Joueurs: ${((article.joueurs as string[]) || []).length} | Clubs: ${((article.clubs as string[]) || []).length} | Ligue: ${detectedLeague}`
     );
     return data.id;
   } catch (error) {

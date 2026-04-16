@@ -92,7 +92,7 @@ export function Header() {
           {installPrompt && (
             <button
               onClick={handleInstall}
-              className="flex items-center gap-1.5 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-black transition-colors hover:bg-emerald-400"
+              className="flex items-center gap-1.5 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-emerald-400"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -107,7 +107,7 @@ export function Header() {
           {installPrompt && (
             <button
               onClick={handleInstall}
-              className="flex items-center gap-1 rounded-lg bg-emerald-500 px-2.5 py-1.5 text-xs font-bold text-black transition-colors hover:bg-emerald-400"
+              className="flex items-center gap-1 rounded-lg bg-emerald-500 px-2.5 py-1.5 text-xs font-bold text-white transition-colors hover:bg-emerald-400"
               aria-label="Installer l'application"
             >
               <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,8 +135,13 @@ export function Header() {
       </div>
 
       {/* Mobile Menu */}
-      {menuOpen && (
-        <div id="mobile-menu" className="border-t border-slate-200/80 bg-white/95 backdrop-blur-xl px-4 pb-4 lg:hidden">
+      <div
+        id="mobile-menu"
+        className={`border-t border-slate-200/80 bg-white/95 backdrop-blur-xl px-4 lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          menuOpen ? "max-h-96 pb-4 opacity-100" : "max-h-0 pb-0 opacity-0"
+        }`}
+      >
+        {menuOpen && (
           <nav aria-label="Navigation mobile" className="flex flex-col gap-1 pt-2">
             {NAV_LINKS.map((link) => (
               <Link
@@ -154,8 +159,8 @@ export function Header() {
               </Link>
             ))}
           </nav>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 }

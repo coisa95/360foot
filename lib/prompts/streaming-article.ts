@@ -147,7 +147,7 @@ export function buildUserPrompt(data: StreamingMatchData): string {
     year: "numeric",
   });
 
-  let prompt = `Rédige un article "streaming / comment regarder" pour ce match :
+  const prompt = `Rédige un article "streaming / comment regarder" pour ce match :
 
 Match : ${data.homeTeam} vs ${data.awayTeam}
 Compétition : ${data.competition}${data.matchday ? ` — Journée ${data.matchday}` : ""}

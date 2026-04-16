@@ -29,7 +29,7 @@ export function CookieBanner() {
     <div className="fixed bottom-0 inset-x-0 z-50 p-4 sm:p-6">
       <div className="mx-auto max-w-xl rounded-xl border border-slate-200 bg-white/95 backdrop-blur-sm p-4 shadow-2xl">
         <p className="text-sm text-slate-600 leading-relaxed">
-          Ce site utilise des cookies pour am&eacute;liorer votre exp&eacute;rience et analyser le trafic.{" "}
+          Ce site utilise des cookies pour améliorer votre expérience et analyser le trafic.{" "}
           <Link href="/confidentialite" className="underline text-emerald-600 hover:text-emerald-500">
             En savoir plus
           </Link>

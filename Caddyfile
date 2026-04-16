@@ -28,6 +28,13 @@
 	@www host www.360-foot.com
 	redir @www https://360-foot.com{uri} permanent
 
+	# Bloquer les appels cron depuis l'extérieur (seul le container worker y accède)
+	@cron_external {
+		path /api/cron/*
+		not remote_ip 172.16.0.0/12 10.0.0.0/8 192.168.0.0/16 127.0.0.1
+	}
+	respond @cron_external 403
+
 	# Reverse proxy vers Next.js
 	reverse_proxy nextjs:3000 {
 		header_up X-Real-IP {remote_host}

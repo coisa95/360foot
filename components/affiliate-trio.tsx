@@ -114,7 +114,7 @@ export function AffiliateTrio() {
             </p>
 
             {/* CTA */}
-            <div className={`w-full text-center rounded-lg ${bk.btnColor} px-4 py-2 text-xs font-bold text-black transition-all group-hover:shadow-md`}>
+            <div className={`w-full text-center rounded-lg ${bk.btnColor} px-4 py-2 text-xs font-bold text-white transition-all group-hover:shadow-md`}>
               {bk.cta} →
             </div>
           </Link>
@@ -149,7 +149,7 @@ export function AffiliateTrio() {
             </div>
 
             {/* CTA */}
-            <span className={`shrink-0 rounded-lg ${bk.btnColor} px-3 py-1.5 text-[10px] font-bold text-black`}>
+            <span className={`shrink-0 rounded-lg ${bk.btnColor} px-3 py-1.5 text-[10px] font-bold text-white`}>
               Profiter
             </span>
           </Link>
@@ -183,7 +183,7 @@ export function AffiliateInline({ index = 0 }: { index?: number }) {
         <span className="font-black text-white">{bk.bonus}</span>
         <span className="ml-1.5 text-sm text-white/80">{bk.bonusLabel}</span>
       </div>
-      <span className={`rounded-lg ${bk.btnColor} px-3 py-1.5 text-xs font-bold text-black transition-all`}>
+      <span className={`rounded-lg ${bk.btnColor} px-3 py-1.5 text-xs font-bold text-white transition-all`}>
         {bk.cta} →
       </span>
     </Link>
