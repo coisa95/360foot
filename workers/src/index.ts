@@ -89,26 +89,36 @@ cron.schedule("0 5,13,21 * * *", () => triggerJob("/api/cron/enrich-players"));
 // Daily at 02:00 — Collect trending football keywords from Google Trends
 cron.schedule("0 2 * * *", () => triggerJob("/api/cron/collect-trends"));
 
+// Every 15 min — Generate "comment regarder / streaming" articles (J-2/J-1)
+cron.schedule("5,20,35,50 * * * *", () =>
+  triggerJob("/api/cron/generate-streaming-articles")
+);
+
+// Every hour at :25 — Scrape local African championship media (RSS + HTML)
+cron.schedule("25 * * * *", () => triggerJob("/api/cron/scrape-african-local"));
+
 // ============================================
 // STARTUP
 // ============================================
 
 log("INFO", "=== 360 Foot CRON Worker started ===");
 log("INFO", `Target: ${SITE_URL}`);
-log("INFO", "13 CRON jobs scheduled:");
-log("INFO", "  - collect-matches     → 0 * * * *");
-log("INFO", "  - generate-articles   → 10 * * * *");
-log("INFO", "  - generate-previews   → 20 * * * *");
-log("INFO", "  - enrich-matches      → */10 * * * *");
-log("INFO", "  - enrich-previews     → 40 * * * *");
-log("INFO", "  - update-standings    → 30 * * * *");
-log("INFO", "  - fetch-top-players   → 0 6 * * *");
-log("INFO", "  - fetch-team-stats    → 0 5 * * *");
-log("INFO", "  - generate-sitemap    → 0 3 * * *");
-log("INFO", "  - process-rss         → 50 * * * *");
-log("INFO", "  - populate-players    → 0 4,12,20 * * *");
-log("INFO", "  - enrich-players      → 0 5,13,21 * * *");
-log("INFO", "  - collect-trends      → 0 2 * * *");
+log("INFO", "15 CRON jobs scheduled:");
+log("INFO", "  - collect-matches            → 0 * * * *");
+log("INFO", "  - generate-articles          → 10 * * * *");
+log("INFO", "  - generate-previews          → 20 * * * *");
+log("INFO", "  - enrich-matches             → */10 * * * *");
+log("INFO", "  - enrich-previews            → 40 * * * *");
+log("INFO", "  - update-standings           → 30 * * * *");
+log("INFO", "  - fetch-top-players          → 0 6 * * *");
+log("INFO", "  - fetch-team-stats           → 0 5 * * *");
+log("INFO", "  - generate-sitemap           → 0 3 * * *");
+log("INFO", "  - process-rss                → 50 * * * *");
+log("INFO", "  - populate-players           → 0 4,12,20 * * *");
+log("INFO", "  - enrich-players             → 0 5,13,21 * * *");
+log("INFO", "  - collect-trends             → 0 2 * * *");
+log("INFO", "  - generate-streaming-articles → 5,20,35,50 * * * *");
+log("INFO", "  - scrape-african-local       → 25 * * * *");
 log("INFO", "Worker running... Press Ctrl+C to stop.");
 
 // Keep process alive
