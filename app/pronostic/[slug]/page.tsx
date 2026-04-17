@@ -354,8 +354,16 @@ export default async function PronosticPage({ params }: Props) {
                     Vainqueur probable
                   </p>
                   <p className="text-xl font-display font-bold text-slate-900">
-                    {predictionsJson.winner}
+                    {typeof predictionsJson.winner === "string"
+                      ? predictionsJson.winner
+                      : predictionsJson.winner?.name || ""}
                   </p>
+                  {typeof predictionsJson.winner === "object" &&
+                    predictionsJson.winner?.comment && (
+                      <p className="mt-1 text-xs text-emerald-700">
+                        {predictionsJson.winner.comment}
+                      </p>
+                    )}
                 </div>
               )}
 
@@ -427,7 +435,9 @@ export default async function PronosticPage({ params }: Props) {
                         Buts attendus
                       </p>
                       <p className="text-lg font-bold text-slate-900">
-                        {predictionsJson.goals}
+                        {typeof predictionsJson.goals === "string"
+                          ? predictionsJson.goals
+                          : `${predictionsJson.goals?.home ?? "?"} - ${predictionsJson.goals?.away ?? "?"}`}
                       </p>
                     </div>
                   )}
