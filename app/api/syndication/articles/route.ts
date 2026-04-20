@@ -48,8 +48,10 @@ export async function GET(request: Request) {
   const typeParam = searchParams.get("type"); // "pronostic,streaming"
   const types = typeParam ? typeParam.split(",").map((t) => t.trim()).filter(Boolean) : [];
   const leagueSlug = searchParams.get("league");
-  const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10) || 20, 50);
-  const offset = parseInt(searchParams.get("offset") || "0", 10) || 0;
+  const rawLimit = parseInt(searchParams.get("limit") || "", 10);
+  const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? Math.min(rawLimit, 50) : 20;
+  const rawOffset = parseInt(searchParams.get("offset") || "", 10);
+  const offset = Number.isFinite(rawOffset) && rawOffset >= 0 ? rawOffset : 0;
   const since = searchParams.get("since");
 
   const supabase = createClient();

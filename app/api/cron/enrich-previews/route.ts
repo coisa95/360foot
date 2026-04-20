@@ -58,11 +58,36 @@ export async function GET(request: Request) {
           const predictions = await getPredictions(apiFootballId);
           if (predictions && predictions.length > 0) {
             const pred = predictions[0];
+            const rawWinner = pred.predictions?.winner;
+            const rawGoals = pred.predictions?.goals;
+            // Normalise winner: API-Football renvoie soit un string, soit
+            // { id, name, comment }. On stocke un string "name" + le
+            // commentaire à part pour éviter les crashs JSX qui tentent de
+            // rendre un objet.
+            const winnerName =
+              typeof rawWinner === "string"
+                ? rawWinner
+                : (rawWinner && typeof rawWinner === "object"
+                    ? (rawWinner as { name?: string }).name || null
+                    : null);
+            const winnerComment =
+              rawWinner && typeof rawWinner === "object"
+                ? (rawWinner as { comment?: string }).comment || null
+                : null;
+            // Normalise goals: soit string "X.X", soit { home, away }.
+            const goalsStr =
+              typeof rawGoals === "string"
+                ? rawGoals
+                : (rawGoals && typeof rawGoals === "object" &&
+                    (rawGoals as { home?: unknown }).home != null
+                      ? `${(rawGoals as { home?: unknown }).home} - ${(rawGoals as { away?: unknown }).away}`
+                      : null);
             predictionsData = {
-              winner: pred.predictions?.winner || null,
+              winner: winnerName,
+              winner_comment: winnerComment,
               advice: pred.predictions?.advice || "",
               percent: pred.predictions?.percent || {},
-              goals: pred.predictions?.goals || {},
+              goals: goalsStr,
               under_over: pred.predictions?.under_over || null,
               comparison: pred.comparison || {},
               home_form: pred.teams?.home?.last_5?.form || "",

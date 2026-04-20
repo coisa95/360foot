@@ -38,7 +38,8 @@ export async function GET(request: Request) {
   const dateParam = searchParams.get("date") || new Date().toISOString().split("T")[0];
   const leagueSlug = searchParams.get("league");
   const status = searchParams.get("status");
-  const limit = Math.min(parseInt(searchParams.get("limit") || "30", 10) || 30, 100);
+  const rawLimit = parseInt(searchParams.get("limit") || "", 10);
+  const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? Math.min(rawLimit, 100) : 30;
 
   const supabase = createClient();
 

@@ -1,12 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const INDEXNOW_KEY = "360foot2025indexnow";
 const HOST = "https://360-foot.com";
 
 export async function POST(req: NextRequest) {
+  const secret = process.env.INDEXNOW_SECRET;
+  if (!secret) {
+    return NextResponse.json(
+      { error: "INDEXNOW_SECRET not configured" },
+      { status: 500 }
+    );
+  }
+
+  const indexNowKey = process.env.INDEXNOW_KEY;
+  if (!indexNowKey) {
+    return NextResponse.json(
+      { error: "INDEXNOW_KEY not configured" },
+      { status: 500 }
+    );
+  }
+
   // Verify a simple bearer token to prevent abuse
   const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.INDEXNOW_SECRET || "360foot-indexnow-2025"}`) {
+  if (auth !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -21,8 +36,8 @@ export async function POST(req: NextRequest) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       host: "360-foot.com",
-      key: INDEXNOW_KEY,
-      keyLocation: `${HOST}/${INDEXNOW_KEY}.txt`,
+      key: indexNowKey,
+      keyLocation: `${HOST}/${indexNowKey}.txt`,
       urlList: urls.map((u: string) => u.startsWith("http") ? u : `${HOST}${u}`),
     }),
   });

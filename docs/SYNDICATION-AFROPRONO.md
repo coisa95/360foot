@@ -2,14 +2,17 @@
 
 ## Clé API
 
+> ⚠️ La clé n'est PAS committée dans ce repo. Demande-la à l'admin 360foot
+> via un canal privé (Signal, Telegram, ou autre). Elle change régulièrement.
+
 ```
-SYNDICATION_API_KEY=10b2db73598cdbd51053868d2f929a28928aba59198c867d1b7bb7e72dac78e6
+SYNDICATION_API_KEY=<demande à l'admin>
 ```
 
 Toutes les requêtes doivent inclure le header :
 
 ```
-x-api-key: 10b2db73598cdbd51053868d2f929a28928aba59198c867d1b7bb7e72dac78e6
+x-api-key: REDACTED_ASK_ADMIN
 ```
 
 ---
@@ -35,7 +38,7 @@ GET /api/syndication/articles
 **Exemple — derniers pronostics et streaming :**
 
 ```bash
-curl -H "x-api-key: 10b2db73598cdbd51053868d2f929a28928aba59198c867d1b7bb7e72dac78e6" \
+curl -H "x-api-key: REDACTED_ASK_ADMIN" \
   "https://360-foot.com/api/syndication/articles?type=pronostic,streaming&limit=10"
 ```
 
@@ -82,7 +85,7 @@ GET /api/syndication/matches
 **Exemple — matchs du jour :**
 
 ```bash
-curl -H "x-api-key: 10b2db73598cdbd51053868d2f929a28928aba59198c867d1b7bb7e72dac78e6" \
+curl -H "x-api-key: REDACTED_ASK_ADMIN" \
   "https://360-foot.com/api/syndication/matches?date=2026-04-16"
 ```
 
@@ -130,7 +133,7 @@ GET /api/syndication/standings
 **Exemple :**
 
 ```bash
-curl -H "x-api-key: 10b2db73598cdbd51053868d2f929a28928aba59198c867d1b7bb7e72dac78e6" \
+curl -H "x-api-key: REDACTED_ASK_ADMIN" \
   "https://360-foot.com/api/syndication/standings?league=ligue-1-cote-divoire"
 ```
 
@@ -222,7 +225,7 @@ export async function generateMetadata({ params }) {
 ### 1. `.env.local` d'afroprono
 
 ```env
-SYNDICATION_API_KEY=10b2db73598cdbd51053868d2f929a28928aba59198c867d1b7bb7e72dac78e6
+SYNDICATION_API_KEY=REDACTED_ASK_ADMIN
 SYNDICATION_BASE_URL=https://360-foot.com
 ```
 

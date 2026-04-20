@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!article) return { title: "Article introuvable" };
+  if (!article) notFound();
 
   const articleUrl = `https://360-foot.com/actu/${slug}`;
   const articleTitle = article.seo_title || article.title;

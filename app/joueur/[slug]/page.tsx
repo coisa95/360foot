@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .single() as { data: any };
 
-  if (!player) return { title: "Joueur introuvable" };
+  if (!player) notFound();
 
   const teamName = player.team?.name || "";
   const title = `${player.name}${teamName ? ` (${teamName})` : ""} — Stats, profil et actu`;

@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!match) return { title: "Pronostic introuvable" };
+  if (!match) notFound();
 
   const homeName = match.home_team?.name || "Equipe A";
   const awayName = match.away_team?.name || "Equipe B";
@@ -469,18 +469,32 @@ export default async function PronosticPage({ params }: Props) {
                   <div className="space-y-3">
                     {Object.entries(predictionsJson.comparison).map(
                       ([key, val]: [string, any]) => {
-                        const homePercent = parseInt(val.home) || 50;
+                        // Defensive: val.home/away can sometimes be objects (API-Football
+                        // structure drift). Coerce to string — prevents React crash.
+                        const safeHome =
+                          val == null
+                            ? ""
+                            : typeof val.home === "object"
+                              ? JSON.stringify(val.home)
+                              : String(val.home ?? "");
+                        const safeAway =
+                          val == null
+                            ? ""
+                            : typeof val.away === "object"
+                              ? JSON.stringify(val.away)
+                              : String(val.away ?? "");
+                        const homePercent = parseInt(safeHome) || 50;
                         return (
                           <div key={key}>
                             <div className="flex justify-between text-xs mb-1">
                               <span className="font-medium text-slate-700">
-                                {val.home}
+                                {safeHome}
                               </span>
                               <span className="text-slate-400">
                                 {compLabels[key] || key}
                               </span>
                               <span className="font-medium text-slate-700">
-                                {val.away}
+                                {safeAway}
                               </span>
                             </div>
                             <div className="flex h-2 gap-0.5 overflow-hidden rounded-full">

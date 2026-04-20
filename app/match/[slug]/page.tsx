@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!match) return { title: "Match introuvable" };
+  if (!match) notFound();
 
   const homeName = match.home_team?.name || "Équipe A";
   const awayName = match.away_team?.name || "Équipe B";
@@ -490,7 +490,10 @@ export default async function MatchPage({ params }: Props) {
                 <Separator className="bg-slate-200" />
                 <p className="text-xs text-slate-400 font-medium mt-2">Comparaison</p>
                 {Object.entries(predictionsJson.comparison).map(([key, val]: [string, any]) => {
-                  const homePercent = parseInt(val.home) || 50;
+                  // Defensive: val.home/away sometimes objects from API-Football
+                  const safeHome = val == null ? "" : typeof val.home === "object" ? JSON.stringify(val.home) : String(val.home ?? "");
+                  const safeAway = val == null ? "" : typeof val.away === "object" ? JSON.stringify(val.away) : String(val.away ?? "");
+                  const homePercent = parseInt(safeHome) || 50;
                   const compLabels: Record<string, string> = {
                     "Form": "Forme", "Att": "Attaque", "Def": "Défense",
                     "Poisson Distribution": "Distribution", "H2H": "Confrontations",
@@ -499,9 +502,9 @@ export default async function MatchPage({ params }: Props) {
                   return (
                     <div key={key}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span>{val.home}</span>
+                        <span>{safeHome}</span>
                         <span className="text-slate-400">{compLabels[key] || key}</span>
-                        <span>{val.away}</span>
+                        <span>{safeAway}</span>
                       </div>
                       <div className="flex h-1.5 gap-0.5 overflow-hidden rounded-full">
                         <div className="bg-emerald-500 rounded-l-full" style={{ width: `${homePercent}%` }} />

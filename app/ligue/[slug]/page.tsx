@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!league) return { title: "Classement introuvable" };
+  if (!league) notFound();
 
   const season = `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`;
   const title = `Classement ${league.name} ${season}`;

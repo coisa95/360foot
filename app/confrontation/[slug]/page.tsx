@@ -75,7 +75,7 @@ function countryToFlag(country: string | null): string {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const parsed = parseSlug(slug);
-  if (!parsed) return { title: "Confrontation introuvable" };
+  if (!parsed) notFound();
 
   const { slugA, slugB } = parsed;
   const supabase = createClient();
@@ -85,7 +85,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     supabase.from("teams").select("id, name, slug").eq("slug", slugB).single(),
   ]);
 
-  if (!teamA || !teamB) return { title: "Confrontation introuvable" };
+  if (!teamA || !teamB) notFound();
 
   const title = `${teamA.name} vs ${teamB.name} — Confrontations directes`;
   const fullDesc = `${teamA.name} vs ${teamB.name} : historique complet, bilan victoires/nuls/défaites, scores et stats de toutes les rencontres.`;

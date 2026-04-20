@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!team) return { title: "Équipe introuvable" };
+  if (!team) notFound();
 
   const leagueName = team.league?.name || "";
   const title = `${team.name} — Effectif, résultats et classement 2024-2025`;
