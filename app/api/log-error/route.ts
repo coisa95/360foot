@@ -70,5 +70,39 @@ export async function POST(request: Request) {
   // Prefix so it's greppable.
   console.error("[CLIENT_ERROR]", JSON.stringify(safe));
 
+  // Best-effort Telegram alert. Env vars already used elsewhere in the
+  // stack (workers) — same bot/channel reuse. Swallow errors: logging
+  // must never fail the user-facing request.
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const channelId =
+    process.env.TELEGRAM_ERROR_CHANNEL_ID || process.env.TELEGRAM_CHANNEL_ID;
+  if (botToken && channelId) {
+    const urlShort = safe.url?.replace("https://360-foot.com", "") || "?";
+    const msg =
+      `🚨 *360foot* error\n` +
+      `\`${urlShort}\`\n` +
+      `*msg*: ${safe.message || "?"}\n` +
+      `*digest*: \`${safe.digest || "?"}\`\n` +
+      `*ip*: \`${ip}\``;
+    // Fire-and-forget; 3s timeout so we don't hang the request thread.
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3000);
+    fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: channelId,
+        text: msg,
+        parse_mode: "Markdown",
+        disable_notification: false,
+      }),
+      signal: ctrl.signal,
+    })
+      .catch(() => {
+        /* swallow — logging already on stderr */
+      })
+      .finally(() => clearTimeout(timer));
+  }
+
   return NextResponse.json({ ok: true });
 }

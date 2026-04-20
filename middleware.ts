@@ -89,7 +89,9 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Apply to all routes except static files and api
+    // Apply to all routes except static assets. /api/* IS covered so
+    // security headers (HSTS, CSP, X-Frame, X-Content-Type) apply to
+    // JSON endpoints too.
     "/((?!_next/static|_next/image|favicon.ico|icon-512.png|logo.png|images/).*)",
   ],
 };
