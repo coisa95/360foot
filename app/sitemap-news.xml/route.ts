@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 
 // Google News sitemap : articles publiés dans les 48 dernières heures
 // Boost massif d'indexation pour les news fraîches
@@ -14,7 +14,7 @@ function escapeXml(s: string): string {
 }
 
 export async function GET() {
-  const supabase = createClient();
+  const supabase = createAnonClient();
   const baseUrl = "https://360-foot.com";
 
   // Articles publiés depuis 48h max (limite Google News)

@@ -74,9 +74,10 @@ export async function GET(request: Request) {
     clubsByLeagueSlug.set(src.leagueSlug, names);
   }
 
-  const sorted = [...AFRICAN_SOURCES].sort(
-    (a, b) => a.reliability - b.reliability
-  );
+  // Filtrer les sources désactivées (mortes / 403 prod / parseur KO) puis trier
+  const sorted = AFRICAN_SOURCES
+    .filter((s) => !s.disabled)
+    .sort((a, b) => a.reliability - b.reliability);
 
   let articlesGenerated = 0;
   const errors: string[] = [];

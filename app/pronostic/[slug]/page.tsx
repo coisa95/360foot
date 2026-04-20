@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Card } from "@/components/ui/card";
@@ -23,7 +23,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: match } = await supabase
@@ -118,7 +118,7 @@ const compLabels: Record<string, string> = {
 
 export default async function PronosticPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: match } = await supabase

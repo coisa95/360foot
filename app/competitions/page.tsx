@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { CollapsibleSection } from "@/components/collapsible-section";
@@ -74,7 +74,7 @@ function categorize(league: any): string {
 }
 
 export default async function CompetitionsPage() {
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: leagues } = await supabase
     .from("leagues")

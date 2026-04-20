@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
@@ -61,7 +61,7 @@ export default async function NationalTeamPage({ params }: Props) {
 
   if (!country) notFound();
 
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   // Chercher l'equipe nationale par pays
   const { data: team } = await supabase

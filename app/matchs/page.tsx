@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { MatchLeagueGroup } from "@/components/match-league-group";
@@ -54,7 +54,7 @@ function formatDateLabel(d: Date): string {
 
 export default async function MatchsPage({ searchParams }: Props) {
   const { date: dateParam, ligue } = await searchParams;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   // Determine selected date
   const today = new Date();

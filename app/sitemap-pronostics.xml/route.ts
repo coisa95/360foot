@@ -1,9 +1,9 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 
 export const revalidate = 3600;
 
 export async function GET() {
-  const supabase = createClient();
+  const supabase = createAnonClient();
   const baseUrl = "https://360-foot.com";
 
   // Only upcoming matches with predictions data

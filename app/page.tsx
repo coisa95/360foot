@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { ArticleCarousel } from "@/components/article-carousel";
 import { MatchCard } from "@/components/match-card";
 import Link from "next/link";
@@ -34,7 +34,7 @@ export const metadata = {
 
 async function getLatestArticles() {
   try {
-    const supabase = createClient();
+    const supabase = createAnonClient();
     const { data } = await supabase
       .from("articles")
       .select("slug, title, excerpt, type, published_at, league:leagues!league_id(name), og_image_url")
@@ -50,7 +50,7 @@ async function getLatestArticles() {
 
 async function getTodayMatches() {
   try {
-    const supabase = createClient();
+    const supabase = createAnonClient();
     const today = new Date().toISOString().split("T")[0];
     const { data } = await supabase
       .from("matches")
@@ -82,7 +82,7 @@ const PRIORITY_LEAGUE_SLUGS = [
 
 async function getStandings() {
   try {
-    const supabase = createClient();
+    const supabase = createAnonClient();
     const { data } = await supabase
       .from("standings")
       .select("league_id, data_json, leagues(name, slug)")

@@ -24,15 +24,9 @@
  */
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
+import { verifySyndicationApiKey as verifyApiKey } from "@/lib/syndication-auth";
 
 export const revalidate = 0; // pas de cache — données fraîches
-
-function verifyApiKey(request: Request): boolean {
-  const key = request.headers.get("x-api-key");
-  const expected = process.env.SYNDICATION_API_KEY;
-  if (!expected) return false;
-  return key === expected;
-}
 
 export async function GET(request: Request) {
   if (!verifyApiKey(request)) {

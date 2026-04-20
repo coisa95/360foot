@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Metadata } from "next";
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const supabase = createClient();
+  const supabase = createAnonClient();
   const { data: bookmakers } = await supabase
     .from("bookmakers")
     .select("slug")
@@ -86,7 +86,7 @@ const DEFAULT_STEPS = [
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: bookmaker } = await supabase
     .from("bookmakers")
@@ -125,7 +125,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function GoPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: bookmaker } = await supabase
     .from("bookmakers")

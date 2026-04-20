@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Badge } from "@/components/ui/badge";
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BookmakersPage() {
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: bookmakers } = await supabase
     .from("bookmakers")

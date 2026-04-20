@@ -1,9 +1,9 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 
 export const revalidate = 3600;
 
 export async function GET() {
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   // Google News sitemap: only articles from last 48 hours
   const twoDaysAgo = new Date();

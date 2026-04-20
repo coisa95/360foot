@@ -6,17 +6,29 @@ import { verifyCronAuth } from "@/lib/auth";
 
 export const maxDuration = 300;
 
-const RSS_FEEDS = [
+interface RSSFeed {
+  url: string;
+  source: string;
+  priority: number;
+  /** Si true, la source est désactivée (morte, bloquée ou parseur en panne). */
+  disabled?: boolean;
+}
+
+const RSS_FEEDS: RSSFeed[] = [
   // ===== PRIORITÉ 1 : Football africain & diaspora =====
   {
     url: "https://www.africatopsports.com/feed/",
     source: "AfricaTopSports",
     priority: 1,
+    // disabled 2026-04-20 : 403 Cloudflare depuis VPS prod (200 en local)
+    disabled: true,
   },
   {
     url: "https://africafoot.com/feed/",
     source: "AfricaFoot",
     priority: 1,
+    // disabled 2026-04-20 : échecs systématiques en prod (Cloudflare block)
+    disabled: true,
   },
   {
     url: "https://footafrica365.fr/rss/",
@@ -27,26 +39,36 @@ const RSS_FEEDS = [
     url: "https://www.jeuneafrique.com/sports/rss/",
     source: "Jeune Afrique Sport",
     priority: 1,
+    // disabled 2026-04-20 : 404 (flux supprimé)
+    disabled: true,
   },
   {
     url: "https://www.bbc.com/africa/topics/cyx5krnw38rt/rss.xml",
     source: "BBC Africa Football",
     priority: 1,
+    // disabled 2026-04-20 : 404 (topic ID obsolète)
+    disabled: true,
   },
   {
     url: "https://allafrica.com/tools/headlines/rdf/sport.html",
     source: "AllAfrica Sports",
     priority: 1,
+    // disabled 2026-04-20 : 404 (endpoint RDF retiré)
+    disabled: true,
   },
   {
     url: "https://www.cafonline.com/rss",
     source: "CAF Online",
     priority: 1,
+    // disabled 2026-04-20 : 404 (pas de flux RSS officiel)
+    disabled: true,
   },
   {
     url: "https://www.supersport.com/football/rss",
     source: "Supersport Africa",
     priority: 1,
+    // disabled 2026-04-20 : 404 après redirect (flux supprimé)
+    disabled: true,
   },
 
   // ===== PRIORITÉ 1 : Transferts =====
@@ -54,6 +76,8 @@ const RSS_FEEDS = [
     url: "https://www.footmercato.net/feed",
     source: "Foot Mercato",
     priority: 1,
+    // disabled 2026-04-20 : 404 sur /feed et /feed/ (pas dans l'audit mais détecté)
+    disabled: true,
   },
   {
     url: "https://www.transfermarkt.fr/rss/news",
@@ -78,16 +102,22 @@ const RSS_FEEDS = [
     url: "https://www.theguardian.com/football/rss",
     source: "The Guardian Football",
     priority: 2,
+    // disabled 2026-04-20 : TypeError au parse (URL 200 mais XML problématique)
+    disabled: true,
   },
   {
     url: "https://www.skysports.com/feeds/news/football",
     source: "Sky Sports",
     priority: 2,
+    // disabled 2026-04-20 : 404
+    disabled: true,
   },
   {
     url: "https://www.goal.com/en/rss?ICID=HP",
     source: "Goal",
     priority: 2,
+    // disabled 2026-04-20 : 404 (Goal a supprimé ses flux RSS publics)
+    disabled: true,
   },
 
   // ===== PRIORITÉ 2 : Médias espagnols =====
@@ -95,11 +125,15 @@ const RSS_FEEDS = [
     url: "https://www.marca.com/rss/futbol.html",
     source: "Marca",
     priority: 2,
+    // disabled 2026-04-20 : 404
+    disabled: true,
   },
   {
     url: "https://as.com/rss/futbol/",
     source: "AS",
     priority: 2,
+    // disabled 2026-04-20 : 404
+    disabled: true,
   },
   {
     url: "https://www.mundodeportivo.com/rss/futbol",
@@ -112,16 +146,22 @@ const RSS_FEEDS = [
     url: "https://www.kicker.de/news/fussball/bundesliga/rss.xml",
     source: "Kicker",
     priority: 2,
+    // disabled 2026-04-20 : 404
+    disabled: true,
   },
   {
     url: "https://www.bild.de/rssfeeds/sport/fussball-25085082,feed=rss.bild.xml",
     source: "Bild Football",
     priority: 2,
+    // disabled 2026-04-20 : 404
+    disabled: true,
   },
   {
     url: "https://www.sport1.de/de/rss/fussball",
     source: "Sport1",
     priority: 2,
+    // disabled 2026-04-20 : redirect vers homepage (flux supprimé)
+    disabled: true,
   },
 
   // ===== PRIORITÉ 3 : Médias français généralistes =====
@@ -134,6 +174,8 @@ const RSS_FEEDS = [
     url: "https://www.maxifoot.fr/rss.xml",
     source: "Maxifoot",
     priority: 3,
+    // disabled 2026-04-20 : 404
+    disabled: true,
   },
 ];
 
@@ -149,8 +191,10 @@ export async function GET(request: Request) {
   const errors: string[] = [];
   const feedsProcessed: string[] = [];
 
-  // Trier par priorité
-  const sortedFeeds = [...RSS_FEEDS].sort((a, b) => a.priority - b.priority);
+  // Filtrer les sources désactivées (mortes / bloquées / parseur KO) puis trier par priorité
+  const sortedFeeds = RSS_FEEDS
+    .filter((f) => !f.disabled)
+    .sort((a, b) => a.priority - b.priority);
 
   for (const feed of sortedFeeds) {
     if (articlesGenerated >= MAX_ARTICLES_PER_RUN) break;
@@ -200,7 +244,7 @@ export async function GET(request: Request) {
     success: true,
     articlesGenerated,
     feedsProcessed,
-    totalFeeds: RSS_FEEDS.length,
+    totalFeeds: sortedFeeds.length,
     errors: errors.length > 0 ? errors.slice(0, 10) : undefined,
     message: `${articlesGenerated} articles RSS générés depuis ${feedsProcessed.length} sources`,
   });

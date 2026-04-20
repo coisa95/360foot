@@ -1,10 +1,10 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 
 // Sitemap articles avec pagination Supabase pour dépasser la limite de 1000
 export const revalidate = 3600;
 
 export async function GET() {
-  const supabase = createClient();
+  const supabase = createAnonClient();
   const baseUrl = "https://360-foot.com";
 
   // Pagination Supabase : récupère par batch de 1000 jusqu'à 50000 max

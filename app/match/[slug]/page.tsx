@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { ArticleCard } from "@/components/article-card";
@@ -22,7 +22,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: match } = await supabase
     .from("matches")
@@ -124,7 +124,7 @@ function parseStatValue(val: any): number {
 
 export default async function MatchPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: match } = await supabase
     .from("matches")

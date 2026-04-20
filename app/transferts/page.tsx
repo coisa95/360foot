@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -53,7 +53,7 @@ const TYPE_BADGE: Record<string, string> = {
 };
 
 export default async function TransfersPage() {
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   // Phase 1: fetch transfers + articles in parallel
   const [{ data: transfers }, { data: transferArticles }] = await Promise.all([

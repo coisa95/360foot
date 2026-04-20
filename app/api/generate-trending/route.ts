@@ -12,11 +12,15 @@ Règles strictes :
 - Rédige en français uniquement.
 - L'article doit faire entre 500 et 800 mots.
 - Ton professionnel, engageant, style journalistique sportif haut de gamme.
-- Utilise des données RÉELLES et ACTUELLES (saison 2024-2025 / mars 2026).
 - IMPORTANT : Le champ "content" doit être en HTML pur (balises <p>, <h2>, <h3>, <strong>, <ul>, <li>, <blockquote>). JAMAIS de markdown. Pas de <h1>.
 - Le champ "excerpt" doit être du texte brut (1-2 phrases max).
-- Inclus des statistiques, des faits, du contexte tactique.
-- Retourne UNIQUEMENT un JSON valide avec : title, content, excerpt, seo_title, seo_description, tags (array de strings).`;
+- Retourne UNIQUEMENT un JSON valide avec : title, content, excerpt, seo_title, seo_description, tags (array de strings).
+
+RÈGLE ANTI-DÉSINFORMATION (CRITIQUE) :
+- N'INVENTE JAMAIS de statistiques de la saison en cours (matchs joués, buts marqués, passes décisives du mois ou de la saison en cours). Si tu n'as pas accès à ces chiffres avec certitude, n'en mentionne AUCUN.
+- Utilise UNIQUEMENT des faits historiques vérifiables : palmarès, records de carrière, trophées remportés, transferts officiels passés.
+- Préfère des formulations qualitatives ("continue de performer à haut niveau", "titulaire indiscutable") plutôt que des chiffres précis sur la saison en cours.
+- Si le contexte du prompt contient des stats, considère-les comme des repères, pas comme des vérités — n'écris un chiffre que si tu peux le justifier historiquement.`;
 
 interface TrendingTopic {
   subject: string;
@@ -36,7 +40,6 @@ Informations à utiliser :
 - Kylian Mbappé, 27 ans, attaquant français
 - Transféré du PSG au Real Madrid à l'été 2024 (transfert libre)
 - Saison 2025-2026 au Real Madrid : son adaptation, ses performances
-- Statistiques approximatives saison en cours : ~35 matchs, ~25 buts, ~8 passes décisives en Liga
 - Joue aux côtés de Vinicius Jr, Bellingham, Rodrygo
 - International français : 80+ sélections, 45+ buts
 - Palmarès : 6x champion de France, 1x Champions League (2024-2025 potentiellement), Coupe du monde 2018, finaliste 2022
@@ -56,7 +59,6 @@ Informations à utiliser :
 - Cristiano Ronaldo, 41 ans, attaquant portugais
 - À Al-Nassr depuis janvier 2023 en Saudi Pro League
 - Continue de battre des records malgré son âge
-- Statistiques approximatives 2025-2026 : ~30 matchs, ~20 buts en SPL
 - Record historique : 900+ buts en carrière, 5 Ballons d'Or
 - Sélection portugaise : 200+ sélections, 130+ buts (meilleur buteur de l'histoire en sélection)
 - Impact sur le football saoudien : affluences records, médiatisation
@@ -76,7 +78,7 @@ Informations à utiliser :
 - Lamine Yamal, 18 ans, ailier droit espagnol d'origine marocaine et équato-guinéenne
 - Prodige formé à La Masia, intégré en équipe première à 15 ans
 - Champion d'Europe avec l'Espagne (Euro 2024) — plus jeune buteur de l'histoire de l'Euro
-- Saison 2025-2026 : titulaire indiscutable au Barça, ~35 matchs, ~12 buts, ~15 passes décisives
+- Titulaire indiscutable au Barça
 - Comparé à Messi pour sa vision du jeu et sa technique
 - Valeur marchande estimée à 200M€+
 - Style : dribbles, passes décisives, vision du jeu exceptionnelle, pied gauche magique

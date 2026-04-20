@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import LeagueTabs from "@/components/league-tabs";
@@ -16,7 +16,7 @@ type Props = {
 
 export default async function LeagueLayout({ params, children }: Props) {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: league } = await supabase
     .from("leagues")

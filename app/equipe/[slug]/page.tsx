@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
@@ -24,7 +24,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: team } = await supabase
     .from("teams")
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function TeamPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: team } = await supabase
     .from("teams")

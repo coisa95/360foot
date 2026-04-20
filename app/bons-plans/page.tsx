@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BonsPlansPage() {
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   // Fetch guide articles
   const { data: guides } = await supabase

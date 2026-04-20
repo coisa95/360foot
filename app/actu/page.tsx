@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Badge } from "@/components/ui/badge";
@@ -97,7 +97,7 @@ export default async function ActuPage({ searchParams }: Props) {
   const perPage = 20;
   const offset = (currentPage - 1) * perPage;
 
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   // Fetch league IDs for geographic filtering
   const { data: allLeagues } = await supabase

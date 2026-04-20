@@ -46,6 +46,8 @@ export interface AfricanSource {
   };
   /** Notes opérationnelles */
   note?: string;
+  /** Si true, la source est désactivée (morte, 403 prod, ou parseur en panne). */
+  disabled?: boolean;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -235,6 +237,8 @@ export const AFRICAN_SOURCES: AfricanSource[] = [
     reliability: 1,
     cms: "wordpress",
     note: "Pure player L1 + sélection + tunisiens en Europe.",
+    // disabled 2026-04-20 : 403 systématique depuis VPS (Cloudflare block data-center IP)
+    disabled: true,
   },
   {
     id: "ftf-official",
@@ -263,6 +267,8 @@ export const AFRICAN_SOURCES: AfricanSource[] = [
     reliability: 2,
     cms: "wordpress",
     note: "Catégorie sports (foot dominant Botola + Lions Atlas) — fallback média sport pays.",
+    // disabled 2026-04-20 : 403 systématique depuis VPS (Cloudflare block)
+    disabled: true,
   },
   {
     id: "le360-sport-botola",
@@ -313,6 +319,8 @@ export const AFRICAN_SOURCES: AfricanSource[] = [
     reliability: 1,
     cms: "wordpress",
     note: "Dédié foot burkinabè — couvre Fasofoot + joueurs locaux.",
+    // disabled 2026-04-20 : 403 systématique depuis VPS (Cloudflare block)
+    disabled: true,
   },
   {
     id: "fasozine-main",

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { Card } from "@/components/ui/card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
@@ -33,7 +33,7 @@ interface StandingEntry {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: league } = await supabase
     .from("leagues")
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LeagueStandingsPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: league } = await supabase
     .from("leagues")

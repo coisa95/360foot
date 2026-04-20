@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
@@ -84,7 +84,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const { slugA, slugB } = parsed;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const [{ data: teamA }, { data: teamB }] = await Promise.all([
     supabase.from("teams").select("id, name, slug").eq("slug", slugA).single(),
@@ -148,7 +148,7 @@ export default async function ConfrontationPage({ params }: Props) {
   }
 
   const { slugA, slugB } = parsed;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   // Fetch both teams
   const [{ data: teamA }, { data: teamB }] = await Promise.all([

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { MatchCard } from "@/components/match-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
@@ -17,7 +17,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: league } = await supabase
     .from("leagues")
@@ -78,7 +78,7 @@ function cleanRoundName(round: string): string {
 export default async function LeagueResultsPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const { journee } = await searchParams;
-  const supabase = createClient();
+  const supabase = createAnonClient();
 
   const { data: league } = await supabase
     .from("leagues")
