@@ -10,6 +10,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export const revalidate = 600;
 
@@ -29,7 +30,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!match) notFound();
+  if (!match) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const homeName = match.home_team?.name || "Équipe A";
   const awayName = match.away_team?.name || "Équipe B";
@@ -126,7 +132,12 @@ export default async function MatchPage({ params }: Props) {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!match) notFound();
+  if (!match) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const { data: relatedArticle } = await supabase
     .from("articles")

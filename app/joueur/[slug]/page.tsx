@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,7 +28,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .single() as { data: any };
 
-  if (!player) notFound();
+  if (!player) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const teamName = player.team?.name || "";
   const title = `${player.name}${teamName ? ` (${teamName})` : ""} — Stats, profil et actu`;
@@ -75,7 +81,12 @@ export default async function PlayerPage({ params }: Props) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .single() as { data: any };
 
-  if (!player) notFound();
+  if (!player) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   // Parallelize independent queries
   const [matchesRes, articlesRes] = await Promise.all([

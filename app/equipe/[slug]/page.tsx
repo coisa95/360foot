@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,7 +32,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!team) notFound();
+  if (!team) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const leagueName = team.league?.name || "";
   const title = `${team.name} — Effectif, résultats et classement 2024-2025`;
@@ -64,7 +70,12 @@ export default async function TeamPage({ params }: Props) {
     .eq("slug", slug)
     .single() as { data: any };
 
-  if (!team) notFound();
+  if (!team) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const now = new Date().toISOString();
   const matchSelect = "id,slug,date,score_home,score_away,status,home_team:teams!home_team_id(name,slug),away_team:teams!away_team_id(name,slug),league:leagues!league_id(name)";

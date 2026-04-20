@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export const revalidate = 3600;
 
@@ -75,7 +76,12 @@ function countryToFlag(country: string | null): string {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const parsed = parseSlug(slug);
-  if (!parsed) notFound();
+  if (!parsed) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const { slugA, slugB } = parsed;
   const supabase = createClient();
@@ -85,7 +91,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     supabase.from("teams").select("id, name, slug").eq("slug", slugB).single(),
   ]);
 
-  if (!teamA || !teamB) notFound();
+  if (!teamA || !teamB) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const title = `${teamA.name} vs ${teamB.name} — Confrontations directes`;
   const fullDesc = `${teamA.name} vs ${teamB.name} : historique complet, bilan victoires/nuls/défaites, scores et stats de toutes les rencontres.`;
@@ -129,7 +140,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ConfrontationPage({ params }: Props) {
   const { slug } = await params;
   const parsed = parseSlug(slug);
-  if (!parsed) notFound();
+  if (!parsed) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const { slugA, slugB } = parsed;
   const supabase = createClient();
@@ -140,7 +156,12 @@ export default async function ConfrontationPage({ params }: Props) {
     supabase.from("teams").select("id, name, slug, logo_url, country").eq("slug", slugB).single(),
   ]);
 
-  if (!teamA || !teamB) notFound();
+  if (!teamA || !teamB) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   // Fetch all H2H matches (both directions)
   const { data: matches } = await supabase

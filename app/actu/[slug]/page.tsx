@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export const revalidate = 1800;
 export const maxDuration = 60;
@@ -29,7 +30,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!article) notFound();
+  if (!article) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const articleUrl = `https://360-foot.com/actu/${slug}`;
   const articleTitle = article.seo_title || article.title;
@@ -76,7 +82,12 @@ export default async function ArticlePage({ params }: Props) {
     console.error("[ArticlePage] Supabase error for slug:", slug, "Error:", articleError.message);
   }
 
-  if (!article) notFound();
+  if (!article) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let relatedArticles: any[] | null = null;
