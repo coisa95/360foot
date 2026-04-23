@@ -4,6 +4,7 @@ import { Breadcrumb } from "@/components/breadcrumb";
 import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export const revalidate = 21600;
 
@@ -133,7 +134,12 @@ export default async function GoPage({ params }: Props) {
     .eq("slug", slug)
     .single();
 
-  if (!bookmaker || !bookmaker.affiliate_url) notFound();
+  if (!bookmaker || !bookmaker.affiliate_url) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const logo = LOGOS[slug] || null;
   const steps = BONUS_STEPS[slug] || DEFAULT_STEPS;

@@ -543,10 +543,13 @@ export default async function PronosticPage({ params }: Props) {
                           .split("")
                           .map((r: string, i: number) => formBadge(r, i))}
                       </div>
-                      {predictionsJson.home_goals_last5 && (
+                      {predictionsJson.home_goals_last5 != null && (
                         <p className="mt-2 text-xs text-slate-400">
-                          {predictionsJson.home_goals_last5} buts sur les 5
-                          derniers matchs
+                          {/* Legacy rows store {for:{total},against:{total}}; new rows store a number. */}
+                          {typeof predictionsJson.home_goals_last5 === "number"
+                            ? predictionsJson.home_goals_last5
+                            : (predictionsJson.home_goals_last5?.for?.total ?? 0)}{" "}
+                          buts sur les 5 derniers matchs
                         </p>
                       )}
                     </div>
@@ -561,10 +564,12 @@ export default async function PronosticPage({ params }: Props) {
                           .split("")
                           .map((r: string, i: number) => formBadge(r, i))}
                       </div>
-                      {predictionsJson.away_goals_last5 && (
+                      {predictionsJson.away_goals_last5 != null && (
                         <p className="mt-2 text-xs text-slate-400">
-                          {predictionsJson.away_goals_last5} buts sur les 5
-                          derniers matchs
+                          {typeof predictionsJson.away_goals_last5 === "number"
+                            ? predictionsJson.away_goals_last5
+                            : (predictionsJson.away_goals_last5?.for?.total ?? 0)}{" "}
+                          buts sur les 5 derniers matchs
                         </p>
                       )}
                     </div>

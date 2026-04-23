@@ -4,6 +4,7 @@ import { ArticleCard } from "@/components/article-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export const revalidate = 900;
 
@@ -61,7 +62,12 @@ export default async function LeagueNewsPage({ params }: Props) {
     .eq("slug", slug)
     .single();
 
-  if (!league) notFound();
+  if (!league) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const { data: articles } = await supabase
     .from("articles")

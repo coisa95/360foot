@@ -12,6 +12,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from("teams")
       .select("slug, created_at")
+      .not("slug", "is", null)
       .range(offset * 1000, (offset + 1) * 1000 - 1);
     if (error || !data || data.length === 0) break;
     all.push(...data);

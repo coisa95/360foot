@@ -18,8 +18,12 @@ export const revalidate = 0;
  * Returns:
  *  - 200 { status: "ok", ...details } when healthy
  *  - 503 { status: "degraded", ...details } when DB down
+ *
+ * Public response only carries { status, timestamp }. Detailed metrics
+ * (db latency, Claude token usage, spend estimate) require `?full=1` +
+ * `x-internal-key` header matching process.env.INTERNAL_OPS_KEY.
  */
-export async function GET() {
+export async function GET(request: Request) {
   const start = Date.now();
   let dbOk = false;
   let dbLatencyMs = 0;
@@ -40,6 +44,29 @@ export async function GET() {
     }
   } catch (e) {
     dbError = e instanceof Error ? e.message : "unknown";
+  }
+
+  const url = new URL(request.url);
+  const wantsFull = url.searchParams.get("full") === "1";
+  const providedKey = request.headers.get("x-internal-key");
+  const expectedKey = process.env.INTERNAL_OPS_KEY;
+  const authorized =
+    wantsFull && !!expectedKey && providedKey === expectedKey;
+
+  if (!authorized) {
+    // Minimal public response — no business info leak.
+    return NextResponse.json(
+      {
+        status: dbOk ? "ok" : "degraded",
+        timestamp: new Date().toISOString(),
+      },
+      {
+        status: dbOk ? 200 : 503,
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+        },
+      }
+    );
   }
 
   const body = {

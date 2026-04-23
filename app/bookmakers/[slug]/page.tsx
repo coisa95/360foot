@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export const revalidate = 21600;
 
@@ -63,7 +64,12 @@ export default async function BookmakerPage({ params }: Props) {
     .eq("slug", slug)
     .single();
 
-  if (!bookmaker) notFound();
+  if (!bookmaker) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const bonusJson = bookmaker.bonus_json as Record<string, string> | null;
   const bonusText = bonusJson

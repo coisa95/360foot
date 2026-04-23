@@ -92,8 +92,14 @@ export async function GET(request: Request) {
               comparison: pred.comparison || {},
               home_form: pred.teams?.home?.last_5?.form || "",
               away_form: pred.teams?.away?.last_5?.form || "",
-              home_goals_last5: pred.teams?.home?.last_5?.goals || null,
-              away_goals_last5: pred.teams?.away?.last_5?.goals || null,
+              // API-Football last_5.goals = { for: { total: N }, against: { total: M } }.
+              // Coerce to a single number at write-time so JSX can render it
+              // directly. Stored object caused "Objects are not valid as a
+              // React child (keys {for, against})" crashes.
+              home_goals_last5:
+                (pred.teams?.home?.last_5?.goals?.for?.total as number | undefined) ?? null,
+              away_goals_last5:
+                (pred.teams?.away?.last_5?.goals?.for?.total as number | undefined) ?? null,
             };
           }
         } catch (err) {

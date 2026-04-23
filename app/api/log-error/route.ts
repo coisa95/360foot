@@ -25,6 +25,25 @@ type ErrorPayload = {
 // Simple in-memory rate limit (per-container) so a crashing client doesn't
 // hammer us. 50 errors / 60s / IP max.
 const rlBuckets = new Map<string, { count: number; resetAt: number }>();
+
+// Purge expired buckets periodically. A simple counter-based approach
+// (no setInterval — keeps the serverless function warm-friendly).
+let _purgeCounter = 0;
+function purgeExpired() {
+  _purgeCounter++;
+  if (_purgeCounter % 100 !== 0) return;  // every ~100 requests
+  const now = Date.now();
+  rlBuckets.forEach((b, ip) => {
+    if (b.resetAt < now) rlBuckets.delete(ip);
+  });
+}
+
+// Escape Telegram MarkdownV1 special chars so that slugs, URLs and raw
+// error messages can't break out of the message template.
+function escapeTelegramMd(s: string): string {
+  return s.replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, "\\$1");
+}
+
 function isRateLimited(ip: string) {
   const now = Date.now();
   const b = rlBuckets.get(ip);
@@ -37,6 +56,8 @@ function isRateLimited(ip: string) {
 }
 
 export async function POST(request: Request) {
+  purgeExpired();
+
   const ip =
     request.headers.get("cf-connecting-ip") ||
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -80,10 +101,10 @@ export async function POST(request: Request) {
     const urlShort = safe.url?.replace("https://360-foot.com", "") || "?";
     const msg =
       `🚨 *360foot* error\n` +
-      `\`${urlShort}\`\n` +
-      `*msg*: ${safe.message || "?"}\n` +
-      `*digest*: \`${safe.digest || "?"}\`\n` +
-      `*ip*: \`${ip}\``;
+      `\`${escapeTelegramMd(urlShort)}\`\n` +
+      `*msg*: ${escapeTelegramMd(safe.message || "?")}\n` +
+      `*digest*: \`${escapeTelegramMd(safe.digest || "?")}\`\n` +
+      `*ip*: \`${escapeTelegramMd(ip)}\``;
     // Fire-and-forget; 3s timeout so we don't hang the request thread.
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 3000);

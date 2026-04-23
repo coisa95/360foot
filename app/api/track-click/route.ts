@@ -14,7 +14,32 @@ try {
 } catch { /* Redis optional */ }
 
 const RATE_LIMIT_WINDOW = 60; // seconds
-const RATE_LIMIT_MAX = 10; // requests per window
+const RATE_LIMIT_MAX = 20; // requests per window
+
+// Fallback in-memory rate limit when Redis is unreachable. Fail-closed on
+// a spammy IP (30 clicks / minute) rather than letting /api/track-click
+// become an unthrottled endpoint if Upstash flaps. Per-container — good
+// enough because the attacker has to hit one container repeatedly.
+const FALLBACK_MAX = 30;
+const fallbackBuckets = new Map<string, { count: number; resetAt: number }>();
+let _fallbackPurge = 0;
+function fallbackIsRateLimited(ip: string): boolean {
+  _fallbackPurge++;
+  if (_fallbackPurge % 100 === 0) {
+    const now = Date.now();
+    fallbackBuckets.forEach((v, k) => {
+      if (v.resetAt < now) fallbackBuckets.delete(k);
+    });
+  }
+  const now = Date.now();
+  const b = fallbackBuckets.get(ip);
+  if (!b || b.resetAt < now) {
+    fallbackBuckets.set(ip, { count: 1, resetAt: now + 60_000 });
+    return false;
+  }
+  b.count++;
+  return b.count > FALLBACK_MAX;
+}
 
 // Allowed bookmaker names to prevent arbitrary data injection
 const ALLOWED_BOOKMAKERS = new Set([
@@ -46,15 +71,19 @@ export async function POST(request: Request) {
       );
     }
 
-    // Rate limiting: max 20 clicks per IP per minute
+    // Rate limiting: max RATE_LIMIT_MAX clicks per IP per minute.
+    // Fail-closed: if Redis is unreachable we fall back to an in-memory
+    // bucket so the endpoint is never unthrottled.
     const ip = getClientIp(request);
     if (redis) {
       const key = `ratelimit:click:${ip}`;
       const count = await redis.incr(key);
-      if (count === 1) await redis.expire(key, 60);
-      if (count > 20) {
+      if (count === 1) await redis.expire(key, RATE_LIMIT_WINDOW);
+      if (count > RATE_LIMIT_MAX) {
         return NextResponse.json({ error: "Too many requests" }, { status: 429 });
       }
+    } else if (fallbackIsRateLimited(ip)) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }
 
     const body = await request.json();

@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import Image from "next/image";
 
 export const revalidate = 3600;
@@ -78,7 +79,12 @@ export default async function TopAssistsPage({ params }: Props) {
     .eq("slug", slug)
     .single();
 
-  if (!league) notFound();
+  if (!league) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   const { data: standingsRows } = await supabase
     .from("standings")

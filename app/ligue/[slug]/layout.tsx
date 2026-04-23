@@ -4,6 +4,7 @@ import { Breadcrumb } from "@/components/breadcrumb";
 import LeagueTabs from "@/components/league-tabs";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -24,7 +25,12 @@ export default async function LeagueLayout({ params, children }: Props) {
     .eq("slug", slug)
     .single();
 
-  if (!league) notFound();
+  if (!league) {
+    // Opt out of ISR cache for 404 — otherwise Next.js caches the
+    // not-found response with HTTP 200, not 404.
+    headers();
+    notFound();
+  }
 
   // Determine season display
   const { data: standingsRow } = await supabase
