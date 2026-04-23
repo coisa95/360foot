@@ -1,6 +1,7 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCspNonce } from "@/lib/csp-nonce";
+import { noindexIf, MIN_ARTICLES_FOR_INDEX } from "@/lib/seo-helpers";
 import { ArticleCard } from "@/components/article-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
@@ -27,12 +28,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!league) return { title: "Actualités introuvables" };
 
+  // Thin content : on exige au moins MIN_ARTICLES_FOR_INDEX (3) articles
+  // publiés sur cette ligue. Une page listing avec 0-2 items n'apporte rien
+  // de plus que la home actu et polluera la Search Console.
   const { count } = await supabase
     .from("articles")
     .select("id", { count: "exact", head: true })
-    .contains("league_slugs", [slug])
-    .eq("status", "published");
-  const hasData = (count ?? 0) > 0;
+    .eq("league_id", league.id)
+    .not("published_at", "is", null);
+  const hasEnoughArticles = (count ?? 0) >= MIN_ARTICLES_FOR_INDEX;
 
   const title = `Actu ${league.name} — Transferts, analyses et résumés`;
   const fullDesc = `Toute l'actualité de ${league.name} : transferts, analyses tactiques, résumés de matchs et infos en direct.`;
@@ -41,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    ...(!hasData && { robots: { index: false, follow: true } }),
+    robots: noindexIf(!hasEnoughArticles),
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/actualites` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/actualites`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {

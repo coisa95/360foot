@@ -1,6 +1,7 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCspNonce } from "@/lib/csp-nonce";
+import { noindexIf, hasJsonContent } from "@/lib/seo-helpers";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { ArticleCard } from "@/components/article-card";
 import { Badge } from "@/components/ui/badge";
@@ -41,11 +42,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const fullDesc = `Tout sur ${player.name}${teamName ? ` de ${teamName}` : ""} : statistiques détaillées, fiche complète, parcours et dernières actualités.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
-  // Pages de joueur sans stats_json = thin content (juste nom + équipe).
-  // noindex pour économiser le crawl budget Google et éviter les
-  // signalements "Explorée, actuellement non indexée" dans la Search Console.
-  const hasStats = player.stats_json && Object.keys(player.stats_json).length > 0;
-  const robots = hasStats ? undefined : { index: false, follow: true };
+  // Pages de joueur sans stats_json ET sans article associé = thin content
+  // (juste nom + équipe). noindex pour économiser le crawl budget Google et
+  // éviter les signalements "Explorée, actuellement non indexée" dans la
+  // Search Console. On garde l'indexation si au moins un article parle du
+  // joueur — dans ce cas la page sert de hub vers ce contenu.
+  const hasStats = hasJsonContent(player.stats_json);
+  let hasArticle = false;
+  if (!hasStats && player.name) {
+    const { count } = await supabase
+      .from("articles")
+      .select("id", { count: "exact", head: true })
+      .ilike("title", `%${player.name}%`)
+      .not("published_at", "is", null);
+    hasArticle = (count ?? 0) > 0;
+  }
+  const robots = noindexIf(!hasStats && !hasArticle);
 
   return {
     title,

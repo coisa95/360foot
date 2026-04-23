@@ -1,6 +1,7 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCspNonce } from "@/lib/csp-nonce";
+import { noindexIf, hasJsonContent } from "@/lib/seo-helpers";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
 import { ArticleCard } from "@/components/article-card";
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: team } = await supabase
     .from("teams")
-    .select("name,slug,league:leagues!league_id(name,slug)")
+    .select("id,name,slug,team_stats_json,league:leagues!league_id(name,slug)")
     .eq("slug", slug)
     .single() as { data: any };
 
@@ -47,9 +48,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : `${team.name} : effectif complet, compositions, résultats récents et statistiques. Toute l'actu en direct.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
+  // Thin content detection :
+  // Équipe sans stats JSON ET sans effectif/matchs = coquille vide.
+  // On exige au moins l'un des trois : team_stats_json, au moins 1 joueur,
+  // ou au moins 1 match (passé ou à venir) pour justifier l'indexation.
+  const hasTeamStats = hasJsonContent(team.team_stats_json);
+  let hasRoster = false;
+  let hasFixtures = false;
+  if (!hasTeamStats && team.id) {
+    const [{ count: playerCount }, { count: matchCount }] = await Promise.all([
+      supabase.from("players").select("id", { count: "exact", head: true }).eq("team_id", team.id),
+      supabase
+        .from("matches")
+        .select("id", { count: "exact", head: true })
+        .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`),
+    ]);
+    hasRoster = (playerCount ?? 0) > 0;
+    hasFixtures = (matchCount ?? 0) > 0;
+  }
+  const hasRealData = hasTeamStats || hasRoster || hasFixtures;
+  const robots = noindexIf(!hasRealData);
+
   return {
     title,
     description,
+    robots,
     alternates: { canonical: `https://360-foot.com/equipe/${slug}` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/equipe/${slug}`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {

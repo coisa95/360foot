@@ -1,6 +1,7 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCspNonce } from "@/lib/csp-nonce";
+import { noindexIf } from "@/lib/seo-helpers";
 import { MatchCard } from "@/components/match-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { RoundNav } from "@/components/round-nav";
@@ -29,11 +30,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!league) return { title: "Résultats introuvables" };
 
+  // Thin content : une page résultats doit afficher des matchs récents —
+  // on exige au moins 1 match joué dans les 90 derniers jours. Au-delà,
+  // la ligue est probablement en intersaison ou la data est trop vieille.
+  const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
   const { count } = await supabase
     .from("matches")
     .select("id", { count: "exact", head: true })
     .eq("league_id", league.id)
-    .not("score_home", "is", null);
+    .not("score_home", "is", null)
+    .gte("date", cutoff);
   const hasData = (count ?? 0) > 0;
 
   const season = `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`;
@@ -44,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    ...(!hasData && { robots: { index: false, follow: true } }),
+    robots: noindexIf(!hasData),
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/resultats` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/resultats`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {

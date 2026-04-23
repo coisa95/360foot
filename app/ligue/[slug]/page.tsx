@@ -1,6 +1,7 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCspNonce } from "@/lib/csp-nonce";
+import { noindexIf } from "@/lib/seo-helpers";
 import { Card } from "@/components/ui/card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: league } = await supabase
     .from("leagues")
-    .select("name")
+    .select("id,name")
     .eq("slug", slug)
     .single();
 
@@ -54,9 +55,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const fullDesc = `Classement ${league.name} ${season} : points, victoires, forme et différence de buts. Mis à jour après chaque journée.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
+  // Thin content detection : une ligue sans aucun classement ET sans match
+  // associé est une coquille vide — noindex.
+  const { data: standingsCheck } = await supabase
+    .from("standings")
+    .select("data_json")
+    .eq("league_id", league.id)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const hasStandings = Array.isArray(standingsCheck?.data_json)
+    ? (standingsCheck!.data_json as unknown[]).length > 0
+    : false;
+  let hasAnyMatch = false;
+  if (!hasStandings) {
+    const { count } = await supabase
+      .from("matches")
+      .select("id", { count: "exact", head: true })
+      .eq("league_id", league.id);
+    hasAnyMatch = (count ?? 0) > 0;
+  }
+  const robots = noindexIf(!hasStandings && !hasAnyMatch);
+
   return {
     title,
     description,
+    robots,
     alternates: { canonical: `https://360-foot.com/ligue/${slug}` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: { card: "summary_large_image" as const, title, description, images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },

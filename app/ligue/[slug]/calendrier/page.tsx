@@ -1,6 +1,7 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCspNonce } from "@/lib/csp-nonce";
+import { noindexIf } from "@/lib/seo-helpers";
 import { MatchCard } from "@/components/match-card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { RoundNav } from "@/components/round-nav";
@@ -29,11 +30,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!league) return { title: "Calendrier introuvable" };
 
+  // Thin content : une page calendrier n'a de sens que s'il reste des matchs
+  // à venir. Une fois la saison terminée / si rien n'est programmé →
+  // noindex (les résultats passés vivent déjà sur /resultats).
+  const nowIso = new Date().toISOString();
   const { count } = await supabase
     .from("matches")
     .select("id", { count: "exact", head: true })
-    .eq("league_id", league.id);
-  const hasData = (count ?? 0) > 0;
+    .eq("league_id", league.id)
+    .gte("date", nowIso);
+  const hasUpcoming = (count ?? 0) > 0;
 
   const season = `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`;
   const title = `Calendrier ${league.name} ${season}`;
@@ -43,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    ...(!hasData && { robots: { index: false, follow: true } }),
+    robots: noindexIf(!hasUpcoming),
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/calendrier` },
     openGraph: { title, description, type: "website", url: `https://360-foot.com/ligue/${slug}/calendrier`, locale: "fr_FR", images: [`https://360-foot.com/api/og?title=${encodeURIComponent(title)}`] },
     twitter: {

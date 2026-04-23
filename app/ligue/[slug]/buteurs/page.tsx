@@ -1,6 +1,7 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCspNonce } from "@/lib/csp-nonce";
+import { noindexIf } from "@/lib/seo-helpers";
 import { Card } from "@/components/ui/card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
@@ -57,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    ...(!hasData && { robots: { index: false, follow: true } }),
+    robots: noindexIf(!hasData),
     alternates: { canonical: `https://360-foot.com/ligue/${slug}/buteurs` },
     openGraph: {
       title,
