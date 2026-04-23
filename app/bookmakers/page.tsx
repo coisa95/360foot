@@ -1,12 +1,13 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const revalidate = 21600;
+export const dynamic = "force-dynamic";
 
 const PROMO_CODES: Record<string, string> = {
   "1xbet": "1WAFU",
@@ -70,6 +71,7 @@ export default async function BookmakersPage() {
     <main className="min-h-screen bg-transparent text-slate-900">
       <script
         type="application/ld+json"
+        nonce={getCspNonce()}
         dangerouslySetInnerHTML={{
           __html: safeJsonLd({
             "@context": "https://schema.org",

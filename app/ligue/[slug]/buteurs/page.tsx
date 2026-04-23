@@ -1,5 +1,6 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { Card } from "@/components/ui/card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
@@ -7,7 +8,7 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import Image from "next/image";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -102,6 +103,7 @@ export default async function TopScorersPage({ params }: Props) {
     <>
       <script
         type="application/ld+json"
+        nonce={getCspNonce()}
         dangerouslySetInnerHTML={{
           __html: safeJsonLd({
             "@context": "https://schema.org",

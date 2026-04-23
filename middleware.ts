@@ -32,7 +32,21 @@ export function middleware(request: NextRequest) {
     return vipResponse;
   }
 
-  const response = NextResponse.next();
+  // Nonce CSP : on génère un nonce par requête qu'on injecte à la fois dans
+  // les headers entrants (pour que les RSC/layouts puissent le lire via
+  // `headers().get('x-nonce')`) et dans la CSP sortante. 'strict-dynamic'
+  // permet aux scripts chargés par un script marqué nonce (ex: GTM qui insère
+  // un <script> pour GA) de s'exécuter sans avoir besoin d'être explicitement
+  // whitelistés — c'est le pattern recommandé par Google pour GA/GTM sous CSP.
+  // `crypto.randomUUID` est global dans l'Edge Runtime (Node 18+).
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+
+  const response = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
 
   // Noindex for parameter-driven pages (prevent duplicate indexing)
   const hasQueryParams = searchParams.toString().length > 0;
@@ -63,14 +77,17 @@ export function middleware(request: NextRequest) {
     "Strict-Transport-Security",
     "max-age=63072000; includeSubDomains; preload"
   );
-  // CSP : plus aucune dépendance Vercel. GA/GTM conservés (analytics principal).
-  // 'unsafe-inline' encore nécessaire pour Next.js (inline hydration scripts) —
-  // migration vers nonce-based CSP prévue dans une prochaine itération.
+  // CSP : script-src passe en mode nonce. 'unsafe-inline' reste uniquement sur
+  // style-src (Tailwind génère des styles inline via `style=""` sur certains
+  // composants et il n'existe pas de nonce pour les styles utility-first).
+  // GTM/GA : 'strict-dynamic' + whitelist https: — les user-agents modernes
+  // ignorent la whitelist quand strict-dynamic est actif, mais on la garde
+  // pour les anciens navigateurs en fallback.
   response.headers.set(
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
+      `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com https://www.google-analytics.com`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' https: data:",
       "font-src 'self' data: https://fonts.gstatic.com",

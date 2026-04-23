@@ -1,5 +1,6 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -7,7 +8,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -249,6 +250,7 @@ export default async function ConfrontationPage({ params }: Props) {
       {/* Breadcrumb JSON-LD */}
       <script
         type="application/ld+json"
+        nonce={getCspNonce()}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
       />
 

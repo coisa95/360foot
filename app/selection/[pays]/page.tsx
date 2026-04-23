@@ -1,5 +1,6 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
 import { Card } from "@/components/ui/card";
@@ -8,7 +9,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 
-export const revalidate = 900;
+export const dynamic = "force-dynamic";
 
 const countryMap: Record<string, { name: string; fullName: string; flag: string }> = {
   CI: { name: "Cote d'Ivoire", fullName: "Equipe nationale de Cote d'Ivoire", flag: "🇨🇮" },
@@ -98,6 +99,7 @@ export default async function NationalTeamPage({ params }: Props) {
     <main className="min-h-screen text-slate-900">
       <script
         type="application/ld+json"
+        nonce={getCspNonce()}
         dangerouslySetInnerHTML={{
           __html: safeJsonLd({
             "@context": "https://schema.org",

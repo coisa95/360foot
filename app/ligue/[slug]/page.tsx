@@ -1,5 +1,6 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { Card } from "@/components/ui/card";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { Metadata } from "next";
@@ -8,7 +9,7 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
-export const revalidate = 900;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -129,10 +130,13 @@ export default async function LeagueStandingsPage({ params }: Props) {
     jsonLdOrg.logo = league.logo_url;
   }
 
+  const nonce = getCspNonce();
+
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: safeJsonLd({
             "@context": "https://schema.org",
@@ -147,6 +151,7 @@ export default async function LeagueStandingsPage({ params }: Props) {
       />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLdOrg) }}
       />
       <div className="flex items-center justify-between mb-4">

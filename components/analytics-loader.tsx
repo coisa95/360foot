@@ -3,7 +3,17 @@
 import { useEffect, useState } from "react";
 import Script from "next/script";
 
-export function AnalyticsLoader() {
+interface AnalyticsLoaderProps {
+  /**
+   * Nonce CSP passé depuis le RootLayout (server component). Injecté sur
+   * chaque <Script> inline pour que la CSP `script-src 'nonce-…'` accepte
+   * leur exécution. 'strict-dynamic' permet ensuite à GTM de charger GA
+   * sans whitelist supplémentaire.
+   */
+  nonce?: string;
+}
+
+export function AnalyticsLoader({ nonce }: AnalyticsLoaderProps) {
   const [consent, setConsent] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,6 +32,7 @@ export function AnalyticsLoader() {
         <Script
           id="gtm-script"
           strategy="afterInteractive"
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -39,10 +50,12 @@ export function AnalyticsLoader() {
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
             strategy="afterInteractive"
+            nonce={nonce}
           />
           <Script
             id="ga4-config"
             strategy="afterInteractive"
+            nonce={nonce}
             dangerouslySetInnerHTML={{
               __html: `
                 window.dataLayer = window.dataLayer || [];

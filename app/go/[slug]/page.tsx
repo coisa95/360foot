@@ -1,12 +1,13 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 
-export const revalidate = 21600;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -173,6 +174,7 @@ export default async function GoPage({ params }: Props) {
     <main className="min-h-screen text-slate-900 relative">
       <script
         type="application/ld+json"
+        nonce={getCspNonce()}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 

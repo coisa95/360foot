@@ -1,5 +1,6 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +12,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { headers } from "next/headers";
 
-export const revalidate = 900;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -245,6 +246,7 @@ export default async function PronosticPage({ params }: Props) {
       {/* Breadcrumb JSON-LD is embedded inside the Breadcrumb component */}
       <script
         type="application/ld+json"
+        nonce={getCspNonce()}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
       />
 

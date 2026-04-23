@@ -1,5 +1,6 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MatchCard } from "@/components/match-card";
 import { ArticleCard } from "@/components/article-card";
@@ -14,7 +15,7 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
-export const revalidate = 900;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -195,6 +196,7 @@ export default async function TeamPage({ params }: Props) {
     <main className="min-h-screen bg-transparent text-slate-900">
       <script
         type="application/ld+json"
+        nonce={getCspNonce()}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 

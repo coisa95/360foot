@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 
 interface BreadcrumbItem {
   label: string;
@@ -22,10 +23,13 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
     })),
   };
 
+  const nonce = getCspNonce();
+
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <nav aria-label="Fil d'Ariane" className="mb-4 overflow-hidden">

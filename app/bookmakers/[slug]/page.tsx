@@ -1,5 +1,6 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -9,7 +10,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 
-export const revalidate = 21600;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -86,6 +87,7 @@ export default async function BookmakerPage({ params }: Props) {
     <main className="min-h-screen bg-transparent text-slate-900">
       <script
         type="application/ld+json"
+        nonce={getCspNonce()}
         dangerouslySetInnerHTML={{
           __html: safeJsonLd({
             "@context": "https://schema.org",

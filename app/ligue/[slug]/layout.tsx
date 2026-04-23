@@ -1,5 +1,6 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
+import { getCspNonce } from "@/lib/csp-nonce";
 import { Breadcrumb } from "@/components/breadcrumb";
 import LeagueTabs from "@/components/league-tabs";
 import Image from "next/image";
@@ -8,7 +9,7 @@ import { headers } from "next/headers";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export const revalidate = 900;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -62,6 +63,7 @@ export default async function LeagueLayout({ params, children }: Props) {
     <div className="min-h-screen text-slate-900">
       <script
         type="application/ld+json"
+        nonce={getCspNonce()}
         dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 

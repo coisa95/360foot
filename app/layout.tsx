@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Inter, Syne } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/header";
@@ -138,6 +139,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const nonce = headers().get("x-nonce") || undefined;
   return (
     <html lang="fr" className={cn("font-sans antialiased", geist.variable, inter.variable, syne.variable)}>
       <head>
@@ -152,6 +154,7 @@ export default function RootLayout({
         {/* GA/GTM scripts moved to AnalyticsLoader (client component, consent-gated) */}
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
         />
       </head>
@@ -176,7 +179,7 @@ export default function RootLayout({
           </div>
         </div>
         <SwRegister />
-        <AnalyticsLoader />
+        <AnalyticsLoader nonce={nonce} />
         <CookieBanner />
         <PromoPopup />
       </body>
