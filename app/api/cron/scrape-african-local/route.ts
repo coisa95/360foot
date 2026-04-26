@@ -29,12 +29,12 @@ import type { AfricanSource } from "@/lib/scrapers/african-sources";
 
 export const maxDuration = 300;
 
-// Nombre max d'articles générés par exécution (limite tokens Claude + 300s Vercel)
+// Nombre max d'articles générés par exécution (limite tokens LLM + 300s Vercel)
 const MAX_ARTICLES_PER_RUN = 8;
 // Nombre max d'articles par source pour diversifier les pays
 const MAX_PER_SOURCE = 2;
-// Rate limiting Claude API entre 2 générations (ms)
-const CLAUDE_THROTTLE_MS = 2000;
+// Rate limiting LLM API entre 2 générations (ms)
+const LLM_THROTTLE_MS = 2000;
 
 export async function GET(request: Request) {
   if (!verifyCronAuth(request)) {
@@ -144,7 +144,7 @@ export async function GET(request: Request) {
           continue;
         }
 
-        // Génération Claude + insertion
+        // Génération LLM + insertion
         // Note : on enrichit le champ source/details pour que le prompt
         // comprenne le contexte championnat et que `findLeagueId` matche.
         const enrichedItem = {
@@ -175,8 +175,8 @@ export async function GET(request: Request) {
           articlesGenerated++;
           stat.generated++;
 
-          // Throttle Claude API
-          await new Promise((r) => setTimeout(r, CLAUDE_THROTTLE_MS));
+          // Throttle LLM API
+          await new Promise((r) => setTimeout(r, LLM_THROTTLE_MS));
         }
       }
     } catch (err) {
@@ -216,7 +216,7 @@ export async function GET(request: Request) {
 /**
  * Router fetch : RSS (défaut) ou HTML scraping selon `fetchMode`.
  * Harmonise la sortie en `RSSItem[]` pour que le reste du pipeline
- * (filtre + dédup + Claude) reste inchangé.
+ * (filtre + dédup + LLM) reste inchangé.
  */
 async function fetchItemsForSource(src: AfricanSource): Promise<RSSItem[]> {
   if (src.fetchMode === "html") {

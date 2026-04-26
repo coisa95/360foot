@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { generateArticle } from "./llm";
 import { RSS_ARTICLE_SYSTEM_PROMPT, buildRSSUserPrompt } from "./rss-prompt";
 import type { RSSItem } from "./rss-prompt";
 import { createClient } from "./supabase";
@@ -6,8 +6,6 @@ import { addInternalLinks } from "./internal-links";
 import { getArticleImages, injectImagesIntoHTML, buildArticleOgUrl } from "./images";
 import { markAsProcessed } from "./rss-fetcher";
 import { publishToTelegram } from "./telegram";
-
-const anthropic = new Anthropic();
 
 // ── Cache module-level pour addInternalLinks (Fix #10: 1 query/run, pas 1/article) ──
 let _linksCache: {
@@ -75,17 +73,13 @@ export async function generateArticleFromRSS(
 
     const trendingKeywords = trendingData?.map((t: { keyword: string }) => t.keyword) || [];
 
-    // 1. Appel Claude pour générer l'article
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 4000,
-      system: RSS_ARTICLE_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: buildRSSUserPrompt(item, trendingKeywords) }],
-    });
+    // 1. Appel LLM pour générer l'article (DeepSeek via wrapper unifié)
+    const text = await generateArticle(
+      RSS_ARTICLE_SYSTEM_PROMPT,
+      buildRSSUserPrompt(item, trendingKeywords)
+    );
 
-    // 2. Parser la réponse JSON (avec guard contre hallucination Claude)
-    const text =
-      response.content[0].type === "text" ? response.content[0].text : "";
+    // 2. Parser la réponse JSON (avec guard contre hallucination du LLM)
     const cleaned = text.replace(/```json|```/g, "").trim();
 
     let article: Record<string, unknown>;
@@ -93,7 +87,7 @@ export async function generateArticleFromRSS(
       article = JSON.parse(cleaned);
     } catch (parseErr) {
       console.error(
-        `❌ JSON.parse fail pour ${item.link}: ${parseErr}. Réponse Claude (100 premiers chars): ${cleaned.slice(0, 100)}`
+        `❌ JSON.parse fail pour ${item.link}: ${parseErr}. Réponse LLM (100 premiers chars): ${cleaned.slice(0, 100)}`
       );
       // Blacklister l'URL pour ne pas retenter (boucle $$$ sinon)
       await markAsProcessed(item.link, null);

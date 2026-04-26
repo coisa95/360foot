@@ -89,7 +89,7 @@ dette est payée.
 ## 🔐 Rotation de secrets
 
 - Rotation annuelle minimum pour : `SYNDICATION_API_KEY`, `CRON_SECRET`,
-  `INDEXNOW_SECRET`.
+  `INDEXNOW_SECRET`, `DEEPSEEK_API_KEY`.
 - Immédiate si compromise : via `php artisan tinker` dans le container
   `coolify` → delete + recreate `EnvironmentVariable` pour que Coolify
   re-encrypte. Puis redéployer l'app.

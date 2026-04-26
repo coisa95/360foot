@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAnonClient } from "@/lib/supabase";
-import { tokenUsage, getEstimatedSpendUSD } from "@/lib/claude";
+import { tokenUsage, getEstimatedSpendUSD } from "@/lib/llm";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -13,14 +13,14 @@ export const revalidate = 0;
  *
  * Checks:
  *  - DB round-trip (SELECT 1 via PostgREST)
- *  - Exposes uptime + Claude token usage (degraded if >$X/day)
+ *  - Exposes uptime + LLM token usage (degraded if >$X/day)
  *
  * Returns:
  *  - 200 { status: "ok", ...details } when healthy
  *  - 503 { status: "degraded", ...details } when DB down
  *
  * Public response only carries { status, timestamp }. Detailed metrics
- * (db latency, Claude token usage, spend estimate) require `?full=1` +
+ * (db latency, LLM token usage, spend estimate) require `?full=1` +
  * `x-internal-key` header matching process.env.INTERNAL_OPS_KEY.
  */
 export async function GET(request: Request) {

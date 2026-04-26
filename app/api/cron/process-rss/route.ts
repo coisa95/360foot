@@ -227,7 +227,7 @@ export async function GET(request: Request) {
           feedGenerated++;
         }
 
-        // Rate limiting Claude API
+        // Rate limiting LLM API
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
 

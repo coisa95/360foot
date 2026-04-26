@@ -11,7 +11,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { verifyCronAuth } from "@/lib/auth";
-import { generateArticle } from "@/lib/claude";
+import { generateArticle } from "@/lib/llm";
 import { getArticleImages, injectImagesIntoHTML, buildArticleOgUrl } from "@/lib/images";
 import {
   systemPrompt as STREAMING_SYSTEM_PROMPT,

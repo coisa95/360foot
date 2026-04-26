@@ -4,7 +4,7 @@ import { getMatchDetails, getVenue } from "@/lib/api-football";
 import { verifyCronAuth } from "@/lib/auth";
 
 export const maxDuration = 300;
-import { generateArticle } from "@/lib/claude";
+import { generateArticle } from "@/lib/llm";
 import { getArticleImages, injectImagesIntoHTML, buildArticleOgUrl } from "@/lib/images";
 import {
   systemPrompt as RESULT_SYSTEM_PROMPT,

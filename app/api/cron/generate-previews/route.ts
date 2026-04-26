@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
-import { generateArticle } from "@/lib/claude";
+import { generateArticle } from "@/lib/llm";
 import { verifyCronAuth } from "@/lib/auth";
 
 export const maxDuration = 300;

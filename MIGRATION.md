@@ -37,7 +37,7 @@ Hetzner CX32 (4 vCPU / 8 GB RAM)
 
 - ✅ Accès root SSH au CX32 Hetzner
 - ✅ Domaine 360-foot.com géré sur Cloudflare
-- ✅ Tous les secrets actuels (Supabase, API-Football, Anthropic, Telegram, etc.)
+- ✅ Tous les secrets actuels (Supabase, API-Football, DeepSeek, Telegram, etc.)
 - ✅ `.env.production` actuel sauvegardé dans un gestionnaire de mots de passe
 
 ### 0.2 Liste des secrets à transférer
@@ -48,7 +48,7 @@ Voir `.env.example` pour la liste complète. Variables critiques :
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
 SUPABASE_SERVICE_ROLE_KEY
-ANTHROPIC_API_KEY
+DEEPSEEK_API_KEY
 API_FOOTBALL_KEY
 CRON_SECRET
 TELEGRAM_BOT_TOKEN
