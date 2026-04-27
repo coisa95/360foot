@@ -27,6 +27,8 @@ import { fetchHTMLArticles } from "@/lib/scrapers/html-fetcher";
 import type { RSSItem } from "@/lib/rss-prompt";
 import type { AfricanSource } from "@/lib/scrapers/african-sources";
 
+
+export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 // Nombre max d'articles générés par exécution (limite tokens LLM + 300s Vercel)

@@ -12,6 +12,29 @@ import {
 } from "@/lib/prompts/result-article";
 import { publishToTelegram } from "@/lib/telegram";
 
+
+export const dynamic = "force-dynamic";
+/**
+ * Normalise un champ `tags` venant du LLM en `string[]`.
+ *
+ * DeepSeek peut, malgré le prompt, renvoyer `tags` sous forme de chaîne CSV
+ * ("psg, mbappé, ligue 1") au lieu d'un array. Postgres rejette alors
+ * l'INSERT avec `22P02 malformed array literal` car la colonne est `text[]`.
+ * On accepte donc string ou array et on retourne toujours un `string[]`.
+ */
+function normalizeTags(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.filter((x): x is string => typeof x === "string" && !!x.trim());
+  }
+  if (typeof raw === "string") {
+    return raw
+      .split(/[,;]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
 function generateSlug(title: string): string {
   return title
     .toLowerCase()
@@ -113,7 +136,9 @@ export async function GET(request: Request) {
 
         const articleData = await generateArticle(
           RESULT_SYSTEM_PROMPT,
-          userPrompt
+          userPrompt,
+          "deepseek-chat",
+          { jsonMode: true }
         );
 
         if (!articleData) {
@@ -123,11 +148,23 @@ export async function GET(request: Request) {
 
         let cleanData = articleData;
         if (typeof cleanData === "string") {
-          // Strip markdown code blocks if present
+          // Strip markdown code blocks if present (defense in depth, jsonMode
+          // est censé suffire — mais DeepSeek peut envelopper malgré tout).
           cleanData = cleanData.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
         }
-        const parsed = JSON.parse(cleanData);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let parsed: any;
+        try {
+          parsed = JSON.parse(cleanData);
+        } catch (parseErr) {
+          console.error(
+            `[LLM_PARSE_ERROR] match=${match.id} err=${String(parseErr)} ` +
+              `head=${cleanData.slice(0, 200)}`
+          );
+          continue;
+        }
         const slug = generateSlug(parsed.title || "article");
+        const tags = normalizeTags(parsed.tags);
 
         // Extract team logos and league logo from API-Football fixture data
         const homeTeamLogo = fixture?.teams?.home?.logo;
@@ -196,7 +233,7 @@ export async function GET(request: Request) {
             teams: [homeTeamName, awayTeamName],
             league: leagueName,
             type: "result",
-            tags: parsed.tags || [],
+            tags,
             venuePhotoUrl,
             venueName,
             venueCity,
@@ -237,7 +274,7 @@ export async function GET(request: Request) {
           seo_title: parsed.seo_title || parsed.title,
           seo_description: parsed.seo_description || parsed.excerpt,
           og_image_url: ogImageUrl,
-          tags: parsed.tags || [],
+          tags,
           published_at: new Date().toISOString(),
         });
 
@@ -251,7 +288,7 @@ export async function GET(request: Request) {
             excerpt: parsed.excerpt,
             type: "result",
             imageUrl: ogImageUrl,
-            tags: parsed.tags || [],
+            tags,
           });
         }
       } catch (err) {

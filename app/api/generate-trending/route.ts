@@ -4,6 +4,8 @@ import { generateArticle } from "@/lib/llm";
 import { getArticleImages, injectImagesIntoHTML } from "@/lib/images";
 import { verifyCronAuth } from "@/lib/auth";
 
+
+export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 const SYSTEM_PROMPT = `Tu es le rédacteur en chef de 360 Foot, un média d'actualité football francophone couvrant l'Afrique et l'Europe.
@@ -187,6 +189,23 @@ Retourne en JSON : title, content, excerpt, seo_title, seo_description, tags.`,
   },
 ];
 
+/**
+ * Normalise un champ `tags` venant du LLM en `string[]` pour éviter
+ * `22P02 malformed array literal` côté Postgres (colonne text[]).
+ */
+function normalizeTags(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.filter((x): x is string => typeof x === "string" && !!x.trim());
+  }
+  if (typeof raw === "string") {
+    return raw
+      .split(/[,;]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -221,13 +240,29 @@ export async function GET(request: Request) {
         continue;
       }
 
-      // Generate article with Claude
+      // Generate article with DeepSeek (jsonMode pour parsing robuste)
       console.log(`Generating article: ${slug}`);
-      const raw = await generateArticle(SYSTEM_PROMPT, topic.prompt);
+      const raw = await generateArticle(SYSTEM_PROMPT, topic.prompt, "deepseek-chat", {
+        jsonMode: true,
+      });
 
-      // Parse JSON from response
+      // Parse JSON from response (defense in depth — jsonMode est censé suffire)
       const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      const parsed = JSON.parse(cleaned);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let parsed: any;
+      try {
+        parsed = JSON.parse(cleaned);
+      } catch (parseErr) {
+        console.error(
+          `[LLM_PARSE_ERROR] trending slug=${slug} err=${String(parseErr)} ` +
+            `head=${cleaned.slice(0, 200)}`
+        );
+        results.push({ slug, status: "error", error: "json_parse" });
+        continue;
+      }
+      const tags = normalizeTags(parsed.tags).length
+        ? normalizeTags(parsed.tags)
+        : topic.tags;
 
       // Get images from Pexels
       let contentWithImages = parsed.content;
@@ -239,7 +274,7 @@ export async function GET(request: Request) {
           teams: topic.tags.slice(0, 2),
           league: topic.tags[topic.tags.length - 1] || "",
           type: topic.type,
-          tags: topic.tags,
+          tags,
         });
 
         if (images.length > 0) {
@@ -260,7 +295,7 @@ export async function GET(request: Request) {
         seo_title: parsed.seo_title || parsed.title,
         seo_description: parsed.seo_description || parsed.excerpt,
         og_image_url: ogImageUrl,
-        tags: parsed.tags || topic.tags,
+        tags,
         published_at: new Date().toISOString(),
       });
 

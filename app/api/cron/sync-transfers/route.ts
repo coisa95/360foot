@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase";
 import { verifyCronAuth } from "@/lib/auth";
 
 export const maxDuration = 300;
+export const dynamic = "force-dynamic";
 import {
   getClubPlayers,
   getPlayerTransfers,

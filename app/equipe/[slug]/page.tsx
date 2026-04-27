@@ -178,21 +178,48 @@ export default async function TeamPage({ params }: Props) {
     { label: team.name },
   ];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const teamAny = team as any;
+  const teamUrl = `https://360-foot.com/equipe/${slug}`;
+  const sameAs: string[] = [];
+  // Si la table contient un champ wikipedia_url ou twitter_url plus tard,
+  // on les ajoute ici (laisser vide sinon — Schema.org accepte un sameAs vide
+  // mais on l'omet pour rester propre).
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SportsTeam",
     name: team.name,
     sport: "Football",
-    memberOf: team.league ? { "@type": "SportsOrganization", name: team.league.name } : undefined,
-    coach: team.coach ? { "@type": "Person", name: team.coach } : undefined,
-    location: team.venue ? { "@type": "Place", name: team.venue } : undefined,
-    athlete: players && players.length > 0
-      ? players.slice(0, 30).map((p: any) => ({
-          "@type": "Person",
-          name: p.name,
-          nationality: p.nationality || undefined,
-        }))
+    url: teamUrl,
+    image: team.logo_url || undefined,
+    foundingDate: teamAny.founded_year || teamAny.founded || undefined,
+    memberOf: team.league
+      ? { "@type": "SportsOrganization", name: team.league.name }
       : undefined,
+    coach: team.coach
+      ? {
+          "@type": "Person",
+          name: team.coach,
+          ...(team.coach_nationality
+            ? { nationality: team.coach_nationality }
+            : {}),
+        }
+      : undefined,
+    location: team.venue
+      ? {
+          "@type": "Place",
+          name: team.venue,
+          ...(team.country
+            ? { address: { "@type": "PostalAddress", addressCountry: team.country } }
+            : {}),
+        }
+      : team.country
+      ? {
+          "@type": "Place",
+          address: { "@type": "PostalAddress", addressCountry: team.country },
+        }
+      : undefined,
+    sameAs: sameAs.length > 0 ? sameAs : undefined,
   };
 
   function renderMatchList(matches: any[]) {

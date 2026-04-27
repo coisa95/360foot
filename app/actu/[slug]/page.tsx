@@ -1,6 +1,7 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCspNonce } from "@/lib/csp-nonce";
+import { INDEXABLE_ROBOTS } from "@/lib/seo-helpers";
 import { addInternalLinks } from "@/lib/internal-links";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { RelatedArticles } from "@/components/related-articles";
@@ -11,11 +12,20 @@ import { getArticleTypeLabel, getArticleTypeColor } from "@/lib/article-types";
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
+
+/**
+ * Strip HTML tags and collapse whitespace. Used for `articleBody` JSON-LD,
+ * which expects plain text, not HTML markup.
+ */
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+}
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -47,6 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: articleTitle,
     description: articleDescription,
+    robots: INDEXABLE_ROBOTS,
     alternates: {
       canonical: articleUrl,
     },
@@ -173,6 +184,18 @@ export default async function ArticlePage({ params }: Props) {
   ];
 
   const articleImageUrl = article.og_image_url || "https://360-foot.com/icon-512.png";
+  // articleBody : texte propre (sans HTML) pour aider Google à comprendre le
+  // contenu sans avoir à parser le DOM. Préfère excerpt si dispo, sinon
+  // dérive du contenu brut.
+  const rawBody = article.excerpt || stripHtml(article.content || "");
+  const articleBody = rawBody.slice(0, 800);
+  // Tags : si la colonne contient une liste, on l'utilise comme keywords.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tags = Array.isArray((article as any).tags) ? ((article as any).tags as string[]) : [];
+  // Note: la table articles n'a pas de colonne updated_at (cf schéma).
+  // dateModified retombe sur published_at en attendant la migration.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updatedAt = (article as any).updated_at || article.published_at;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -186,14 +209,14 @@ export default async function ArticlePage({ params }: Props) {
       height: 630,
     },
     datePublished: article.published_at,
-    // Note: la table articles n'a pas de colonne updated_at (cf schéma).
-    // Pour distinguer dateModified, ajouter `updated_at TIMESTAMPTZ` + trigger
-    // dans une migration séparée. Pour l'instant on retombe sur published_at.
-    dateModified: article.published_at,
+    dateModified: updatedAt,
+    articleBody,
+    keywords: tags.length > 0 ? tags : undefined,
     author: {
       "@type": "Person",
-      name: "Rédaction 360 Foot",
-      url: "https://360-foot.com/methodologie",
+      "@id": "https://360-foot.com/auteurs/coffi#person",
+      name: "Coffi",
+      url: "https://360-foot.com/auteurs/coffi",
     },
     publisher: {
       "@type": "Organization",
@@ -252,6 +275,24 @@ export default async function ArticlePage({ params }: Props) {
             <h1 className="font-display text-3xl md:text-4xl font-bold leading-tight">
               {article.title}
             </h1>
+
+            {/* Byline auteur (E-E-A-T) */}
+            <div className="flex items-center gap-2 text-sm text-slate-500 mb-4 mt-4">
+              <Link
+                href="/auteurs/coffi"
+                className="hover:text-emerald-600 font-medium"
+              >
+                Par Coffi
+              </Link>
+              <span>·</span>
+              <time dateTime={article.published_at}>
+                {new Date(article.published_at).toLocaleDateString("fr-FR", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+            </div>
 
             {article.excerpt && (
               <p className="text-slate-500 text-lg mt-4 leading-relaxed">

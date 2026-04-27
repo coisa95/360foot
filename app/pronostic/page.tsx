@@ -96,7 +96,7 @@ export default async function PronosticIndexPage() {
         <Breadcrumb items={breadcrumbItems} />
 
         <h1 className="font-display mt-6 text-3xl font-bold md:text-4xl">
-          <span className="text-emerald-600">Pronostics</span> football
+          <span className="text-emerald-600">Pronostics football</span> : prédictions et analyses du jour
         </h1>
         <p className="mt-2 text-slate-500 text-sm max-w-2xl">
           Prédictions et analyses pour les prochains matchs : Ligue 1 Côte

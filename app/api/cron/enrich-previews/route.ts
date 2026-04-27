@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase";
 import { getPredictions, getHeadToHead, getInjuries } from "@/lib/api-football";
 import { verifyCronAuth } from "@/lib/auth";
 
+
+export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 /**

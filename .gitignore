@@ -41,6 +41,8 @@ supabase/.temp/
 .claude/
 workers/node_modules/
 workers/dist/
+og-service/node_modules/
+og-service/dist/
 CHANGELOG.md
 
 # playwright

@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase";
 import { getTeamSquad } from "@/lib/api-football";
 import { verifyCronAuth } from "@/lib/auth";
 
+
+export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 const TEAMS_PER_RUN = 25; // Increased: VPS calls 4x/day

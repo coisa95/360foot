@@ -4,6 +4,8 @@ import { generateArticleFromRSS } from "@/lib/rss-generator";
 import type { RSSItem } from "@/lib/rss-prompt";
 import { verifyCronAuth } from "@/lib/auth";
 
+
+export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 interface RSSFeed {

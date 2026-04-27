@@ -142,19 +142,35 @@ export default async function PlayerPage({ params }: Props) {
     { label: player.name },
   ];
 
+  const playerUrl = `https://360-foot.com/joueur/${slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
     name: player.name,
+    url: playerUrl,
+    image: player.photo_url || undefined,
     nationality: player.nationality || undefined,
     birthDate: player.birth_date || undefined,
+    jobTitle: "Footballeur",
     memberOf: player.team
       ? {
           "@type": "SportsTeam",
           name: player.team.name,
+          ...(player.team.slug
+            ? { url: `https://360-foot.com/equipe/${player.team.slug}` }
+            : {}),
         }
       : undefined,
-    jobTitle: "Footballeur professionnel",
+    affiliation: player.team
+      ? {
+          "@type": "SportsTeam",
+          name: player.team.name,
+          ...(player.team.slug
+            ? { url: `https://360-foot.com/equipe/${player.team.slug}` }
+            : {}),
+        }
+      : undefined,
+    award: [],
   };
 
   const calculateAge = (birthDate: string): number => {

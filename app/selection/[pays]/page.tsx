@@ -29,8 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!country) return { title: "Sélection introuvable" };
 
-  const title = `${country.flag} ${country.name} — Matchs, résultats et actu`;
-  const fullDesc = `Suivez l'${country.fullName} : calendrier, résultats en direct, compositions et toute l'actualité de la sélection nationale.`;
+  const title = `Football ${country.name} : actu, matchs et classement | 360 Foot`;
+  const fullDesc = `Sélection ${country.name} : calendrier, résultats en direct, compositions et toute l'actualité de l'${country.fullName}.`;
   const description = fullDesc.length > 155 ? fullDesc.slice(0, 152) + "..." : fullDesc;
 
   return {
@@ -118,11 +118,14 @@ export default async function NationalTeamPage({ params }: Props) {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="mt-6">
-          <h1 className="font-display text-3xl font-bold text-emerald-600">
-            {country.flag} {country.fullName}
+          <h1
+            className="font-display text-3xl font-bold text-emerald-600"
+            aria-label={`${country.flag} Football ${country.name} : actu, matchs et classement`}
+          >
+            Football {country.name} — Actu, matchs et classement
           </h1>
           <p className="text-slate-500 mt-1">
-            Tous les matchs et resultats de la selection {country.name.toLowerCase()}
+            <span aria-hidden="true">{country.flag}</span> Tous les matchs et resultats de la selection {country.name.toLowerCase()}
           </p>
         </div>
 

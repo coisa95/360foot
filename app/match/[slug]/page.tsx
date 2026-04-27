@@ -1,6 +1,7 @@
 import { createAnonClient } from "@/lib/supabase";
 import { safeJsonLd } from "@/lib/json-ld";
 import { getCspNonce } from "@/lib/csp-nonce";
+import { INDEXABLE_ROBOTS } from "@/lib/seo-helpers";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { ArticleCard } from "@/components/article-card";
 import { Badge } from "@/components/ui/badge";
@@ -68,7 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     (match.h2h_json && match.h2h_json.length > 0)
   );
   const hasRealData = isFinished ? hasFinishedData : hasUpcomingData;
-  const robots = hasRealData ? undefined : { index: false, follow: true };
+  const robots = hasRealData ? INDEXABLE_ROBOTS : { index: false, follow: true };
 
   return {
     title,

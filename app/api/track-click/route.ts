@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase";
 import { Redis } from "@upstash/redis";
 import { getClientIp, getClientCountry } from "@/lib/client-ip";
 
+
+export const dynamic = "force-dynamic";
 let redis: Redis | null = null;
 try {
   if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {

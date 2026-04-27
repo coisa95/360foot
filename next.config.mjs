@@ -81,6 +81,15 @@ const nextConfig = {
         destination: "/ligue/:slug",
         permanent: true,
       },
+      // Slug court "ligue-1" → variant pays explicite (DB stocke
+      // "ligue-1-france"). Évite un 404 SEO sur l'URL la plus tapée.
+      // `premier-league`, `la-liga`, `serie-a`, `bundesliga`,
+      // `champions-league` existent déjà tels quels — pas de redirect requis.
+      {
+        source: "/ligue/ligue-1",
+        destination: "/ligue/ligue-1-france",
+        permanent: true,
+      },
     ];
   },
   images: {

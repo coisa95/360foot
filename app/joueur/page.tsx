@@ -87,7 +87,7 @@ export default async function JoueurIndexPage() {
         <Breadcrumb items={breadcrumbItems} />
 
         <h1 className="font-display mt-6 text-3xl font-bold md:text-4xl">
-          <span className="text-emerald-600">Joueurs</span> de football
+          <span className="text-emerald-600">Joueurs de football</span> : profils, stats et actualités
         </h1>
         <p className="mt-2 text-slate-500 text-sm max-w-2xl">
           Profils, statistiques, transferts et actualités des joueurs africains

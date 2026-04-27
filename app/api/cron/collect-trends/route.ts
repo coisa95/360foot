@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase";
 import { verifyCronAuth } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const googleTrends = require("google-trends-api");
 

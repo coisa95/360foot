@@ -23,6 +23,8 @@ import {
 } from "@/lib/broadcasters/mapping";
 import { publishToTelegram } from "@/lib/telegram";
 
+
+export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -63,6 +65,23 @@ function isEligibleCompetition(name: string): boolean {
   // Exclure féminin, jeunes, scolaire
   if (EXCLUDED_COMPETITION_PATTERNS.some((rx) => rx.test(name))) return false;
   return ELIGIBLE_COMPETITION_PATTERNS.some((rx) => rx.test(name));
+}
+
+/**
+ * Normalise un champ `tags` venant du LLM en `string[]` pour éviter
+ * `22P02 malformed array literal` côté Postgres (colonne text[]).
+ */
+function normalizeTags(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.filter((x): x is string => typeof x === "string" && !!x.trim());
+  }
+  if (typeof raw === "string") {
+    return raw
+      .split(/[,;]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+  return [];
 }
 
 function generateSlug(title: string): string {
@@ -184,7 +203,9 @@ export async function GET(request: Request) {
 
         const articleData = await generateArticle(
           STREAMING_SYSTEM_PROMPT,
-          userPrompt
+          userPrompt,
+          "deepseek-chat",
+          { jsonMode: true }
         );
 
         if (!articleData) {
@@ -199,8 +220,19 @@ export async function GET(request: Request) {
             .replace(/\n?```\s*$/i, "")
             .trim();
         }
-        const parsed = JSON.parse(cleanData);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let parsed: any;
+        try {
+          parsed = JSON.parse(cleanData);
+        } catch (parseErr) {
+          console.error(
+            `[LLM_PARSE_ERROR] streaming match=${match.id} err=${String(parseErr)} ` +
+              `head=${cleanData.slice(0, 200)}`
+          );
+          continue;
+        }
         const slug = generateSlug(parsed.title || "streaming");
+        const tags = normalizeTags(parsed.tags);
 
         // Images + OG
         let contentWithImages = parsed.content;
@@ -211,7 +243,7 @@ export async function GET(request: Request) {
             teams: [homeTeamName, awayTeamName],
             league: competitionName,
             type: "preview",
-            tags: parsed.tags || [],
+            tags,
             homeTeamLogo,
             awayTeamLogo,
             leagueLogo,
@@ -245,7 +277,7 @@ export async function GET(request: Request) {
           seo_title: parsed.seo_title || parsed.title,
           seo_description: parsed.seo_description || parsed.excerpt,
           og_image_url: ogImageUrl,
-          tags: parsed.tags || [],
+          tags,
           published_at: new Date().toISOString(),
         });
 
@@ -262,7 +294,7 @@ export async function GET(request: Request) {
           excerpt: parsed.excerpt,
           type: "streaming",
           imageUrl: ogImageUrl,
-          tags: parsed.tags || [],
+          tags,
         });
       } catch (err) {
         const msg = `Match ${match.id}: ${String(err)}`;

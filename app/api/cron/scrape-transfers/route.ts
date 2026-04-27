@@ -4,6 +4,7 @@ import { generateArticle } from "@/lib/llm";
 import { verifyCronAuth } from "@/lib/auth";
 
 export const maxDuration = 300;
+export const dynamic = "force-dynamic";
 import {
   systemPrompt as TRANSFER_SYSTEM_PROMPT,
   buildUserPrompt as buildTransferUserPrompt,
@@ -22,6 +23,23 @@ interface TransferEntry {
       out: { id: number; name: string; logo: string };
     };
   }>;
+}
+
+/**
+ * Normalise un champ `tags` venant du LLM en `string[]` pour éviter
+ * `22P02 malformed array literal` côté Postgres (colonne text[]).
+ */
+function normalizeTags(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.filter((x): x is string => typeof x === "string" && !!x.trim());
+  }
+  if (typeof raw === "string") {
+    return raw
+      .split(/[,;]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+  return [];
 }
 
 function generateSlug(title: string): string {
@@ -165,7 +183,9 @@ export async function GET(request: Request) {
 
                 const articleData = await generateArticle(
                   TRANSFER_SYSTEM_PROMPT,
-                  userPrompt
+                  userPrompt,
+                  "deepseek-chat",
+                  { jsonMode: true }
                 );
 
                 if (articleData) {
@@ -173,8 +193,19 @@ export async function GET(request: Request) {
                   if (typeof cleanData === "string") {
                     cleanData = cleanData.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
                   }
-                  const parsed = JSON.parse(cleanData);
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  let parsed: any;
+                  try {
+                    parsed = JSON.parse(cleanData);
+                  } catch (parseErr) {
+                    console.error(
+                      `[LLM_PARSE_ERROR] transfer player=${entry.player.name} ` +
+                        `err=${String(parseErr)} head=${cleanData.slice(0, 200)}`
+                    );
+                    continue;
+                  }
                   const slug = generateSlug(parsed.title || "transfert");
+                  const tags = normalizeTags(parsed.tags);
 
                   await supabase.from("articles").insert({
                     title: parsed.title,
@@ -184,7 +215,7 @@ export async function GET(request: Request) {
                     type: "transfer",
                     seo_title: parsed.seo_title || parsed.title,
                     seo_description: parsed.seo_description || parsed.excerpt,
-                    tags: parsed.tags || [],
+                    tags,
                     published_at: new Date().toISOString(),
                   });
                   articlesGenerated++;

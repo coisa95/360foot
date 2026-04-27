@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase";
 import { verifyCronAuth } from "@/lib/auth";
 import { LEAGUE_IMAGES } from "@/lib/images";
 
+
+export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const SITE_URL = "https://360-foot.com";

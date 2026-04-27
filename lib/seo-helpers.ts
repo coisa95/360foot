@@ -24,11 +24,28 @@ import type { Metadata } from "next";
 type Robots = NonNullable<Metadata["robots"]>;
 
 /**
- * Renvoie `{ index: false, follow: true }` si `shouldNoindex` est true,
- * sinon `undefined` (laisse Next.js appliquer le défaut du layout).
+ * Robots explicite "indexable + max snippets" — on l'émet sur les pages
+ * dynamiques qui ont du contenu, pour que Google reçoive un signal positif
+ * (et notamment `max-image-preview:large` qui est requis pour Discover et
+ * les rich results).
  */
-export function noindexIf(shouldNoindex: boolean): Robots | undefined {
-  return shouldNoindex ? { index: false, follow: true } : undefined;
+export const INDEXABLE_ROBOTS = {
+  index: true,
+  follow: true,
+  "max-image-preview": "large" as const,
+  "max-snippet": -1,
+  "max-video-preview": -1,
+} satisfies Robots;
+
+/**
+ * Renvoie `{ index: false, follow: true }` si `shouldNoindex` est true,
+ * sinon le robots explicite indexable. Avant : retournait `undefined` (laissait
+ * Next.js appliquer le défaut du layout) — ce qui n'émettait PAS de balise
+ * `<meta name="robots">` sur la page, alors que Google préfère un signal
+ * explicite.
+ */
+export function noindexIf(shouldNoindex: boolean): Robots {
+  return shouldNoindex ? { index: false, follow: true } : INDEXABLE_ROBOTS;
 }
 
 // ── Helpers "a-t-on de la data ?" ─────────────────────────────────────────

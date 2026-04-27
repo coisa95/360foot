@@ -48,6 +48,23 @@ dette est payée.
   sur stderr + alert Telegram (bot + `@foot360news`).
 - Healthcheck Docker → `/api/health` (check Supabase).
 - Vitest smoke tests dans `__tests__/` : run `npm test`.
+- ✅ Tests E2E Playwright (15 specs dans `e2e/`) : run `npx playwright test`.
+  Couverture : home, match, pronostic, search, syndication, health,
+  crash regression, 404. Playwright config dans `playwright.config.ts`.
+
+### LLM / contenu généré
+- Migration achevée vers **DeepSeek** (`deepseek-chat`, OpenAI-compatible)
+  via `lib/llm.ts`. Plus de dépendance `@anthropic-ai/sdk` côté Next.js
+  ni `workers/`. Tarifs DeepSeek (avril 2026) : input 0.14$ / 1M, cache hit
+  0.014$ / 1M, output 0.28$ / 1M.
+- `response_format: { type: "json_object" }` activé (`jsonMode: true`) sur
+  tous les callers qui parsent du JSON (cron generate-articles,
+  generate-previews, generate-streaming-articles, scrape-transfers,
+  generate-trending). Erreurs de parse loggées avec préfixe
+  `[LLM_PARSE_ERROR]` et l'item est skip proprement (pas de crash cron).
+- Page auteur **Coffi** (rédacteur en chef éditorial) : voir
+  `app/auteurs/coffi/page.tsx` pour le profil public et la responsabilité
+  éditoriale. Photo à uploader manuellement dans `public/auteurs/coffi.jpg`.
 
 ### API hardening
 - `/api/syndication/*` : validation stricte de `limit` et `offset`
@@ -61,13 +78,15 @@ dette est payée.
 ## 🔄 Dettes techniques connues
 
 ### Critiques
-- **Aucun test E2E** (Playwright absent). Les smoke tests Vitest couvrent
-  quelques helpers purs mais pas les pages réelles.
 - **Soft-404 HTTP 200** pour `/pronostic/[bad-slug]` etc. : bug Next.js 14.2
   avec `revalidate` + `notFound()`. Mitigation : `<meta robots="noindex">`
   servie ; Google n'indexera pas. Upgrade Next.js recommandé.
-- **`'unsafe-inline'` dans CSP `script-src`** : requis par Next.js hydration
-  inline. Migration vers nonce-based CSP recommandée (voir Next.js docs).
+
+### Réglées récemment
+- ✅ **Tests E2E Playwright** présents (`e2e/`, 15 specs). Voir
+  "Observabilité" plus haut.
+- ✅ **CSP nonce-based** : middleware injecte un nonce par requête via
+  `lib/csp-nonce.ts`, plus de `'unsafe-inline'` permanent dans `script-src`.
 
 ### Moyennes
 - 93+ `any` / `as any` dans les pages. Le bug pronostic initial venait de

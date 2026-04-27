@@ -77,7 +77,7 @@ export default async function EquipeIndexPage() {
         <Breadcrumb items={breadcrumbItems} />
 
         <h1 className="font-display mt-6 text-3xl font-bold md:text-4xl">
-          <span className="text-emerald-600">Équipes</span> de football
+          <span className="text-emerald-600">Équipes de football</span> : effectifs, stats et actualités
         </h1>
         <p className="mt-2 text-slate-500 text-sm max-w-2xl">
           Effectifs, statistiques, calendriers et actualités des clubs africains

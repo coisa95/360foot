@@ -11,6 +11,17 @@ export async function GET() {
     .select("slug")
     .eq("active", true);
 
+  // Slugs temporairement exclus du sitemap : pas de fiche bookmaker en DB
+  // (Supabase renvoie "Bookmaker introuvable" → soft-404 côté Google).
+  // À retirer dès que la table `bookmakers` est seedée pour ces slugs.
+  // Cf. update-bookmakers.sql + tâche SEO.
+  const EXCLUDED_BOOKMAKER_SLUGS = new Set([
+    "1xbet",
+    "1win",
+    "melbet",
+    "megapari",
+  ]);
+
   const staticPages = [
     { url: "/", priority: "1.0", changefreq: "hourly" },
     { url: "/actu", priority: "0.9", changefreq: "hourly" },
@@ -26,6 +37,8 @@ export async function GET() {
     { url: "/mentions-legales", priority: "0.2", changefreq: "monthly" },
     { url: "/bookmakers", priority: "0.7", changefreq: "weekly" },
     { url: "/selection", priority: "0.7", changefreq: "weekly" },
+    { url: "/auteurs", priority: "0.5", changefreq: "monthly" },
+    { url: "/auteurs/coffi", priority: "0.6", changefreq: "monthly" },
   ];
 
   const nationalTeams = ["CI", "SN", "CM", "ML", "BF"];
@@ -44,6 +57,7 @@ export async function GET() {
 
   if (bookmakers) {
     for (const bk of bookmakers) {
+      if (EXCLUDED_BOOKMAKER_SLUGS.has(bk.slug)) continue;
       xml += `
   <url>
     <loc>${baseUrl}/bookmakers/${bk.slug}</loc>
