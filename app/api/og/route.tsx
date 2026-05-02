@@ -3,6 +3,13 @@ import { NextRequest } from "next/server";
 
 export const runtime = "edge";
 
+// 360 Foot brand colors (emerald — matches site CSS --primary 160 84% 39%)
+const BRAND_GREEN = "#10b981";
+const BRAND_GREEN_DARK = "#059669";
+const NAVY_DEEP = "#0f172a";
+const NAVY_SOFT = "#1e293b";
+const SLATE_TEXT = "#94a3b8";
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -14,10 +21,16 @@ export async function GET(request: NextRequest) {
     const homeLogo = searchParams.get("homeLogo") || "";
     const awayLogo = searchParams.get("awayLogo") || "";
     const leagueLogo = searchParams.get("leagueLogo") || "";
+    // Optional match metadata
+    const scoreHome = searchParams.get("scoreHome") || "";
+    const scoreAway = searchParams.get("scoreAway") || "";
+    const dateLabel = searchParams.get("date") || ""; // e.g. "Sam. 3 mai · 18:00"
+    const status = searchParams.get("status") || ""; // "LIVE" | "FT" | "NS" | ""
 
     const hasLogos = !!(homeLogo && awayLogo);
+    const hasScore = scoreHome !== "" && scoreAway !== "";
 
-    // Match articles with team logos → diagonal VS layout
+    // Match articles with team logos → premium diagonal VS layout
     if (hasLogos) {
       return new ImageResponse(
         (
@@ -29,25 +42,58 @@ export async function GET(request: NextRequest) {
               position: "relative",
               overflow: "hidden",
               fontFamily: "sans-serif",
-              backgroundColor: "#0891b2",
+              // Deep emerald → navy gradient
+              backgroundImage:
+                "linear-gradient(135deg, #064e3b 0%, #0f172a 60%, #1e293b 100%)",
             }}
           >
-            {/* Right triangle (light) — large rotated box */}
+            {/* Diagonal accent shape — emerald glow, very subtle */}
             <div
               style={{
                 position: "absolute",
-                top: "-300px",
-                right: "-200px",
-                width: "1200px",
-                height: "1200px",
-                backgroundColor: "#f0f9ff",
-                transform: "rotate(30deg)",
-                transformOrigin: "center center",
+                top: "-250px",
+                right: "-250px",
+                width: "900px",
+                height: "900px",
+                background:
+                  "radial-gradient(circle at 50% 50%, rgba(16,185,129,0.18), transparent 70%)",
+                borderRadius: "50%",
                 display: "flex",
               }}
             />
 
-            {/* Home team logo — left side */}
+            {/* Light geometric panel — subtle, top-right diagonal */}
+            <div
+              style={{
+                position: "absolute",
+                top: "-200px",
+                right: "-300px",
+                width: "1100px",
+                height: "1100px",
+                background:
+                  "linear-gradient(135deg, rgba(255,255,255,0.04), rgba(16,185,129,0.06))",
+                transform: "rotate(28deg)",
+                transformOrigin: "center center",
+                display: "flex",
+                border: "1px solid rgba(255,255,255,0.05)",
+              }}
+            />
+
+            {/* Decorative diagonal lines for texture */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundImage:
+                  "repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 60px)",
+                display: "flex",
+              }}
+            />
+
+            {/* Home team logo — left side, bigger with shadow */}
             <div
               style={{
                 position: "absolute",
@@ -64,9 +110,14 @@ export async function GET(request: NextRequest) {
               <img
                 src={homeLogo}
                 alt="Home"
-                width={220}
-                height={220}
-                style={{ width: "220px", height: "220px", objectFit: "contain" }}
+                width={280}
+                height={280}
+                style={{
+                  width: "280px",
+                  height: "280px",
+                  objectFit: "contain",
+                  filter: "drop-shadow(0 12px 24px rgba(0,0,0,0.45))",
+                }}
               />
             </div>
 
@@ -87,123 +138,275 @@ export async function GET(request: NextRequest) {
               <img
                 src={awayLogo}
                 alt="Away"
-                width={220}
-                height={220}
-                style={{ width: "220px", height: "220px", objectFit: "contain" }}
+                width={280}
+                height={280}
+                style={{
+                  width: "280px",
+                  height: "280px",
+                  objectFit: "contain",
+                  filter: "drop-shadow(0 12px 24px rgba(0,0,0,0.45))",
+                }}
               />
             </div>
 
-            {/* VS badge — center */}
-            <div
-              style={{
-                position: "absolute",
-                top: "250px",
-                left: "555px",
-                width: "90px",
-                height: "90px",
-                borderRadius: "50%",
-                backgroundColor: "#ffffff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.25)",
-                border: "3px solid #e2e8f0",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "36px",
-                  fontWeight: "bold",
-                  color: "#0f172a",
-                }}
-              >
-                VS
-              </span>
-            </div>
-
-            {/* League name — bottom center */}
-            {league && (
+            {/* CENTER — score if FT, "VS" otherwise */}
+            {hasScore ? (
               <div
                 style={{
                   position: "absolute",
-                  bottom: "24px",
-                  left: "400px",
-                  width: "400px",
+                  top: "230px",
+                  left: "440px",
+                  width: "320px",
+                  height: "170px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "10px",
-                  backgroundColor: "rgba(15,23,42,0.85)",
-                  padding: "10px 28px",
-                  borderRadius: "30px",
+                  gap: "30px",
                 }}
               >
-                {leagueLogo && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={leagueLogo}
-                    alt=""
-                    width={24}
-                    height={24}
-                    style={{ width: "24px", height: "24px", objectFit: "contain" }}
-                  />
-                )}
                 <span
                   style={{
-                    fontSize: "20px",
-                    fontWeight: 600,
+                    fontSize: "120px",
+                    fontWeight: 900,
                     color: "#ffffff",
+                    textShadow: "0 4px 20px rgba(0,0,0,0.5)",
+                    display: "flex",
                   }}
                 >
-                  {league}
+                  {scoreHome}
+                </span>
+                <span
+                  style={{
+                    fontSize: "60px",
+                    fontWeight: 700,
+                    color: BRAND_GREEN,
+                    display: "flex",
+                  }}
+                >
+                  -
+                </span>
+                <span
+                  style={{
+                    fontSize: "120px",
+                    fontWeight: 900,
+                    color: "#ffffff",
+                    textShadow: "0 4px 20px rgba(0,0,0,0.5)",
+                    display: "flex",
+                  }}
+                >
+                  {scoreAway}
+                </span>
+              </div>
+            ) : (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "235px",
+                  left: "540px",
+                  width: "120px",
+                  height: "120px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "#ffffff",
+                  boxShadow:
+                    "0 0 0 6px rgba(16,185,129,0.25), 0 8px 32px rgba(0,0,0,0.4)",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "44px",
+                    fontWeight: 900,
+                    color: NAVY_DEEP,
+                    letterSpacing: "-1px",
+                  }}
+                >
+                  VS
                 </span>
               </div>
             )}
 
-            {/* 360 Foot branding — top left */}
+            {/* Status badge under score/VS — LIVE pulse, FT, kickoff time */}
+            {status && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: hasScore ? "415px" : "375px",
+                  left: "0",
+                  right: "0",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor:
+                      status === "LIVE"
+                        ? "#ef4444"
+                        : status === "FT"
+                          ? NAVY_SOFT
+                          : BRAND_GREEN_DARK,
+                    color: "#ffffff",
+                    padding: "8px 22px",
+                    borderRadius: "999px",
+                    fontSize: "20px",
+                    fontWeight: 700,
+                    letterSpacing: "1px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  {status === "LIVE" && (
+                    <div
+                      style={{
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "50%",
+                        backgroundColor: "#ffffff",
+                        display: "flex",
+                      }}
+                    />
+                  )}
+                  {status}
+                </div>
+              </div>
+            )}
+
+            {/* League pill — bottom center, premium glassy */}
+            {league && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "32px",
+                  left: "0",
+                  right: "0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    background:
+                      "linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))",
+                    backdropFilter: "blur(8px)",
+                    padding: "12px 32px",
+                    borderRadius: "999px",
+                    border: "1px solid rgba(16,185,129,0.3)",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  {leagueLogo && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={leagueLogo}
+                      alt=""
+                      width={28}
+                      height={28}
+                      style={{
+                        width: "28px",
+                        height: "28px",
+                        objectFit: "contain",
+                      }}
+                    />
+                  )}
+                  <span
+                    style={{
+                      fontSize: "22px",
+                      fontWeight: 700,
+                      color: "#ffffff",
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    {league}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* 360 Foot branding — top left, emerald accent */}
             <div
               style={{
                 position: "absolute",
-                top: "20px",
-                left: "24px",
+                top: "28px",
+                left: "32px",
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
+                gap: "10px",
               }}
             >
               <div
                 style={{
-                  width: "36px",
-                  height: "36px",
+                  width: "44px",
+                  height: "44px",
                   borderRadius: "50%",
-                  backgroundColor: "#84cc16",
+                  background: `linear-gradient(135deg, ${BRAND_GREEN}, ${BRAND_GREEN_DARK})`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "13px",
-                  fontWeight: "bold",
-                  color: "#0f172a",
+                  fontSize: "15px",
+                  fontWeight: 900,
+                  color: "#ffffff",
+                  boxShadow: "0 4px 12px rgba(16,185,129,0.4)",
+                  letterSpacing: "-0.5px",
                 }}
               >
                 360
               </div>
               <span
                 style={{
-                  fontSize: "22px",
-                  fontWeight: "bold",
+                  fontSize: "26px",
+                  fontWeight: 800,
                   color: "#ffffff",
+                  letterSpacing: "-0.5px",
                 }}
               >
                 360 Foot
               </span>
             </div>
+
+            {/* Date label — top right (optional) */}
+            {dateLabel && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "32px",
+                  right: "32px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  background: "rgba(15,23,42,0.6)",
+                  padding: "8px 18px",
+                  borderRadius: "999px",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: SLATE_TEXT,
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  {dateLabel}
+                </span>
+              </div>
+            )}
           </div>
         ),
         { width: 1200, height: 630 }
       );
     }
 
-    // Non-match articles (transfers, news, etc.) → title-based layout
+    // Non-match articles (transfers, news, profiles) → title-based premium layout
     const typeLabel =
       type === "preview"
         ? "Avant-Match"
@@ -211,9 +414,13 @@ export async function GET(request: NextRequest) {
           ? "Transfert"
           : type === "trending"
             ? "Actualité"
-            : "Résultat";
-
-    const accentColor = "#84cc16";
+            : type === "streaming"
+              ? "Streaming"
+              : type === "player_profile"
+                ? "Profil joueur"
+                : type === "recap"
+                  ? "Résumé match"
+                  : "Résultat";
 
     return new ImageResponse(
       (
@@ -223,48 +430,66 @@ export async function GET(request: NextRequest) {
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "#0f172a",
+            // Deep emerald → navy gradient (same as match layout)
+            backgroundImage:
+              "linear-gradient(135deg, #064e3b 0%, #0f172a 60%, #1e293b 100%)",
             padding: "60px",
             fontFamily: "sans-serif",
             position: "relative",
             overflow: "hidden",
           }}
         >
-          {/* Background gradient effects */}
+          {/* Subtle diagonal texture lines */}
           <div
             style={{
               position: "absolute",
-              top: "-80px",
-              right: "-80px",
-              width: "300px",
-              height: "300px",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundImage:
+                "repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 60px)",
+              display: "flex",
+            }}
+          />
+
+          {/* Emerald glow — top right */}
+          <div
+            style={{
+              position: "absolute",
+              top: "-150px",
+              right: "-150px",
+              width: "550px",
+              height: "550px",
               background:
-                "radial-gradient(circle, rgba(132,204,22,0.15), transparent)",
+                "radial-gradient(circle, rgba(16,185,129,0.25), transparent 70%)",
               borderRadius: "50%",
               display: "flex",
             }}
           />
+          {/* Cool secondary glow — bottom left */}
           <div
             style={{
               position: "absolute",
-              bottom: "-60px",
-              left: "-60px",
-              width: "250px",
-              height: "250px",
+              bottom: "-120px",
+              left: "-120px",
+              width: "400px",
+              height: "400px",
               background:
-                "radial-gradient(circle, rgba(8,145,178,0.15), transparent)",
+                "radial-gradient(circle, rgba(8,145,178,0.22), transparent 70%)",
               borderRadius: "50%",
               display: "flex",
             }}
           />
 
-          {/* Top bar */}
+          {/* Top bar — brand + type pill */}
           <div
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
               marginBottom: "30px",
+              zIndex: 1,
             }}
           >
             <div
@@ -276,25 +501,28 @@ export async function GET(request: NextRequest) {
             >
               <div
                 style={{
-                  width: "48px",
-                  height: "48px",
+                  width: "56px",
+                  height: "56px",
                   borderRadius: "50%",
-                  backgroundColor: accentColor,
+                  background: `linear-gradient(135deg, ${BRAND_GREEN}, ${BRAND_GREEN_DARK})`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "20px",
-                  fontWeight: "bold",
-                  color: "#0f172a",
+                  fontSize: "18px",
+                  fontWeight: 900,
+                  color: "#ffffff",
+                  boxShadow: "0 4px 16px rgba(16,185,129,0.45)",
+                  letterSpacing: "-0.5px",
                 }}
               >
                 360
               </div>
               <span
                 style={{
-                  fontSize: "32px",
-                  fontWeight: "bold",
+                  fontSize: "34px",
+                  fontWeight: 800,
                   color: "#ffffff",
+                  letterSpacing: "-0.5px",
                 }}
               >
                 360 Foot
@@ -302,14 +530,16 @@ export async function GET(request: NextRequest) {
             </div>
             <div
               style={{
-                backgroundColor: accentColor,
-                color: "#0f172a",
-                padding: "8px 20px",
-                borderRadius: "20px",
+                background: `linear-gradient(135deg, ${BRAND_GREEN}, ${BRAND_GREEN_DARK})`,
+                color: "#ffffff",
+                padding: "10px 24px",
+                borderRadius: "999px",
                 fontSize: "18px",
-                fontWeight: "bold",
+                fontWeight: 800,
                 textTransform: "uppercase",
+                letterSpacing: "1px",
                 display: "flex",
+                boxShadow: "0 4px 16px rgba(16,185,129,0.4)",
               }}
             >
               {typeLabel}
@@ -322,14 +552,17 @@ export async function GET(request: NextRequest) {
               display: "flex",
               flex: 1,
               alignItems: "center",
+              zIndex: 1,
             }}
           >
             <div
               style={{
-                fontSize: title.length > 60 ? "42px" : "56px",
-                fontWeight: "bold",
+                fontSize: title.length > 80 ? "40px" : title.length > 50 ? "52px" : "62px",
+                fontWeight: 900,
                 color: "#ffffff",
-                lineHeight: 1.2,
+                lineHeight: 1.15,
+                letterSpacing: "-1px",
+                textShadow: "0 4px 24px rgba(0,0,0,0.4)",
                 display: "flex",
               }}
             >
@@ -337,22 +570,47 @@ export async function GET(request: NextRequest) {
             </div>
           </div>
 
-          {/* Bottom bar */}
+          {/* Bottom bar — emerald separator + league + domain */}
           <div
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              borderTop: `2px solid ${accentColor}`,
+              borderTop: `2px solid ${BRAND_GREEN}`,
               paddingTop: "20px",
+              zIndex: 1,
             }}
           >
-            {league && (
-              <span style={{ fontSize: "22px", color: "#94a3b8", display: "flex" }}>
-                {league}
-              </span>
+            {league ? (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                {leagueLogo && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={leagueLogo}
+                    alt=""
+                    width={28}
+                    height={28}
+                    style={{
+                      width: "28px",
+                      height: "28px",
+                      objectFit: "contain",
+                    }}
+                  />
+                )}
+                <span style={{ fontSize: "22px", color: SLATE_TEXT, fontWeight: 600, display: "flex" }}>
+                  {league}
+                </span>
+              </div>
+            ) : (
+              <span />
             )}
-            <span style={{ fontSize: "18px", color: "#64748b", display: "flex" }}>
+            <span style={{ fontSize: "18px", color: "#64748b", fontWeight: 500, display: "flex" }}>
               360-foot.com
             </span>
           </div>
