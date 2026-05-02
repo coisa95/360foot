@@ -10,6 +10,36 @@ const NAVY_DEEP = "#0f172a";
 const NAVY_SOFT = "#1e293b";
 const SLATE_TEXT = "#94a3b8";
 
+// African-inspired tribal pattern (Adinkra + Bogolan motifs).
+// 80x80 tile that seamlessly repeats: alternating triangles, X marks, dots,
+// chevron lines. Used as overlay background-image at 4-6% opacity to give
+// the OG cards a subtle Afro-geometric identity (audience = Afrique
+// francophone) without overpowering the content.
+const TRIBAL_PATTERN_SVG = `<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'>
+  <g fill='none' stroke='#ffffff' stroke-width='1' stroke-opacity='0.07'>
+    <polygon points='15,8 22,20 8,20' fill='#ffffff' fill-opacity='0.05' stroke='none'/>
+    <polygon points='55,8 62,20 48,20' fill='#10b981' fill-opacity='0.05' stroke='none'/>
+    <polygon points='35,32 42,44 28,44' fill='none'/>
+    <polygon points='75,32 82,44 68,44' fill='#ffffff' fill-opacity='0.05' stroke='none'/>
+    <line x1='6' y1='52' x2='14' y2='60'/>
+    <line x1='14' y1='52' x2='6' y2='60'/>
+    <line x1='46' y1='52' x2='54' y2='60'/>
+    <line x1='54' y1='52' x2='46' y2='60'/>
+    <line x1='0' y1='40' x2='8' y2='40'/>
+    <line x1='40' y1='40' x2='48' y2='40'/>
+    <line x1='80' y1='40' x2='72' y2='40'/>
+    <circle cx='40' cy='10' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
+    <circle cx='0' cy='30' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
+    <circle cx='80' cy='30' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
+    <circle cx='40' cy='70' r='1.5' fill='#10b981' fill-opacity='0.12' stroke='none'/>
+    <circle cx='20' cy='50' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
+    <circle cx='60' cy='50' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
+    <path d='M 25 70 L 30 75 L 25 80 M 30 75 L 35 70 M 30 75 L 35 80' stroke-opacity='0.09'/>
+    <path d='M 65 70 L 70 75 L 65 80 M 70 75 L 75 70 M 70 75 L 75 80' stroke-opacity='0.09'/>
+  </g>
+</svg>`;
+const TRIBAL_PATTERN_URI = `data:image/svg+xml;utf8,${encodeURIComponent(TRIBAL_PATTERN_SVG)}`;
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -79,7 +109,7 @@ export async function GET(request: NextRequest) {
               }}
             />
 
-            {/* Decorative diagonal lines for texture */}
+            {/* African tribal pattern overlay — Adinkra/Bogolan inspired */}
             <div
               style={{
                 position: "absolute",
@@ -87,8 +117,8 @@ export async function GET(request: NextRequest) {
                 left: 0,
                 width: "100%",
                 height: "100%",
-                backgroundImage:
-                  "repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 60px)",
+                backgroundImage: `url("${TRIBAL_PATTERN_URI}")`,
+                backgroundRepeat: "repeat",
                 display: "flex",
               }}
             />
@@ -439,7 +469,7 @@ export async function GET(request: NextRequest) {
             overflow: "hidden",
           }}
         >
-          {/* Subtle diagonal texture lines */}
+          {/* African tribal pattern overlay — same as match layout */}
           <div
             style={{
               position: "absolute",
@@ -447,8 +477,8 @@ export async function GET(request: NextRequest) {
               left: 0,
               width: "100%",
               height: "100%",
-              backgroundImage:
-                "repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 60px)",
+              backgroundImage: `url("${TRIBAL_PATTERN_URI}")`,
+              backgroundRepeat: "repeat",
               display: "flex",
             }}
           />
