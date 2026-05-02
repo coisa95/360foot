@@ -96,28 +96,78 @@ const SCHEMES: Record<string, ColorScheme> = {
   },
 };
 
-function pickScheme(type: string, league: string): ColorScheme {
-  const leagueLower = league.toLowerCase();
+// Keywords that trigger the gold (Afrique francophone) scheme.
+// Matched against league name AND article title — so a Mali/CAF article
+// classified under "Champions League" still gets the African accent.
+const AFRICA_KEYWORDS = [
+  // Pays francophones
+  "côte d'ivoire",
+  "cote d'ivoire",
+  "ivoir",
+  "sénégal",
+  "senegal",
+  "cameroun",
+  "burkina",
+  "bénin",
+  "benin",
+  " mali",
+  "malien",
+  "togo",
+  "togolais",
+  "guinée",
+  "guinea",
+  "rdc",
+  "congo",
+  "gabon",
+  "tchad",
+  "niger",
+  // Maghreb
+  "maroc",
+  "morocco",
+  "marocain",
+  "algérie",
+  "algerie",
+  "algérien",
+  "algerien",
+  "tunisie",
+  "tunisien",
+  // Afrique anglophone (audience secondaire)
+  "nigeria",
+  "ghana",
+  "south africa",
+  "afrique du sud",
+  // Compétitions africaines
+  "caf",
+  " can ",
+  "afcon",
+  "afrique",
+  "fasofoot",
+  "linafoot",
+  "botola",
+  "elite one",
+  // Stars africaines (pour profils joueurs)
+  "mané",
+  "mane",
+  "hakimi",
+  "salah",
+  "osimhen",
+  "mahrez",
+  "kessié",
+  "kessie",
+  "boufal",
+  "ziyech",
+  "haller",
+  "infantino", // FIFA business avec dirigeant africain potentiel
+];
 
-  // League-level overrides (most specific) — African = gold accent
-  if (
-    leagueLower.includes("côte d'ivoire") ||
-    leagueLower.includes("cote d'ivoire") ||
-    leagueLower.includes("ligue 1 ci") ||
-    leagueLower.includes("sénégal") ||
-    leagueLower.includes("senegal") ||
-    leagueLower.includes("cameroun") ||
-    leagueLower.includes("burkina") ||
-    leagueLower.includes("fasofoot") ||
-    leagueLower.includes("benin") ||
-    leagueLower.includes("bénin") ||
-    leagueLower.includes("mali") ||
-    leagueLower.includes("linafoot") ||
-    leagueLower.includes("botola") ||
-    leagueLower.includes("ligue 1 tunisie") ||
-    leagueLower.includes("can") ||
-    leagueLower.includes("caf")
-  ) {
+function isAfrican(text: string): boolean {
+  const lower = " " + text.toLowerCase() + " ";
+  return AFRICA_KEYWORDS.some((kw) => lower.includes(kw));
+}
+
+function pickScheme(type: string, league: string, title: string = ""): ColorScheme {
+  // Africa override (most specific) — checks both league AND title
+  if (isAfrican(league) || isAfrican(title)) {
     return SCHEMES.gold;
   }
 
@@ -146,11 +196,11 @@ function pickScheme(type: string, league: string): ColorScheme {
 // the OG cards a subtle Afro-geometric identity (audience = Afrique
 // francophone) without overpowering the content.
 const TRIBAL_PATTERN_SVG = `<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'>
-  <g fill='none' stroke='#ffffff' stroke-width='1' stroke-opacity='0.07'>
-    <polygon points='15,8 22,20 8,20' fill='#ffffff' fill-opacity='0.05' stroke='none'/>
-    <polygon points='55,8 62,20 48,20' fill='#10b981' fill-opacity='0.05' stroke='none'/>
+  <g fill='none' stroke='#ffffff' stroke-width='1' stroke-opacity='0.035'>
+    <polygon points='15,8 22,20 8,20' fill='#ffffff' fill-opacity='0.025' stroke='none'/>
+    <polygon points='55,8 62,20 48,20' fill='#10b981' fill-opacity='0.025' stroke='none'/>
     <polygon points='35,32 42,44 28,44' fill='none'/>
-    <polygon points='75,32 82,44 68,44' fill='#ffffff' fill-opacity='0.05' stroke='none'/>
+    <polygon points='75,32 82,44 68,44' fill='#ffffff' fill-opacity='0.025' stroke='none'/>
     <line x1='6' y1='52' x2='14' y2='60'/>
     <line x1='14' y1='52' x2='6' y2='60'/>
     <line x1='46' y1='52' x2='54' y2='60'/>
@@ -158,14 +208,14 @@ const TRIBAL_PATTERN_SVG = `<svg xmlns='http://www.w3.org/2000/svg' width='80' h
     <line x1='0' y1='40' x2='8' y2='40'/>
     <line x1='40' y1='40' x2='48' y2='40'/>
     <line x1='80' y1='40' x2='72' y2='40'/>
-    <circle cx='40' cy='10' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
-    <circle cx='0' cy='30' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
-    <circle cx='80' cy='30' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
-    <circle cx='40' cy='70' r='1.5' fill='#10b981' fill-opacity='0.12' stroke='none'/>
-    <circle cx='20' cy='50' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
-    <circle cx='60' cy='50' r='1.5' fill='#ffffff' fill-opacity='0.08' stroke='none'/>
-    <path d='M 25 70 L 30 75 L 25 80 M 30 75 L 35 70 M 30 75 L 35 80' stroke-opacity='0.09'/>
-    <path d='M 65 70 L 70 75 L 65 80 M 70 75 L 75 70 M 70 75 L 75 80' stroke-opacity='0.09'/>
+    <circle cx='40' cy='10' r='1.5' fill='#ffffff' fill-opacity='0.04' stroke='none'/>
+    <circle cx='0' cy='30' r='1.5' fill='#ffffff' fill-opacity='0.04' stroke='none'/>
+    <circle cx='80' cy='30' r='1.5' fill='#ffffff' fill-opacity='0.04' stroke='none'/>
+    <circle cx='40' cy='70' r='1.5' fill='#10b981' fill-opacity='0.06' stroke='none'/>
+    <circle cx='20' cy='50' r='1.5' fill='#ffffff' fill-opacity='0.04' stroke='none'/>
+    <circle cx='60' cy='50' r='1.5' fill='#ffffff' fill-opacity='0.04' stroke='none'/>
+    <path d='M 25 70 L 30 75 L 25 80 M 30 75 L 35 70 M 30 75 L 35 80' stroke-opacity='0.045'/>
+    <path d='M 65 70 L 70 75 L 65 80 M 70 75 L 75 70 M 70 75 L 75 80' stroke-opacity='0.045'/>
   </g>
 </svg>`;
 const TRIBAL_PATTERN_URI = `data:image/svg+xml;utf8,${encodeURIComponent(TRIBAL_PATTERN_SVG)}`;
@@ -190,8 +240,8 @@ export async function GET(request: NextRequest) {
     const hasLogos = !!(homeLogo && awayLogo);
     const hasScore = scoreHome !== "" && scoreAway !== "";
 
-    // Color scheme varies by article type + league
-    const scheme = pickScheme(type, league);
+    // Color scheme varies by article type + league + title (Africa override)
+    const scheme = pickScheme(type, league, title);
 
     // Match articles with team logos → premium diagonal VS layout
     if (hasLogos) {
@@ -611,6 +661,20 @@ export async function GET(request: NextRequest) {
             }}
           />
 
+          {/* Dark band behind title — kills pattern conflict with text */}
+          <div
+            style={{
+              position: "absolute",
+              top: "30%",
+              left: 0,
+              width: "100%",
+              height: "45%",
+              background:
+                "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.5) 70%, transparent 100%)",
+              display: "flex",
+            }}
+          />
+
           {/* Accent glow — top right (color follows scheme) */}
           <div
             style={{
@@ -718,7 +782,10 @@ export async function GET(request: NextRequest) {
                 color: "#ffffff",
                 lineHeight: 1.15,
                 letterSpacing: "-1px",
-                textShadow: "0 4px 24px rgba(0,0,0,0.4)",
+                // Multi-layer shadow forms a dark halo so the white text
+                // stays crisp even over the tribal pattern.
+                textShadow:
+                  "0 0 24px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.9), 0 4px 16px rgba(0,0,0,0.6)",
                 display: "flex",
               }}
             >
