@@ -63,8 +63,11 @@ USER nextjs
 
 EXPOSE 3000
 
-# Healthcheck Coolify
+# Healthcheck Coolify — uses /robots.txt (static, no DB dependency).
+# /api/health hits Postgres which can be slow during cold-start or
+# transient DB issues; healthcheck would fail and abort deploy. Liveness
+# != DB readiness, so we keep them separate.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/robots.txt || exit 1
 
 CMD ["node", "server.js"]
