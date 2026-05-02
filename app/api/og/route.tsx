@@ -10,6 +10,136 @@ const NAVY_DEEP = "#0f172a";
 const NAVY_SOFT = "#1e293b";
 const SLATE_TEXT = "#94a3b8";
 
+/**
+ * Color scheme picker — varies the OG background gradient based on article
+ * type AND league. Six base schemes, league overrides apply when matched.
+ *
+ *   accent       = bright signature color (used for "360" badge glow, ring,
+ *                  separator, title type pill)
+ *   accentDark   = darker accent (gradients)
+ *   gradFrom     = top-left of background gradient (deep saturated)
+ *   gradMid      = middle stop (always navy-ish for legibility)
+ *   gradTo       = bottom-right (slightly different from mid for depth)
+ */
+type ColorScheme = {
+  accent: string;
+  accentDark: string;
+  gradFrom: string;
+  gradMid: string;
+  gradTo: string;
+  glowAlpha: string; // rgba string for the corner glow
+};
+
+const SCHEMES: Record<string, ColorScheme> = {
+  // emerald — default 360foot brand, used for previews/general
+  emerald: {
+    accent: "#10b981",
+    accentDark: "#059669",
+    gradFrom: "#064e3b",
+    gradMid: "#0f172a",
+    gradTo: "#1e293b",
+    glowAlpha: "rgba(16,185,129,0.22)",
+  },
+  // crimson — match results / recaps (intense finished-match energy)
+  crimson: {
+    accent: "#f43f5e",
+    accentDark: "#be123c",
+    gradFrom: "#4c0519",
+    gradMid: "#0f172a",
+    gradTo: "#1e1b2e",
+    glowAlpha: "rgba(244,63,94,0.22)",
+  },
+  // amber — streaming articles (hot, urgent, "regarde maintenant")
+  amber: {
+    accent: "#f59e0b",
+    accentDark: "#b45309",
+    gradFrom: "#451a03",
+    gradMid: "#0f172a",
+    gradTo: "#1e1b16",
+    glowAlpha: "rgba(245,158,11,0.24)",
+  },
+  // royal — transfer news (business, formal, big money)
+  royal: {
+    accent: "#6366f1",
+    accentDark: "#4338ca",
+    gradFrom: "#1e1b4b",
+    gradMid: "#0f172a",
+    gradTo: "#1e293b",
+    glowAlpha: "rgba(99,102,241,0.24)",
+  },
+  // magenta — trending / exclusives (buzz, viral)
+  magenta: {
+    accent: "#ec4899",
+    accentDark: "#be185d",
+    gradFrom: "#4a044e",
+    gradMid: "#0f172a",
+    gradTo: "#1e1b2e",
+    glowAlpha: "rgba(236,72,153,0.22)",
+  },
+  // teal — player profiles (cool, individual)
+  teal: {
+    accent: "#14b8a6",
+    accentDark: "#0f766e",
+    gradFrom: "#042f2e",
+    gradMid: "#0f172a",
+    gradTo: "#172e2c",
+    glowAlpha: "rgba(20,184,166,0.22)",
+  },
+  // gold — African leagues / selections (Afrique francophone signature)
+  gold: {
+    accent: "#fbbf24",
+    accentDark: "#d97706",
+    gradFrom: "#3b0764",
+    gradMid: "#0f172a",
+    gradTo: "#1e1b16",
+    glowAlpha: "rgba(251,191,36,0.20)",
+  },
+};
+
+function pickScheme(type: string, league: string): ColorScheme {
+  const leagueLower = league.toLowerCase();
+
+  // League-level overrides (most specific) — African = gold accent
+  if (
+    leagueLower.includes("côte d'ivoire") ||
+    leagueLower.includes("cote d'ivoire") ||
+    leagueLower.includes("ligue 1 ci") ||
+    leagueLower.includes("sénégal") ||
+    leagueLower.includes("senegal") ||
+    leagueLower.includes("cameroun") ||
+    leagueLower.includes("burkina") ||
+    leagueLower.includes("fasofoot") ||
+    leagueLower.includes("benin") ||
+    leagueLower.includes("bénin") ||
+    leagueLower.includes("mali") ||
+    leagueLower.includes("linafoot") ||
+    leagueLower.includes("botola") ||
+    leagueLower.includes("ligue 1 tunisie") ||
+    leagueLower.includes("can") ||
+    leagueLower.includes("caf")
+  ) {
+    return SCHEMES.gold;
+  }
+
+  // Type-based scheme
+  switch (type) {
+    case "result":
+    case "recap":
+      return SCHEMES.crimson;
+    case "streaming":
+      return SCHEMES.amber;
+    case "transfer":
+      return SCHEMES.royal;
+    case "trending":
+      return SCHEMES.magenta;
+    case "player_profile":
+      return SCHEMES.teal;
+    case "preview":
+    default:
+      return SCHEMES.emerald;
+  }
+}
+
 // African-inspired tribal pattern (Adinkra + Bogolan motifs).
 // 80x80 tile that seamlessly repeats: alternating triangles, X marks, dots,
 // chevron lines. Used as overlay background-image at 4-6% opacity to give
@@ -60,6 +190,9 @@ export async function GET(request: NextRequest) {
     const hasLogos = !!(homeLogo && awayLogo);
     const hasScore = scoreHome !== "" && scoreAway !== "";
 
+    // Color scheme varies by article type + league
+    const scheme = pickScheme(type, league);
+
     // Match articles with team logos → premium diagonal VS layout
     if (hasLogos) {
       return new ImageResponse(
@@ -72,12 +205,11 @@ export async function GET(request: NextRequest) {
               position: "relative",
               overflow: "hidden",
               fontFamily: "sans-serif",
-              // Deep emerald → navy gradient
-              backgroundImage:
-                "linear-gradient(135deg, #064e3b 0%, #0f172a 60%, #1e293b 100%)",
+              // Dynamic gradient based on scheme
+              backgroundImage: `linear-gradient(135deg, ${scheme.gradFrom} 0%, ${scheme.gradMid} 60%, ${scheme.gradTo} 100%)`,
             }}
           >
-            {/* Diagonal accent shape — emerald glow, very subtle */}
+            {/* Accent glow — top right (color follows scheme) */}
             <div
               style={{
                 position: "absolute",
@@ -85,8 +217,7 @@ export async function GET(request: NextRequest) {
                 right: "-250px",
                 width: "900px",
                 height: "900px",
-                background:
-                  "radial-gradient(circle at 50% 50%, rgba(16,185,129,0.18), transparent 70%)",
+                background: `radial-gradient(circle at 50% 50%, ${scheme.glowAlpha}, transparent 70%)`,
                 borderRadius: "50%",
                 display: "flex",
               }}
@@ -100,8 +231,7 @@ export async function GET(request: NextRequest) {
                 right: "-300px",
                 width: "1100px",
                 height: "1100px",
-                background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.04), rgba(16,185,129,0.06))",
+                background: `linear-gradient(135deg, rgba(255,255,255,0.04), ${scheme.glowAlpha.replace("0.22", "0.06").replace("0.24", "0.06").replace("0.20", "0.06")})`,
                 transform: "rotate(28deg)",
                 transformOrigin: "center center",
                 display: "flex",
@@ -209,7 +339,7 @@ export async function GET(request: NextRequest) {
                   style={{
                     fontSize: "60px",
                     fontWeight: 700,
-                    color: BRAND_GREEN,
+                    color: scheme.accent,
                     display: "flex",
                   }}
                 >
@@ -240,8 +370,7 @@ export async function GET(request: NextRequest) {
                   alignItems: "center",
                   justifyContent: "center",
                   background: "#ffffff",
-                  boxShadow:
-                    "0 0 0 6px rgba(16,185,129,0.25), 0 8px 32px rgba(0,0,0,0.4)",
+                  boxShadow: `0 0 0 6px ${scheme.glowAlpha}, 0 8px 32px rgba(0,0,0,0.4)`,
                 }}
               >
                 <span
@@ -277,7 +406,7 @@ export async function GET(request: NextRequest) {
                         ? "#ef4444"
                         : status === "FT"
                           ? NAVY_SOFT
-                          : BRAND_GREEN_DARK,
+                          : scheme.accentDark,
                     color: "#ffffff",
                     padding: "8px 22px",
                     borderRadius: "999px",
@@ -329,7 +458,7 @@ export async function GET(request: NextRequest) {
                     backdropFilter: "blur(8px)",
                     padding: "12px 32px",
                     borderRadius: "999px",
-                    border: "1px solid rgba(16,185,129,0.3)",
+                    border: `1px solid ${scheme.accent}66`,
                     boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
                   }}
                 >
@@ -377,14 +506,14 @@ export async function GET(request: NextRequest) {
                   width: "44px",
                   height: "44px",
                   borderRadius: "50%",
-                  background: `linear-gradient(135deg, ${BRAND_GREEN}, ${BRAND_GREEN_DARK})`,
+                  background: `linear-gradient(135deg, ${scheme.accent}, ${scheme.accentDark})`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: "15px",
                   fontWeight: 900,
                   color: "#ffffff",
-                  boxShadow: "0 4px 12px rgba(16,185,129,0.4)",
+                  boxShadow: `0 4px 12px ${scheme.glowAlpha}`,
                   letterSpacing: "-0.5px",
                 }}
               >
@@ -460,9 +589,8 @@ export async function GET(request: NextRequest) {
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            // Deep emerald → navy gradient (same as match layout)
-            backgroundImage:
-              "linear-gradient(135deg, #064e3b 0%, #0f172a 60%, #1e293b 100%)",
+            // Dynamic gradient (matches scheme)
+            backgroundImage: `linear-gradient(135deg, ${scheme.gradFrom} 0%, ${scheme.gradMid} 60%, ${scheme.gradTo} 100%)`,
             padding: "60px",
             fontFamily: "sans-serif",
             position: "relative",
@@ -483,7 +611,7 @@ export async function GET(request: NextRequest) {
             }}
           />
 
-          {/* Emerald glow — top right */}
+          {/* Accent glow — top right (color follows scheme) */}
           <div
             style={{
               position: "absolute",
@@ -491,13 +619,12 @@ export async function GET(request: NextRequest) {
               right: "-150px",
               width: "550px",
               height: "550px",
-              background:
-                "radial-gradient(circle, rgba(16,185,129,0.25), transparent 70%)",
+              background: `radial-gradient(circle, ${scheme.glowAlpha}, transparent 70%)`,
               borderRadius: "50%",
               display: "flex",
             }}
           />
-          {/* Cool secondary glow — bottom left */}
+          {/* Secondary glow — bottom left (slightly different shade for depth) */}
           <div
             style={{
               position: "absolute",
@@ -505,8 +632,7 @@ export async function GET(request: NextRequest) {
               left: "-120px",
               width: "400px",
               height: "400px",
-              background:
-                "radial-gradient(circle, rgba(8,145,178,0.22), transparent 70%)",
+              background: `radial-gradient(circle, ${scheme.glowAlpha.replace("0.22", "0.16").replace("0.24", "0.16").replace("0.20", "0.14")}, transparent 70%)`,
               borderRadius: "50%",
               display: "flex",
             }}
@@ -534,14 +660,14 @@ export async function GET(request: NextRequest) {
                   width: "56px",
                   height: "56px",
                   borderRadius: "50%",
-                  background: `linear-gradient(135deg, ${BRAND_GREEN}, ${BRAND_GREEN_DARK})`,
+                  background: `linear-gradient(135deg, ${scheme.accent}, ${scheme.accentDark})`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: "18px",
                   fontWeight: 900,
                   color: "#ffffff",
-                  boxShadow: "0 4px 16px rgba(16,185,129,0.45)",
+                  boxShadow: `0 4px 16px ${scheme.glowAlpha}`,
                   letterSpacing: "-0.5px",
                 }}
               >
@@ -606,7 +732,7 @@ export async function GET(request: NextRequest) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              borderTop: `2px solid ${BRAND_GREEN}`,
+              borderTop: `2px solid ${scheme.accent}`,
               paddingTop: "20px",
               zIndex: 1,
             }}
