@@ -44,6 +44,7 @@ services:
       args:
         NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+        NEXT_PUBLIC_WHATSAPP_URL: ${NEXT_PUBLIC_WHATSAPP_URL}
     image: foot360-nextjs:latest
     container_name: foot360-nextjs
     restart: unless-stopped
@@ -63,6 +64,7 @@ services:
       - UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN}
       - SYNDICATION_API_KEY=${SYNDICATION_API_KEY}
       - INTERNAL_OPS_KEY=${INTERNAL_OPS_KEY}
+      - NEXT_PUBLIC_WHATSAPP_URL=${NEXT_PUBLIC_WHATSAPP_URL}
     expose:
       - "3000"
     networks:

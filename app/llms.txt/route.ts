@@ -13,6 +13,7 @@ export async function GET() {
 > Média 360 Foot couvrant l'actualité football : pronostics, résultats, transferts, ligues africaines et européennes en français.
 
 ## Sections principales
+- [Streaming foot — toutes les chaînes et alternatives](https://360-foot.com/streaming)
 - [Actualités](https://360-foot.com/actu)
 - [Pronostics du jour](https://360-foot.com/pronostic)
 - [Matchs en direct](https://360-foot.com/matchs)

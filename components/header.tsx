@@ -9,8 +9,8 @@ const NAV_LINKS = [
   { href: "/competitions", label: "Compétitions" },
   { href: "/actu", label: "Actualités" },
   { href: "/matchs", label: "Matchs" },
+  { href: "/streaming", label: "Streaming" },
   { href: "/transferts", label: "Transferts" },
-  { href: "/bons-plans", label: "Bons Plans" },
   { href: "/recherche", label: "Recherche", icon: true },
 ];
 

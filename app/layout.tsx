@@ -11,6 +11,7 @@ import { LeagueSidebar } from "@/components/league-sidebar";
 import { SwRegister } from "@/components/sw-register";
 import { CookieBanner } from "@/components/cookie-banner";
 import { PromoPopup } from "@/components/promo-popup";
+import { WhatsAppStickyMobile } from "@/components/whatsapp-cta";
 import { AnalyticsLoader } from "@/components/analytics-loader";
 import { safeJsonLd } from "@/lib/json-ld";
 
@@ -210,6 +211,9 @@ export default function RootLayout({
         <AnalyticsLoader nonce={nonce} />
         <CookieBanner />
         <PromoPopup />
+        {/* Sticky mobile WhatsApp CTA — appears after 30% scroll, lg:hidden,
+            dismissable 7 days. Only renders if NEXT_PUBLIC_WHATSAPP_URL is set. */}
+        <WhatsAppStickyMobile message="africa-alerts" />
       </body>
     </html>
   );

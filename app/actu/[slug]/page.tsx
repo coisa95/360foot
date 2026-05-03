@@ -7,6 +7,7 @@ import { Breadcrumb } from "@/components/breadcrumb";
 import { RelatedArticles } from "@/components/related-articles";
 import { AffiliateTrio } from "@/components/affiliate-trio";
 import { ShareButtons } from "@/components/share-buttons";
+import { WhatsAppInlineCard } from "@/components/whatsapp-cta";
 import { Badge } from "@/components/ui/badge";
 import { getArticleTypeLabel, getArticleTypeColor } from "@/lib/article-types";
 import { Separator } from "@/components/ui/separator";
@@ -335,6 +336,21 @@ export default async function ArticlePage({ params }: Props) {
               prose-figcaption:text-xs prose-figcaption:text-slate-400 prose-figcaption:italic prose-figcaption:text-center prose-figcaption:mt-2
               prose-img:rounded-lg prose-img:mx-auto"
             dangerouslySetInnerHTML={{ __html: enrichedContent }}
+          />
+
+          {/* Inline WhatsApp CTA — message varies by article type
+              streaming article → "streaming-weekend"
+              pronostic article → "pronos-daily"
+              other            → "africa-alerts" */}
+          <WhatsAppInlineCard
+            placement="inline-card"
+            message={
+              article.type === "streaming"
+                ? "streaming-weekend"
+                : article.type === "preview"
+                  ? "pronos-daily"
+                  : "africa-alerts"
+            }
           />
 
           {/* Boutons de partage social */}

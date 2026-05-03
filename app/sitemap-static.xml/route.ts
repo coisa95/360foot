@@ -26,6 +26,7 @@ export async function GET() {
     { url: "/", priority: "1.0", changefreq: "hourly" },
     { url: "/actu", priority: "0.9", changefreq: "hourly" },
     { url: "/matchs", priority: "0.9", changefreq: "hourly" },
+    { url: "/streaming", priority: "0.95", changefreq: "hourly" },
     { url: "/pronostic", priority: "0.9", changefreq: "hourly" },
     { url: "/competitions", priority: "0.8", changefreq: "daily" },
     { url: "/equipe", priority: "0.8", changefreq: "daily" },
