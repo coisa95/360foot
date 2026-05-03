@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: article } = await supabase
     .from("articles")
-    .select("title,slug,seo_title,seo_description,excerpt,og_image_url,published_at")
+    .select("title,slug,seo_title,seo_description,excerpt,og_image_url,og_meta_image_url,published_at")
     .eq("slug", slug)
     .single();
 
@@ -52,7 +52,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const articleTitle = article.seo_title || article.title;
   const rawDescription = article.seo_description || article.excerpt || "";
   const articleDescription = rawDescription.length > 155 ? rawDescription.slice(0, 152) + "..." : rawDescription;
-  const articleImage = article.og_image_url || "https://360-foot.com/icon-512.png";
+  // For social META (og:image / twitter:image): prefer the dynamic /api/og
+  // branded card stored in og_meta_image_url. Fallback to original RSS
+  // photo if column is null. The original og_image_url stays untouched
+  // for in-page display (article body, cards, carousel).
+  const articleImage =
+    article.og_meta_image_url ||
+    article.og_image_url ||
+    "https://360-foot.com/icon-512.png";
 
   return {
     title: articleTitle,
